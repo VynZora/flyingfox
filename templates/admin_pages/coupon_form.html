@@ -1,0 +1,577 @@
+{% extends "admin_pages/base.html" %}
+
+{% block title %}
+{% if coupon %}Update Coupon{% else %}Add Coupon{% endif %} | FlyingFox Admin
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard sp_bottom_100">
+
+    <div class="container-fluid full__width__padding">
+
+        <div class="row">
+
+            <div class="col-xl-9 col-lg-10 col-md-12">
+
+                <div class="dashboard__section__title">
+
+                    <h4 class="mb-0">
+                        {% if coupon %}
+                            Update Coupon
+                        {% else %}
+                            Add Coupon
+                        {% endif %}
+                    </h4>
+
+                </div>
+
+
+                <div class="form-card mt-4">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <!-- CODE -->
+<!-- COUPON CODE -->
+
+<div class="mb-4">
+
+    <label for="couponCode" class="form-label">
+        Coupon Code
+        <span class="text-danger">*</span>
+    </label>
+
+    <div class="coupon-code-wrapper">
+
+        <input
+            type="text"
+            name="code"
+            id="couponCode"
+            class="form-control modern-input"
+            value="{% if coupon %}{{ coupon.code }}{% else %}{{ form_data.code|default:'' }}{% endif %}"
+            placeholder="Example: FLY-A7K9P2"
+            maxlength="50"
+            required
+        >
+
+        <button
+            type="button"
+            id="generateCouponBtn"
+            class="btn generate-coupon-btn"
+        >
+            <i class="icofont-refresh"></i>
+            Generate Code
+        </button>
+
+    </div>
+
+    <small class="text-muted d-block mt-2">
+        Enter a custom coupon code or generate one automatically.
+    </small>
+
+</div>
+
+
+                        <!-- RIDES -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Applicable Rides
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="ride-selection">
+
+                                {% for ride in rides %}
+
+                                <label class="ride-option">
+
+                                    <input
+                                        type="checkbox"
+                                        name="rides"
+                                        value="{{ ride.id }}"
+
+                                        {% if coupon and ride in coupon.rides.all %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+                                        {{ ride.name }}
+                                    </span>
+
+                                </label>
+
+                                {% empty %}
+
+                                <p class="text-muted mb-0">
+                                    No active rides found.
+                                </p>
+
+                                {% endfor %}
+
+                            </div>
+
+                            <small class="text-muted">
+                                Select one or more rides where this coupon can be used.
+                            </small>
+
+                        </div>
+
+
+                        <div class="row">
+
+
+                            <!-- TYPE -->
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Discount Type
+                                </label>
+
+                                <select
+                                    name="discount_type"
+                                    class="form-select modern-input"
+                                    required
+                                >
+
+                                    <option
+                                        value="percentage"
+                                        {% if coupon.discount_type == "percentage" %}selected{% endif %}
+                                    >
+                                        Percentage
+                                    </option>
+
+                                    <option
+                                        value="fixed"
+                                        {% if coupon.discount_type == "fixed" %}selected{% endif %}
+                                    >
+                                        Fixed Amount
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- VALUE -->
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Discount Value
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="discount_value"
+                                    class="form-control modern-input"
+                                    step="0.01"
+                                    min="0.01"
+                                    value="{% if coupon %}{{ coupon.discount_value }}{% endif %}"
+                                    placeholder="Example: 20"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+
+                            <!-- VALID FROM -->
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Valid From
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="valid_from"
+                                    class="form-control modern-input"
+                                    value="{% if coupon %}{{ coupon.valid_from|date:'Y-m-d' }}{% endif %}"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- VALID UNTIL -->
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Valid Until
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="valid_until"
+                                    class="form-control modern-input"
+                                    value="{% if coupon %}{{ coupon.valid_until|date:'Y-m-d' }}{% endif %}"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+
+                            <!-- MINIMUM -->
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Minimum Booking Amount
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="minimum_amount"
+                                    class="form-control modern-input"
+                                    step="0.01"
+                                    min="0"
+                                    value="{% if coupon %}{{ coupon.minimum_amount }}{% else %}0{% endif %}"
+                                >
+
+                            </div>
+
+
+                            <!-- USAGE LIMIT -->
+
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label">
+                                    Usage Limit
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="usage_limit"
+                                    class="form-control modern-input"
+                                    min="1"
+                                    value="{% if coupon and coupon.usage_limit %}{{ coupon.usage_limit }}{% endif %}"
+                                    placeholder="Leave empty for unlimited"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIVE -->
+
+                        <div class="mb-4">
+
+                            <div class="form-check">
+
+                                <input
+                                    type="checkbox"
+                                    name="is_active"
+                                    id="isActive"
+                                    class="form-check-input"
+
+                                    {% if coupon %}
+                                        {% if coupon.is_active %}checked{% endif %}
+                                    {% else %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <label
+                                    for="isActive"
+                                    class="form-check-label"
+                                >
+                                    Active
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="dashboard__form__button">
+
+                            <button
+                                type="submit"
+                                class="btn flying-btn"
+                            >
+
+                                {% if coupon %}
+                                    Update Coupon
+                                {% else %}
+                                    Add Coupon
+                                {% endif %}
+
+                            </button>
+
+
+                            <a
+                                href="{% url 'coupon_list' %}"
+                                class="btn btn-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.form-card {
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 12px;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 4px 18px rgba(0,0,0,.04);
+}
+
+.modern-input {
+    min-height: 48px;
+    border-radius: 8px;
+}
+
+.ride-selection {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 7px;
+}
+
+.ride-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f3f3;
+}
+
+.ride-option:last-child {
+    border-bottom: none;
+}
+
+.ride-option input {
+    width: 17px;
+    height: 17px;
+}
+
+.flying-btn {
+    background: #f97316;
+    color: #fff;
+    border: none;
+}
+
+.flying-btn:hover {
+    background: #ea580c;
+    color: #fff;
+}
+
+.dashboard__form__button {
+    display: flex;
+    gap: 10px;
+}
+
+@media(max-width:575px) {
+
+    .form-card {
+        padding: 18px;
+    }
+
+    .dashboard__form__button {
+        flex-direction: column;
+    }
+
+    .dashboard__form__button .btn {
+        width: 100%;
+    }
+
+}
+
+
+{% comment %} coupon code css start {% endcomment %}
+.coupon-code-wrapper {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.coupon-code-wrapper .form-control {
+    flex: 1;
+}
+
+.generate-coupon-btn {
+    min-width: 160px;
+
+    background: #fff7ed;
+    border: 1px solid #f97316;
+
+    color: #f97316;
+
+    font-weight: 600;
+
+    border-radius: 8px;
+
+    padding: 0 18px;
+
+    white-space: nowrap;
+
+    transition: all 0.2s ease;
+}
+
+.generate-coupon-btn:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #ffffff;
+}
+
+.generated-code {
+    border-color: #f97316 !important;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(249, 115, 22, 0.12) !important;
+}
+
+
+/* Mobile */
+
+@media (max-width: 575px) {
+
+    .coupon-code-wrapper {
+        flex-direction: column;
+    }
+
+    .generate-coupon-btn {
+        width: 100%;
+        min-height: 46px;
+    }
+
+}
+{% comment %} coupon code css end  {% endcomment %}
+
+
+
+
+
+
+
+
+</style>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const couponInput =
+        document.getElementById("couponCode");
+
+    const generateButton =
+        document.getElementById("generateCouponBtn");
+
+
+    function generateCouponCode() {
+
+        // Avoid confusing characters:
+        // 0, O, 1, I are excluded
+        const characters =
+            "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+        let randomPart = "";
+
+        for (let i = 0; i < 6; i++) {
+
+            const randomIndex =
+                Math.floor(
+                    Math.random() * characters.length
+                );
+
+            randomPart +=
+                characters.charAt(randomIndex);
+        }
+
+        return "FLY-" + randomPart;
+    }
+
+
+    generateButton.addEventListener(
+        "click",
+        function () {
+
+            const newCode =
+                generateCouponCode();
+
+            couponInput.value =
+                newCode;
+
+            // Small visual feedback
+            couponInput.classList.add(
+                "generated-code"
+            );
+
+            setTimeout(function () {
+
+                couponInput.classList.remove(
+                    "generated-code"
+                );
+
+            }, 700);
+
+        }
+    );
+
+
+    // Automatically convert manually typed codes
+    // to uppercase
+    couponInput.addEventListener(
+        "input",
+        function () {
+
+            this.value =
+                this.value.toUpperCase();
+
+        }
+    );
+
+});
+
+</script>
+
+{% endblock %}

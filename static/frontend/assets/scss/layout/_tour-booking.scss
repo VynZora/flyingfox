@@ -1,0 +1,212 @@
+@use "../utils" as *;
+
+/*====================
+43. Tour booking css
+======================*/
+
+.tour-booking {
+  .widget {
+    background: var(--color-white);
+    padding: 30px;
+    border-radius: 25px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-info-color);
+
+    .title {
+      margin-bottom: 20px;
+    }
+  }
+
+  &-form {
+    .label {
+      margin-bottom: 5px;
+      color: var(--body-text-color);
+      font-size: 15px;
+    }
+    .form-group .form-control,
+    .form-group .form-select {
+      box-shadow: none;
+    }
+  }
+
+  &-summary {
+    padding: 25px;
+    border-radius: 25px;
+    border: 1px solid var(--border-info-color);
+
+    .property-img {
+      img {
+        border-radius: 20px;
+      }
+    }
+
+    .property-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      margin-bottom: 10px;
+
+      h5 {
+        margin-bottom: 5px;
+        font-size: 20px;
+      }
+
+      p {
+        margin-bottom: 0px;
+        font-size: 15px;
+
+        i {
+          color: var(--theme-color);
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .book-edit-btn {
+      width: 32px;
+      height: 32px;
+      line-height: 30px;
+      text-align: center;
+      background: var(--theme-color);
+      border-radius: 8px;
+      color: var(--color-white);
+
+      &:hover {
+        background: var(--theme-color2);
+        color: var(--color-white);
+      }
+    }
+
+    .property-rate {
+      font-size: 15px;
+
+      .badge {
+        background: var(--theme-color);
+        margin-right: 5px;
+        border-radius: 50px;
+      }
+
+      .rate-text {
+        color: var(--body-text-color);
+      }
+
+      .rate-type {
+        color: var(--theme-color);
+      }
+    }
+
+    .info-summary {
+      margin-top: 25px;
+
+      h5 {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-info-color);
+      }
+
+      li {
+        font-weight: 500;
+        color: var(--color-dark);
+        margin-bottom: 12px;
+
+        span {
+          float: right;
+          font-weight: 400;
+          color: var(--body-text-color);
+        }
+      }
+    }
+
+    .order-info {
+      margin-top: 30px;
+
+      h5 {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-info-color);
+      }
+      span {
+        float: right;
+        font-weight: 400;
+        color: var(--body-text-color);
+      }
+
+      li {
+        margin-bottom: 12px;
+        font-weight: 500;
+        color: var(--color-dark);
+      }
+    }
+    .order-total {
+      padding-top: 10px;
+      border-top: 1px solid var(--border-info-color);
+
+      span {
+        font-weight: bold;
+        color: var(--theme-color2);
+      }
+    }
+
+    .theme-btn {
+      &::before {
+        width: 450px;
+        height: 450px;
+      }
+    }
+  }
+}
+
+.payment-area {
+  .nav-link {
+    background: transparent !important;
+    border: 1px solid var(--border-info-color);
+    text-align: center;
+    border-radius: 15px;
+    margin-right: 15px;
+    margin-bottom: 20px;
+    position: relative;
+
+    &::before {
+      content: "\f058";
+      position: absolute;
+      font-family: "Font Awesome 6 Pro";
+      font-weight: bold;
+      font-size: 20px;
+      color: var(--theme-color);
+      transform: scale(0);
+      opacity: 0;
+      visibility: hidden;
+      left: 7px;
+      top: 0;
+      transition: all 0.3s ease-in-out;
+    }
+
+    &.active::before {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+    }
+
+    &.active {
+      border-color: var(--theme-color);
+    }
+
+    span {
+      color: var(--color-dark);
+    }
+  }
+
+  .payment-card-img {
+    padding-top: 15px;
+    margin-bottom: 13px;
+
+    img {
+      width: 30px;
+    }
+  }
+
+  .payment-img img {
+    width: 130px;
+  }
+}

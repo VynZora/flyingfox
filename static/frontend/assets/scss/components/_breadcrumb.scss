@@ -1,0 +1,81 @@
+@use "../utils" as *;
+
+/*====================
+9. Breadcrumb css
+======================*/
+
+.site-breadcrumb {
+  @include flex(center);
+  flex-direction: column;
+  @include bg-support(true);
+  text-align: center;
+  position: relative;
+  padding-top: 150px;
+  padding-bottom: 150px;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: -1;
+  }
+
+  .breadcrumb-title {
+    font-size: 35px;
+    color: var(--color-white);
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+  }
+
+  .breadcrumb-menu {
+    position: relative;
+    z-index: 1;
+
+    li {
+      position: relative;
+      display: inline-block;
+      margin-left: 25px;
+      color: var(--color-white);
+      font-weight: 500;
+      text-transform: capitalize;
+
+      a {
+        color: var(--color-white);
+        transition: all 0.5s ease-in-out;
+
+        &:hover {
+          color: var(--theme-color);
+        }
+      }
+
+      &::before {
+        position: absolute;
+        content: "\f101";
+        font-family: "Font Awesome 6 Pro";
+        right: -21px;
+        top: 1px;
+        text-align: center;
+        font-size: 16px;
+        color: var(--color-white);
+      }
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child:before {
+        display: none;
+      }
+
+      &.active {
+        color: var(--theme-color);
+      }
+    }
+  }
+}

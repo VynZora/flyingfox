@@ -1,0 +1,112 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}Add Category | Admin Dashboard{% endblock %}
+
+{% block extra_css %}
+
+<style>
+/* Style for error messages */
+.field-error {
+    display: none;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    color: #dc3545;
+}
+
+/* Red border for invalid fields */
+.field-error-border {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1) !important;
+}
+
+/* Green border for valid fields */
+.field-valid-border {
+    border-color: #28a745 !important;
+}
+
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="dashboard sp_bottom_100">
+    <div class="container-fluid full__width__padding">
+        <div class="row">
+            <div class="col-xl-9 col-lg-9 col-md-12">
+                <div class="dashboard__section__title">
+                    <h4 class="mb-0">Add Category</h4>
+                   
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <form method="post" class="needs-validation form-wrapper" novalidate>
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label for="categoryName" class="form-label">Category Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" id="categoryName" class="form-control modern-input" required>
+                                <div class="invalid-feedback">Please enter a category name.</div>
+                            </div>
+
+                            <div class="dashboard__form__button">
+                                <button type="submit" class="btn btn-primary">Add Category</button>
+
+    <!-- Cancel Button -->
+    <a href="{% url 'category_list' %}" class="btn btn-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    const categoryInput = document.getElementById('categoryName');
+
+    // Create error message element
+    const errorDiv = document.createElement('div');
+    errorDiv.classList.add('text-danger', 'mt-1');
+    categoryInput.insertAdjacentElement('afterend', errorDiv);
+
+    // Validate category name
+    function validateCategory() {
+        const value = categoryInput.value.trim();
+        let error = '';
+        if (!value) {
+            error = 'Category name is required.';
+        } else if (!/^[A-Za-z\s]+$/.test(value)) {
+            error = 'Category name must contain only letters and spaces.';
+        }
+
+        errorDiv.textContent = error;
+        categoryInput.classList.toggle('field-error-border', !!error);
+        return !error;
+    }
+
+    // Real-time validation
+    categoryInput.addEventListener('blur', validateCategory);
+    categoryInput.addEventListener('input', validateCategory);
+
+    // Form submission
+    form.addEventListener('submit', function (e) {
+        if (!validateCategory()) {
+            e.preventDefault();
+            categoryInput.focus();
+        }
+    });
+});
+</script>
+
+{% comment %} <style>
+.field-error-border {
+    border-color: #dc3545 !important;
+}
+</style> {% endcomment %}
+{% endblock %}
+

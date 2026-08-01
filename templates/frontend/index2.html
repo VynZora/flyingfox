@@ -1,0 +1,190 @@
+{% extends 'frontend/base.html' %}
+
+{% load static %}
+
+
+{% block title %}
+Flying Fox | Zipline Adventure
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'frontend/css/home.css' %}"
+>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section
+    class="hero-section"
+    id="hero"
+>
+
+
+    <!-- THREE.JS CANVAS GOES HERE -->
+
+    <div
+        id="three-container"
+        class="three-container"
+    ></div>
+
+
+
+    <!-- HERO TEXT -->
+
+    <div class="hero-content">
+
+
+        <p class="hero-top-text">
+
+            FLYING FOX ADVENTURE
+
+        </p>
+
+
+        <h1 class="hero-title">
+
+            <span>
+                FLY
+            </span>
+
+            <span>
+                ABOVE
+            </span>
+
+            <span>
+                EVERYTHING
+            </span>
+
+        </h1>
+
+
+        <div class="hero-bottom">
+
+
+            <p>
+
+                MUNNAR
+                <span>•</span>
+
+                ZIPLINE
+                <span>•</span>
+
+                ADVENTURE
+
+            </p>
+
+
+            <a
+                href="#experience"
+                class="discover-button"
+            >
+
+                DISCOVER
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<section
+    id="experience"
+    class="experience-section"
+>
+
+    <div class="experience-inner">
+
+        <span class="section-label">
+            EXPERIENCE
+        </span>
+
+
+        <h2>
+
+            Feel the valley
+            from a different perspective.
+
+        </h2>
+
+
+        <p>
+
+            Ride high above the landscape,
+            experience the speed,
+            and discover Flying Fox.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+
+<script type="importmap">
+
+{
+    "imports": {
+
+        "three":
+        "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+
+        "three/addons/":
+        "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+}
+
+</script>
+
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js">
+</script>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js">
+</script>
+
+
+
+<script type="module">
+
+    window.RIDER_MODEL_URL =
+        "{% static 'frontend/models/rider.glb' %}";
+
+</script>
+
+
+
+<script
+    type="module"
+    src="{% static 'frontend/js/home-3d.js' %}">
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,303 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}
+Add Ride Price | FlyingFox Admin
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard sp_bottom_100">
+
+    <div class="container-fluid full__width__padding">
+
+        <div class="row">
+
+            <div class="col-xl-9 col-lg-10 col-md-12">
+
+                <div class="dashboard__section__title">
+
+                    <h4 class="mb-0">
+                        Add Ride Price
+                    </h4>
+
+                </div>
+
+
+                <div class="row mt-4">
+
+                    <div class="col-12">
+
+                        <form
+                            method="POST"
+                            class="form-wrapper"
+                            id="priceForm"
+                        >
+
+                            {% csrf_token %}
+
+
+                            <!-- Ride -->
+                            <div class="mb-4">
+
+                                <label
+                                    for="ride"
+                                    class="form-label"
+                                >
+                                    Ride
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+                                </label>
+
+
+                                <select
+                                    name="ride"
+                                    id="ride"
+                                    class="form-select modern-input"
+                                    required
+                                >
+
+                                    <option value="">
+                                        -- Select Ride --
+                                    </option>
+
+
+                                    {% for ride in rides %}
+
+                                    <option value="{{ ride.id }}">
+
+                                        {{ ride.name }}
+
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Date row -->
+                            <div class="row">
+
+
+                                <!-- Start Date -->
+                                <div class="col-md-6 mb-4">
+
+                                    <label
+                                        for="startDate"
+                                        class="form-label"
+                                    >
+                                        Start Date
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        name="start_date"
+                                        id="startDate"
+                                        class="form-control modern-input"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- End Date -->
+                                <div class="col-md-6 mb-4">
+
+                                    <label
+                                        for="endDate"
+                                        class="form-label"
+                                    >
+                                        End Date
+
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        name="end_date"
+                                        id="endDate"
+                                        class="form-control modern-input"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Price -->
+                            <div class="mb-4">
+
+                                <label
+                                    for="price"
+                                    class="form-label"
+                                >
+                                    Price
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+                                </label>
+
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        ₹
+                                    </span>
+
+                                    <input
+                                        type="number"
+                                        name="price"
+                                        id="price"
+                                        class="form-control modern-input"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="Enter price"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Active -->
+                            <div class="form-check mb-4">
+
+                                <input
+                                    type="checkbox"
+                                    name="is_active"
+                                    id="isActive"
+                                    class="form-check-input"
+                                    checked
+                                >
+
+                                <label
+                                    for="isActive"
+                                    class="form-check-label"
+                                >
+                                    Active
+                                </label>
+
+                            </div>
+
+
+                            <!-- Buttons -->
+                            <div class="dashboard__form__button">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Add Price
+                                </button>
+
+
+                                <a
+                                    href="{% url 'ride_price_list' %}"
+                                    class="btn btn-secondary"
+                                >
+                                    Cancel
+                                </a>
+
+                            </div>
+
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.form-wrapper {
+    max-width: 850px;
+}
+
+.modern-input {
+    min-height: 46px;
+}
+
+.input-group-text {
+    background: #fff7ed;
+    color: #f97316;
+    border-color: #d1d5db;
+    font-weight: 700;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const startDate =
+            document.getElementById(
+                "startDate"
+            );
+
+        const endDate =
+            document.getElementById(
+                "endDate"
+            );
+
+
+        startDate.addEventListener(
+            "change",
+            function () {
+
+                endDate.min =
+                    this.value;
+
+
+                if (
+                    endDate.value &&
+                    endDate.value < this.value
+                ) {
+
+                    endDate.value = "";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,557 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}
+Bookings | FlyingFox Admin
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard__form__wraper">
+
+    <!-- HEADER -->
+
+    <div class="create__course__title mb-4 d-flex justify-content-between align-items-center">
+
+        <div>
+
+            <h4>Bookings</h4>
+
+            <p class="text-muted mb-0">
+                Manage customer ride bookings.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'booking_create' %}"
+            class="btn btn-primary"
+        >
+
+            <i class="fas fa-plus"></i>
+
+            Manual Booking
+
+        </a>
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <form
+        method="GET"
+        class="booking-filter mb-4"
+    >
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            value="{{ search }}"
+            placeholder="Search customer, phone, email or ride..."
+        >
+
+
+        <select
+            name="status"
+            class="form-select"
+        >
+
+            <option value="">
+                All Status
+            </option>
+
+
+            {% for value, label in status_choices %}
+
+            <option
+                value="{{ value }}"
+                {% if selected_status == value %}
+                    selected
+                {% endif %}
+            >
+                {{ label }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Filter
+        </button>
+
+
+        <a
+            href="{% url 'booking_list' %}"
+            class="btn btn-secondary"
+        >
+            Clear
+        </a>
+
+    </form>
+
+
+    <!-- TABLE -->
+
+    <div class="custom-table-container">
+
+        <table class="table table-striped table-hover align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>Booking</th>
+
+                    <th>Customer</th>
+
+                    <th>Ride</th>
+
+                    <th>Date</th>
+
+                    <th>Persons</th>
+
+                    <th>Amount</th>
+
+                    <th>Status</th>
+
+                    <th class="text-center">
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for booking in bookings %}
+
+
+                <tr>
+
+                    <td>
+
+                        <span class="booking-id">
+
+                            {{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ booking.user.full_name }}
+                        </strong>
+
+                        <div class="small text-muted">
+                            {{ booking.user.phone }}
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ booking.ride.name }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ booking.booking_date|date:"d M Y" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ booking.quantity }}
+
+                    </td>
+
+
+                    <td>
+
+                        <strong class="price-text">
+
+                            ₹{{ booking.total_amount }}
+
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+
+
+                        {% if booking.status == "confirmed" %}
+
+                        <span class="badge bg-success">
+                            Confirmed
+                        </span>
+
+
+                        {% elif booking.status == "pending" %}
+
+                        <span class="badge bg-warning">
+                            Pending
+                        </span>
+
+
+                        {% elif booking.status == "checked_in" %}
+
+                        <span class="badge bg-primary">
+                            Checked In
+                        </span>
+
+
+                        {% elif booking.status == "cancelled" %}
+
+                        <span class="badge bg-danger">
+                            Cancelled
+                        </span>
+
+
+                        {% else %}
+
+                        <span class="badge bg-secondary">
+
+                            {{ booking.get_status_display }}
+
+                        </span>
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="booking-actions">
+
+
+                            <a
+                                href="{% url 'booking_detail' booking.id %}"
+                                class="btn btn-sm btn-info"
+                            >
+
+                                <i class="fas fa-eye"></i>
+
+                                View
+
+                            </a>
+
+
+                            <a
+                                href="{% url 'booking_update' booking.id %}"
+                                class="btn btn-sm btn-warning"
+                            >
+
+                                Edit
+
+                            </a>
+
+
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteBooking{{ booking.id }}"
+                            >
+
+                                Delete
+
+                            </button>
+
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                <!-- DELETE MODAL -->
+
+                <div
+                    class="modal fade"
+                    id="deleteBooking{{ booking.id }}"
+                    tabindex="-1"
+                >
+
+                    <div class="modal-dialog modal-dialog-centered">
+
+                        <div class="modal-content">
+
+
+                            <form
+                                method="POST"
+                                action="{% url 'booking_delete' booking.id %}"
+                            >
+
+                                {% csrf_token %}
+
+
+                                <div class="modal-header">
+
+                                    <h5 class="modal-title">
+
+                                        Delete Booking
+
+                                    </h5>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                    ></button>
+
+                                </div>
+
+
+                                <div class="modal-body">
+
+                                    Are you sure you want to delete this booking for
+
+                                    <strong>
+                                        {{ booking.user.full_name }}
+                                    </strong>?
+
+
+                                    <div class="alert alert-danger mt-3 mb-0">
+
+                                        Participant, payment and ticket
+                                        records connected to this booking
+                                        may also be deleted.
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="modal-footer">
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Cancel
+                                    </button>
+
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger"
+                                    >
+                                        Yes, Delete
+                                    </button>
+
+
+                                </div>
+
+
+                            </form>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {% empty %}
+
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        class="text-center py-5"
+                    >
+
+                        No bookings found.
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+
+    {% if bookings.has_other_pages %}
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+
+            {% if bookings.has_previous %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ bookings.previous_page_number }}&search={{ search }}&status={{ selected_status }}"
+                >
+                    &laquo;
+                </a>
+
+            </li>
+
+            {% endif %}
+
+
+            {% for number in bookings.paginator.page_range %}
+
+            <li class="page-item {% if bookings.number == number %}active{% endif %}">
+
+                <a
+                    class="page-link"
+                    href="?page={{ number }}&search={{ search }}&status={{ selected_status }}"
+                >
+
+                    {{ number }}
+
+                </a>
+
+            </li>
+
+            {% endfor %}
+
+
+            {% if bookings.has_next %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ bookings.next_page_number }}&search={{ search }}&status={{ selected_status }}"
+                >
+                    &raquo;
+                </a>
+
+            </li>
+
+            {% endif %}
+
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.booking-filter {
+    display: grid;
+
+    grid-template-columns:
+        minmax(250px, 1fr)
+        180px
+        auto
+        auto;
+
+    gap: 10px;
+
+    max-width: 850px;
+}
+
+
+.booking-id {
+
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.price-text {
+    color: #f97316;
+}
+
+
+.booking-actions {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 5px;
+}
+
+
+@media(max-width:767px) {
+
+    .booking-filter {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .custom-table-container {
+
+        overflow-x: auto;
+
+    }
+
+
+    .table {
+
+        min-width: 1000px;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

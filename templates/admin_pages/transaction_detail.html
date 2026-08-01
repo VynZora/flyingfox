@@ -1,0 +1,310 @@
+{% extends "admin_pages/base.html" %}
+
+{% block title %}
+Transaction Details | FlyingFox Admin
+{% endblock %}
+
+{% block content %}
+
+<div class="transaction-detail">
+
+    <div class="detail-header">
+
+        <div>
+
+            <h4>
+                Transaction Details
+            </h4>
+
+            <p class="text-muted mb-0">
+                Payment information for this booking.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'transaction_list' %}"
+            class="btn btn-secondary"
+        >
+            Back
+        </a>
+
+    </div>
+
+
+    <div class="detail-grid">
+
+        <!-- PAYMENT -->
+        <div class="detail-card">
+
+            <h5>
+                Payment
+            </h5>
+
+
+            <div class="info-row">
+
+                <span>Gateway</span>
+
+                <strong>
+                    {{ payment.gateway|title }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Gateway Order ID</span>
+
+                <strong>
+                    {{ payment.gateway_order_id|default:"-" }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Gateway Payment ID</span>
+
+                <strong>
+                    {{ payment.gateway_payment_id|default:"-" }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Status</span>
+
+                <strong>
+                    {{ payment.get_status_display }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Amount</span>
+
+                <strong class="price-text">
+                    ₹{{ payment.amount }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Paid At</span>
+
+                <strong>
+
+                    {% if payment.paid_at %}
+
+                        {{ payment.paid_at|date:"d M Y h:i A" }}
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Created At</span>
+
+                <strong>
+                    {{ payment.created_at|date:"d M Y h:i A" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOOKING -->
+        <div class="detail-card">
+
+            <h5>
+                Booking
+            </h5>
+
+
+            <div class="info-row">
+
+                <span>Booking ID</span>
+
+                <strong>
+                    {{ payment.booking.booking_id }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Customer</span>
+
+                <strong>
+                    {{ payment.booking.user.full_name }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Email</span>
+
+                <strong>
+                    {{ payment.booking.user.email }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Phone</span>
+
+                <strong>
+                    {{ payment.booking.user.phone }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Ride</span>
+
+                <strong>
+                    {{ payment.booking.ride.name }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Ride Date</span>
+
+                <strong>
+                    {{ payment.booking.booking_date|date:"d M Y" }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>Persons</span>
+
+                <strong>
+                    {{ payment.booking.quantity }}
+                </strong>
+
+            </div>
+
+
+            <a
+                href="{% url 'booking_detail' payment.booking.id %}"
+                class="btn btn-primary mt-3"
+            >
+                View Full Booking
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.transaction-detail {
+    max-width: 1100px;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.detail-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.detail-card h5 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 17px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 12px;
+}
+
+.info-row span {
+    color: #6b7280;
+}
+
+.info-row strong {
+    color: #1f2937;
+    text-align: right;
+    word-break: break-all;
+}
+
+.price-text {
+    color: #f97316 !important;
+    font-size: 16px;
+}
+
+@media(max-width:767px) {
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+</style>
+
+{% endblock %}

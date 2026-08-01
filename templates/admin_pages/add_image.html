@@ -1,0 +1,532 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}Add Images | Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard sp_bottom_100">
+    <div class="container-fluid full__width__padding">
+        <div class="row">
+            <!-- Sidebar comes from base.html -->
+
+            <!-- Main Content -->
+            <div class="col-xl-9 col-lg-9 col-md-12">
+                <div class="dashboard__section__title">
+                    <h4 class="mb-0">Add Images</h4>
+                   
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Form (wider + aligned) -->
+                    <div class="col-12">
+                       <form
+    method="POST"
+    enctype="multipart/form-data"
+    id="galleryForm"
+    class="form-wrapper"
+>
+
+    {% csrf_token %}
+
+    <!-- CATEGORY -->
+    <div class="mb-4">
+
+        <label class="form-label">
+            Category
+            <span class="text-danger">*</span>
+        </label>
+
+        <select
+            name="category"
+            class="form-select"
+            required
+        >
+
+            <option value="">
+                -- Select Category --
+            </option>
+
+            {% for category in categories %}
+
+            <option value="{{ category.id }}">
+                {{ category.name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- MULTIPLE IMAGES -->
+    <div class="mb-4">
+
+        <label class="form-label">
+            Images
+        </label>
+
+        <input
+            type="file"
+            name="images"
+            class="form-control"
+            accept="image/*"
+            multiple
+        >
+
+        <small class="text-muted">
+            You can select multiple images.
+        </small>
+
+    </div>
+
+
+    <!-- MULTIPLE VIDEOS -->
+    <div class="mb-4">
+
+        <label class="form-label">
+            Videos
+        </label>
+
+        <input
+            type="file"
+            name="videos"
+            class="form-control"
+            accept="video/*"
+            multiple
+        >
+
+        <small class="text-muted">
+            You can select multiple videos.
+        </small>
+
+    </div>
+
+
+    <button
+        type="submit"
+        class="btn btn-primary"
+    >
+        Upload Gallery
+    </button>
+
+
+    <a
+        href="{% url 'list_image' %}"
+        class="btn btn-secondary"
+    >
+        Cancel
+    </a>
+
+</form>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'add_category' %}" id="addCategoryForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="categoryName" name="name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Section Title */
+.dashboard__section__title {
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard__section__title h4 {
+    font-weight: 600;
+    color: #111827;
+    font-size: 1.5rem;
+}
+
+/* Form Wrapper - wider but centered */
+.form-wrapper {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+
+/* Form Inputs */
+.modern-input {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.modern-input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Buttons */
+.dashboard__form__button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dashboard__form__button .default__button {
+    background: #4f46e5;
+    color: #fff;
+    padding: 0.85rem 1.6rem;
+    border-radius: 8px;
+    font-weight: 500;
+    border: none;
+    transition: background 0.3s;
+    font-size: 1rem;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard__form__button .default__button:hover {
+    background: #4338ca;
+}
+
+.dashboard__form__button .secondary__button {
+    background: #6b7280;
+}
+
+.dashboard__form__button .secondary__button:hover {
+    background: #4b5563;
+}
+
+/* Image Previews */
+.image-previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.image-preview {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-preview .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: #ef4444;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Form labels and text */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Modal adjustments for mobile */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #eaeaea;
+}
+
+/* Responsive Design */
+/* Mobile devices (portrait) */
+@media (max-width: 575.98px) {
+    .dashboard__section__title h4 {
+        font-size: 1.25rem;
+    }
+    
+    .dashboard__section__title p {
+        font-size: 0.9rem;
+    }
+    
+    .form-wrapper {
+        padding: 0 10px;
+    }
+    
+    .modern-input {
+        padding: 0.75rem 0.9rem;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .dashboard__form__button {
+        flex-direction: column;
+    }
+    
+    .dashboard__form__button .default__button {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .image-previews {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .image-preview {
+        height: 100px;
+    }
+    
+    .image-preview .remove-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+    }
+    
+    /* Button in category label */
+    .btn-outline-primary {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .image-previews {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .image-preview {
+        height: 110px;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .form-wrapper {
+        max-width: 95%;
+    }
+    
+    .image-previews {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .form-wrapper {
+        max-width: 85%;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .form-wrapper {
+        max-width: 900px;
+    }
+}
+
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+    .modern-input, 
+    .form-select, 
+    .btn {
+        min-height: 44px; /* Better touch targets */
+    }
+    
+    .image-preview .remove-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .modern-input {
+        border-width: 2px;
+    }
+    
+    .btn-outline-primary {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .modern-input,
+    .btn {
+        transition: none;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('images');
+    const previewContainer = document.getElementById('imagePreviews');
+    const categorySelect = document.getElementById('category');
+    const addCategoryForm = document.getElementById('addCategoryForm');
+    const imageUploadForm = document.getElementById('imageUploadForm');
+    
+    // Image preview functionality
+    imageInput.addEventListener('change', function(e) {
+        previewContainer.innerHTML = '';
+        
+        if (this.files && this.files.length > 0) {
+            for (let i = 0; i < this.files.length; i++) {
+                const file = this.files[i];
+                
+                if (file.type.match('image.*')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const preview = document.createElement('div');
+                        preview.className = 'image-preview';
+                        
+                        preview.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}">
+                            <button type="button" class="remove-btn" data-index="${i}">&times;</button>
+                        `;
+                        
+                        previewContainer.appendChild(preview);
+                        
+                        // Add event listener to remove button
+                        const removeBtn = preview.querySelector('.remove-btn');
+                        removeBtn.addEventListener('click', function() {
+                            // Create a new FileList without the removed file
+                            const dt = new DataTransfer();
+                            for (let j = 0; j < imageInput.files.length; j++) {
+                                if (j !== parseInt(this.getAttribute('data-index'))) {
+                                    dt.items.add(imageInput.files[j]);
+                                }
+                            }
+                            imageInput.files = dt.files;
+                            
+                            // Remove the preview
+                            preview.remove();
+                        });
+                    }
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+    });
+    
+    // Form validation for image upload
+    imageUploadForm.addEventListener('submit', function(e) {
+        if (!imageUploadForm.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        imageUploadForm.classList.add('was-validated');
+    });
+    
+    // Handle category form submission with AJAX
+    addCategoryForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const categoryName = document.getElementById('categoryName').value;
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add the new category to the dropdown
+                const newOption = document.createElement('option');
+                newOption.value = data.category_id;
+                newOption.textContent = categoryName;
+                newOption.selected = true;
+                categorySelect.appendChild(newOption);
+                
+                // Close the modal and reset the form
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addCategoryModal'));
+                modal.hide();
+                addCategoryForm.reset();
+                
+                // Show success message
+                alert('Category added successfully!');
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the category.');
+        });
+    });
+});
+</script>
+{% endblock %}

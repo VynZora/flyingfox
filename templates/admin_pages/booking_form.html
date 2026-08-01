@@ -1,0 +1,741 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}
+{% if booking %}Update Booking{% else %}Manual Booking{% endif %}
+| FlyingFox Admin
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard__form__wraper">
+
+    <div class="create__course__title mb-4">
+
+        <h4>
+
+            {% if booking %}
+                Update Booking
+            {% else %}
+                Manual Booking
+            {% endif %}
+
+        </h4>
+
+    </div>
+
+
+    <form
+        method="POST"
+        id="bookingForm"
+        class="booking-form"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- CUSTOMER -->
+
+        <div class="mb-4">
+
+            <label class="form-label">
+
+                Customer
+                <span class="text-danger">*</span>
+
+            </label>
+
+
+            <select
+                name="user"
+                class="form-select"
+                required
+            >
+
+                <option value="">
+                    -- Select Customer --
+                </option>
+
+
+                {% for user in users %}
+
+                <option
+                    value="{{ user.id }}"
+                    {% if booking.user_id == user.id %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{ user.full_name }}
+                    - {{ user.phone }}
+
+                </option>
+
+                {% endfor %}
+
+
+            </select>
+
+        </div>
+
+
+        <!-- RIDE -->
+
+        <div class="mb-4">
+
+            <label class="form-label">
+
+                Ride
+                <span class="text-danger">*</span>
+
+            </label>
+
+
+            <select
+                name="ride"
+                id="rideSelect"
+                class="form-select"
+                required
+            >
+
+                <option value="">
+                    -- Select Ride --
+                </option>
+
+
+                {% for ride in rides %}
+
+                <option
+                    value="{{ ride.id }}"
+                    {% if booking.ride_id == ride.id %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{ ride.name }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- PRICE -->
+
+        <div class="mb-4">
+
+            <label class="form-label">
+
+                Ride Price
+                <span class="text-danger">*</span>
+
+            </label>
+
+
+            <select
+                name="ride_price"
+                id="priceSelect"
+                class="form-select"
+                required
+            >
+
+                <option value="">
+                    -- Select Price --
+                </option>
+
+
+                {% for price in prices %}
+
+                <option
+                    value="{{ price.id }}"
+                    data-ride="{{ price.ride_id }}"
+                    data-price="{{ price.price }}"
+                    {% if booking.ride_price_id == price.id %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{ price.ride.name }}
+                    —
+                    {{ price.start_date|date:"d M Y" }}
+                    to
+                    {{ price.end_date|date:"d M Y" }}
+                    —
+                    ₹{{ price.price }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- DATE -->
+
+        <div class="mb-4">
+
+            <label class="form-label">
+
+                Booking Date
+                <span class="text-danger">*</span>
+
+            </label>
+
+
+            <input
+                type="date"
+                name="booking_date"
+                class="form-control"
+                value="{% if booking %}{{ booking.booking_date|date:'Y-m-d' }}{% endif %}"
+                required
+            >
+
+        </div>
+
+
+        <!-- QUANTITY -->
+
+        <div class="mb-4">
+
+            <label class="form-label">
+
+                Number of Persons
+                <span class="text-danger">*</span>
+
+            </label>
+
+
+            <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                class="form-control"
+                value="{{ booking.quantity|default:'1' }}"
+                min="1"
+                max="50"
+                required
+            >
+
+        </div>
+
+
+        {% if not booking %}
+
+        <!-- PARTICIPANTS -->
+
+        <div class="participant-section">
+
+            <h5>
+                Participant Details
+            </h5>
+
+
+            <p class="text-muted">
+
+                Enter details for each person included
+                in this booking.
+
+            </p>
+
+
+            <div id="participantContainer">
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- PRICE SUMMARY -->
+
+        <div class="price-summary">
+
+            <div>
+
+                <span>
+                    Price / Person
+                </span>
+
+                <strong id="pricePerPerson">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Persons
+                </span>
+
+                <strong id="summaryQuantity">
+                    1
+                </strong>
+
+            </div>
+
+
+            <div class="summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="totalAmount">
+                    ₹0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="d-flex gap-2 mt-4">
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+
+                {% if booking %}
+
+                    Update Booking
+
+                {% else %}
+
+                    Create Booking
+
+                {% endif %}
+
+            </button>
+
+
+            <a
+                href="{% url 'booking_list' %}"
+                class="btn btn-secondary"
+            >
+
+                Cancel
+
+            </a>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.booking-form {
+
+    max-width: 900px;
+
+}
+
+
+.participant-section {
+
+    margin-top: 30px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid #e5e7eb;
+
+}
+
+
+.participant-section h5 {
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+}
+
+
+.participant-row {
+
+    display: grid;
+
+    grid-template-columns:
+        50px
+        minmax(200px, 1fr)
+        150px;
+
+    gap: 12px;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+
+}
+
+
+.person-number {
+
+    width: 36px;
+
+    height: 36px;
+
+    border-radius: 50%;
+
+    background: #fff7ed;
+
+    color: #f97316;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 700;
+
+}
+
+
+.price-summary {
+
+    max-width: 500px;
+
+    margin-top: 30px;
+
+    padding: 18px;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+}
+
+
+.price-summary > div {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 6px 0;
+
+    color: #4b5563;
+
+}
+
+
+.price-summary .summary-total {
+
+    margin-top: 8px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #fed7aa;
+
+    color: #ea580c;
+
+    font-size: 17px;
+
+}
+
+
+@media(max-width:600px) {
+
+    .participant-row {
+
+        grid-template-columns:
+            40px 1fr;
+
+    }
+
+
+    .participant-row .participant-age {
+
+        grid-column:
+            2;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const rideSelect =
+            document.getElementById(
+                "rideSelect"
+            );
+
+        const priceSelect =
+            document.getElementById(
+                "priceSelect"
+            );
+
+        const quantity =
+            document.getElementById(
+                "quantity"
+            );
+
+        const participantContainer =
+            document.getElementById(
+                "participantContainer"
+            );
+
+        const pricePerPerson =
+            document.getElementById(
+                "pricePerPerson"
+            );
+
+        const summaryQuantity =
+            document.getElementById(
+                "summaryQuantity"
+            );
+
+        const totalAmount =
+            document.getElementById(
+                "totalAmount"
+            );
+
+
+        /* =========================
+           FILTER PRICES BY RIDE
+        ========================== */
+
+        function filterPrices() {
+
+            const selectedRide =
+                rideSelect.value;
+
+
+            Array.from(
+                priceSelect.options
+            ).forEach(
+                function (option) {
+
+                    if (!option.value) {
+                        return;
+                    }
+
+
+                    const ride =
+                        option.dataset.ride;
+
+
+                    option.hidden =
+                        ride !== selectedRide;
+
+                }
+            );
+
+
+            const current =
+                priceSelect.options[
+                    priceSelect.selectedIndex
+                ];
+
+
+            if (
+                current &&
+                current.value &&
+                current.dataset.ride !== selectedRide
+            ) {
+
+                priceSelect.value = "";
+
+            }
+
+
+            updatePrice();
+
+        }
+
+
+
+        /* =========================
+           PARTICIPANTS
+        ========================== */
+
+        function buildParticipants() {
+
+            if (!participantContainer) {
+                return;
+            }
+
+
+            const count =
+                parseInt(
+                    quantity.value
+                ) || 1;
+
+
+            participantContainer.innerHTML =
+                "";
+
+
+            for (
+                let i = 1;
+                i <= count;
+                i++
+            ) {
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "participant-row";
+
+
+                row.innerHTML = `
+
+                    <div class="person-number">
+                        ${i}
+                    </div>
+
+
+                    <input
+                        type="text"
+                        name="participant_name"
+                        class="form-control"
+                        placeholder="Full Name"
+                        required
+                    >
+
+
+                    <input
+                        type="number"
+                        name="participant_age"
+                        class="form-control participant-age"
+                        placeholder="Age"
+                        min="1"
+                        required
+                    >
+
+                `;
+
+
+                participantContainer.appendChild(
+                    row
+                );
+
+            }
+
+
+            updatePrice();
+
+        }
+
+
+
+        /* =========================
+           PRICE
+        ========================== */
+
+        function updatePrice() {
+
+            const selectedOption =
+                priceSelect.options[
+                    priceSelect.selectedIndex
+                ];
+
+
+            let price = 0;
+
+
+            if (
+                selectedOption &&
+                selectedOption.dataset.price
+            ) {
+
+                price =
+                    parseFloat(
+                        selectedOption.dataset.price
+                    );
+
+            }
+
+
+            const count =
+                parseInt(
+                    quantity.value
+                ) || 1;
+
+
+            pricePerPerson.textContent =
+                "₹" + price.toFixed(2);
+
+
+            summaryQuantity.textContent =
+                count;
+
+
+            totalAmount.textContent =
+                "₹" +
+                (
+                    price * count
+                ).toFixed(2);
+
+        }
+
+
+
+        rideSelect.addEventListener(
+            "change",
+            filterPrices
+        );
+
+
+        priceSelect.addEventListener(
+            "change",
+            updatePrice
+        );
+
+
+        quantity.addEventListener(
+            "input",
+            function () {
+
+                buildParticipants();
+
+            }
+        );
+
+
+        filterPrices();
+
+        buildParticipants();
+
+    }
+);
+
+</script>
+
+{% endblock %}

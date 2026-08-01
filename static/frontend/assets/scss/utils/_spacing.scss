@@ -1,0 +1,8 @@
+@use "mixin" as *;
+
+/*====================
+4. Margin & padding
+======================*/
+
+@include generateSpacing(padding , p);
+@include generateSpacing(margin , m);

@@ -1,0 +1,1099 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Create Account | FlyingFox Adventures
+    </title>
+
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        :root {
+
+            --orange: #ff6819;
+
+            --orange-dark: #e95008;
+
+            --orange-light: #fff3eb;
+
+            --dark: #171b24;
+
+            --text: #646b78;
+
+            --border: #e5e7eb;
+
+            --white: #ffffff;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f5f6f8;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px;
+        }
+
+
+        /* =============================
+           AUTH CONTAINER
+        ============================== */
+
+        .auth-wrapper {
+
+            width: 100%;
+
+            max-width: 1100px;
+
+            min-height: auto;
+
+            background: white;
+
+            border-radius: 26px;
+
+            overflow: hidden;
+
+            display: grid;
+
+            grid-template-columns:
+                44% 56%;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.09);
+        }
+
+
+        /* =============================
+           LEFT SIDE
+        ============================== */
+
+        .auth-visual {
+
+            position: relative;
+
+            padding: 45px;
+
+            color: white;
+
+            overflow: hidden;
+
+            background:
+
+                linear-gradient(
+                    180deg,
+                    rgba(255,104,25,.92),
+                    rgba(255,82,5,.95) 55%,
+                    #291812 100%
+                );
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+        }
+
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 25px;
+
+            font-weight: 800;
+        }
+
+
+        .brand-icon {
+
+            width: 40px;
+
+            height: 40px;
+
+            border-radius: 50%;
+
+            background: white;
+
+            color: var(--orange);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        .visual-content {
+
+            position: relative;
+
+            z-index: 5;
+
+            max-width: 410px;
+        }
+
+
+        .visual-content h1 {
+
+            font-size: 42px;
+
+            line-height: 1.15;
+
+            margin-bottom: 16px;
+        }
+
+
+        .visual-content p {
+
+            font-size: 17px;
+
+            line-height: 1.8;
+
+            color:
+                rgba(255,255,255,.9);
+        }
+
+
+        /* zipline illustration */
+
+        .zipline-scene {
+
+            position: relative;
+
+            height: 220px;
+
+            margin:
+                30px -45px 15px;
+        }
+
+
+        .zipline-wire {
+
+            position: absolute;
+
+            width: 120%;
+
+            height: 2px;
+
+            background: #2e1d18;
+
+            top: 40px;
+
+            left: -10%;
+
+            transform: rotate(-15deg);
+        }
+
+
+        .rider {
+
+            position: absolute;
+
+            left: 48%;
+
+            top: 65px;
+
+            font-size: 75px;
+
+            transform: rotate(-10deg);
+
+            color: #271812;
+        }
+
+
+        .mountain {
+
+            position: absolute;
+
+            bottom: -20px;
+
+            width: 100%;
+
+            text-align: center;
+
+            font-size: 130px;
+
+            color:
+                rgba(59,30,20,.45);
+        }
+
+
+        .features {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+
+            position: relative;
+
+            z-index: 5;
+        }
+
+
+        .feature i {
+
+            font-size: 20px;
+
+            margin-bottom: 9px;
+        }
+
+
+        .feature strong {
+
+            display: block;
+
+            font-size: 13px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .feature span {
+
+            font-size: 11px;
+
+            color:
+                rgba(255,255,255,.75);
+        }
+
+
+        /* =============================
+           RIGHT FORM
+        ============================== */
+
+        .auth-form-section {
+
+            padding:
+                35px 70px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            position: relative;
+        }
+
+
+        .auth-form {
+
+            width: 100%;
+
+            max-width: 510px;
+        }
+
+
+        .auth-title {
+
+            text-align: center;
+
+            margin-bottom: 18px;
+        }
+
+
+        .auth-title h2 {
+
+            font-size: 35px;
+
+            color: var(--dark);
+
+            margin-bottom: 8px;
+
+            font-weight: 750;
+        }
+
+
+        .auth-title p {
+
+            color: var(--text);
+
+            font-size: 15px;
+        }
+
+
+        /* messages */
+
+        .message {
+
+            padding: 12px 15px;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            font-size: 13px;
+        }
+
+
+        .message.error {
+
+            background: #fff0f0;
+
+            color: #d92d20;
+
+            border:
+                1px solid #ffcaca;
+        }
+
+
+        .message.success {
+
+            background: #ecfdf3;
+
+            color: #027a48;
+
+            border:
+                1px solid #abefc6;
+        }
+
+
+        /* inputs */
+
+        .form-group {
+
+            margin-bottom: 14px;
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #262b35;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+
+        .input-wrapper > i {
+
+            position: absolute;
+
+            left: 16px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: var(--orange);
+
+            font-size: 15px;
+        }
+
+
+        .input-wrapper input {
+
+            width: 100%;
+
+            height: 44px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 9px;
+
+            padding:
+                0 48px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: .25s;
+
+            background: white;
+        }
+
+
+        .input-wrapper input:focus {
+
+            border-color:
+                var(--orange);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(255,104,25,.10);
+        }
+
+
+        .password-toggle {
+
+            position: absolute;
+
+            right: 15px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            color: #848b96;
+
+            font-size: 15px;
+        }
+
+
+        .submit-btn {
+
+            width: 100%;
+
+            height: 54px;
+
+            margin-top: 8px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ff5c11,
+                    #ff751c
+                );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .25s;
+
+            box-shadow:
+                0 9px 18px
+                rgba(255,104,25,.18);
+        }
+
+
+        .submit-btn:hover {
+
+            background:
+                var(--orange-dark);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .signin-text {
+
+            text-align: center;
+
+            margin-top: 28px;
+
+            font-size: 14px;
+
+            color: var(--text);
+        }
+
+
+        .signin-text a {
+
+            color:
+                var(--orange);
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+
+        /* =============================
+           RESPONSIVE
+        ============================== */
+
+        @media(max-width: 991px) {
+
+            body {
+                padding: 0;
+            }
+
+
+            .auth-wrapper {
+
+                border-radius: 0;
+
+                min-height: 100vh;
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .auth-visual {
+
+                min-height: 340px;
+
+                padding: 35px;
+            }
+
+
+            .visual-content h1 {
+                font-size: 32px;
+            }
+
+
+            .zipline-scene {
+
+                display: none;
+            }
+
+
+            .features {
+
+                margin-top: 30px;
+            }
+
+
+            .auth-form-section {
+
+                padding:
+                    55px 35px;
+            }
+
+        }
+
+
+        @media(max-width: 575px) {
+
+            .auth-visual {
+
+                min-height: 280px;
+
+                padding:
+                    28px 22px;
+            }
+
+
+            .brand {
+
+                font-size: 21px;
+            }
+
+
+            .visual-content h1 {
+
+                font-size: 28px;
+
+                margin-top: 30px;
+            }
+
+
+            .visual-content p {
+
+                font-size: 14px;
+            }
+
+
+            .features {
+
+                display: none;
+            }
+
+
+            .auth-form-section {
+
+                padding:
+                    45px 20px;
+            }
+
+
+            .auth-title h2 {
+
+                font-size: 28px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="auth-wrapper">
+
+
+    <!-- ==========================
+         LEFT SIDE
+    =========================== -->
+
+    <section class="auth-visual">
+
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-person-falling"></i>
+            </div>
+
+            FlyingFox
+
+        </div>
+
+
+        <div>
+
+
+            <div class="visual-content">
+
+                <h1>
+                    Join the Adventure!
+                </h1>
+
+                <p>
+                    Create your account and start
+                    your journey with the ultimate
+                    zipline experience.
+                </p>
+
+            </div>
+
+
+            <div class="zipline-scene">
+
+                <div class="zipline-wire"></div>
+
+                <div class="rider">
+                    <i class="fa-solid fa-person-falling"></i>
+                </div>
+
+                <div class="mountain">
+                    ▲ ▲ ▲
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="features">
+
+
+            <div class="feature">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <strong>
+                    Safe & Secure
+                </strong>
+
+                <span>
+                    Top-notch safety standards
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <i class="fa-regular fa-clock"></i>
+
+                <strong>
+                    Best Experience
+                </strong>
+
+                <span>
+                    Unforgettable adventures
+                </span>
+
+            </div>
+
+
+            <div class="feature">
+
+                <i class="fa-solid fa-headset"></i>
+
+                <strong>
+                    24/7 Support
+                </strong>
+
+                <span>
+                    We're always here to help
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================
+         RIGHT SIDE
+    =========================== -->
+
+    <section class="auth-form-section">
+
+
+        <form
+            method="POST"
+            class="auth-form"
+            id="signupForm"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="auth-title">
+
+                <h2>
+                    Create Account
+                </h2>
+
+                <p>
+                    Sign up to get started
+                </p>
+
+            </div>
+
+
+            <!-- Messages -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div
+                        class="message {% if message.tags %}{{ message.tags }}{% endif %}"
+                    >
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-user"></i>
+
+                    <input
+                        type="text"
+                        name="full_name"
+                        value="{{ form_data.full_name|default:'' }}"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label>
+                    Email Address
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-regular fa-envelope"></i>
+
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ form_data.email|default:'' }}"
+                        placeholder="Enter your email address"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label>
+                    Phone Number
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-phone"></i>
+
+                    <input
+                        type="tel"
+                        name="phone"
+                        value="{{ form_data.phone|default:'' }}"
+                        placeholder="Enter your phone number"
+                        autocomplete="tel"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        data-target="password"
+                    >
+
+                        <i class="fa-regular fa-eye"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label>
+                    Confirm Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        name="confirm_password"
+                        id="confirmPassword"
+                        placeholder="Confirm your password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        data-target="confirmPassword"
+                    >
+
+                        <i class="fa-regular fa-eye"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+                Create Account
+            </button>
+
+
+            <p class="signin-text">
+
+                Already have an account?
+
+                <a href="{% url 'user_signin' %}">
+                    Sign in
+                </a>
+
+            </p>
+
+
+        </form>
+
+    </section>
+
+
+</div>
+
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const toggleButtons =
+            document.querySelectorAll(
+                ".password-toggle"
+            );
+
+
+        toggleButtons.forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const targetId =
+                            this.dataset.target;
+
+                        const input =
+                            document.getElementById(
+                                targetId
+                            );
+
+                        const icon =
+                            this.querySelector("i");
+
+
+                        if (
+                            input.type === "password"
+                        ) {
+
+                            input.type = "text";
+
+                            icon.classList.remove(
+                                "fa-eye"
+                            );
+
+                            icon.classList.add(
+                                "fa-eye-slash"
+                            );
+
+                        } else {
+
+                            input.type = "password";
+
+                            icon.classList.remove(
+                                "fa-eye-slash"
+                            );
+
+                            icon.classList.add(
+                                "fa-eye"
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

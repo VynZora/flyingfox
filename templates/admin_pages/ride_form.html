@@ -1,0 +1,465 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}
+{% if ride %}Update Ride{% else %}Add Ride{% endif %} | FlyingFox Admin
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard__form__wraper">
+
+    <div class="create__course__title mb-4">
+
+        <h4>
+            {% if ride %}
+                Update Ride
+            {% else %}
+                Add Ride
+            {% endif %}
+        </h4>
+
+    </div>
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="ride-form"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- NAME -->
+        <div class="mb-4">
+
+            <label class="form-label">
+                Ride Name
+                <span class="text-danger">*</span>
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                class="form-control"
+                value="{{ ride.name|default:'' }}"
+                placeholder="Example: Mega Zipline Adventure"
+                required
+            >
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+<div class="mb-4">
+
+    <label
+        for="rideDescription"
+        class="form-label"
+    >
+        Full Description
+        <span class="text-danger">*</span>
+    </label>
+
+    <textarea
+        name="description"
+        id="rideDescription"
+        class="form-control"
+        required
+    >{{ ride.description|default:'' }}</textarea>
+
+</div>
+
+
+        <!-- DURATION -->
+        <div class="mb-4">
+
+            <label class="form-label">
+                Duration
+                <span class="text-danger">*</span>
+            </label>
+
+            <input
+                type="text"
+                name="duration"
+                class="form-control"
+                value="{{ ride.duration|default:'' }}"
+                placeholder="Example: 30 Minutes"
+                required
+            >
+
+        </div>
+
+
+        <!-- SAFETY NOTES -->
+        <div class="mb-4">
+
+            <label class="form-label">
+                Safety Notes
+            </label>
+
+            <textarea
+                name="safety_notes"
+                class="form-control"
+                rows="5"
+                placeholder="Enter safety instructions..."
+            >{{ ride.safety_notes|default:'' }}</textarea>
+
+        </div>
+
+
+        <!-- IMAGES -->
+        <div class="mb-4">
+
+            <label class="form-label">
+                Ride Images
+            </label>
+
+            <input
+                type="file"
+                name="images"
+                id="rideImages"
+                class="form-control"
+                accept="image/*"
+                multiple
+            >
+
+            <small class="text-muted">
+                You can select multiple images.
+            </small>
+
+
+            <div
+                id="imagePreview"
+                class="ride-preview-grid mt-3"
+            ></div>
+
+        </div>
+
+
+        <!-- CURRENT MEDIA -->
+        {% if ride %}
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Current Images / Videos
+            </label>
+
+
+            <div class="ride-preview-grid">
+
+                {% for media in ride.media.all %}
+
+                <div class="ride-media-card">
+
+                    {% if media.media_type == "image" %}
+
+                        {% if media.image %}
+
+                        <img
+                            src="{{ media.image.url }}"
+                            alt="Ride Image"
+                        >
+
+                        {% endif %}
+
+
+                    {% elif media.media_type == "video" %}
+
+
+                        {% if media.thumbnail %}
+
+                        <img
+                            src="{{ media.thumbnail.url }}"
+                            alt="Video"
+                        >
+
+
+                        {% elif media.video %}
+
+                        <video controls>
+
+                            <source src="{{ media.video.url }}">
+
+                        </video>
+
+                        {% endif %}
+
+
+                    {% endif %}
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'ride_media_delete' media.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="media-delete-btn"
+                        >
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-muted">
+                    No media added.
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- VIDEO -->
+        <div class="mb-4">
+
+            <label class="form-label">
+                Upload Video
+            </label>
+
+            <input
+                type="file"
+                name="video"
+                class="form-control"
+                accept="video/*"
+            >
+
+        </div>
+
+
+        <!-- ACTIVE -->
+        <div class="form-check mb-4">
+
+            <input
+                type="checkbox"
+                name="is_active"
+                id="isActive"
+                class="form-check-input"
+                {% if not ride or ride.is_active %}checked{% endif %}
+            >
+
+            <label
+                for="isActive"
+                class="form-check-label"
+            >
+                Active Ride
+            </label>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div class="d-flex gap-2">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+
+                {% if ride %}
+                    Update Ride
+                {% else %}
+                    Add Ride
+                {% endif %}
+
+            </button>
+
+
+            <a
+                href="{% url 'ride_list' %}"
+                class="btn btn-secondary"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.ride-form {
+    max-width: 900px;
+}
+
+.ride-preview-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(150px, 1fr));
+
+    gap: 15px;
+}
+
+.ride-media-card {
+    position: relative;
+
+    height: 140px;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb;
+
+    background: #f9fafb;
+}
+
+.ride-media-card img,
+.ride-media-card video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.media-delete-btn {
+    position: absolute;
+
+    top: 6px;
+    right: 6px;
+
+    width: 28px;
+    height: 28px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #dc2626;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<!-- CKEditor -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================================
+       CKEDITOR
+    ========================================= */
+
+    const descriptionField =
+        document.querySelector("#rideDescription");
+
+    if (descriptionField) {
+
+        ClassicEditor
+            .create(descriptionField, {
+
+                toolbar: [
+                    "heading",
+                    "|",
+                    "bold",
+                    "italic",
+                    "link",
+                    "|",
+                    "bulletedList",
+                    "numberedList",
+                    "|",
+                    "blockQuote",
+                    "insertTable",
+                    "|",
+                    "undo",
+                    "redo"
+                ]
+
+            })
+            .catch(error => {
+                console.error("CKEditor error:", error);
+            });
+    }
+
+
+    /* =========================================
+       IMAGE PREVIEW
+    ========================================= */
+
+    const input =
+        document.getElementById("rideImages");
+
+    const preview =
+        document.getElementById("imagePreview");
+
+    if (input && preview) {
+
+        input.addEventListener(
+            "change",
+            function () {
+
+                preview.innerHTML = "";
+
+                Array.from(this.files).forEach(
+                    function (file) {
+
+                        const reader =
+                            new FileReader();
+
+                        reader.onload =
+                            function (event) {
+
+                                const box =
+                                    document.createElement(
+                                        "div"
+                                    );
+
+                                box.className =
+                                    "ride-media-card";
+
+                                box.innerHTML = `
+                                    <img
+                                        src="${event.target.result}"
+                                        alt="Ride Image"
+                                    >
+                                `;
+
+                                preview.appendChild(box);
+                            };
+
+                        reader.readAsDataURL(file);
+                    }
+                );
+            }
+        );
+    }
+
+});
+</script>
+
+{% endblock %}

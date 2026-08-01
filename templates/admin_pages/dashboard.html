@@ -1,0 +1,613 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard | WorldByArk{% endblock %}
+
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+<div class="dashboard-wrap">
+
+    <div class="stats-grid">
+
+        <div class="stat-card stat-green">
+            <div class="stat-top">
+                <span class="stat-label">Blogs / News</span>
+                <div class="stat-icon"><i class="icofont-read-book"></i></div>
+            </div>
+            <div class="stat-value">{{ stats.total_blogs }}</div>
+            <div class="stat-footer">
+                <span class="pill pill-green">{{ stats.blogs_this_month }} this month</span>
+            </div>
+        </div>
+
+        <div class="stat-card stat-blue">
+            <div class="stat-top">
+                <span class="stat-label">Gallery Images</span>
+                <div class="stat-icon"><i class="icofont-picture"></i></div>
+            </div>
+            <div class="stat-value">{{ stats.total_gallery }}</div>
+            <div class="stat-footer">Total Uploaded</div>
+        </div>
+
+        <div class="stat-card stat-purple">
+            <div class="stat-top">
+                <span class="stat-label">Destinations</span>
+                <div class="stat-icon"><i class="icofont-location-pin"></i></div>
+            </div>
+            <div class="stat-value">{{ stats.total_destinations }}</div>
+            <div class="stat-footer">Total Listings</div>
+        </div>
+
+        <div class="stat-card stat-orange">
+            <div class="stat-top">
+                <span class="stat-label">Contact Messages</span>
+                <div class="stat-icon"><i class="icofont-envelope"></i></div>
+            </div>
+            <div class="stat-value">{{ stats.total_contacts }}</div>
+            <div class="stat-footer">Total Received</div>
+        </div>
+
+        <div class="stat-card stat-primary">
+            <div class="stat-top">
+                <span class="stat-label">Tour Packages</span>
+                <div class="stat-icon"><i class="icofont-package"></i></div>
+            </div>
+            <div class="stat-value">{{ stats.total_packages }}</div>
+            <div class="stat-footer">Total Active</div>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-row">
+
+        <div class="chart-card chart-wide">
+            <div class="card-header">
+                <span class="card-title">Activity Over Time (Last 6 Months)</span>
+            </div>
+            <div class="chart-body">
+                <canvas id="projectsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card chart-narrow">
+            <div class="card-header">
+                <span class="card-title">Gallery By Category</span>
+            </div>
+            <div class="chart-body">
+                <canvas id="servicesChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Recent Projects & Packages Side-by-Side -->
+    {% comment %} <div class="data-row">
+        <!-- Recent Blogs -->
+        <div class="data-card">
+            <div class="card-header">
+                <span class="card-title">Recent Blogs</span>
+                <a href="{% url 'admin_blog_list' %}" class="view-all-link">View All →</a>
+            </div>
+            <ul class="feed-list">
+                {% for blog in recent_blogs %}
+                <li class="feed-item">
+                    <div class="feed-avatar feed-avatar-green">
+                        <i class="icofont-read-book"></i>
+                    </div>
+                    <div class="feed-content">
+                        <p class="feed-name">{{ blog.title }}</p>
+                        <p class="feed-meta">
+                            {{ blog.created_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="feed-empty">No blogs added yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Recent Camping Packages -->
+        {% comment %} <div class="data-card">
+            <div class="card-header">
+                <span class="card-title">Recent Packages</span>
+                <a href="{% url 'admin_package_list' %}" class="view-all-link">View All →</a>
+            </div>
+            <ul class="feed-list">
+                {% for package in recent_packages %}
+                <li class="feed-item">
+                    <div class="feed-avatar feed-avatar-primary">
+                        <i class="icofont-tent"></i>
+                    </div>
+                    <div class="feed-content">
+                        <p class="feed-name">{{ package.name }}</p>
+                        <p class="feed-sub">{{ package.normal_price|default:"0.00" }}</p>
+                        <p class="feed-meta">
+                            <i class="icofont-clock-time"></i> {{ package.created_at|timesince }} ago
+                        </p>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="feed-empty">No tour packages yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Inquiries + Contacts side by side -->
+    <div class="data-row">
+
+        <div class="data-card">
+            <div class="card-header">
+                <span class="card-title">Recent Destinations</span>
+                <a href="{% url 'admin_destination_list' %}" class="view-all-link">View All →</a>
+            </div>
+            <ul class="feed-list">
+                {% for destination in recent_destinations %}
+                <li class="feed-item">
+                    <div class="feed-avatar feed-avatar-purple">
+                        <i class="icofont-location-pin"></i>
+                    </div>
+                    <div class="feed-content">
+                        <p class="feed-name">{{ destination.name }}</p>
+                        <p class="feed-sub">{{ destination.location|default:"Location TBD" }}</p>
+                        <p class="feed-meta">
+                            {{ destination.created_at|timesince }} ago
+                        </p>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="feed-empty">No destinations added yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="data-card">
+            <div class="card-header">
+                <span class="card-title">Recent Contact Messages</span>
+                <a href="{% url 'view_contacts' %}" class="view-all-link">View All →</a>
+            </div>
+            <ul class="feed-list">
+                {% for contact in recent_contacts %}
+                <li class="feed-item">
+                    <div class="feed-avatar feed-avatar-orange">
+                        <i class="icofont-envelope"></i>
+                    </div>
+                    <div class="feed-content">
+                        <p class="feed-name">{{ contact.first_name }} {{ contact.last_name }}</p>
+                        <p class="feed-sub">{{ contact.message|truncatewords:10 }}</p>
+                        <p class="feed-meta">
+                            <i class="icofont-phone"></i> {{ contact.phone }} &nbsp;·&nbsp; {{ contact.created_at|timesince }} ago
+                        </p>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="feed-empty">No contact messages yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div> {% endcomment %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        new Chart(document.getElementById('projectsChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [{% for lbl in month_labels %}'{{ lbl }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Blogs / News',
+            data: {{ blogs_counts| safe }},
+        backgroundColor: 'rgba(34, 197, 94, 0.08)',
+        borderColor: '#22c55e',
+        borderWidth: 2.5,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 5,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#22c55e',
+        pointBorderWidth: 2
+            },
+        {
+            label: 'Contact Messages',
+            data: {{ contacts_counts| safe }},
+        backgroundColor: 'rgba(245, 158, 11, 0.08)',
+        borderColor: '#f59e0b',
+        borderWidth: 2.5,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 5,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#f59e0b',
+        pointBorderWidth: 2
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: true, position: 'top' },
+            tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1, color: '#9ca3af' },
+                grid: { color: '#f3f4f6' },
+                border: { color: 'transparent' }
+            },
+            x: {
+                ticks: { color: '#9ca3af' },
+                grid: { display: false },
+                border: { color: '#f3f4f6' }
+            }
+        }
+    }
+    });
+
+    new Chart(document.getElementById('servicesChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: [{% for lbl in service_labels %}'{{ lbl|safe }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            data: {{ service_counts| safe }},
+        backgroundColor: ['#22c55e', '#3b82f6', '#a855f7', '#f59e0b', '#ef4444', '#6b7280'],
+        borderWidth: 3,
+        borderColor: '#fff'
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: { boxWidth: 10, padding: 16, usePointStyle: true, color: '#6b7280', font: { size: 12 } }
+            }
+        }
+    }
+    });
+});
+</script>
+
+<style>
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    .dashboard-wrap {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        padding: 28px 32px;
+        background: #f7f8fc;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    /* Stats */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 14px;
+        padding: 22px 24px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        border-top: 3px solid transparent;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
+    }
+
+    .stat-green {
+        border-top-color: #22c55e;
+    }
+
+    .stat-blue {
+        border-top-color: #3b82f6;
+    }
+
+    .stat-purple {
+        border-top-color: #a855f7;
+    }
+
+    .stat-orange {
+        border-top-color: #f59e0b;
+    }
+
+    .stat-primary {
+        border-top-color: #4f46e5;
+    }
+
+    .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        color: #9ca3af;
+    }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .stat-green .stat-icon {
+        background: #f0fdf4;
+        color: #22c55e;
+    }
+
+    .stat-blue .stat-icon {
+        background: #eff6ff;
+        color: #3b82f6;
+    }
+
+    .stat-purple .stat-icon {
+        background: #faf5ff;
+        color: #a855f7;
+    }
+
+    .stat-orange .stat-icon {
+        background: #fffbeb;
+        color: #f59e0b;
+    }
+
+    .stat-primary .stat-icon {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .stat-value {
+        font-size: 30px;
+        font-weight: 800;
+        color: #111827;
+        letter-spacing: -1px;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .stat-footer {
+        font-size: 12px;
+        color: #9ca3af;
+        font-weight: 500;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .pill {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 9px;
+        border-radius: 20px;
+    }
+
+    .pill-green {
+        background: #f0fdf4;
+        color: #16a34a;
+    }
+
+    /* Charts */
+    .charts-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 18px;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 14px;
+        padding: 22px 24px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        height: 340px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chart-body {
+        flex: 1;
+        position: relative;
+        min-height: 0;
+    }
+
+    /* Data cards */
+    .data-card {
+        background: white;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .data-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    /* Card header */
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .card-badge {
+        font-size: 11px;
+        font-weight: 600;
+        background: #f0fdf4;
+        color: #22c55e;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+
+    .view-all-link {
+        font-size: 13px;
+        font-weight: 600;
+        color: #3b82f6;
+        text-decoration: none;
+    }
+
+    .view-all-link:hover {
+        opacity: 0.75;
+    }
+
+    /* Feed */
+    .feed-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-height: 320px;
+        overflow-y: auto;
+    }
+
+    .feed-item {
+        display: flex;
+        gap: 14px;
+        padding: 14px 22px;
+        border-bottom: 1px solid #f9fafb;
+        align-items: flex-start;
+        transition: background 0.15s;
+    }
+
+    .feed-item:last-child {
+        border-bottom: none;
+    }
+
+    .feed-item:hover {
+        background: #fafafa;
+    }
+
+    .feed-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1rem;
+    }
+
+    .feed-avatar-green {
+        background: #f0fdf4;
+        color: #22c55e;
+    }
+
+    .feed-avatar-purple {
+        background: #faf5ff;
+        color: #a855f7;
+    }
+
+    .feed-avatar-orange {
+        background: #fffbeb;
+        color: #f59e0b;
+    }
+
+    .feed-avatar-primary {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .feed-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .feed-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+        margin: 0 0 2px;
+    }
+
+    .feed-sub {
+        font-size: 13px;
+        color: #3b82f6;
+        font-weight: 500;
+        margin: 0 0 3px;
+    }
+
+    .feed-meta {
+        font-size: 11px;
+        color: #9ca3af;
+        margin: 0;
+    }
+
+    .feed-empty {
+        padding: 24px 22px;
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .charts-row {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-card {
+            height: 300px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .data-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .dashboard-wrap {
+            padding: 16px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+{% endblock %}

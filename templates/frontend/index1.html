@@ -1,0 +1,925 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Flying Fox Adventures
+{% endblock %}
+
+
+{% block content %}
+
+
+<section
+    class="ff-scroll-section"
+    id="ffScrollSection"
+>
+
+    <div class="ff-sticky-scene">
+
+
+        <!-- =========================================
+             VIDEO
+        ========================================== -->
+
+        <video
+            id="ffHeroVideo"
+            class="ff-hero-video"
+            muted
+            playsinline
+            webkit-playsinline
+            preload="auto"
+        >
+
+            <source
+                src="{% static 'frontend/video/zipline-scroll.mp4' %}"
+                type="video/mp4"
+            >
+
+        </video>
+
+
+
+        <!-- =========================================
+             DARK OVERLAY
+        ========================================== -->
+
+        <div class="ff-video-overlay"></div>
+
+
+
+        <!-- =========================================
+             BRAND
+        ========================================== -->
+
+        <div class="ff-brand">
+
+            <strong>
+                FLYING FOX
+            </strong>
+
+            <span>
+                ADVENTURES
+            </span>
+
+        </div>
+
+
+
+        <!-- =========================================
+             SCENE 1
+        ========================================== -->
+
+        <div class="ff-content ff-scene-1 active">
+
+            <span class="ff-label">
+                FLYING FOX
+            </span>
+
+            <h2>
+                Begin Your Adventure
+            </h2>
+
+            <p>
+                Step onto the launch platform and prepare
+                to experience the valley from above.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================================
+             SCENE 2
+        ========================================== -->
+
+        <div class="ff-content ff-scene-2">
+
+            <span class="ff-label">
+                THE RIDE
+            </span>
+
+            <h2>
+                Glide Above Nature
+            </h2>
+
+            <p>
+                Travel high above the river, forest and
+                mountains on an unforgettable zipline journey.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================================
+             SCENE 3
+        ========================================== -->
+
+        <div class="ff-content ff-scene-3">
+
+            <span class="ff-label">
+                PURE ADVENTURE
+            </span>
+
+            <h2>
+                Feel The Speed
+            </h2>
+
+            <p>
+                Experience height, movement and open-air
+                freedom as you cross the valley.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================================
+             SCENE 4
+        ========================================== -->
+
+        <div class="ff-content ff-scene-4">
+
+            <span class="ff-label">
+                ABOVE THE VALLEY
+            </span>
+
+            <h2>
+                A View Like No Other
+            </h2>
+
+            <p>
+                Watch the river and forest pass beneath you
+                while travelling toward the opposite side.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================================
+             FINAL SCENE
+        ========================================== -->
+
+        <div class="ff-content ff-scene-final">
+
+            <span class="ff-label">
+                FLYING FOX
+            </span>
+
+            <h2>
+                Ready To Fly?
+            </h2>
+
+            <p>
+                Turn the view into an experience.
+            </p>
+
+            <a href="#" class="ff-book-btn">
+
+                Book Your Ride
+
+                <span>↗</span>
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =========================================
+             SCROLL INDICATOR
+        ========================================== -->
+
+        <div class="ff-scroll-indicator">
+
+               <div class="scroll-mouse">
+
+                  <span></span>
+
+                </div>
+
+                <p>SCROLL TO FLY</p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+
+<section class="ride-showcase-section">
+
+    <div class="ride-showcase-container">
+
+        <div class="ride-section-heading">
+
+            <span>CHOOSE YOUR ADVENTURE</span>
+
+            <h2>
+                Rides Built For The Bold
+            </h2>
+
+            <p>
+                Explore our most exciting aerial adventures and
+                find the experience that matches your thrill level.
+            </p>
+
+        </div>
+
+
+        <div class="ride-showcase-grid">
+
+            {% for ride in rides %}
+
+            <article class="ride-showcase-card">
+
+                <a
+                    href="#"
+                    class="ride-card-link"
+                >
+
+                    <div class="ride-card-media">
+
+                        {% if ride.images.first %}
+
+                        <img
+                            src="{{ ride.images.first.image.url }}"
+                            alt="{{ ride.name }}"
+                        >
+
+                        {% endif %}
+
+
+                        <div class="ride-card-overlay"></div>
+
+
+                        {% if forloop.first %}
+
+                        <span class="ride-featured-badge">
+                            Most Popular
+                        </span>
+
+                        {% endif %}
+
+
+                        <span class="ride-number">
+                            0{{ forloop.counter }}
+                        </span>
+
+
+                        <div class="ride-play-button">
+
+                            <span>▶</span>
+
+                        </div>
+
+
+                        <div class="ride-card-content">
+
+                            <span class="ride-difficulty">
+                                {{ ride.get_difficulty_display }}
+                            </span>
+
+                            <h3>
+                                {{ ride.name }}
+                            </h3>
+
+                            <p>
+                                {{ ride.short_description|truncatewords:14 }}
+                            </p>
+
+
+                            <div class="ride-card-meta">
+
+                                <span>
+                                    {{ ride.duration_minutes }} Min
+                                </span>
+
+                                <span>
+                                    Age {{ ride.minimum_age }}+
+                                </span>
+
+                            </div>
+
+
+                            <div class="ride-card-footer">
+
+                                <span>
+                                    Explore Ride
+                                </span>
+
+                                <span class="ride-arrow">
+                                    ↗
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </article>
+
+            {% empty %}
+
+            <p class="no-rides">
+                No rides are available at the moment.
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+
+{% comment %} 
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const video = document.getElementById("ffHeroVideo");
+    const section = document.getElementById("ffScrollSection");
+    const progressBar = document.getElementById("ffProgressBar");
+
+    const scenes = [
+        document.querySelector(".ff-scene-1"),
+        document.querySelector(".ff-scene-2"),
+        document.querySelector(".ff-scene-3"),
+        document.querySelector(".ff-scene-4"),
+        document.querySelector(".ff-scene-final")
+    ];
+
+    if (!video || !section) {
+        console.error("Hero video or hero section not found.");
+        return;
+    }
+
+
+    let duration = 0;
+    let isReady = false;
+    let ticking = false;
+
+
+    /* ==========================================
+       VIDEO SETTINGS
+    ========================================== */
+
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+
+
+    /* ==========================================
+       SCROLL PROGRESS
+    ========================================== */
+
+    function getProgress() {
+
+        const rect = section.getBoundingClientRect();
+
+        const sectionHeight = section.offsetHeight;
+
+        const viewportHeight = window.innerHeight;
+
+        const scrollableDistance =
+            sectionHeight - viewportHeight;
+
+
+        /*
+         rect.top becomes negative while
+         scrolling through the section.
+        */
+
+        const scrolled =
+            -rect.top;
+
+
+        let progress =
+            scrolled / scrollableDistance;
+
+
+        progress = Math.max(
+            0,
+            Math.min(1, progress)
+        );
+
+
+        return progress;
+    }
+
+
+    /* ==========================================
+       CONTENT
+    ========================================== */
+
+    function updateContent(progress) {
+
+        let activeIndex;
+
+
+        if (progress < 0.18) {
+
+            activeIndex = 0;
+
+        } else if (progress < 0.38) {
+
+            activeIndex = 1;
+
+        } else if (progress < 0.58) {
+
+            activeIndex = 2;
+
+        } else if (progress < 0.80) {
+
+            activeIndex = 3;
+
+        } else {
+
+            activeIndex = 4;
+
+        }
+
+
+        scenes.forEach(function (scene, index) {
+
+            if (!scene) {
+                return;
+            }
+
+
+            if (index === activeIndex) {
+
+                scene.classList.add("active");
+
+            } else {
+
+                scene.classList.remove("active");
+
+            }
+
+        });
+
+    }
+
+
+    /* ==========================================
+       VIDEO FRAME
+    ========================================== */
+
+    function updateVideo(progress) {
+
+        if (!isReady || !duration) {
+            return;
+        }
+
+
+        const targetTime =
+            progress *
+            (duration - 0.05);
+
+
+        /*
+         Only seek when there is enough
+         difference from current frame.
+        */
+
+        if (
+            Math.abs(
+                video.currentTime - targetTime
+            ) > 0.015
+        ) {
+
+            video.currentTime =
+                targetTime;
+
+        }
+
+    }
+
+
+    /* ==========================================
+       UPDATE HERO
+    ========================================== */
+
+    function updateHero() {
+
+        if (!isReady) {
+
+            ticking = false;
+            return;
+
+        }
+
+
+        const progress =
+            getProgress();
+
+
+        updateVideo(progress);
+
+        updateContent(progress);
+
+
+        if (progressBar) {
+
+            progressBar.style.height =
+                (progress * 100) + "%";
+
+        }
+
+
+        ticking = false;
+    }
+
+
+    /* ==========================================
+       SCROLL EVENT
+    ========================================== */
+
+    function onScroll() {
+
+        if (!ticking) {
+
+            requestAnimationFrame(
+                updateHero
+            );
+
+            ticking = true;
+
+        }
+
+    }
+
+
+    window.addEventListener(
+        "scroll",
+        onScroll,
+        { passive: true }
+    );
+
+
+    window.addEventListener(
+        "resize",
+        updateHero
+    );
+
+
+    /* ==========================================
+       IMPORTANT:
+       WAIT UNTIL VIDEO CAN ACTUALLY PLAY
+    ========================================== */
+
+    function startHero() {
+
+        if (isReady) {
+            return;
+        }
+
+
+        duration = video.duration;
+
+
+        if (
+            !Number.isFinite(duration) ||
+            duration <= 0
+        ) {
+
+            console.error(
+                "Invalid video duration."
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "VIDEO FULLY READY"
+        );
+
+        console.log(
+            "Duration:",
+            duration
+        );
+
+        console.log(
+            "Ready state:",
+            video.readyState
+        );
+
+
+        /*
+         Warm up Chrome video decoder.
+         The video is muted, so autoplay is allowed.
+        */
+
+        const playPromise =
+            video.play();
+
+
+        if (playPromise !== undefined) {
+
+            playPromise
+                .then(function () {
+
+                    video.pause();
+
+                    video.currentTime =
+                        0.01;
+
+
+                    isReady = true;
+
+
+                    updateHero();
+
+                })
+                .catch(function () {
+
+                    /*
+                     Even if autoplay warming fails,
+                     enable scrolling anyway.
+                    */
+
+                    video.pause();
+
+                    video.currentTime =
+                        0.01;
+
+                    isReady = true;
+
+                    updateHero();
+
+                });
+
+        } else {
+
+            video.pause();
+
+            video.currentTime =
+                0.01;
+
+            isReady = true;
+
+            updateHero();
+
+        }
+
+    }
+
+
+    /* ==========================================
+       WAIT FOR VIDEO DATA
+
+       readyState >= 3 means:
+       HAVE_FUTURE_DATA
+    ========================================== */
+
+    if (video.readyState >= 3) {
+
+        startHero();
+
+    } else {
+
+        video.addEventListener(
+            "canplay",
+            startHero,
+            {
+                once: true
+            }
+        );
+
+    }
+
+
+});
+</script>
+
+{% endblock %} {% endcomment %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const video = document.getElementById("ffHeroVideo");
+    const section = document.getElementById("ffScrollSection");
+    const progressBar = document.getElementById("ffProgressBar");
+
+    const scenes = [
+        document.querySelector(".ff-scene-1"),
+        document.querySelector(".ff-scene-2"),
+        document.querySelector(".ff-scene-3"),
+        document.querySelector(".ff-scene-4"),
+        document.querySelector(".ff-scene-final")
+    ];
+
+    if (!video || !section) {
+        console.error("VIDEO OR SECTION NOT FOUND");
+        return;
+    }
+
+    video.muted = true;
+    video.pause();
+
+    let duration = 0;
+
+
+    /* ========================================
+       SHOW CONTENT
+    ======================================== */
+
+    function showScene(index) {
+
+        scenes.forEach(function(scene, i) {
+
+            if (!scene) return;
+
+            if (i === index) {
+                scene.classList.add("active");
+            } else {
+                scene.classList.remove("active");
+            }
+
+        });
+
+    }
+
+
+    /* ========================================
+       UPDATE ON SCROLL
+    ======================================== */
+
+    function updateHero() {
+
+        if (!duration) {
+            return;
+        }
+
+
+        const sectionTop = section.offsetTop;
+
+        const sectionHeight = section.offsetHeight;
+
+        const viewportHeight = window.innerHeight;
+
+        const maxScroll =
+            sectionHeight - viewportHeight;
+
+
+        const currentScroll =
+            window.scrollY - sectionTop;
+
+
+        let progress =
+            currentScroll / maxScroll;
+
+
+        progress =
+            Math.max(
+                0,
+                Math.min(1, progress)
+            );
+
+
+        /* ===============================
+           VIDEO
+        =============================== */
+
+        const targetTime =
+            progress * (duration - 0.05);
+
+
+        video.currentTime =
+            targetTime;
+
+
+        /* DEBUG */
+
+        console.log(
+            "scroll:",
+            progress.toFixed(3),
+            "video:",
+            targetTime.toFixed(2)
+        );
+
+
+        /* ===============================
+           PROGRESS BAR
+        =============================== */
+
+        if (progressBar) {
+
+            progressBar.style.height =
+                (progress * 100) + "%";
+
+        }
+
+
+        /* ===============================
+           CONTENT
+        =============================== */
+
+        if (progress < 0.18) {
+
+            showScene(0);
+
+        }
+
+        else if (progress < 0.38) {
+
+            showScene(1);
+
+        }
+
+        else if (progress < 0.58) {
+
+            showScene(2);
+
+        }
+
+        else if (progress < 0.80) {
+
+            showScene(3);
+
+        }
+
+        else {
+
+            showScene(4);
+
+        }
+
+    }
+
+
+    /* ========================================
+       VIDEO READY
+    ======================================== */
+
+    function initialize() {
+
+        duration = video.duration;
+
+        console.log(
+            "VIDEO INITIALIZED:",
+            duration
+        );
+
+        video.pause();
+
+        video.currentTime = 0.01;
+
+        updateHero();
+
+    }
+
+
+    if (video.readyState >= 1) {
+
+        initialize();
+
+    } else {
+
+        video.addEventListener(
+            "loadedmetadata",
+            initialize,
+            { once: true }
+        );
+
+    }
+
+
+    /* ========================================
+       EVENTS
+    ======================================== */
+
+    window.addEventListener(
+        "scroll",
+        updateHero,
+        { passive: true }
+    );
+
+    window.addEventListener(
+        "resize",
+        updateHero
+    );
+
+});
+</script>
+
+{% endblock %}
