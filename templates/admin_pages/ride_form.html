@@ -2,7 +2,12 @@
 {% load static %}
 
 {% block title %}
-{% if ride %}Update Ride{% else %}Add Ride{% endif %} | FlyingFox Admin
+    {% if ride %}
+        Update Ride
+    {% else %}
+        Add Ride
+    {% endif %}
+    | FlyingFox Admin
 {% endblock %}
 
 
@@ -27,12 +32,13 @@
         method="POST"
         enctype="multipart/form-data"
         class="ride-form"
+        id="rideMainForm"
     >
 
         {% csrf_token %}
 
 
-        <!-- NAME -->
+        <!-- RIDE NAME -->
         <div class="mb-4">
 
             <label class="form-label">
@@ -44,7 +50,7 @@
                 type="text"
                 name="name"
                 class="form-control"
-                value="{{ ride.name|default:'' }}"
+                value="{% if ride %}{{ ride.name }}{% else %}{{ form_data.name|default:'' }}{% endif %}"
                 placeholder="Example: Mega Zipline Adventure"
                 required
             >
@@ -53,24 +59,24 @@
 
 
         <!-- DESCRIPTION -->
-<div class="mb-4">
+        <div class="mb-4">
 
-    <label
-        for="rideDescription"
-        class="form-label"
-    >
-        Full Description
-        <span class="text-danger">*</span>
-    </label>
+            <label
+                for="rideDescription"
+                class="form-label"
+            >
+                Full Description
+                <span class="text-danger">*</span>
+            </label>
 
-    <textarea
-        name="description"
-        id="rideDescription"
-        class="form-control"
-        required
-    >{{ ride.description|default:'' }}</textarea>
+            <textarea
+                name="description"
+                id="rideDescription"
+                class="form-control"
+                required
+            >{% if ride %}{{ ride.description }}{% else %}{{ form_data.description|default:'' }}{% endif %}</textarea>
 
-</div>
+        </div>
 
 
         <!-- DURATION -->
@@ -85,7 +91,7 @@
                 type="text"
                 name="duration"
                 class="form-control"
-                value="{{ ride.duration|default:'' }}"
+                value="{% if ride %}{{ ride.duration }}{% else %}{{ form_data.duration|default:'' }}{% endif %}"
                 placeholder="Example: 30 Minutes"
                 required
             >
@@ -105,7 +111,79 @@
                 class="form-control"
                 rows="5"
                 placeholder="Enter safety instructions..."
-            >{{ ride.safety_notes|default:'' }}</textarea>
+            >{% if ride %}{{ ride.safety_notes }}{% else %}{{ form_data.safety_notes|default:'' }}{% endif %}</textarea>
+
+        </div>
+
+
+        <!-- FEATURED RIDE -->
+        <div class="switch-card mb-4">
+
+            <label class="custom-switch">
+
+                <input
+                    type="checkbox"
+                    name="is_featured"
+                    id="isFeatured"
+                    {% if ride %}
+                        {% if ride.is_featured %}checked{% endif %}
+                    {% elif form_data.is_featured %}
+                        checked
+                    {% endif %}
+                >
+
+                <span class="switch-slider"></span>
+
+            </label>
+
+            <div class="switch-text">
+
+                <label for="isFeatured">
+                    Featured Ride
+                </label>
+
+                <small>
+                    Turn this on to show the ride in featured sections.
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE RIDE -->
+        <div class="switch-card mb-4">
+
+            <label class="custom-switch">
+
+                <input
+                    type="checkbox"
+                    name="is_active"
+                    id="isActive"
+                    {% if ride %}
+                        {% if ride.is_active %}checked{% endif %}
+                    {% elif form_data %}
+                        {% if form_data.is_active %}checked{% endif %}
+                    {% else %}
+                        checked
+                    {% endif %}
+                >
+
+                <span class="switch-slider"></span>
+
+            </label>
+
+            <div class="switch-text">
+
+                <label for="isActive">
+                    Active Ride
+                </label>
+
+                <small>
+                    Inactive rides will not be displayed on the website.
+                </small>
+
+            </div>
 
         </div>
 
@@ -130,7 +208,6 @@
                 You can select multiple images.
             </small>
 
-
             <div
                 id="imagePreview"
                 class="ride-preview-grid mt-3"
@@ -148,7 +225,6 @@
                 Current Images / Videos
             </label>
 
-
             <div class="ride-preview-grid">
 
                 {% for media in ride.media.all %}
@@ -159,54 +235,46 @@
 
                         {% if media.image %}
 
-                        <img
-                            src="{{ media.image.url }}"
-                            alt="Ride Image"
-                        >
+                            <img
+                                src="{{ media.image.url }}"
+                                alt="{{ ride.name }}"
+                            >
 
                         {% endif %}
 
 
                     {% elif media.media_type == "video" %}
 
+                        {% if media.video %}
 
-                        {% if media.thumbnail %}
+                            <video controls preload="metadata">
 
-                        <img
-                            src="{{ media.thumbnail.url }}"
-                            alt="Video"
-                        >
+                                <source src="{{ media.video.url }}">
 
+                                Your browser does not support video playback.
 
-                        {% elif media.video %}
-
-                        <video controls>
-
-                            <source src="{{ media.video.url }}">
-
-                        </video>
+                            </video>
 
                         {% endif %}
-
 
                     {% endif %}
 
 
-                    <form
-                        method="POST"
-                        action="{% url 'ride_media_delete' media.id %}"
+                    <!--
+                        Do not place another form here.
+                        This button submits directly to the media delete URL.
+                    -->
+                    <button
+                        type="submit"
+                        class="media-delete-btn"
+                        formaction="{% url 'ride_media_delete' media.id %}"
+                        formmethod="POST"
+                        formnovalidate
+                        onclick="return confirm('Delete this media file?');"
+                        title="Delete media"
                     >
-
-                        {% csrf_token %}
-
-                        <button
-                            type="submit"
-                            class="media-delete-btn"
-                        >
-                            <i class="fas fa-times"></i>
-                        </button>
-
-                    </form>
+                        <i class="fas fa-times"></i>
+                    </button>
 
                 </div>
 
@@ -239,26 +307,9 @@
                 accept="video/*"
             >
 
-        </div>
-
-
-        <!-- ACTIVE -->
-        <div class="form-check mb-4">
-
-            <input
-                type="checkbox"
-                name="is_active"
-                id="isActive"
-                class="form-check-input"
-                {% if not ride or ride.is_active %}checked{% endif %}
-            >
-
-            <label
-                for="isActive"
-                class="form-check-label"
-            >
-                Active Ride
-            </label>
+            <small class="text-muted">
+                You can upload one new video at a time.
+            </small>
 
         </div>
 
@@ -270,13 +321,11 @@
                 type="submit"
                 class="btn btn-primary"
             >
-
                 {% if ride %}
                     Update Ride
                 {% else %}
                     Add Ride
                 {% endif %}
-
             </button>
 
 
@@ -306,24 +355,17 @@
 
 .ride-preview-grid {
     display: grid;
-
     grid-template-columns:
         repeat(auto-fill, minmax(150px, 1fr));
-
     gap: 15px;
 }
 
 .ride-media-card {
     position: relative;
-
     height: 140px;
-
     border-radius: 9px;
-
     overflow: hidden;
-
     border: 1px solid #e5e7eb;
-
     background: #f9fafb;
 }
 
@@ -331,31 +373,105 @@
 .ride-media-card video {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
 }
 
 .media-delete-btn {
     position: absolute;
-
     top: 6px;
     right: 6px;
-
-    width: 28px;
-    height: 28px;
-
+    width: 30px;
+    height: 30px;
+    padding: 0;
     border: none;
-
     border-radius: 50%;
-
     background: #dc2626;
-
     color: white;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.media-delete-btn:hover {
+    background: #b91c1c;
+}
+
+
+/* SWITCH DESIGN */
+
+.switch-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fffaf6;
+}
+
+.custom-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.custom-switch input {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    border-radius: 30px;
+    background: #c7c7c7;
+    transition: 0.3s ease;
+}
+
+.switch-slider::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+    transition: 0.3s ease;
+}
+
+.custom-switch input:checked + .switch-slider {
+    background: #ff6b00;
+}
+
+.custom-switch input:checked + .switch-slider::before {
+    transform: translateX(24px);
+}
+
+.switch-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.switch-text label {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #202020;
+    cursor: pointer;
+}
+
+.switch-text small {
+    color: #777777;
+    font-size: 12px;
 }
 
 </style>
@@ -365,10 +481,10 @@
 
 {% block extra_js %}
 
-<!-- CKEditor -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================
@@ -401,9 +517,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 ]
 
             })
-            .catch(error => {
-                console.error("CKEditor error:", error);
+            .catch(function (error) {
+
+                console.error(
+                    "CKEditor error:",
+                    error
+                );
+
             });
+
     }
 
 
@@ -428,6 +550,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 Array.from(this.files).forEach(
                     function (file) {
 
+                        if (
+                            !file.type.startsWith("image/")
+                        ) {
+                            return;
+                        }
+
                         const reader =
                             new FileReader();
 
@@ -445,21 +573,26 @@ document.addEventListener("DOMContentLoaded", function () {
                                 box.innerHTML = `
                                     <img
                                         src="${event.target.result}"
-                                        alt="Ride Image"
+                                        alt="Ride image preview"
                                     >
                                 `;
 
                                 preview.appendChild(box);
+
                             };
 
                         reader.readAsDataURL(file);
+
                     }
                 );
+
             }
         );
+
     }
 
 });
+
 </script>
 
 {% endblock %}

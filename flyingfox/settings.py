@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-_z__7v1ikw!pdsk5x$$d!t&l*egm)m4f^u5&@kwb$5ak2a0=qi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "testserver",
+]
 
 # Application definition
 
@@ -65,6 +68,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                "flyingfox_app.context_processors.footer_popular_rides",
             ],
         },
     },
@@ -128,3 +133,53 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+import os
+
+
+# ==========================================
+# EMAIL SETTINGS
+# ==========================================
+
+EMAIL_BACKEND = (
+    "django.core.mail.backends.smtp.EmailBackend"
+)
+
+EMAIL_HOST = "smtp.gmail.com"
+
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "sirajvynzora@gmail.com"
+
+EMAIL_HOST_PASSWORD ="lcnu ekkv pktx ktbz"
+
+DEFAULT_FROM_EMAIL = "sirajvynzora@gmail.com"
+
+EMAIL_TIMEOUT = 30
+
+# ==========================================
+# TWILIO SETTINGS
+# ==========================================
+
+TWILIO_ACCOUNT_SID = "ACd41c526b5d484745f2a25e8626541960"
+
+TWILIO_AUTH_TOKEN = "af5adc9039c5f30763287ffd337c81a7"
+
+TWILIO_PHONE_NUMBER = "+17372508034"
+
+
+
+
+
+# ==========================================
+# whatsapp SETTINGS
+# ==========================================
+TWILIO_WHATSAPP_FROM = "whatsapp:+17372508034"
+
+TWILIO_WHATSAPP_CONTENT_SID = (
+    "HXfe5ab5f00277942d4d4200328b4d403c"
+)

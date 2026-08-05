@@ -1,0 +1,591 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- meta tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <!-- title -->
+    <title>{% block title %}Flying Fox Adventure{% endblock %}</title>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'frontend/assets/img/logo/logo.png' %}" />
+
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/animate.min.css'%}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/magnific-popup.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/owl.carousel.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/slimselect.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/flatpickr.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}" />
+
+    <!-- page specific css -->
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body class="h-bg">
+    <!-- preloader -->
+    <div class="preloader">
+      <div class="loader-ripple">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <!-- preloader end -->
+
+    <!-- header area -->
+    <header class="header-2 h-abs">
+      <!-- header top -->
+      <div class="header-top">
+        {% comment %} <div class="container">
+          <div class="header-top-wrap">
+            <div class="header-top-left">
+              <div class="header-top-list">
+                <ul>
+                  <li>
+                    <a href="mailto:info@example.com"><i class="far fa-envelopes"></i> info@example.com</a>
+                  </li>
+                  <li>
+                    <a href="tel:+21236547898"><i class="far fa-phone-volume"></i> +2 123 654 7898</a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="far fa-alarm-clock"></i> Sun - Fri (08AM - 10PM)</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="header-top-right">
+              <div class="header-top-list">
+                <a href="login.html"><i class="far fa-sign-in"></i>Login</a>
+              </div>
+              <div class="header-top-lang">
+                <div class="dropdown">
+                  <a href="#" class="top-lang dropdown-toggle" data-bs-toggle="dropdown"><i class="fal fa-globe"></i> Eng</a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">English</a></li>
+                    <li><a class="dropdown-item" href="#">German</a></li>
+                    <li><a class="dropdown-item" href="#">Russian</a></li>
+                    <li><a class="dropdown-item" href="#">Spanish</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="header-top-social">
+                <span>Follow Us: </span>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-x-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div> {% endcomment %}
+      </div>
+      <!-- header top end -->
+
+      <!-- navbar -->
+      <div class="main-navigation">
+        <nav class="navbar navbar-expand-lg">
+          <div class="container position-relative">
+            <a class="navbar-brand" href="{% url 'home' %}">
+              <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="logo" />
+            </a>
+            <div class="mobile-menu-right">
+              <div class="mobile-menu-btn">
+                <button type="button" class="nav-right-link search-box-outer"><i class="far fa-search"></i></button>
+              </div>
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar"
+                aria-label="Toggle navigation"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+            </div>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+              <div class="offcanvas-header">
+                <a href="{% url 'home' %}" class="offcanvas-brand" id="offcanvasNavbarLabel">
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
+                </a>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+                  <i class="far fa-xmark"></i>
+                </button>
+              </div>
+              <div class="offcanvas-body gap-xl-4">
+                <ul class="navbar-nav justify-content-end flex-grow-1">
+
+                  <li class="nav-item">
+                    <a class="nav-link {% block nav_home %}{% endblock %}" href="{% url 'home' %}">
+                      Home
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link {% block nav_about %}{% endblock %}" href="{% url 'about' %}">
+                      About
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link {% block nav_rides %}{% endblock %}" href="{% url 'rides' %}">
+                      Rides
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link {% block nav_gallery %}{% endblock %}" href="{% url 'gallery' %}">
+                      Gallery
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link {% block nav_blog %}{% endblock %}" href="{% url 'blog' %}">
+                      Blog
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link {% block nav_contact %}{% endblock %}" href="{% url 'contact' %}">
+                      Contact
+                    </a>
+                  </li>
+
+                </ul>
+                <!-- nav-right -->
+                <div class="nav-right">
+                  <div class="search-btn">
+                    <button type="button" class="nav-right-link search-box-outer"><i class="far fa-search"></i></button>
+                  </div>
+                  <div class="nav-btn">
+                    <a href="{% url 'bookings' %}" class="theme-btn">Book Now<i class="fas fa-arrow-right"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <!-- navbar end-->
+    </header>
+    <!-- header area end -->
+
+    <!-- popup search -->
+    <div class="search-popup">
+      <button class="close-search"><span class="far fa-times"></span></button>
+      <form action="#">
+        <div class="form-group">
+          <input type="search" name="search-field" class="form-control" placeholder="Search Here..." required />
+          <button type="submit"><i class="far fa-search"></i></button>
+        </div>
+      </form>
+    </div>
+    <!-- popup search end -->
+
+    <main class="main">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- footer area -->
+    <footer class="footer-area ft-bg">
+      <div class="footer-widget">
+        <div class="container">
+          <div class="footer-widget-wrap pt-100 pb-50">
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <div class="footer-widget-box about-us">
+                  <a href="#" class="footer-logo">
+                    <img src="{% static 'frontend/assets/img/logo/logo-light.png' %}" alt="" />
+                  </a>
+                  <p>
+                    Experience the thrill of soaring above Munnar's breathtaking valleys with world-class safety, professional guides, and unforgettable Flying Fox adventures designed for every thrill seeker.
+                  </p>
+                  <div class="footer-social-box mt-70">
+                    <h4>Follow Us On</h4>
+                    <ul class="footer-social">
+                      <li>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fab fa-x-twitter"></i></a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                      </li>
+                      <li>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="footer-contact">
+                  <div class="footer-contact-wrap">
+                    <div class="footer-contact-item">
+                      <div class="icon">
+                        <img src="{% static 'frontend/assets/img/icon/call.svg' %}" alt="" />
+                      </div>
+                      <div class="content">
+                        <h5>Call Us</h5>
+                        <a href="tel:+21236547898">+2 123 654 7898</a>
+                      </div>
+                    </div>
+                    <div class="footer-contact-item">
+                      <div class="icon">
+                        <img src="{% static 'frontend/assets/img/icon/email.svg' %}" alt="" />
+                      </div>
+                      <div class="content">
+                        <h5>Mail Us</h5>
+                        <a href="mailto:info@example.com">info@example.com</a>
+                      </div>
+                    </div>
+                    <div class="footer-contact-item">
+                      <div class="icon">
+                        <img src="{% static 'frontend/assets/img/icon/address.svg' %}" alt="" />
+                      </div>
+                      <div class="content">
+                        <h5>Our Address</h5>
+                        <p>Munnar, Kerala, India</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6 col-lg-3">
+                    <div class="footer-widget-box list">
+                      <h4 class="footer-widget-title">Company</h4>
+                      <ul class="footer-list">
+                        <li>
+                          <a href="{% url 'about' %}"><i class="far fa-angle-double-right"></i>About Us</a>
+                        </li>
+                        <li>
+                          <a href="{% url 'faq' %}"><i class="far fa-angle-double-right"></i>FAQ's</a>
+                        </li>
+                        <li>
+                          <a href="{% url 'blog' %}"><i class="far fa-angle-double-right"></i>Update News</a>
+                        </li>
+                        <li>
+                          <a href="{% url 'contact' %}"><i class="far fa-angle-double-right"></i>Contact Us</a>
+                        </li>
+                        {% comment %} <li>
+                          <a href="{% url 'terms' %}"><i class="far fa-angle-double-right"></i>Terms Of Service</a>
+                        </li> {% endcomment %}
+                        {% comment %} <li>
+                          <a href="{% url 'privacy' %}"><i class="far fa-angle-double-right"></i>Privacy policy</a>
+                        </li> {% endcomment %}
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-6 col-lg-4">
+                    <div class="footer-widget-box list">
+
+    <h4 class="footer-widget-title">
+        Popular Rides
+    </h4>
+
+    <ul class="footer-list">
+
+        {% for ride in footer_popular_rides %}
+
+        <li>
+
+            <a href="{% url 'ride_detail' ride.slug %}">
+
+                <i class="far fa-angle-double-right"></i>
+
+                {{ ride.name }}
+
+            </a>
+
+        </li>
+
+        {% empty %}
+
+        <li>
+
+            <span>No rides available.</span>
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+                  </div>
+                  <div class="col-lg-5">
+                    <div class="footer-widget-box">
+                      <h4 class="footer-widget-title">Get In Touch</h4>
+                      <div class="footer-newsletter mt-30">
+                        <p>Subscribe Our Newsletter To Get Latest Update And News</p>
+                        <div class="newsletter-form">
+                          <form action="#">
+                            <div class="form-group mb-0">
+                              <div class="form-icon">
+                                <i class="far fa-envelopes"></i>
+                                <input type="email" class="form-control" placeholder="Your Email" />
+                                <button class="theme-btn" type="submit">
+                                  <img src="{% static 'frontend/assets/img/icon/paper-plane.svg' %}" alt="" />
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="copyright text-center">
+          <p class="copyright-text">&copy; Copyright <span id="date"></span> <a href="#"> vynzora </a> All Rights Reserved.</p>
+        </div>
+      </div>
+    </footer>
+    <!-- footer area end -->
+
+    <!-- =====================================================
+     FLYING FOX CHATBOT
+    ===================================================== -->
+
+    <div class="ff-chatbot-wrapper">
+
+        <!-- Floating chatbot button -->
+
+        <button
+            type="button"
+            class="ff-chatbot-toggle"
+            id="ffChatbotToggle"
+            aria-label="Open Flying Fox chatbot"
+            aria-expanded="false"
+        >
+
+            <span class="ff-chatbot-toggle-icon">
+
+                <i class="fas fa-comments"></i>
+
+            </span>
+
+        </button>
+
+
+        <!-- Chatbot window -->
+
+        <div
+            class="ff-chatbot-window"
+            id="ffChatbotWindow"
+            aria-hidden="true"
+        >
+
+            <!-- Header -->
+
+            <div class="ff-chatbot-header">
+
+                <div class="ff-chatbot-agent">
+
+                    <div class="ff-chatbot-avatar">
+
+                        <i class="fas fa-headset"></i>
+
+                    </div>
+
+                    <div class="ff-chatbot-agent-info">
+
+                        <h5>
+                            Flying Fox Assistant
+                        </h5>
+
+                        <span>
+
+                            <span class="ff-chatbot-online-dot"></span>
+
+                            Online now
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="ff-chatbot-close"
+                    id="ffChatbotClose"
+                    aria-label="Close chatbot"
+                >
+
+                    <i class="fas fa-times"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- Messages -->
+
+            <div
+                class="ff-chatbot-messages"
+                id="ffChatbotMessages"
+                aria-live="polite"
+            >
+
+                <div class="ff-chatbot-message ff-bot-message">
+
+                    <div class="ff-message-avatar">
+
+                        <i class="fas fa-headset"></i>
+
+                    </div>
+
+                    <div class="ff-message-body">
+
+                        <div class="ff-message-bubble">
+
+                            Hello! Welcome to Flying Fox Adventure.
+
+                            How can I help you today?
+
+                        </div>
+
+                        <span class="ff-message-time">
+                            Now
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick reply buttons -->
+
+            <div class="ff-chatbot-quick-replies" id="ffChatbotQuickReplies" hidden>
+
+               <button
+        type="button"
+        class="ff-chatbot-quick-button"
+        data-message="How can I book a ride?"
+    >
+        Book Ride
+    </button>
+
+    <button
+        type="button"
+        class="ff-chatbot-quick-button"
+        data-message="Show ride prices"
+    >
+        Ride Prices
+    </button>
+
+    <button
+        type="button"
+        class="ff-chatbot-quick-button"
+        data-message="Tell me about safety"
+    >
+        Safety
+    </button>
+
+    <button
+        type="button"
+        class="ff-chatbot-quick-button"
+        data-message="How do I get my QR ticket?"
+    >
+        QR Ticket
+    </button>
+
+            </div>
+
+
+            <!-- Message form -->
+
+            <form
+                method="POST"
+                class="ff-chatbot-form"
+                id="ffChatbotForm"
+            >
+
+                {% csrf_token %}
+
+                <div class="ff-chatbot-input-box">
+
+                    <input
+                        type="text"
+                        id="ffChatbotInput"
+                        name="message"
+                        placeholder="Type your message..."
+                        maxlength="1000"
+                        autocomplete="off"
+                        aria-label="Chatbot message"
+                    >
+
+                    <button
+                        type="submit"
+                        class="ff-chatbot-send"
+                        id="ffChatbotSend"
+                        aria-label="Send message"
+                    >
+
+                        <i class="fas fa-paper-plane"></i>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script>
+        window.FLYING_FOX_CHATBOT = {
+            initializeUrl: "{% url 'chatbot_initialize' %}",
+            messageUrl: "{% url 'chatbot_message' %}"
+        };
+    </script>
+
+
+    <script
+        src="{% static 'frontend/assets/js/flyingfox-chatbot.js' %}"
+    ></script>
+
+    <!-- scroll-top -->
+    <a href="#" id="scroll-top"><i class="fas fa-arrow-up-long"></i></a>
+    <!-- scroll-top end -->
+
+    <!-- js -->
+    <script src="{% static 'frontend/assets/js/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/jquery.appear.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/counter-up.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/wow.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/slimselect.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/flatpickr.min.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/main.js' %}"></script>
+
+    <!-- page specific js -->
+    {% block extra_js %}{% endblock %}
+
+  </body>
+</html>

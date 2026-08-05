@@ -1,0 +1,575 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}
+
+{% if rule %}
+Update Chatbot Rule
+{% else %}
+Add Chatbot Rule
+{% endif %}
+
+| FlyingFox Admin
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard sp_bottom_100">
+
+    <div class="container-fluid full__width__padding">
+
+        <div class="row">
+
+            <div class="col-xl-9 col-lg-10 col-md-12">
+
+                <div class="dashboard__section__title">
+
+                    <h4 class="mb-0">
+
+                        {% if rule %}
+                            Update Chatbot Rule
+                        {% else %}
+                            Add Chatbot Rule
+                        {% endif %}
+
+                    </h4>
+
+                    <p class="text-muted mt-2 mb-0">
+                        Configure keywords and the automatic chatbot response.
+                    </p>
+
+                </div>
+
+
+                <div class="row mt-4">
+
+                    <div class="col-12">
+
+                        <form
+                            method="POST"
+                            id="chatbotRuleForm"
+                            class="form-wrapper"
+                            novalidate
+                        >
+
+                            {% csrf_token %}
+
+
+                            <!-- TITLE -->
+
+                            <div class="mb-4">
+
+                                <label
+                                    for="ruleTitle"
+                                    class="form-label"
+                                >
+                                    Rule Title
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="title"
+                                    id="ruleTitle"
+                                    class="form-control"
+                                    value="{% if form_data %}{{ form_data.title }}{% elif rule %}{{ rule.title }}{% endif %}"
+                                    placeholder="Example: Booking Process"
+                                    required
+                                >
+
+                                <div
+                                    class="field-error"
+                                    id="titleError"
+                                ></div>
+
+                            </div>
+
+
+                            <!-- KEYWORDS -->
+
+                            <div class="mb-4">
+
+                                <label
+                                    for="ruleKeywords"
+                                    class="form-label"
+                                >
+                                    Keywords
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                               <textarea
+    name="keywords"
+    id="ruleKeywords"
+    class="form-control chatbot-keyword-input"
+    rows="4"
+    placeholder='["book", "booking", "reserve", "how to book"]'
+    required
+>{% if form_data %}{{ form_data.keywords }}{% elif rule %}{{ keywords_json }}{% endif %}</textarea>
+                                <small class="text-muted">
+                                    Enter keywords as a JSON list. Example:
+                                    <code>["price", "cost", "rate"]</code>
+                                </small>
+
+                                <div
+                                    class="field-error"
+                                    id="keywordsError"
+                                ></div>
+
+                            </div>
+
+
+                            <!-- RESPONSE -->
+
+                            <div class="mb-4">
+
+                                <label
+                                    for="ruleResponse"
+                                    class="form-label"
+                                >
+                                    Bot Response
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <textarea
+                                    name="response"
+                                    id="ruleResponse"
+                                    class="form-control"
+                                    rows="7"
+                                    placeholder="Enter the chatbot response..."
+                                    required
+                                >{% if form_data %}{{ form_data.response }}{% elif rule %}{{ rule.response }}{% endif %}</textarea></textarea>
+
+                                <div
+                                    class="field-error"
+                                    id="responseError"
+                                ></div>
+
+                            </div>
+
+
+                            <div class="row">
+
+                                <!-- ACTION TEXT -->
+
+                                <div class="col-md-6 mb-4">
+
+                                    <label
+                                        for="actionText"
+                                        class="form-label"
+                                    >
+                                        Action Button Text
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="action_text"
+                                        id="actionText"
+                                        class="form-control"
+                                        value="{% if form_data %}{{ form_data.action_text }}{% elif rule %}{{ rule.action_text }}{% endif %}"
+                                         placeholder="Example: Book Now"
+                                    >
+
+                                </div>
+
+
+                                <!-- ACTION URL -->
+
+                                <div class="col-md-6 mb-4">
+
+                                    <label
+                                        for="actionUrl"
+                                        class="form-label"
+                                    >
+                                        Action Button URL
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="action_url"
+                                        id="actionUrl"
+                                        class="form-control"
+                                        value="{% if form_data %}{{ form_data.action_url }}{% elif rule %}{{ rule.action_url }}{% endif %}"
+                                        placeholder="Example: /bookings/"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+
+                                <!-- PRIORITY -->
+
+                                <div class="col-md-6 mb-4">
+
+                                    <label
+                                        for="rulePriority"
+                                        class="form-label"
+                                    >
+                                        Priority
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="priority"
+                                        id="rulePriority"
+                                        class="form-control"
+                                        value="{% if rule %}{{ rule.priority }}{% else %}{{ form_data.priority|default:'10' }}{% endif %}"
+                                        min="0"
+                                    >
+
+                                    <small class="text-muted">
+                                        Higher priority rules are checked first.
+                                    </small>
+
+                                </div>
+
+
+                                <!-- STATUS -->
+
+                                <div class="col-md-6 mb-4">
+
+                                    <label class="form-label d-block">
+                                        Status
+                                    </label>
+
+                                    <div class="form-check form-switch chatbot-status-switch">
+
+                                        <input
+                                            type="checkbox"
+                                            name="is_active"
+                                            id="ruleActive"
+                                            class="form-check-input"
+                                            {% if rule %}
+                                                {% if rule.is_active %}checked{% endif %}
+                                            {% else %}
+                                                checked
+                                            {% endif %}
+                                        >
+
+                                        <label
+                                            for="ruleActive"
+                                            class="form-check-label"
+                                        >
+                                            Active
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="dashboard__form__button">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+
+                                    {% if rule %}
+                                        Update Rule
+                                    {% else %}
+                                        Add Rule
+                                    {% endif %}
+
+                                </button>
+
+                                <a
+                                    href="{% url 'chatbot_rule_list' %}"
+                                    class="btn btn-secondary"
+                                >
+                                    Cancel
+                                </a>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.chatbot-keyword-input {
+    font-family: Consolas, Monaco, monospace;
+}
+
+.field-error {
+    display: block;
+    min-height: 18px;
+    margin-top: 5px;
+    color: #dc3545;
+    font-size: 12px;
+}
+
+.field-error-border {
+    border-color: #dc3545 !important;
+    box-shadow:
+        0 0 0 2px
+        rgba(220, 53, 69, 0.10) !important;
+}
+
+.chatbot-status-switch {
+    padding-top: 10px;
+}
+
+.chatbot-status-switch .form-check-input {
+    width: 44px;
+    height: 22px;
+    margin-right: 10px;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const form =
+            document.getElementById(
+                "chatbotRuleForm"
+            );
+
+        const titleInput =
+            document.getElementById(
+                "ruleTitle"
+            );
+
+        const keywordsInput =
+            document.getElementById(
+                "ruleKeywords"
+            );
+
+        const responseInput =
+            document.getElementById(
+                "ruleResponse"
+            );
+
+        const titleError =
+            document.getElementById(
+                "titleError"
+            );
+
+        const keywordsError =
+            document.getElementById(
+                "keywordsError"
+            );
+
+        const responseError =
+            document.getElementById(
+                "responseError"
+            );
+
+
+        function setError(
+            input,
+            errorElement,
+            message
+        ) {
+
+            errorElement.textContent =
+                message;
+
+            input.classList.toggle(
+                "field-error-border",
+                Boolean(message)
+            );
+
+            return !message;
+        }
+
+
+        function validateTitle() {
+
+            const value =
+                titleInput.value.trim();
+
+            if (!value) {
+
+                return setError(
+                    titleInput,
+                    titleError,
+                    "Rule title is required."
+                );
+            }
+
+            return setError(
+                titleInput,
+                titleError,
+                ""
+            );
+        }
+
+
+        function validateKeywords() {
+
+            const value =
+                keywordsInput.value.trim();
+
+            if (!value) {
+
+                return setError(
+                    keywordsInput,
+                    keywordsError,
+                    "Keywords are required."
+                );
+            }
+
+            try {
+
+                const keywords =
+                    JSON.parse(value);
+
+                if (
+                    !Array.isArray(keywords)
+                    || keywords.length === 0
+                ) {
+
+                    return setError(
+                        keywordsInput,
+                        keywordsError,
+                        "Keywords must be a non-empty JSON list."
+                    );
+                }
+
+                const valid =
+                    keywords.every(
+                        function (keyword) {
+
+                            return (
+                                typeof keyword
+                                === "string"
+                                && keyword.trim()
+                            );
+                        }
+                    );
+
+                if (!valid) {
+
+                    return setError(
+                        keywordsInput,
+                        keywordsError,
+                        "Every keyword must be text."
+                    );
+                }
+
+            } catch (error) {
+
+                return setError(
+                    keywordsInput,
+                    keywordsError,
+                    'Use valid JSON, for example: ["hello", "hi"]'
+                );
+            }
+
+            return setError(
+                keywordsInput,
+                keywordsError,
+                ""
+            );
+        }
+
+
+        function validateResponse() {
+
+            const value =
+                responseInput.value.trim();
+
+            if (!value) {
+
+                return setError(
+                    responseInput,
+                    responseError,
+                    "Bot response is required."
+                );
+            }
+
+            return setError(
+                responseInput,
+                responseError,
+                ""
+            );
+        }
+
+
+        titleInput.addEventListener(
+            "input",
+            validateTitle
+        );
+
+        keywordsInput.addEventListener(
+            "input",
+            validateKeywords
+        );
+
+        responseInput.addEventListener(
+            "input",
+            validateResponse
+        );
+
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+                const titleValid =
+                    validateTitle();
+
+                const keywordsValid =
+                    validateKeywords();
+
+                const responseValid =
+                    validateResponse();
+
+                if (
+                    !titleValid
+                    || !keywordsValid
+                    || !responseValid
+                ) {
+
+                    event.preventDefault();
+
+                    const firstInvalid =
+                        form.querySelector(
+                            ".field-error-border"
+                        );
+
+                    if (firstInvalid) {
+                        firstInvalid.focus();
+                    }
+                }
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

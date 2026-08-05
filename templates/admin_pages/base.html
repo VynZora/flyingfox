@@ -1248,6 +1248,74 @@
 </li>
 
 
+
+
+<li>
+
+    <a
+        href="{% url 'review_list' %}"
+        class="{% if request.resolver_match.url_name == 'review_list' or request.resolver_match.url_name == 'testimonial_create' or request.resolver_match.url_name == 'testimonial_update' %}active{% endif %}"
+    >
+
+        <i class="icofont-sale-discount"></i>
+
+        Testimonials
+
+    </a>
+
+</li>
+
+
+<li class="has-dropdown {% if request.resolver_match.url_name == 'chatbot_rule_list' or request.resolver_match.url_name == 'chat_session_list' or request.resolver_match.url_name == 'chat_enquiry_list' %}open{% endif %}">
+
+    <a href="#">
+        <i class="icofont-live-support"></i>
+        Chatbot
+    </a>
+
+    <ul class="submenu">
+
+        <li>
+            <a
+                href="{% url 'chatbot_rule_list' %}"
+                class="{% if request.resolver_match.url_name == 'chatbot_rule_list' %}active{% endif %}">
+                Chatbot Rules
+            </a>
+        </li>
+
+       <li>
+    <a
+        href="{% url 'chat_session_list' %}"
+        class="
+            {% if request.resolver_match.url_name == 'chat_session_list' or request.resolver_match.url_name == 'chat_session_detail' %}
+                active
+            {% endif %}
+        "
+    >
+        Chat Messages
+    </a>
+</li>
+
+<li>
+    <a
+        href="{% url 'chat_enquiry_list' %}"
+        class="
+            {% if request.resolver_match.url_name == 'chat_enquiry_list' or request.resolver_match.url_name == 'chat_enquiry_detail' %}
+                active
+            {% endif %}
+        "
+    >
+        Chat Enquiries
+    </a>
+</li>
+
+    </ul>
+
+</li>
+
+
+
+
                     <li
                         class="has-dropdown {% if request.resolver_match.url_name == 'list_image' or request.resolver_match.url_name == 'category_list' %}open{% endif %}">
                         <a href="#">

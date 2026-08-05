@@ -1,0 +1,466 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const config = window.FLYING_FOX_CHATBOT || {};
+
+  const chatbotToggle = document.getElementById("ffChatbotToggle");
+
+  const chatbotWindow = document.getElementById("ffChatbotWindow");
+
+  const chatbotClose = document.getElementById("ffChatbotClose");
+
+  const chatbotForm = document.getElementById("ffChatbotForm");
+
+  const chatbotInput = document.getElementById("ffChatbotInput");
+
+  const chatbotSend = document.getElementById("ffChatbotSend");
+
+  const chatbotMessages = document.getElementById("ffChatbotMessages");
+
+  const quickRepliesContainer = document.getElementById(
+    "ffChatbotQuickReplies",
+  );
+
+  const quickReplyButtons = document.querySelectorAll(
+    ".ff-chatbot-quick-button",
+  );
+
+  const notificationBadge = document.querySelector(".ff-chatbot-alert");
+
+  let chatbotInitialized = false;
+
+  if (
+    !chatbotToggle ||
+    !chatbotWindow ||
+    !chatbotForm ||
+    !chatbotInput ||
+    !chatbotMessages
+  ) {
+    return;
+  }
+
+  /* =========================================
+           CSRF COOKIE
+        ========================================= */
+
+  function getCookie(name) {
+    const cookies = document.cookie.split(";").map(function (cookie) {
+      return cookie.trim();
+    });
+
+    const targetCookie = cookies.find(function (cookie) {
+      return cookie.startsWith(name + "=");
+    });
+
+    if (!targetCookie) {
+      return "";
+    }
+
+    return decodeURIComponent(targetCookie.substring(name.length + 1));
+  }
+
+  /* =========================================
+           SAFE HTML
+        ========================================= */
+
+  function escapeHtml(value) {
+    const element = document.createElement("div");
+
+    element.textContent = value == null ? "" : String(value);
+
+    return element.innerHTML;
+  }
+
+  /* =========================================
+           CURRENT TIME
+        ========================================= */
+
+  function getCurrentTime() {
+    return new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  /* =========================================
+           SCROLL TO LAST MESSAGE
+        ========================================= */
+
+  function scrollToBottom() {
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  }
+
+  /* =========================================
+           SHOW / HIDE QUICK REPLIES
+        ========================================= */
+
+  function setQuickRepliesVisible(visible) {
+    if (!quickRepliesContainer) {
+      return;
+    }
+
+    quickRepliesContainer.hidden = !visible;
+  }
+
+  /* =========================================
+           ADD MESSAGE
+        ========================================= */
+
+  function addMessage(message, sender, action, isError) {
+    const wrapper = document.createElement("div");
+
+    wrapper.className =
+      "ff-chatbot-message " +
+      (sender === "user" ? "ff-user-message" : "ff-bot-message");
+
+    if (isError) {
+      wrapper.classList.add("ff-chatbot-error");
+    }
+
+    let actionHtml = "";
+
+    if (action && action.text && action.url) {
+      actionHtml = `
+
+                    <a
+                        href="${escapeHtml(action.url)}"
+                        class="ff-chatbot-action-button"
+                    >
+                        ${escapeHtml(action.text)}
+
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                `;
+    }
+
+    wrapper.innerHTML = `
+
+                ${
+                  sender === "bot"
+                    ? `
+                            <div class="ff-message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                        `
+                    : ""
+                }
+
+                <div class="ff-message-body">
+
+                    <div class="ff-message-bubble">
+                        ${escapeHtml(message)}
+                    </div>
+
+                    ${actionHtml}
+
+                    <span class="ff-message-time">
+                        ${getCurrentTime()}
+                    </span>
+
+                </div>
+            `;
+
+    chatbotMessages.appendChild(wrapper);
+
+    scrollToBottom();
+  }
+
+  /* =========================================
+           TYPING INDICATOR
+        ========================================= */
+
+  function showTypingIndicator() {
+    removeTypingIndicator();
+
+    const typing = document.createElement("div");
+
+    typing.id = "ffChatbotTyping";
+
+    typing.className = "ff-chatbot-message ff-bot-message";
+
+    typing.innerHTML = `
+
+                <div class="ff-message-avatar">
+                    <i class="fas fa-paw"></i>
+                </div>
+
+                <div class="ff-message-body">
+
+                    <div class="
+                        ff-message-bubble
+                        ff-chatbot-typing
+                    ">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                </div>
+            `;
+
+    chatbotMessages.appendChild(typing);
+
+    scrollToBottom();
+  }
+
+  function removeTypingIndicator() {
+    const typing = document.getElementById("ffChatbotTyping");
+
+    if (typing) {
+      typing.remove();
+    }
+  }
+
+  /* =========================================
+           LOADING STATE
+        ========================================= */
+
+  function setLoading(isLoading) {
+    chatbotInput.disabled = isLoading;
+
+    if (chatbotSend) {
+      chatbotSend.disabled = isLoading;
+    }
+  }
+
+  /* =========================================
+           INITIALIZE CHATBOT
+        ========================================= */
+
+  async function initializeChatbot() {
+    if (chatbotInitialized) {
+      return;
+    }
+
+    if (!config.initializeUrl) {
+      addMessage("Chatbot initialize URL is missing.", "bot", null, true);
+
+      return;
+    }
+
+    showTypingIndicator();
+
+    try {
+      const response = await fetch(config.initializeUrl, {
+        method: "GET",
+
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) {
+        const htmlResponse = await response.text();
+
+        console.error("Chatbot HTML response:", htmlResponse);
+
+        throw new Error(
+          "Chatbot server returned HTML. " + "Check the Django terminal.",
+        );
+      }
+
+      const data = await response.json();
+
+      removeTypingIndicator();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Unable to start chatbot.");
+      }
+
+      /*
+       * Remove the static welcome message
+       * from the HTML.
+       */
+      chatbotMessages.innerHTML = "";
+
+      addMessage(data.response, "bot");
+
+      setQuickRepliesVisible(data.show_quick_replies === true);
+
+      chatbotInitialized = true;
+    } catch (error) {
+      removeTypingIndicator();
+
+      console.error("Chatbot initialization error:", error);
+
+      addMessage(
+        error.message || "Unable to start chatbot.",
+        "bot",
+        null,
+        true,
+      );
+    }
+  }
+
+  /* =========================================
+           OPEN CHATBOT
+        ========================================= */
+
+  function openChatbot() {
+    chatbotWindow.classList.add("is-open");
+
+    chatbotToggle.classList.add("is-open");
+
+    chatbotWindow.setAttribute("aria-hidden", "false");
+
+    chatbotToggle.setAttribute("aria-expanded", "true");
+
+    if (notificationBadge) {
+      notificationBadge.style.display = "none";
+    }
+
+    initializeChatbot();
+
+    setTimeout(function () {
+      chatbotInput.focus();
+    }, 250);
+  }
+
+  /* =========================================
+           CLOSE CHATBOT
+        ========================================= */
+
+  function closeChatbot() {
+    chatbotWindow.classList.remove("is-open");
+
+    chatbotToggle.classList.remove("is-open");
+
+    chatbotWindow.setAttribute("aria-hidden", "true");
+
+    chatbotToggle.setAttribute("aria-expanded", "false");
+  }
+
+  /* =========================================
+           SEND MESSAGE
+        ========================================= */
+
+  async function sendMessage(message) {
+    const userMessage = String(message || "").trim();
+
+    if (!userMessage) {
+      return;
+    }
+
+    if (!config.messageUrl) {
+      addMessage("Chatbot message URL is missing.", "bot", null, true);
+
+      return;
+    }
+
+    addMessage(userMessage, "user");
+
+    chatbotInput.value = "";
+
+    setLoading(true);
+
+    showTypingIndicator();
+
+    try {
+      const response = await fetch(config.messageUrl, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          "X-CSRFToken": getCookie("csrftoken"),
+
+          "X-Requested-With": "XMLHttpRequest",
+        },
+
+        body: JSON.stringify({
+          message: userMessage,
+        }),
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) {
+        const htmlResponse = await response.text();
+
+        console.error("Django returned HTML:", htmlResponse);
+
+        throw new Error(
+          "The server returned an invalid " +
+            "response. Check the Django terminal.",
+        );
+      }
+
+      const data = await response.json();
+
+      removeTypingIndicator();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Unable to send message.");
+      }
+
+      /*
+       * Quick options remain hidden while
+       * collecting name, phone and email.
+       *
+       * They appear after onboarding is
+       * completed.
+       */
+      setQuickRepliesVisible(data.show_quick_replies === true);
+
+      addMessage(data.response, "bot", data.action || null);
+    } catch (error) {
+      removeTypingIndicator();
+
+      console.error("Flying Fox chatbot error:", error);
+
+      addMessage(error.message || "Something went wrong.", "bot", null, true);
+    } finally {
+      setLoading(false);
+
+      chatbotInput.focus();
+    }
+  }
+
+  /* =========================================
+           OPEN / CLOSE EVENTS
+        ========================================= */
+
+  chatbotToggle.addEventListener("click", function () {
+    if (chatbotWindow.classList.contains("is-open")) {
+      closeChatbot();
+    } else {
+      openChatbot();
+    }
+  });
+
+  if (chatbotClose) {
+    chatbotClose.addEventListener("click", closeChatbot);
+  }
+
+  /* =========================================
+           FORM SUBMIT
+        ========================================= */
+
+  chatbotForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    sendMessage(chatbotInput.value);
+  });
+
+  /* =========================================
+           QUICK REPLY BUTTONS
+        ========================================= */
+
+  quickReplyButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const message = button.dataset.message;
+
+      sendMessage(message);
+    });
+  });
+
+  /* =========================================
+           ESCAPE KEY
+        ========================================= */
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && chatbotWindow.classList.contains("is-open")) {
+      closeChatbot();
+    }
+  });
+});

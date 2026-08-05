@@ -1,286 +1,54 @@
+{% extends "frontend/base.html" %}
 {% load static %}
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- meta tags -->
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
+{% block title %}Flying Fox Adventure - Home{% endblock %}
 
-    <!-- title -->
-    <title>Touria - Travel Agency And Tour HTML5 Template</title>
+{% block nav_home %}active{% endblock %}
 
-    <!-- favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'frontend/assets/img/logo/favicon.webp' %}" />
+{% block content %}
 
-    <!-- css -->
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/animate.min.css'%}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/magnific-popup.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/owl.carousel.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/slimselect.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/flatpickr.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}" />
-  </head>
-
-  <body class="h-bg">
-    <!-- preloader -->
-    <div class="preloader">
-      <div class="loader-ripple">
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-    <!-- preloader end -->
-
-    <!-- header area -->
-    <header class="header-2 h-abs">
-      <!-- header top -->
-      <div class="header-top">
-        <div class="container">
-          <div class="header-top-wrap">
-            <div class="header-top-left">
-              <div class="header-top-list">
-                <ul>
-                  <li>
-                    <a href="mailto:info@example.com"><i class="far fa-envelopes"></i> info@example.com</a>
-                  </li>
-                  <li>
-                    <a href="tel:+21236547898"><i class="far fa-phone-volume"></i> +2 123 654 7898</a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="far fa-alarm-clock"></i> Sun - Fri (08AM - 10PM)</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="header-top-right">
-              <div class="header-top-list">
-                <a href="login.html"><i class="far fa-sign-in"></i>Login</a>
-              </div>
-              <div class="header-top-lang">
-                <div class="dropdown">
-                  <a href="#" class="top-lang dropdown-toggle" data-bs-toggle="dropdown"><i class="fal fa-globe"></i> Eng</a>
-                  <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">English</a></li>
-                    <li><a class="dropdown-item" href="#">German</a></li>
-                    <li><a class="dropdown-item" href="#">Russian</a></li>
-                    <li><a class="dropdown-item" href="#">Spanish</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div class="header-top-social">
-                <span>Follow Us: </span>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-x-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- header top end -->
-
-      <!-- navbar -->
-      <div class="main-navigation">
-        <nav class="navbar navbar-expand-lg">
-          <div class="container position-relative">
-            <a class="navbar-brand" href="index.html">
-              <img src="{% static 'frontend/assets/img/logo/logo.webp' %}" alt="logo" />
-            </a>
-            <div class="mobile-menu-right">
-              <div class="mobile-menu-btn">
-                <button type="button" class="nav-right-link search-box-outer"><i class="far fa-search"></i></button>
-              </div>
-              <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar"
-                aria-label="Toggle navigation"
-              >
-                <span></span>
-                <span></span>
-                <span></span>
-              </button>
-            </div>
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
-              <div class="offcanvas-header">
-                <a href="index.html" class="offcanvas-brand" id="offcanvasNavbarLabel">
-                  <img src="{% static 'frontend/assets/img/logo/logo.webp' %}" alt="" />
-                </a>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
-                  <i class="far fa-xmark"></i>
-                </button>
-              </div>
-              <div class="offcanvas-body gap-xl-4">
-                <ul class="navbar-nav justify-content-end flex-grow-1">
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown">Home</a>
-                    <ul class="dropdown-menu fade-down">
-                      <li><a class="dropdown-item" href="index.html">Home Demo 01</a></li>
-                      <li><a class="dropdown-item" href="index-2.html">Home Demo 02</a></li>
-                      <li><a class="dropdown-item" href="index-3.html">Home Demo 03</a></li>
-                    </ul>
-                  </li>
-                  <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Tours</a>
-                    <ul class="dropdown-menu fade-down">
-                      <li><a class="dropdown-item" href="tour.html">Tours One</a></li>
-                      <li><a class="dropdown-item" href="tour-2.html">Tours Two</a></li>
-                      <li><a class="dropdown-item" href="tour-3.html">Tours Three</a></li>
-                      <li><a class="dropdown-item" href="tour-category.html">Tours Category</a></li>
-                      <li><a class="dropdown-item" href="tour-single.html">Tour Single</a></li>
-                      <li><a class="dropdown-item" href="tour-booking.html">Tour Booking</a></li>
-                    </ul>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Pages</a>
-                    <ul class="dropdown-menu fade-down">
-                      <li><a class="dropdown-item" href="about.html">About Us</a></li>
-                      <li><a class="dropdown-item" href="team.html">Our Team</a></li>
-                      <li class="dropdown-submenu">
-                        <a class="dropdown-item dropdown-toggle" href="#">Tour Guide</a>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="tour-guide.html">Tour Guide</a></li>
-                          <li><a class="dropdown-item" href="tour-guide-single.html">Tour Guide Single</a></li>
-                        </ul>
-                      </li>
-                      <li class="dropdown-submenu">
-                        <a class="dropdown-item dropdown-toggle" href="#">Activity</a>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="activity.html">Activity</a></li>
-                          <li><a class="dropdown-item" href="activity-single.html">Activity Single</a></li>
-                        </ul>
-                      </li>
-                      <li class="dropdown-submenu">
-                        <a class="dropdown-item dropdown-toggle" href="#">Visa</a>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="visa.html">Visa</a></li>
-                          <li><a class="dropdown-item" href="visa-single.html">Visa Single</a></li>
-                        </ul>
-                      </li>
-                      <li class="dropdown-submenu">
-                        <a class="dropdown-item dropdown-toggle" href="#">Authentication</a>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="login.html">Login</a></li>
-                          <li><a class="dropdown-item" href="register.html">Register</a></li>
-                          <li><a class="dropdown-item" href="forgot-password.html">Forgot Password</a></li>
-                        </ul>
-                      </li>
-                      <li class="dropdown-submenu">
-                        <a class="dropdown-item dropdown-toggle" href="#">Extra Pages</a>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="coming-soon.html">Coming Soon</a></li>
-                          <li><a class="dropdown-item" href="terms.html">Terms Of Service</a></li>
-                          <li><a class="dropdown-item" href="privacy.html">Privacy Policy</a></li>
-                        </ul>
-                      </li>
-                      <li><a class="dropdown-item" href="contact.html">Contact Us</a></li>
-                      <li><a class="dropdown-item" href="gallery.html">Gallery</a></li>
-                      <li><a class="dropdown-item" href="faq.html">Faq's</a></li>
-                      <li><a class="dropdown-item" href="testimonial.html">Testimonials</a></li>
-                      <li><a class="dropdown-item" href="404.html">404 Error</a></li>
-                    </ul>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Destinations</a>
-                    <ul class="dropdown-menu fade-down">
-                      <li><a class="dropdown-item" href="destination.html">Destinations One</a></li>
-                      <li><a class="dropdown-item" href="destination-2.html">Destinations Two</a></li>
-                      <li><a class="dropdown-item" href="destination-single.html">Destination Single</a></li>
-                    </ul>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Blog</a>
-                    <ul class="dropdown-menu fade-down">
-                      <li><a class="dropdown-item" href="blog.html">Blog</a></li>
-                      <li><a class="dropdown-item" href="blog-single.html">Blog Single</a></li>
-                    </ul>
-                  </li>
-                  <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                </ul>
-                <!-- nav-right -->
-                <div class="nav-right">
-                  <div class="search-btn">
-                    <button type="button" class="nav-right-link search-box-outer"><i class="far fa-search"></i></button>
-                  </div>
-                  <div class="nav-btn">
-                    <a href="contact.html" class="theme-btn">Let's Talk<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </div>
-      <!-- navbar end-->
-    </header>
-    <!-- header area end -->
-
-    <!-- popup search -->
-    <div class="search-popup">
-      <button class="close-search"><span class="far fa-times"></span></button>
-      <form action="#">
-        <div class="form-group">
-          <input type="search" name="search-field" class="form-control" placeholder="Search Here..." required />
-          <button type="submit"><i class="far fa-search"></i></button>
-        </div>
-      </form>
-    </div>
-    <!-- popup search end -->
-
-    <main class="main">
       <!-- hero area -->
       <div class="hero-section hs-2">
         <div class="wave-shape"><img src="{% static 'frontend/assets/img/shape/13.webp' %}" alt="" /></div>
         <div class="hero-slider owl-carousel">
           <div class="hero-single">
-            <div class="hero-bg-img" style="background-image: url({% static 'frontend/assets/img/hero/slider-1.webp' %})"></div>
+            <div class="hero-bg-img" style="background-image: url({% static 'frontend/assets/img/hero/img-4.jpg' %})"></div>
             <div class="container">
               <div class="row align-items-center">
                 <div class="col-md-12 col-lg-7">
                   <div class="hero-content">
-                    <div class="shape" data-animation="fadeInRight" data-delay=".3s"><img src="{% static 'frontend/assets/img/shape/12.webp' %}" alt="" /></div>
-                    <h4 class="hero-sub-title" data-animation="fadeInUp" data-delay=".1s">Welcome To Touria!</h4>
-                    <h3 class="hero-title" data-animation="fadeInUp" data-delay=".2s">Explore The Whole <span>World</span></h3>
+                    {% comment %} <div class="shape" data-animation="fadeInRight" data-delay=".3s"><img src="{% static 'frontend/assets/img/shape/12.webp' %}" alt="" /></div> {% endcomment %}
+                    <h4 class="hero-sub-title" data-animation="fadeInUp" data-delay=".1s">Welcome to Flying Fox Adventure</h4>
+                    <h3 class="hero-title" data-animation="fadeInUp" data-delay=".2s">Fly Above Munnar's Breathtaking <span>Valleys</span></h3>
                     <p data-animation="fadeInUp" data-delay=".3s">
-                      There are many variations of passages available the majority have suffered <br />
-                      alteration in some the Internet tend to repeat injected.
+                      Experience Kerala's most thrilling zipline adventure. Glide high above lush tea plantations, forests, rivers, and breathtaking mountain valleys with complete safety and unforgettable views.
                     </p>
                     <div class="hero-info" data-animation="fadeInUp" data-delay=".4s">
                       <ul>
                         <li>
                           <div class="icon"><img src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}" alt="" /></div>
-                          <h4>Best Price Guarantee</h4>
+                          <h4>International Safety Standards</h4>
                         </li>
                         <li>
                           <div class="icon"><img src="{% static 'frontend/assets/img/icon/calendar-pen.svg' %}" alt="" /></div>
-                          <h4>Fast And Easy Booking</h4>
+                          <h4>Professional Adventure Guides</h4>
                         </li>
                       </ul>
                     </div>
                     <div class="hero-btn" data-animation="fadeInUp" data-delay=".5s">
-                      <a href="about.html" class="theme-btn">About More<i class="fas fa-arrow-right"></i></a>
-                      <a href="contact.html" class="theme-btn2">Learn More<i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'bookings' %}" class="theme-btn">Book Your Ride<i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'rides' %}" class="theme-btn2">View Rides<i class="fas fa-arrow-right"></i></a>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-12 col-lg-5">
                   <div class="hero-destination" data-animation="fadeInUp" data-delay=".2s">
-                    <h4 class="title">Most Popular Destination</h4>
+                    <h4 class="title">Featured Zipline Ride</h4>
                     <div class="img">
                       <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/hero/d1.webp' %}" alt="" />
+                        <img src="{% static 'frontend/assets/img/hero/img-2.jpg' %}" alt="" />
                       </div>
-                      <a href="destination-single.html"><i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'destination_single' %}"><i class="fas fa-arrow-right"></i></a>
                     </div>
                     <div class="hero-info-wrap">
                       <div class="hero-avatar-group">
@@ -301,17 +69,16 @@
             </div>
           </div>
           <div class="hero-single">
-            <div class="hero-bg-img" style="background-image: url({% static 'frontend/assets/img/hero/slider-2.webp' %})"></div>
+            <div class="hero-bg-img" style="background-image: url({% static 'frontend/assets/img/hero/img-3.jpg' %})"></div>
             <div class="container">
               <div class="row align-items-center">
                 <div class="col-md-12 col-lg-7">
                   <div class="hero-content">
-                    <div class="shape" data-animation="fadeInRight" data-delay=".3s"><img src="{% static 'frontend/assets/img/shape/12.webp' %}" alt="" /></div>
-                    <h4 class="hero-sub-title" data-animation="fadeInUp" data-delay=".1s">Welcome To Touria!</h4>
-                    <h3 class="hero-title" data-animation="fadeInUp" data-delay=".2s">Explore The Whole <span>World</span></h3>
+                    {% comment %} <div class="shape" data-animation="fadeInRight" data-delay=".3s"><img src="{% static 'frontend/assets/img/shape/12.webp' %}" alt="" /></div> {% endcomment %}
+                    <h4 class="hero-sub-title" data-animation="fadeInUp" data-delay=".1s">ADVENTURE AWAITS</h4>
+                    <h3 class="hero-title" data-animation="fadeInUp" data-delay=".2s">Feel The Rush <span>Experience The Freedom</span></h3>
                     <p data-animation="fadeInUp" data-delay=".3s">
-                      There are many variations of passages available the majority have suffered <br />
-                      alteration in some the Internet tend to repeat injected.
+                      Soar across rivers, forests, and tea plantations with complete safety.
                     </p>
                     <div class="hero-info" data-animation="fadeInUp" data-delay=".4s">
                       <ul>
@@ -326,8 +93,8 @@
                       </ul>
                     </div>
                     <div class="hero-btn" data-animation="fadeInUp" data-delay=".5s">
-                      <a href="about.html" class="theme-btn">About More<i class="fas fa-arrow-right"></i></a>
-                      <a href="contact.html" class="theme-btn2">Learn More<i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'about' %}" class="theme-btn">About More<i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'contact' %}" class="theme-btn2">Contact Us<i class="fas fa-arrow-right"></i></a>
                     </div>
                   </div>
                 </div>
@@ -336,9 +103,9 @@
                     <h4 class="title">Most Popular Destination</h4>
                     <div class="img">
                       <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/hero/d2.webp' %}" alt="" />
+                        <img src="{% static 'frontend/assets/img/hero/img-2.jpg' %}" alt="" />
                       </div>
-                      <a href="destination-single.html"><i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'destination_single' %}"><i class="fas fa-arrow-right"></i></a>
                     </div>
                     <div class="hero-info-wrap">
                       <div class="hero-avatar-group">
@@ -359,17 +126,16 @@
             </div>
           </div>
           <div class="hero-single">
-            <div class="hero-bg-img" style="background-image: url({% static 'frontend/assets/img/hero/slider-3.webp' %})"></div>
+            <div class="hero-bg-img" style="background-image: url({% static 'frontend/assets/img/hero/img-1.jpg' %})"></div>
             <div class="container">
               <div class="row align-items-center">
                 <div class="col-md-12 col-lg-7">
                   <div class="hero-content">
-                    <div class="shape" data-animation="fadeInRight" data-delay=".3s"><img src="{% static 'frontend/assets/img/shape/12.webp' %}" alt="" /></div>
-                    <h4 class="hero-sub-title" data-animation="fadeInUp" data-delay=".1s">Welcome To Touria!</h4>
-                    <h3 class="hero-title" data-animation="fadeInUp" data-delay=".2s">Explore The Whole <span>World</span></h3>
+                    {% comment %} <div class="shape" data-animation="fadeInRight" data-delay=".3s"><img src="{% static 'frontend/assets/img/shape/12.webp' %}" alt="" /></div> {% endcomment %}
+                    <h4 class="hero-sub-title" data-animation="fadeInUp" data-delay=".1s">CREATE MEMORIES</h4>
+                    <h3 class="hero-title" data-animation="fadeInUp" data-delay=".2s">An Adventure<span>You'll Never Forget</span></h3>
                     <p data-animation="fadeInUp" data-delay=".3s">
-                      There are many variations of passages available the majority have suffered <br />
-                      alteration in some the Internet tend to repeat injected.
+                     Perfect for families, couples, friends, and thrill seekers visiting Munnar.
                     </p>
                     <div class="hero-info" data-animation="fadeInUp" data-delay=".4s">
                       <ul>
@@ -384,8 +150,8 @@
                       </ul>
                     </div>
                     <div class="hero-btn" data-animation="fadeInUp" data-delay=".5s">
-                      <a href="about.html" class="theme-btn">About More<i class="fas fa-arrow-right"></i></a>
-                      <a href="contact.html" class="theme-btn2">Learn More<i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'about' %}" class="theme-btn">About More<i class="fas fa-arrow-right"></i></a>
+                      <a href="{% url 'contact' %}" class="theme-btn2">Contact Us<i class="fas fa-arrow-right"></i></a>
                     </div>
                   </div>
                 </div>
@@ -394,7 +160,7 @@
                     <h4 class="title">Most Popular Destination</h4>
                     <div class="img">
                       <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/hero/d3.webp' %}" alt="" />
+                        <img src="{% static 'frontend/assets/img/hero/img-2.jpg' %}" alt="" />
                       </div>
                       <a href="destination-single.html"><i class="fas fa-arrow-right"></i></a>
                     </div>
@@ -421,7 +187,7 @@
       <!-- hero area end -->
 
       <!-- booking form -->
-      <div class="booking-form-2">
+      {% comment %} <div class="booking-form-2">
         <div class="container">
           <div class="col-lg-12 position-relative">
             <div class="booking-form-wrap b-abs">
@@ -491,1050 +257,754 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> {% endcomment %}
       <!-- booking form end -->
 
-      <!-- tour category -->
-      <div class="tour-category pt-120">
+      <!-- ride video section -->
+      <section class="ride-showcase-section pt-120 pb-100">
         <div class="container">
-          <div class="category-slider owl-carousel owl-theme wow fadeInUp" data-wow-delay=".2s">
-            <div class="item">
-              <div class="category-item">
-                <div class="category-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/category/01.webp' %}" alt="" />
-                  </div>
-                  <a href="tour.html" class="category-arrow"><i class="fas fa-arrow-right"></i></a>
-                  <div class="shape"><img src="{% static 'frontend/assets/img/shape/14.webp' %}" alt="" /></div>
-                </div>
-                <div class="category-content">
-                  <h4><a href="tour.html">Family Tour</a></h4>
-                  <span>29 Tours</span>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="category-item">
-                <div class="category-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/category/02.webp' %}" alt="" />
-                  </div>
-                  <a href="tour.html" class="category-arrow"><i class="fas fa-arrow-right"></i></a>
-                  <div class="shape"><img src="{% static 'frontend/assets/img/shape/14.webp' %}" alt="" /></div>
-                </div>
-                <div class="category-content">
-                  <h4><a href="tour.html">Adventure Tour</a></h4>
-                  <span>18 Tours</span>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="category-item">
-                <div class="category-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/category/03.webp' %}" alt="" />
-                  </div>
-                  <a href="tour.html" class="category-arrow"><i class="fas fa-arrow-right"></i></a>
-                  <div class="shape"><img src="{% static 'frontend/assets/img/shape/14.webp' %}" alt="" /></div>
-                </div>
-                <div class="category-content">
-                  <h4><a href="tour.html">Solo Tour</a></h4>
-                  <span>15 Tours</span>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="category-item">
-                <div class="category-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/category/04.webp' %}" alt="" />
-                  </div>
-                  <a href="tour.html" class="category-arrow"><i class="fas fa-arrow-right"></i></a>
-                  <div class="shape"><img src="{% static 'frontend/assets/img/shape/14.webp' %}" alt="" /></div>
-                </div>
-                <div class="category-content">
-                  <h4><a href="tour.html">Group Tour</a></h4>
-                  <span>37 Tours</span>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="category-item">
-                <div class="category-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/category/05.webp' %}" alt="" />
-                  </div>
-                  <a href="tour.html" class="category-arrow"><i class="fas fa-arrow-right"></i></a>
-                  <div class="shape"><img src="{% static 'frontend/assets/img/shape/14.webp' %}" alt="" /></div>
-                </div>
-                <div class="category-content">
-                  <h4><a href="tour.html">Beach Gateways</a></h4>
-                  <span>18 Tours</span>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="category-item">
-                <div class="category-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/category/06.webp' %}" alt="" />
-                  </div>
-                  <a href="tour.html" class="category-arrow"><i class="fas fa-arrow-right"></i></a>
-                  <div class="shape"><img src="{% static 'frontend/assets/img/shape/14.webp' %}" alt="" /></div>
-                </div>
-                <div class="category-content">
-                  <h4><a href="tour.html">Honeymoon Tour</a></h4>
-                  <span>29 Tours</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- tour category -->
 
-      <!-- feature-area -->
-      <div class="feature-area pt-100">
-        <div class="container-fluid">
-          <div class="feature-wrap bg-shape pt-90 pb-150">
-            <div class="row">
-              <div class="col-lg-6 mx-auto">
-                <div class="site-heading text-center wow fadeInUp" data-wow-delay=".2s">
-                  <span class="site-title-tagline"><i class="far fa-backpack"></i>Our Feature</span>
-                  <h3 class="site-title">
-                    Stop dreaming about the world <br />
-                    and start seeing it
-                  </h3>
-                </div>
-              </div>
-            </div>
-            <div class="container pb-30">
-              <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                  <div class="feature-item wow fadeInUp" data-wow-delay=".2s">
-                    <div class="feature-content">
-                      <div class="feature-head">
-                        <div class="feature-icon">
-                          <img src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}" alt="" />
-                        </div>
-                        <div>
-                          <span class="count">01</span>
-                          <h4>Affordable Pricing</h4>
-                        </div>
-                      </div>
-                      <div class="feature-info">
-                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                  <div class="feature-item wow fadeInUp" data-wow-delay=".4s">
-                    <div class="feature-content">
-                      <div class="feature-head">
-                        <div class="feature-icon">
-                          <img src="{% static 'frontend/assets/img/icon/mountains.svg' %}" alt="" />
-                        </div>
-                        <div>
-                          <span class="count">02</span>
-                          <h4>Outdoor Camping</h4>
-                        </div>
-                      </div>
-                      <div class="feature-info">
-                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                  <div class="feature-item wow fadeInUp" data-wow-delay=".6s">
-                    <div class="feature-content">
-                      <div class="feature-head">
-                        <div class="feature-icon">
-                          <img src="{% static 'frontend/assets/img/icon/shield-check.svg' %}" alt="" />
-                        </div>
-                        <div>
-                          <span class="count">03</span>
-                          <h4>Complete Safety</h4>
-                        </div>
-                      </div>
-                      <div class="feature-info">
-                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                  <div class="feature-item wow fadeInUp" data-wow-delay=".8s">
-                    <div class="feature-content">
-                      <div class="feature-head">
-                        <div class="feature-icon">
-                          <img src="{% static 'frontend/assets/img/icon/user-headset.svg' %}" alt="" />
-                        </div>
-                        <div>
-                          <span class="count">04</span>
-                          <h4>24/7 Client Support</h4>
-                        </div>
-                      </div>
-                      <div class="feature-info">
-                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- feature-area end -->
-
-      <!-- partner area -->
-      <div class="partner-area">
-        <div class="container">
-          <div class="partner-wrap mt-ng">
-            <div class="partner-slider owl-carousel owl-theme">
-              <img src="{% static 'frontend/assets/img/partner/01.webp' %}" alt="thumb" />
-              <img src="{% static 'frontend/assets/img/partner/02.webp' %}" alt="thumb" />
-              <img src="{% static 'frontend/assets/img/partner/03.webp' %}" alt="thumb" />
-              <img src="{% static 'frontend/assets/img/partner/04.webp' %}" alt="thumb" />
-              <img src="{% static 'frontend/assets/img/partner/01.webp' %}" alt="thumb" />
-              <img src="{% static 'frontend/assets/img/partner/02.webp' %}" alt="thumb" />
-              <img src="{% static 'frontend/assets/img/partner/03.webp' %}" alt="thumb" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- partner area end -->
-
-      <!-- about area -->
-      <div class="about-area3 py-120">
-        <div class="container">
           <div class="row">
-            <div class="col-lg-7">
-              <div class="about-left">
-                <div class="site-heading mb-4 wow fadeInUp" data-wow-delay=".2s">
-                  <span class="site-title-tagline"><i class="far fa-backpack"></i>About Us</span>
-                  <h3 class="site-title">We take you places and you make memories from the world</h3>
-                </div>
-                <div class="row g-lg-5">
-                  <div class="col-lg-4">
-                    <div class="img-1 wow fadeInUp" data-wow-delay=".4s">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/about/02.webp' %}" alt="" />
-                      </div>
-                    </div>
-                    <div class="ani-shape">
-                      <img class="ani-transY" src="{% static 'frontend/assets/img/shape/08.webp' %}" alt="" />
-                    </div>
-                  </div>
-                  <div class="col-lg-8">
-                    <div class="about-content my-0 wow fadeInUp" data-wow-delay=".6s">
-                      <p class="about-text">
-                        There are many variations of passages available but the majority have suffered alteration in some form by inject
-                        scrambled it to make a type specimen book.
-                      </p>
-                      <div class="about-content-wrap">
-                        <div class="about-item">
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/guide.svg' %}" alt="" />
-                          </div>
-                          <div class="content">
-                            <h4>Local Guide Assistance</h4>
-                            <p>It is a long established fact that reader content words page when looking layout.</p>
-                          </div>
-                        </div>
-                        <div class="about-list">
-                          <ul>
-                            <li>
-                              <img src="{% static 'frontend/assets/img/icon/check.svg' %}" alt="" />
-                              <p>Many variations of passages available</p>
-                            </li>
-                            <li>
-                              <img src="{% static 'frontend/assets/img/icon/check.svg' %}" alt="" />
-                              <p>Suffered alteration in some form by injected</p>
-                            </li>
-                            <li>
-                              <img src="{% static 'frontend/assets/img/icon/check.svg' %}" alt="" />
-                              <p>Words which don't look even slightly</p>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <a href="about.html" class="theme-btn">Discover More<i class="fas fa-arrow-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-5">
-              <div class="about-right wow fadeInRight" data-wow-delay=".2s">
-                <div class="about-experience">
-                  <h4>30<span>+</span></h4>
-                  <p>Years Of Experience</p>
-                </div>
-                <div class="img-2">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/about/06.webp' %}" alt="" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- about area end -->
+            <div class="col-lg-7 mx-auto">
+              <div class="site-heading text-center wow fadeInUp">
+                <span class="site-title-tagline">
+                  <i class="far fa-person-hiking"></i>
+                  Our Adventures
+                </span>
 
-      <!-- tour-area -->
-      <div class="tour-area bg-2 pt-90 pb-100">
-        <div class="shape-1">
-          <img src="{% static 'frontend/assets/img/shape/02.webp' %}" alt="" />
-        </div>
-        <div class="container-fluid px-lg-5">
-          <div class="row">
-            <div class="col-12">
-              <div class="site-heading inline wow fadeInDown" data-wow-delay=".2s">
-                <div>
-                  <span class="site-title-tagline"><i class="far fa-backpack"></i>Our Tours</span>
-                  <h3 class="site-title">Let's check our popular tours</h3>
-                </div>
-                <div>
-                  <a href="tour.html" class="theme-btn">View All Tours<i class="fas fa-arrow-right"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="tour-slider popup-gallery owl-carousel owl-theme wow fadeInUp" data-wow-delay=".2s">
-            <div class="item">
-              <div class="tour-item">
-                <span class="tour-badge">Featured</span>
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/01.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Family</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$429</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="tour-item">
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/02.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                  <div class="tour-btn">
-                    <a class="popup-img" href="{% static 'frontend/assets/img/tour/02.webp' %}"><i class="far fa-image"></i></a>
-                    <a class="popup-youtube" href="https://www.youtube.com/watch?v=jLS3DrTJrpI"><i class="far fa-video"></i></a>
-                  </div>
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Adventure</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$385</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="tour-item">
-                <span class="tour-badge badge-discount">25% Save</span>
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/03.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Solo</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$520</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="tour-item">
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/04.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Honeymoon</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$640</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="tour-item">
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/05.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Beach</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$815</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="tour-item">
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/06.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Holiday</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$293</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="tour-item">
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/07.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Group</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$464</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="tour-item">
-                <div class="tour-img">
-                  <a href="#" class="favorite"><i class="far fa-heart"></i></a>
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/tour/08.webp' %}" alt="" />
-                  </div>
-                  <img class="shape" src="{% static 'frontend/assets/img/shape/01.webp' %}" alt="" />
-                </div>
-                <div class="tour-content">
-                  <div class="tour-top">
-                    <a href="#" class="tour-category"><i class="far fa-tag"></i> Historical</a>
-                    <span class="tour-place"><i class="far fa-earth-americas"></i> 10 Places</span>
-                  </div>
-                  <h4 class="tour-title"><a href="tour-single.html">France Adventure Tour</a></h4>
-                  <p class="tour-location"><i class="far fa-location-dot"></i> 13 Rue Massenet Road, Nice</p>
-                  <div class="tour-rate">
-                    <span class="badge"><i class="far fa-star"></i> 5.0</span>
-                    <span class="tour-rate-type">Excellent</span>
-                    <span class="tour-rate-review">(2.5k Reviews)</span>
-                  </div>
-                  <div class="tour-duration"><i class="far fa-clock"></i> 5 Days 4 Nights Trip</div>
-                  <div class="tour-bottom">
-                    <div class="tour-price">From <span>$378</span></div>
-                    <a href="tour-single.html" class="theme-btn">See More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- tour-area end -->
+                <h2 class="site-title">
+                  Choose Your Next
+                  <span>Flying Fox Adventure</span>
+                </h2>
 
-      <!-- text-slider -->
-      <div class="marquee-text-slider">
+                <p>
+                  Watch the experience, explore each ride and choose the perfect
+                  adventure for your visit to Munnar.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="ride-video-slider owl-carousel owl-theme wow fadeInUp"
+            data-wow-delay=".3s"
+          >
+
+            {% for ride in rides %}
+
+              {% with ride_video=ride.uploaded_videos.0 %}
+
+                <div class="ride-video-item">
+                  <article class="ride-video-card">
+
+                    <div class="ride-video-media">
+
+                      {% if ride_video %}
+
+                        <video
+                          class="ride-card-video"
+                          preload="metadata"
+                          playsinline
+                        >
+                          <source
+                            src="{{ ride_video.video.url }}"
+                            type="video/mp4"
+                          >
+
+                          Your browser does not support HTML video.
+                        </video>
+
+                        <div class="ride-video-overlay"></div>
+
+                        <button
+                          type="button"
+                          class="ride-play-button"
+                          aria-label="Play {{ ride.name }} video"
+                        >
+                          <i class="fas fa-play"></i>
+                        </button>
+
+                      {% else %}
+
+                        <div class="ride-no-video">
+                          <i class="fas fa-video-slash"></i>
+                          <span>Video coming soon</span>
+                        </div>
+
+                      {% endif %}
+
+                      <span class="ride-level-badge">
+                        <i class="far fa-bolt"></i>
+                        Flying Fox
+                      </span>
+
+                      <div class="ride-card-content">
+
+                        <span class="ride-card-location">
+                          <i class="far fa-location-dot"></i>
+                          Munnar, Kerala
+                        </span>
+
+                        <h3>
+                          <a href="#">
+                            {{ ride.name }}
+                          </a>
+                        </h3>
+
+                        <div class="ride-card-info">
+                          <span>
+                            <i class="far fa-clock"></i>
+                            {{ ride.duration }}
+                          </span>
+                        </div>
+
+                        <a href="#" class="ride-details-link">
+                          Explore Ride
+                          <i class="fas fa-arrow-right"></i>
+                        </a>
+
+                      </div>
+
+                    </div>
+                  </article>
+                </div>
+
+              {% endwith %}
+
+            {% empty %}
+
+              <div class="text-center">
+                <p>No active rides are available.</p>
+              </div>
+
+            {% endfor %}
+
+          </div>
+        </div>
+      </section>
+      <!-- ride video section end -->
+
+  <!-- text-slider -->
+      {% comment %} <div class="marquee-text-slider">
         <div class="container-fluid px-0">
           <div class="tw-marquee">
             <div class="tw-marquee-wrap">
               <div class="tw-marquee-group">
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Special Activities</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Proper Guideline</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Travel Arrangement</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Location Manager</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>24/7 Customer Support</h3>
                 </div>
               </div>
               <!-- duplicate for complete loop -->
               <div class="tw-marquee-group">
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Special Activities</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Proper Guideline</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Travel Arrangement</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>Location Manager</h3>
                 </div>
                 <div class="tw-marquee-text">
-                  <img src="{% static 'frontend/assets/img/marquee/01.webp' %}" alt="" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="" />
                   <h3>24/7 Customer Support</h3>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div> {% endcomment %}
       <!-- text-slider end -->
 
-      <!-- banner area -->
-      <div class="banner-area py-120">
+
+
+      <!-- safety section -->
+      <section class="safety-first-section py-120">
         <div class="container">
-          <div class="row g-5">
-            <div class="col-lg-4">
-              <div class="site-heading mb-0 wow fadeInLeft" data-wow-delay=".2s">
-                <span class="site-title-tagline"><i class="far fa-backpack"></i>Our Gallery</span>
-                <h3 class="site-title">Our gallery brings every destination in world to life</h3>
+
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <div
+                class="site-heading text-center safety-heading wow fadeInUp"
+                data-wow-delay=".2s"
+              >
+                <span class="site-title-tagline">
+                  <i class="far fa-shield-check"></i>
+                  Safety First
+                </span>
+
+                <h2 class="site-title">
+                  Your Safety,
+                  <span>Our Promise</span>
+                </h2>
+
                 <p>
-                  There are many variations of passages available but the majority have suffered alteration in some you need sure there
-                  isn't anything in the middle of text.
+                  We use internationally certified equipment and follow strict
+                  safety procedures to provide a secure and unforgettable Flying
+                  Fox adventure.
                 </p>
-                <div class="mt-50">
-                  <a href="contact.html" class="theme-btn">Contact Us<i class="fas fa-arrow-right"></i></a>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-8">
-              <div class="banner-img-wrap popup-gallery wow fadeInRight" data-wow-delay=".2s">
-                <div class="img-item active">
-                  <img src="{% static 'frontend/assets/img/gallery/01.webp' %}" alt="" />
-                  <a href="{% static 'frontend/assets/img/gallery/01.webp' %}" class="popup-img"><i class="far fa-plus"></i></a>
-                </div>
-                <div class="img-item">
-                  <img src="{% static 'frontend/assets/img/gallery/02.webp' %}" alt="" />
-                  <a href="{% static 'frontend/assets/img/gallery/02.webp' %}" class="popup-img"><i class="far fa-plus"></i></a>
-                </div>
-                <div class="img-item">
-                  <img src="{% static 'frontend/assets/img/gallery/03.webp' %}" alt="" />
-                  <a href="{% static 'frontend/assets/img/gallery/03.webp' %}" class="popup-img"><i class="far fa-plus"></i></a>
-                </div>
-                <div class="img-item">
-                  <img src="{% static 'frontend/assets/img/gallery/04.webp' %}" alt="" />
-                  <a href="{% static 'frontend/assets/img/gallery/04.webp' %}" class="popup-img"><i class="far fa-plus"></i></a>
-                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <!-- banner area end -->
 
-      <!-- destination -->
-      <div class="destination-3">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-7 mx-auto">
-              <div class="site-heading text-center wow fadeInDown" data-wow-delay=".2s">
-                <span class="site-title-tagline"><i class="far fa-backpack"></i>Destination</span>
-                <h3 class="site-title">Find your next escape among our top rated destinations</h3>
+          <div
+            class="safety-equipment-slider owl-carousel owl-theme wow fadeInUp"
+            data-wow-delay=".3s"
+          >
+
+            <div class="safety-equipment-item">
+              <article class="safety-equipment-card">
+                <div class="safety-equipment-image">
+                  <img
+                    src="{% static 'frontend/assets/img/safety/safety-helmet.png' %}"
+                    alt="Flying Fox safety helmet"
+                  >
+                </div>
+
+                <span class="safety-card-arrow">
+                  <i class="fas fa-arrow-up-right"></i>
+                </span>
+
+                <div class="safety-equipment-content">
+                  <h3>Safety Helmet</h3>
+
+                  <p>
+                    High-impact certified helmets designed to provide maximum
+                    head protection during every ride.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <div class="safety-equipment-item">
+              <article class="safety-equipment-card">
+                <div class="safety-equipment-image">
+                  <img
+                    src="{% static 'frontend/assets/img/safety/harness.png' %}"
+                    alt="Full body safety harness"
+                  >
+                </div>
+
+                <span class="safety-card-arrow">
+                  <i class="fas fa-arrow-up-right"></i>
+                </span>
+
+                <div class="safety-equipment-content">
+                  <h3>Full Body Harness</h3>
+
+                  <p>
+                    A secure and comfortable harness with adjustable straps for a
+                    safe and perfect fit.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <div class="safety-equipment-item">
+              <article class="safety-equipment-card">
+                <div class="safety-equipment-image">
+                  <img
+                    src="{% static 'frontend/assets/img/safety/trolley.png' %}"
+                    alt="Professional zipline trolley"
+                  >
+                </div>
+
+                <span class="safety-card-arrow">
+                  <i class="fas fa-arrow-up-right"></i>
+                </span>
+
+                <div class="safety-equipment-content">
+                  <h3>Zipline Trolley</h3>
+
+                  <p>
+                    A premium-quality trolley engineered for smooth, stable and
+                    controlled movement along the cable.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <div class="safety-equipment-item">
+              <article class="safety-equipment-card">
+                <div class="safety-equipment-image">
+                  <img
+                    src="{% static 'frontend/assets/img/safety/carabiners.png' %}"
+                    alt="Double locking safety carabiners"
+                  >
+                </div>
+
+                <span class="safety-card-arrow">
+                  <i class="fas fa-arrow-up-right"></i>
+                </span>
+
+                <div class="safety-equipment-content">
+                  <h3>Safety Carabiners</h3>
+
+                  <p>
+                    Strong double-locking carabiners provide a secure connection
+                    between the rider, harness and trolley.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <div class="safety-equipment-item">
+              <article class="safety-equipment-card">
+                <div class="safety-equipment-image">
+                  <img
+                    src="{% static 'frontend/assets/img/safety/gloves.png' %}"
+                    alt="Protective adventure gloves"
+                  >
+                </div>
+
+                <span class="safety-card-arrow">
+                  <i class="fas fa-arrow-up-right"></i>
+                </span>
+
+                <div class="safety-equipment-content">
+                  <h3>Protective Gloves</h3>
+
+                  <p>
+                    Strong-grip gloves improve hand protection, comfort and
+                    control throughout the adventure.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <div class="safety-equipment-item">
+              <article class="safety-equipment-card">
+                <div class="safety-equipment-image">
+                  <img
+                    src="{% static 'frontend/assets/img/safety/lanyard.png' %}"
+                    alt="Zipline safety lanyard"
+                  >
+                </div>
+
+                <span class="safety-card-arrow">
+                  <i class="fas fa-arrow-up-right"></i>
+                </span>
+
+                <div class="safety-equipment-content">
+                  <h3>Safety Lanyard</h3>
+
+                  <p>
+                    A durable shock-absorbing lanyard helps reduce sudden impact
+                    while maintaining a secure connection.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+          </div>
+
+          <div
+            class="safety-feature-panel wow fadeInUp"
+            data-wow-delay=".4s"
+          >
+            <div class="row g-0">
+
+              <div class="col-md-6 col-lg-4 col-xl-2">
+                <div class="safety-feature-item">
+                  <div class="safety-feature-icon">
+                    <i class="far fa-shield-check"></i>
+                  </div>
+
+                  <h4>Certified Equipment</h4>
+
+                  <p>
+                    Internationally certified and regularly maintained safety
+                    gear.
+                  </p>
+                </div>
               </div>
+
+              <div class="col-md-6 col-lg-4 col-xl-2">
+                <div class="safety-feature-item">
+                  <div class="safety-feature-icon">
+                    <i class="far fa-clipboard-check"></i>
+                  </div>
+
+                  <h4>Pre-Ride Inspection</h4>
+
+                  <p>
+                    Every piece of equipment is checked carefully before each
+                    ride.
+                  </p>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4 col-xl-2">
+                <div class="safety-feature-item">
+                  <div class="safety-feature-icon">
+                    <i class="far fa-user-helmet-safety"></i>
+                  </div>
+
+                  <h4>Trained Guides</h4>
+
+                  <p>
+                    Every ride is managed by trained and experienced adventure
+                    professionals.
+                  </p>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4 col-xl-2">
+                <div class="safety-feature-item">
+                  <div class="safety-feature-icon">
+                    <i class="far fa-link"></i>
+                  </div>
+
+                  <h4>Double-Lock System</h4>
+
+                  <p>
+                    Advanced dual-lock connections offer additional security.
+                  </p>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4 col-xl-2">
+                <div class="safety-feature-item">
+                  <div class="safety-feature-icon">
+                    <i class="far fa-cloud-sun-rain"></i>
+                  </div>
+
+                  <h4>Weather Monitoring</h4>
+
+                  <p>
+                    Rides operate only when weather conditions are safe.
+                  </p>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4 col-xl-2">
+                <div class="safety-feature-item">
+                  <div class="safety-feature-icon">
+                    <i class="far fa-kit-medical"></i>
+                  </div>
+
+                  <h4>Emergency Response</h4>
+
+                  <p>
+                    First-aid support and emergency procedures are always ready.
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
+
+          <div class="safety-bottom-message wow fadeInUp" data-wow-delay=".5s">
+            <i class="fas fa-shield-check"></i>
+
+            <p>
+              Your adventure is our responsibility. Experience every thrill with
+              <strong>complete peace of mind.</strong>
+            </p>
+          </div>
+
         </div>
+      </section>
+      <!-- safety section end -->
+
+      <!-- latest offers section -->
+      <section class="adventure-offers-section">
+        <div class="offer-cable offer-cable-one"></div>
+        <div class="offer-cable offer-cable-two"></div>
+
         <div class="container-fluid px-0">
-          <div class="marquee-destination-slider">
-            <div class="tw-marquee-wrap">
-              <div class="tw-marquee-group">
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/01.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Kyoto, Japan</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$320</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>4.9</span>
-                      </div>
-                    </div>
-                  </div>
+          <div class="row g-0 align-items-stretch">
+
+            <div class="col-lg-4">
+              <div class="offers-rider-area">
+
+                <div class="offers-rider-shape"></div>
+
+                <div class="offers-rider-content">
+                  <span class="offers-small-label">
+                    Limited-Time Deals
+                  </span>
+
+                  <h3>
+                    More Adventure.
+                    <span>Less Price.</span>
+                  </h3>
                 </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/02.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Paris, France</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$460</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>4.9</span>
-                      </div>
-                    </div>
-                  </div>
+
+                <img
+                  src="{% static 'frontend/assets/img/offers/offer-rider.png' %}"
+                  alt="Flying Fox adventure rider"
+                  class="offers-rider-image"
+                >
+
+                <div class="offers-discount-badge">
+                  <strong>UP TO</strong>
+                  <span>25%</span>
+                  <small>OFF</small>
                 </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/03.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Istanbul, Turkey</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$390</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>5.0</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/04.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Lisbon, Portugal</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$524</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/05.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Sydney, Australia</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$470</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>5.0</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- duplicate for complete loop -->
-              <div class="tw-marquee-group">
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/01.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Kyoto, Japan</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$320</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/02.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Paris, France</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$460</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/03.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Istanbul, Turkey</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$390</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>5.0</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/04.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Lisbon, Portugal</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$524</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="destination-item">
-                    <div class="destination-img">
-                      <div class="ani-img">
-                        <img src="{% static 'frontend/assets/img/destination/05.webp' %}" alt="" />
-                      </div>
-                      <div class="destination-btn">
-                        <a href="tour.html">Booking Trip <i class="fas fa-arrow-right"></i></a>
-                      </div>
-                    </div>
-                    <div class="destination-content">
-                      <h4><a href="destination-single.html">Sydney, Australia</a></h4>
-                      <div class="bottom">
-                        <span class="cost"><span>$470</span> starting</span>
-                        <span class="rate"><i class="fas fa-star"></i>5.0</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
               </div>
             </div>
+
+            <div class="col-lg-8">
+              <div class="offers-content-area">
+
+                <div class="offers-heading">
+                  <span class="offers-tagline">
+                    <i class="far fa-ticket"></i>
+                    Latest Adventure Deals
+                  </span>
+
+                  <h2>
+                    Jaw-Dropping
+                    <span>Offers!</span>
+                  </h2>
+
+                  <p>
+                    Grab our limited-time Flying Fox deals and make your Munnar
+                    adventure even more exciting.
+                  </p>
+                </div>
+
+                <div class="offers-slider owl-carousel owl-theme">
+
+                  <article class="offer-card offer-card-purple">
+                    <div class="offer-card-pattern"></div>
+
+                    <span class="offer-card-badge">
+                      Weekday Special
+                    </span>
+
+                    <div class="offer-card-content">
+                      <span class="offer-small-text">SAVE BIG</span>
+
+                      <h3>
+                        20%
+                        <span>OFF</span>
+                      </h3>
+
+                      <h4>Weekday Flying Fox</h4>
+
+                      <p>
+                        Book your ride from Monday to Thursday and enjoy an
+                        exclusive discount.
+                      </p>
+
+                      <div class="offer-validity">
+                        <i class="far fa-calendar-check"></i>
+                        Valid Monday–Thursday
+                      </div>
+
+                      <a href="#" class="offer-book-btn">
+                        Book Offer
+                        <i class="fas fa-arrow-right"></i>
+                      </a>
+                    </div>
+                  </article>
+
+                  <article class="offer-card offer-card-blue">
+                    <div class="offer-card-pattern"></div>
+
+                    <span class="offer-card-badge">
+                      Couple Deal
+                    </span>
+
+                    <div class="offer-card-content">
+                      <span class="offer-small-text">FLY TOGETHER</span>
+
+                      <h3 class="offer-buy-one">
+                        BUY 1
+                        <span>GET 1</span>
+                      </h3>
+
+                      <h4>Couple Adventure</h4>
+
+                      <p>
+                        Share the thrill with someone special and get the second
+                        ride at 50% off.
+                      </p>
+
+                      <div class="offer-validity">
+                        <i class="far fa-heart"></i>
+                        Perfect for couples
+                      </div>
+
+                      <a href="#" class="offer-book-btn">
+                        Book Offer
+                        <i class="fas fa-arrow-right"></i>
+                      </a>
+                    </div>
+                  </article>
+
+                  <article class="offer-card offer-card-orange">
+                    <div class="offer-card-pattern"></div>
+
+                    <span class="offer-card-badge">
+                      Birthday Special
+                    </span>
+
+                    <div class="offer-card-content">
+                      <span class="offer-small-text">CELEBRATE WITH US</span>
+
+                      <h3>
+                        RIDE
+                        <span>FREE</span>
+                      </h3>
+
+                      <h4>Birthday Adventure</h4>
+
+                      <p>
+                        Celebrate your birthday at Flying Fox Adventure and receive
+                        one complimentary ride.
+                      </p>
+
+                      <div class="offer-validity">
+                        <i class="far fa-cake-candles"></i>
+                        ID proof required
+                      </div>
+
+                      <a href="#" class="offer-book-btn">
+                        Book Offer
+                        <i class="fas fa-arrow-right"></i>
+                      </a>
+                    </div>
+                  </article>
+
+                  <article class="offer-card offer-card-green">
+                    <div class="offer-card-pattern"></div>
+
+                    <span class="offer-card-badge">
+                      Group Saver
+                    </span>
+
+                    <div class="offer-card-content">
+                      <span class="offer-small-text">BRING YOUR CREW</span>
+
+                      <h3>
+                        ₹1000
+                        <span>OFF</span>
+                      </h3>
+
+                      <h4>Group Adventure</h4>
+
+                      <p>
+                        Visit with five or more adventurers and save more on your
+                        complete group booking.
+                      </p>
+
+                      <div class="offer-validity">
+                        <i class="far fa-users"></i>
+                        Minimum 5 riders
+                      </div>
+
+                      <a href="#" class="offer-book-btn">
+                        Book Offer
+                        <i class="fas fa-arrow-right"></i>
+                      </a>
+                    </div>
+                  </article>
+
+                  <article class="offer-card offer-card-navy">
+                    <div class="offer-card-pattern"></div>
+
+                    <span class="offer-card-badge">
+                      Early Bird
+                    </span>
+
+                    <div class="offer-card-content">
+                      <span class="offer-small-text">PLAN AHEAD</span>
+
+                      <h3>
+                        15%
+                        <span>OFF</span>
+                      </h3>
+
+                      <h4>Advance Booking</h4>
+
+                      <p>
+                        Reserve your Flying Fox experience at least seven days in
+                        advance and save.
+                      </p>
+
+                      <div class="offer-validity">
+                        <i class="far fa-clock"></i>
+                        Book 7 days early
+                      </div>
+
+                      <a href="#" class="offer-book-btn">
+                        Book Offer
+                        <i class="fas fa-arrow-right"></i>
+                      </a>
+                    </div>
+                  </article>
+
+                </div>
+
+                <div class="offers-bottom">
+                  <a href="#" class="offers-main-button">
+                    Explore All Offers
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+
+                  <div class="offers-custom-nav">
+                    <button
+                      type="button"
+                      class="offers-prev"
+                      aria-label="Previous offer"
+                    >
+                      <i class="fas fa-arrow-left"></i>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="offers-next"
+                      aria-label="Next offer"
+                    >
+                      <i class="fas fa-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
-      <!-- destination end -->
+      </section>
+      <!-- latest offers section end -->
 
-      <!-- activity-area -->
-      <div class="activity-area py-120">
-        <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <div class="site-heading inline wow fadeInDown" data-wow-delay=".2s">
-                <div>
-                  <span class="site-title-tagline"><i class="far fa-backpack"></i>Our Activity</span>
-                  <h3 class="site-title">Let's check our popular activity</h3>
-                </div>
-                <div>
-                  <a href="tour.html" class="theme-btn">All Activity<i class="fas fa-arrow-right"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="activity-slider owl-carousel owl-theme wow fadeInUp" data-wow-delay=".2s">
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/01.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/hiking.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Jungle Hiking</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/02.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/skydiving.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Skydiving</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/03.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/zipline.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Zip Lining</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/04.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/surfing.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Surfing</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/05.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/scuba-diving.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Scuba Diving</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/06.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/rafting.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Rafting</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/07.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/bungee-jumping.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Bungee Jumping</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="activity-item">
-                <div class="activity-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/activity/08.webp' %}" alt="" />
-                  </div>
-                  <div class="activity-content">
-                    <div class="icon">
-                      <img src="{% static 'frontend/assets/img/icon/ski-touring.svg' %}" alt="" />
-                    </div>
-                    <h4><a href="activity-single.html">Ski Touring</a></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- activity-area end -->
-
-      <!-- video-area -->
-      <div class="video-area-2 pt-100 pb-120">
-        <div class="video-bg"></div>
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-7 mx-auto">
-              <div class="site-heading sh-2 text-center wow fadeInDown" data-wow-delay=".2s">
-                <span class="site-title-tagline"><i class="far fa-backpack"></i>Tours Video</span>
-                <h3 class="site-title text-white">Experience the sights and sounds of our most iconic tours</h3>
-              </div>
-            </div>
-          </div>
-          <div class="video-content" style="background-image: url({% static 'frontend/assets/img/video/01.webp' %})">
-            <div class="video-wrap">
-              <a class="play-btn popup-youtube" href="https://www.youtube.com/watch?v=jLS3DrTJrpI">
-                <i class="fas fa-play"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- video-area end -->
-
-      <!-- tour guide -->
-      <div class="tour-guide pb-120">
+       <!-- tour guide -->
+      {% comment %} <div class="tour-guide py-120">
         <div class="container">
           <div class="row">
             <div class="col-lg-7 mx-auto">
               <div class="site-heading text-center wow fadeInUp" data-wow-delay=".2s">
                 <span class="site-title-tagline"><i class="far fa-backpack"></i>Tour Guide</span>
-                <h3 class="site-title">Explore hidden gems with our expert guide leading the way</h3>
+                <h3 class="site-title">Meet Our Safety Crew</h3>
               </div>
             </div>
           </div>
@@ -1646,384 +1116,896 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> {% endcomment %}
       <!-- tour guide end -->
 
-      <!-- section-group -->
-      <div class="section-group">
-        <div class="container-fluid">
-          <div class="section-group-wrap rounded-5 bg-2 pt-90 pb-120">
-            <!-- choose area -->
-            <div class="choose-area pb-120">
-              <div class="container">
-                <div class="row g-4 align-items-center">
-                  <div class="col-lg-6">
-                    <div class="choose-content">
-                      <div class="col-12 col-md-8 col-lg-12">
-                        <div class="site-heading mb-0 wow fadeInUp" data-wow-delay=".1s">
-                          <span class="site-title-tagline"><i class="far fa-backpack"></i>Why Choose Us</span>
-                          <h3 class="site-title">Lifelong memories every moment now feels special.</h3>
+
+
+      <!-- how it works section -->
+      <section class="how-it-works-section py-120">
+
+        <div class="hiw-decoration hiw-decoration-one"></div>
+        <div class="hiw-decoration hiw-decoration-two"></div>
+
+        <div class="container">
+
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <div
+                class="site-heading text-center hiw-heading wow fadeInUp"
+                data-wow-delay=".2s"
+              >
+                <span class="hiw-tagline">
+                  <i class="far fa-ticket"></i>
+                  How It Works
+                </span>
+
+                <h2>
+                  Your Adventure Starts
+                  <span>In Just 6 Easy Steps</span>
+                </h2>
+
+                <p>
+                  Register, choose your preferred Flying Fox ride, add participant
+                  details, complete the secure payment and receive your QR ticket
+                  directly on WhatsApp.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hiw-bento-grid">
+
+            <article
+              class="hiw-card hiw-card-large hiw-card-orange wow fadeInUp"
+              data-wow-delay=".2s"
+            >
+              <div class="hiw-card-content">
+
+                <span class="hiw-step-number">01</span>
+
+                <div class="hiw-card-text">
+                  <h3>Create Your Account</h3>
+
+                  <span class="hiw-title-line"></span>
+
+                  <p>
+                    Register using your name, mobile number and email address.
+                    Already registered users can sign in and continue booking.
+                  </p>
+
+                  <a href="#" class="hiw-card-link hiw-card-link-light">
+                    Register Now
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+                </div>
+
+                <div class="hiw-card-image hiw-register-image">
+                  <img
+                    src="{% static 'frontend/assets/img/how-it-works/register-phone.png' %}"
+                    alt="Create a Flying Fox adventure account"
+                  >
+                </div>
+
+              </div>
+            </article>
+
+            <article
+              class="hiw-card hiw-card-white wow fadeInUp"
+              data-wow-delay=".3s"
+            >
+              <div class="hiw-card-content">
+
+                <span class="hiw-step-number">02</span>
+
+                <div class="hiw-card-text">
+                  <h3>Choose Your Ride</h3>
+
+                  <span class="hiw-title-line"></span>
+
+                  <p>
+                    Select your preferred Flying Fox ride, available date and
+                    convenient time slot.
+                  </p>
+                </div>
+
+                <div class="hiw-card-image">
+                  <img
+                    src="{% static 'frontend/assets/img/how-it-works/choose-ride.png' %}"
+                    alt="Choose Flying Fox ride date and time"
+                  >
+                </div>
+
+              </div>
+            </article>
+
+            <article
+              class="hiw-card hiw-card-white wow fadeInUp"
+              data-wow-delay=".4s"
+            >
+              <div class="hiw-card-content">
+
+                <span class="hiw-step-number">03</span>
+
+                <div class="hiw-card-text">
+                  <h3>Add Participant Details</h3>
+
+                  <span class="hiw-title-line"></span>
+
+                  <p>
+                    Enter every rider's required information, including name,
+                    age, weight and contact details.
+                  </p>
+                </div>
+
+                <div class="hiw-card-image">
+                  <img
+                    src="{% static 'frontend/assets/img/how-it-works/participant-details.png' %}"
+                    alt="Enter Flying Fox participant information"
+                  >
+                </div>
+
+              </div>
+            </article>
+
+            <article
+              class="hiw-card hiw-card-white wow fadeInUp"
+              data-wow-delay=".5s"
+            >
+              <div class="hiw-card-content">
+
+                <span class="hiw-step-number">04</span>
+
+                <div class="hiw-card-text">
+                  <h3>Make Secure Payment</h3>
+
+                  <span class="hiw-title-line"></span>
+
+                  <p>
+                    Review your booking summary and complete the payment securely
+                    using the available online payment method.
+                  </p>
+                </div>
+
+                <div class="hiw-card-image">
+                  <img
+                    src="{% static 'frontend/assets/img/how-it-works/secure-payment.png' %}"
+                    alt="Secure online payment for Flying Fox booking"
+                  >
+                </div>
+
+                <div class="hiw-payment-methods">
+                  <span>UPI</span>
+                  <span>VISA</span>
+                  <span>Mastercard</span>
+                </div>
+
+              </div>
+            </article>
+
+            <article
+              class="hiw-card hiw-card-orange wow fadeInUp"
+              data-wow-delay=".6s"
+            >
+              <div class="hiw-card-content">
+
+                <span class="hiw-step-number hiw-step-white">05</span>
+
+                <div class="hiw-card-text">
+                  <h3>Get WhatsApp Ticket</h3>
+
+                  <span class="hiw-title-line hiw-title-line-white"></span>
+
+                  <p>
+                    After successful payment, your booking confirmation and QR
+                    ticket will be sent directly to your WhatsApp.
+                  </p>
+                </div>
+
+                <div class="hiw-card-image hiw-whatsapp-image">
+                  <img
+                    src="{% static 'frontend/assets/img/how-it-works/whatsapp-ticket.png' %}"
+                    alt="Flying Fox QR ticket received on WhatsApp"
+                  >
+                </div>
+
+                <span class="hiw-whatsapp-badge">
+                  <i class="fab fa-whatsapp"></i>
+                </span>
+
+              </div>
+            </article>
+
+            <article
+              class="hiw-card hiw-card-wide hiw-card-white wow fadeInUp"
+              data-wow-delay=".7s"
+            >
+              <div class="hiw-card-content">
+
+                <span class="hiw-step-number">06</span>
+
+                <div class="hiw-card-text">
+                  <h3>Verify Your Ticket &amp; Fly</h3>
+
+                  <span class="hiw-title-line"></span>
+
+                  <p>
+                    Show the QR ticket at the Flying Fox counter. Our team will
+                    verify your booking, provide safety equipment and prepare you
+                    for the adventure.
+                  </p>
+
+                  <div class="hiw-mini-features">
+                    <span>
+                      <i class="far fa-shield-check"></i>
+                      Safety First
+                    </span>
+
+                    <span>
+                      <i class="far fa-helmet-safety"></i>
+                      Gear Up
+                    </span>
+
+                    <span>
+                      <i class="far fa-person-hiking"></i>
+                      Start Riding
+                    </span>
+                  </div>
+                </div>
+
+                <div class="hiw-card-image hiw-verify-image">
+                  <img
+                    src="{% static 'frontend/assets/img/how-it-works/ticket-verification.webp' %}"
+                    alt="Flying Fox ticket verification before the ride"
+                  >
+                </div>
+
+              </div>
+            </article>
+
+          </div>
+
+          <div
+            class="hiw-bottom-bar wow fadeInUp"
+            data-wow-delay=".8s"
+          >
+            <div class="hiw-bottom-info">
+
+              <div class="hiw-bottom-icon">
+                <i class="far fa-ticket"></i>
+              </div>
+
+              <div>
+                <h4>
+                  Your ticket includes a unique booking ID and QR code.
+                </h4>
+
+                <p>
+                  Keep the ticket ready on your mobile phone when you arrive at
+                  the venue.
+                </p>
+              </div>
+
+            </div>
+
+            <a href="{% url 'bookings' %}" class="hiw-book-button">
+              Book Your Adventure
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+
+        </div>
+      </section>
+      <!-- how it works section end -->
+
+      <!-- plan adventure section -->
+      <section class="plan-adventure-section">
+        <div class="plan-adventure-overlay"></div>
+
+        <div class="container">
+          <div class="plan-adventure-content">
+
+            <div class="plan-adventure-heading text-center">
+              <span class="plan-adventure-tagline">
+                Plan Your Adventure
+              </span>
+
+              <h2>
+                Plan Your Perfect Adventure
+              </h2>
+
+              <p>
+                Everything you need to know for a smooth, safe and unforgettable
+                Flying Fox experience in Munnar.
+              </p>
+            </div>
+
+            <div class="plan-adventure-grid">
+
+              <div class="plan-adventure-card">
+                <div class="plan-adventure-icon">
+                  <i class="far fa-calendar-check"></i>
+                </div>
+
+                <h3>Book Your Ride in Advance</h3>
+
+                <p>
+                  Reserve your preferred date and time slot before arriving.
+                </p>
+              </div>
+
+              <div class="plan-adventure-card">
+                <div class="plan-adventure-icon">
+                  <i class="far fa-qrcode"></i>
+                </div>
+
+                <h3>Carry Your Digital Ticket</h3>
+
+                <p>
+                  Keep your WhatsApp QR ticket ready on your mobile phone.
+                </p>
+              </div>
+
+              <div class="plan-adventure-card">
+                <div class="plan-adventure-icon">
+                  <i class="far fa-shirt"></i>
+                </div>
+
+                <h3>Wear Comfortable Clothes</h3>
+
+                <p>
+                  Choose fitted and flexible clothing suitable for the activity.
+                </p>
+              </div>
+
+              <div class="plan-adventure-card">
+                <div class="plan-adventure-icon">
+                  <i class="far fa-shoe-prints"></i>
+                </div>
+
+                <h3>Wear Secure Footwear</h3>
+
+                <p>
+                  Closed shoes with a good grip are strongly recommended.
+                </p>
+              </div>
+
+              <div class="plan-adventure-card">
+                <div class="plan-adventure-icon">
+                  <i class="far fa-ban"></i>
+                </div>
+
+                <h3>Avoid Loose Accessories</h3>
+
+                <p>
+                  Remove loose jewellery, scarves and unsecured belongings.
+                </p>
+              </div>
+
+              <div class="plan-adventure-card">
+                <div class="plan-adventure-icon">
+                  <i class="far fa-clock"></i>
+                </div>
+
+                <h3>Arrive 30 Minutes Early</h3>
+
+                <p>
+                  Arrive early for verification, briefing and safety gear fitting.
+                </p>
+              </div>
+
+            </div>
+
+            <div class="plan-adventure-button-wrap">
+              <a href="/bookings/" class="plan-adventure-button">
+                Book Your Adventure
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+      <!-- plan adventure section end -->
+
+      <!-- gallery video marquee section -->
+      <section class="ff-gallery-video-section">
+
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+
+              <div
+                class="site-heading text-center ff-gallery-heading wow fadeInUp"
+                data-wow-delay=".2s"
+              >
+                <span class="site-title-tagline">
+                  <i class="far fa-video"></i>
+                  Adventure Gallery
+                </span>
+
+                <h2 class="site-title">
+                  Watch The
+                  <span>Flying Fox Experience</span>
+                </h2>
+
+                <p>
+                  Get a glimpse of the excitement, breathtaking views and
+                  unforgettable moments from our Flying Fox adventures.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {% if gallery_videos %}
+
+          <div class="ff-gallery-marquee">
+
+            <div class="ff-gallery-track">
+
+              <div class="ff-gallery-group">
+
+                {% for gallery_video in gallery_videos %}
+                  <div class="ff-gallery-item">
+
+                    <article class="ff-gallery-card">
+
+                      <video
+                        class="ff-gallery-video"
+                        muted
+                        autoplay
+                        loop
+                        playsinline
+                        preload="metadata"
+                      >
+                        <source
+                          src="{{ gallery_video.video.url }}"
+                          type="video/mp4"
+                        >
+
+                        Your browser does not support HTML video.
+                      </video>
+
+                      <div class="ff-gallery-overlay"></div>
+
+                    </article>
+
+                  </div>
+                {% endfor %}
+
+              </div>
+
+              <div class="ff-gallery-group" aria-hidden="true">
+
+                {% for gallery_video in gallery_videos %}
+                  <div class="ff-gallery-item">
+
+                    <article class="ff-gallery-card">
+
+                      <video
+                        class="ff-gallery-video"
+                        muted
+                        autoplay
+                        loop
+                        playsinline
+                        preload="metadata"
+                        tabindex="-1"
+                      >
+                        <source
+                          src="{{ gallery_video.video.url }}"
+                          type="video/mp4"
+                        >
+                      </video>
+
+                      <div class="ff-gallery-overlay"></div>
+
+                    </article>
+
+                  </div>
+                {% endfor %}
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="container">
+            <div class="ff-gallery-bottom text-center">
+              <a href="{% url 'gallery' %}" class="theme-btn">
+                Explore Full Gallery
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+        {% else %}
+
+          <div class="container">
+            <div class="ff-gallery-empty">
+              <i class="far fa-video-slash"></i>
+              <p>No gallery videos are available.</p>
+            </div>
+          </div>
+
+        {% endif %}
+
+      </section>
+      <!-- gallery video marquee section end -->
+
+      <!-- dynamic gallery section -->
+      {% comment %} <section class="banner-area py-120">
+        <div class="container">
+          <div class="row g-5 align-items-center">
+
+            <div class="col-lg-4">
+              <div
+                class="site-heading mb-0 wow fadeInLeft"
+                data-wow-delay=".2s"
+              >
+                <span class="site-title-tagline">
+                  <i class="far fa-images"></i>
+                  Our Gallery
+                </span>
+
+                <h2 class="site-title">
+                  Moments From Our
+                  <span>Flying Fox Adventures</span>
+                </h2>
+
+                <p>
+                  Explore memorable moments, breathtaking views and real adventure
+                  experiences captured at Flying Fox Adventure in Munnar.
+                </p>
+
+                <div class="mt-50">
+                  <a href="#" class="theme-btn">
+                    View Full Gallery
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-8">
+
+              {% if gallery_images %}
+
+                <div
+                  class="banner-img-wrap popup-gallery wow fadeInRight"
+                  data-wow-delay=".2s"
+                >
+
+                  {% for gallery_item in gallery_images %}
+
+                    <div
+                      class="img-item {% if forloop.first %}active{% endif %}"
+                    >
+                      <img
+                        src="{{ gallery_item.image.url }}"
+                        alt="{{ gallery_item.category.name }} gallery image"
+                        loading="lazy"
+                      >
+
+                      <a
+                        href="{{ gallery_item.image.url }}"
+                        class="popup-img"
+                        aria-label="View gallery image"
+                      >
+                        <i class="far fa-plus"></i>
+                      </a>
+                    </div>
+
+                  {% endfor %}
+
+                </div>
+
+              {% else %}
+
+                <div class="gallery-image-empty">
+                  <i class="far fa-images"></i>
+                  <p>No gallery images are available.</p>
+                </div>
+
+              {% endif %}
+
+            </div>
+
+          </div>
+        </div>
+      </section> {% endcomment %}
+      <!-- dynamic gallery section end -->
+
+      <!-- testimonial section -->
+      <section class="testimonial-area pt-120 pb-80">
+        <div class="container">
+
+          <div class="row">
+            <div class="col-lg-7 mx-auto">
+              <div
+                class="site-heading text-center wow fadeInUp"
+                data-wow-delay=".2s"
+              >
+                <span class="site-title-tagline">
+                  <i class="far fa-comment-smile"></i>
+                  Testimonials
+                </span>
+
+                <h2 class="site-title">
+                  Real Stories From Our
+                  <span>Happy Adventurers</span>
+                </h2>
+
+                <p>
+                  Discover what our guests say about their Flying Fox experience,
+                  safety, service and unforgettable moments in Munnar.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {% if testimonials %}
+
+            <div class="row g-4 align-items-stretch">
+
+              <div class="col-lg-3">
+                <div class="testimonial-box ff-testimonial-summary">
+
+                  <div class="img">
+                    <div class="ani-img">
+
+                      {% with first_testimonial=testimonials.first %}
+
+                        {% if first_testimonial.image %}
+                          <img
+                            src="{{ first_testimonial.image.url }}"
+                            alt="{{ first_testimonial.name }}"
+                          >
+                        {% else %}
+                          <img
+                            src="{% static 'frontend/assets/img/testimonial/default-testimonial.webp' %}"
+                            alt="Flying Fox customer review"
+                          >
+                        {% endif %}
+
+                      {% endwith %}
+
+                    </div>
+                  </div>
+
+                  <div class="content">
+                    <div class="google-rating">
+
+                      <div class="icon">
+                        <img
+                          src="{% static 'frontend/assets/img/icon/icon-google.svg' %}"
+                          alt="Google reviews"
+                        >
+                      </div>
+
+                      <div class="content">
+                        <span>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                        </span>
+
+                        <p>
+                          Trusted Guest Reviews
+                        </p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="col-lg-9">
+                <div
+                  class="testimonial-slider owl-carousel owl-theme wow fadeInUp"
+                  data-wow-delay=".1s"
+                >
+
+                  {% for testimonial in testimonials %}
+
+                    <div class="testimonial-item">
+                      <div class="content">
+
+                        <div class="icon">
+                          <img
+                            src="{% static 'frontend/assets/img/icon/quote.svg' %}"
+                            alt="Quote"
+                          >
+                        </div>
+
+                        <div class="rating">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                        </div>
+
+                        <div class="quote">
                           <p>
-                            It is a long established fact that a reader will be distracted by the readable content of page when looking at
-                            layout many desktop packages and web page editors now.
+                            {{ testimonial.review|safe }}
                           </p>
                         </div>
-                      </div>
-                      <div class="choose-content-wrap">
-                        <div class="row g-4">
-                          <div class="col-lg-6">
-                            <div class="choose-item wow fadeInUp" data-wow-delay=".2s">
-                              <span class="count">01</span>
-                              <div class="top">
-                                <div class="icon">
-                                  <img src="{% static 'frontend/assets/img/icon/guide.svg' %}" alt="" />
-                                </div>
-                                <h4>Experts Local Guide</h4>
-                              </div>
-                              <div class="info">
-                                <p>There are many variations of have words look even slightly injected the have suffered humour.</p>
-                              </div>
+
+                        <div class="bottom">
+
+                          <div class="author">
+
+                            <div class="author-img">
+
+                              {% if testimonial.image %}
+                                <img
+                                  src="{{ testimonial.image.url }}"
+                                  alt="{{ testimonial.name }}"
+                                  loading="lazy"
+                                >
+                              {% else %}
+                                <img
+                                  src="{% static 'frontend/assets/img/testimonial/default-user.webp' %}"
+                                  alt="{{ testimonial.name }}"
+                                  loading="lazy"
+                                >
+                              {% endif %}
+
                             </div>
-                          </div>
-                          <div class="col-lg-6">
-                            <div class="choose-item wow fadeInUp" data-wow-delay=".3s">
-                              <span class="count">02</span>
-                              <div class="top">
-                                <div class="icon">
-                                  <img src="{% static 'frontend/assets/img/icon/trip.svg' %}" alt="" />
-                                </div>
-                                <h4>Special Event Trips</h4>
-                              </div>
-                              <div class="info">
-                                <p>There are many variations of have words look even slightly injected the have suffered humour.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="bottom wow fadeInUp" data-wow-delay=".4s">
-                          <a href="contact.html" class="theme-btn">Book Now<i class="fas fa-arrow-right"></i></a>
-                          <div class="hero-info-wrap">
-                            <div class="hero-avatar-group">
-                              <span class="avatar"><img src="{% static 'frontend/assets/img/account/01.webp' %}" alt="" /></span>
-                              <span class="avatar"><img src="{% static 'frontend/assets/img/account/02.webp' %}" alt="" /></span>
-                              <span class="avatar"><img src="{% static 'frontend/assets/img/account/03.webp' %}" alt="" /></span>
-                              <span class="avatar"><img src="{% static 'frontend/assets/img/account/04.webp' %}" alt="" /></span>
-                              <span class="avatar"><img src="{% static 'frontend/assets/img/account/05.webp' %}" alt="" /></span>
+
+                            <div class="author-info">
                               <h4>
-                                <span>25k</span> <br />
-                                Trusted Us
+                                {{ testimonial.name }}
                               </h4>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-6">
-                    <div class="choose-img wow fadeInRight" data-wow-delay=".1s">
-                      <img src="{% static 'frontend/assets/img/choose/01.webp' %}" alt="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- choose area end -->
 
-            <!-- process area -->
-            <div class="process-area">
-              <div class="container">
-                <div class="process-wrap">
-                  <div class="shape">
-                    <img src="{% static 'frontend/assets/img/shape/18.webp' %}" alt="" />
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-6 mx-auto">
-                      <div class="site-heading text-center wow fadeInUp" data-wow-delay=".2s">
-                        <span class="site-title-tagline"><i class="far fa-backpack"></i>Working Process</span>
-                        <h3 class="site-title">Book your next step in three easy steps</h3>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row g-4">
-                    <div class="col-md-6 col-xl-4">
-                      <div class="process-item wow fadeInUp" data-wow-delay=".2s">
-                        <span class="count">01</span>
-                        <div class="img">
-                          <img src="{% static 'frontend/assets/img/step/01.webp' %}" alt="" />
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/user-roadmap.svg' %}" alt="" />
-                          </div>
-                        </div>
-                        <div class="content">
-                          <h4>Choose Your Destination</h4>
-                          <p>It is long established fact the readable content of page majority words passage suffered.</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4">
-                      <div class="process-item wow fadeInUp" data-wow-delay=".4s">
-                        <span class="count">02</span>
-                        <div class="img">
-                          <img src="{% static 'frontend/assets/img/step/02.webp' %}" alt="" />
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/booking.svg' %}" alt="" />
-                          </div>
-                        </div>
-                        <div class="content">
-                          <h4>Book Trip Easily Online</h4>
-                          <p>It is long established fact the readable content of page majority words passage suffered.</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4">
-                      <div class="process-item wow fadeInUp" data-wow-delay=".6s">
-                        <span class="count">03</span>
-                        <div class="img">
-                          <img src="{% static 'frontend/assets/img/step/03.webp' %}" alt="" />
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/plane-globe.svg' %}" alt="" />
-                          </div>
-                        </div>
-                        <div class="content">
-                          <h4>Travel On Selected Date</h4>
-                          <p>It is long established fact the readable content of page majority words passage suffered.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- process area end -->
+                              <p>
+                                Flying Fox Guest
+                              </p>
+                            </div>
 
-            <!-- testimonial-area -->
-            <div class="testimonial-area pt-120 pb-80">
-              <div class="container">
-                <div class="row">
-                  <div class="col-lg-7 mx-auto">
-                    <div class="site-heading text-center wow fadeInUp" data-wow-delay=".2s">
-                      <span class="site-title-tagline"><i class="far fa-backpack"></i>Testimonials</span>
-                      <h3 class="site-title">Real feedback from our happy travelers worldwide</h3>
+                          </div>
+
+                          <div class="img">
+                            <img
+                              src="{% static 'frontend/assets/img/icon/icon-google.svg' %}"
+                              alt="Google review"
+                            >
+                          </div>
+
+                        </div>
+
+                      </div>
+                    </div>
+
+                  {% endfor %}
+
+                </div>
+              </div>
+
+            </div>
+
+          {% else %}
+
+            <div class="testimonial-empty-state">
+              <i class="far fa-comments"></i>
+
+              <h4>No testimonials available</h4>
+
+              <p>
+                Customer reviews will appear here after they are added from the
+                dashboard.
+              </p>
+            </div>
+
+          {% endif %}
+
+        </div>
+      </section>
+      <!-- testimonial section end -->
+
+      <!-- feature-area -->
+      <div class="feature-area pt-100">
+        <div class="container-fluid">
+          <div class="feature-wrap bg-shape pt-90 pb-150">
+            <div class="row">
+              <div class="col-lg-6 mx-auto">
+                <div class="site-heading text-center wow fadeInUp" data-wow-delay=".2s">
+                  <span class="site-title-tagline"><i class="far fa-backpack"></i>Our Feature</span>
+                  <h3 class="site-title">
+                    Stop dreaming about the world <br />
+                    and start seeing it
+                  </h3>
+                </div>
+              </div>
+            </div>
+            <div class="container pb-30">
+              <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-item wow fadeInUp" data-wow-delay=".2s">
+                    <div class="feature-content">
+                      <div class="feature-head">
+                        <div class="feature-icon">
+                          <img src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}" alt="" />
+                        </div>
+                        <div>
+                          <span class="count">01</span>
+                          <h4>Affordable Pricing</h4>
+                        </div>
+                      </div>
+                      <div class="feature-info">
+                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="row g-4">
-                  <div class="col-lg-3">
-                    <div class="testimonial-box">
-                      <div class="img">
-                        <div class="ani-img">
-                          <img src="{% static 'frontend/assets/img/testimonial/06.webp' %}" alt="" />
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-item wow fadeInUp" data-wow-delay=".4s">
+                    <div class="feature-content">
+                      <div class="feature-head">
+                        <div class="feature-icon">
+                          <img src="{% static 'frontend/assets/img/icon/mountains.svg' %}" alt="" />
+                        </div>
+                        <div>
+                          <span class="count">02</span>
+                          <h4>Outdoor Camping</h4>
                         </div>
                       </div>
-                      <div class="content">
-                        <div class="google-rating">
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/icon-google.svg' %}" alt="" />
-                          </div>
-                          <div class="content">
-                            <span>
-                              <i class="fas fa-star"></i>
-                              <i class="fas fa-star"></i>
-                              <i class="fas fa-star"></i>
-                              <i class="fas fa-star"></i>
-                              <i class="fas fa-star-half-stroke"></i>
-                            </span>
-                            <p>4.8/5 Clients Reviews</p>
-                          </div>
-                        </div>
+                      <div class="feature-info">
+                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-9">
-                    <div class="testimonial-slider owl-carousel owl-theme wow fadeInUp" data-wow-delay=".1s">
-                      <div class="testimonial-item">
-                        <div class="content">
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/quote.svg' %}" alt="" />
-                          </div>
-                          <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                          </div>
-                          <div class="quote">
-                            <p>
-                              There are many variations of passage available the have majority suffered of alteration of the some humour
-                              words look even slightly internet tend to repeat predefined chunks necessary form by the to default model
-                              believable.
-                            </p>
-                          </div>
-                          <div class="bottom">
-                            <div class="author">
-                              <div class="author-img">
-                                <img src="{% static 'frontend/assets/img/testimonial/01.webp' %}" alt="" />
-                              </div>
-                              <div class="author-info">
-                                <h4>Niesha Phips</h4>
-                                <p>Customer</p>
-                              </div>
-                            </div>
-                            <div class="img">
-                              <img src="{% static 'frontend/assets/img/icon/icon-google.svg' %}" alt="" />
-                            </div>
-                          </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-item wow fadeInUp" data-wow-delay=".6s">
+                    <div class="feature-content">
+                      <div class="feature-head">
+                        <div class="feature-icon">
+                          <img src="{% static 'frontend/assets/img/icon/shield-check.svg' %}" alt="" />
+                        </div>
+                        <div>
+                          <span class="count">03</span>
+                          <h4>Complete Safety</h4>
                         </div>
                       </div>
-                      <div class="testimonial-item">
-                        <div class="content">
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/quote.svg' %}" alt="" />
-                          </div>
-                          <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                          </div>
-                          <div class="quote">
-                            <p>
-                              There are many variations of passage available the have majority suffered of alteration of the some humour
-                              words look even slightly internet tend to repeat predefined chunks necessary form by the to default model
-                              believable.
-                            </p>
-                          </div>
-                          <div class="bottom">
-                            <div class="author">
-                              <div class="author-img">
-                                <img src="{% static 'frontend/assets/img/testimonial/02.webp' %}" alt="" />
-                              </div>
-                              <div class="author-info">
-                                <h4>Eugene Ivan</h4>
-                                <p>Customer</p>
-                              </div>
-                            </div>
-                            <div class="img">
-                              <img src="{% static 'frontend/assets/img/icon/icon-google.svg' %}" alt="" />
-                            </div>
-                          </div>
+                      <div class="feature-info">
+                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-item wow fadeInUp" data-wow-delay=".8s">
+                    <div class="feature-content">
+                      <div class="feature-head">
+                        <div class="feature-icon">
+                          <img src="{% static 'frontend/assets/img/icon/user-headset.svg' %}" alt="" />
+                        </div>
+                        <div>
+                          <span class="count">04</span>
+                          <h4>24/7 Client Support</h4>
                         </div>
                       </div>
-                      <div class="testimonial-item">
-                        <div class="content">
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/quote.svg' %}" alt="" />
-                          </div>
-                          <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                          </div>
-                          <div class="quote">
-                            <p>
-                              There are many variations of passage available the have majority suffered of alteration of the some humour
-                              words look even slightly internet tend to repeat predefined chunks necessary form by the to default model
-                              believable.
-                            </p>
-                          </div>
-                          <div class="bottom">
-                            <div class="author">
-                              <div class="author-img">
-                                <img src="{% static 'frontend/assets/img/testimonial/03.webp' %}" alt="" />
-                              </div>
-                              <div class="author-info">
-                                <h4>Martha Brown</h4>
-                                <p>Customer</p>
-                              </div>
-                            </div>
-                            <div class="img">
-                              <img src="{% static 'frontend/assets/img/icon/icon-google.svg' %}" alt="" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="testimonial-item">
-                        <div class="content">
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/quote.svg' %}" alt="" />
-                          </div>
-                          <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                          </div>
-                          <div class="quote">
-                            <p>
-                              There are many variations of passage available the have majority suffered of alteration of the some humour
-                              words look even slightly internet tend to repeat predefined chunks necessary form by the to default model
-                              believable.
-                            </p>
-                          </div>
-                          <div class="bottom">
-                            <div class="author">
-                              <div class="author-img">
-                                <img src="{% static 'frontend/assets/img/testimonial/04.webp' %}" alt="" />
-                              </div>
-                              <div class="author-info">
-                                <h4>Robert Dese</h4>
-                                <p>Customer</p>
-                              </div>
-                            </div>
-                            <div class="img">
-                              <img src="{% static 'frontend/assets/img/icon/icon-google.svg' %}" alt="" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="testimonial-item">
-                        <div class="content">
-                          <div class="icon">
-                            <img src="{% static 'frontend/assets/img/icon/quote.svg' %}" alt="" />
-                          </div>
-                          <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                          </div>
-                          <div class="quote">
-                            <p>
-                              There are many variations of passage available the have majority suffered of alteration of the some humour
-                              words look even slightly internet tend to repeat predefined chunks necessary form by the to default model
-                              believable.
-                            </p>
-                          </div>
-                          <div class="bottom">
-                            <div class="author">
-                              <div class="author-img">
-                                <img src="{% static 'frontend/assets/img/testimonial/05.webp' %}" alt="" />
-                              </div>
-                              <div class="author-info">
-                                <h4>Buchan Conie</h4>
-                                <p>Customer</p>
-                              </div>
-                            </div>
-                            <div class="img">
-                              <img src="{% static 'frontend/assets/img/icon/icon-google.svg' %}" alt="" />
-                            </div>
-                          </div>
-                        </div>
+                      <div class="feature-info">
+                        <p>It is long established fact that reader will be distracted by the readable content layout.</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- testimonial-area end -->
           </div>
         </div>
       </div>
-      <!-- section-group end -->
+      <!-- feature-area end -->
 
-      <!-- cta-area -->
-      <div class="cta-area">
+      <!-- CTA area -->
+      {% comment %} <div class="cta-area">
         <div class="container">
           <div class="cta-wrap ng-mt" style="background-image: url({% static 'frontend/assets/img/cta/01.webp' %})">
             <div class="row align-items-center">
@@ -2041,11 +2023,70 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- cta-area end -->
+      </div> {% endcomment %}
+
+<div class="cta-area">
+    <div class="container">
+
+        <div
+            class="cta-wrap ng-mt"
+            style="background-image: url({% static 'frontend/assets/img/cta/01.webp' %})"
+        >
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-6">
+
+                    <div class="cta-content">
+
+                        <div class="site-heading sh-2 mb-0">
+
+                            <span class="site-title-tagline">
+                                <i class="fas fa-mountain"></i>
+                                Book Your Flying Fox Adventure
+                            </span>
+
+                            <h3 class="site-title">
+                                Ready To Soar Above The
+                                <span>Beautiful Valleys Of Munnar?</span>
+                            </h3>
+
+                            <p class="text-white mt-3 mb-0">
+                                Experience breathtaking views, world-class safety,
+                                and an unforgettable zipline adventure. Reserve
+                                your preferred date today and receive your instant
+                                QR ticket after booking.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 text-lg-end text-center mt-4 mt-lg-0">
+
+                    <a
+                        href="{% url 'bookings' %}"
+                        class="theme-btn"
+                    >
+                        Book Your Ride
+                        <i class="far fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+      <!-- CTA area end -->
 
       <!-- faq area -->
-      <div class="faq-area py-120">
+      {% comment %} <div class="faq-area py-120">
         <div class="container">
           <div class="row">
             <div class="col-lg-6">
@@ -2145,313 +2186,658 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> {% endcomment %}
+<div class="faq-area py-120">
+    <div class="container">
+        <div class="row">
+
+            <!-- FAQ -->
+
+            <div class="col-lg-6">
+
+                <div class="faq-content wow fadeInLeft" data-wow-delay=".2s">
+
+                    <div class="site-heading mb-4">
+
+                        <span class="site-title-tagline">
+                            <i class="fas fa-question-circle"></i>
+                            Frequently Asked Questions
+                        </span>
+
+                        <h3 class="site-title">
+                            Everything You Need to Know Before Your Flying Fox Adventure
+                        </h3>
+
+                        <p>
+                            Find answers to the most common questions about our
+                            zipline experience, safety standards, booking process,
+                            eligibility, and more.
+                        </p>
+
+                    </div>
+
+                    <div class="accordion" id="accordionExample">
+
+                        <!-- FAQ 1 -->
+
+                        <div class="accordion-item">
+
+                            <h4 class="accordion-header" id="headingOne">
+
+                                <button
+                                    class="accordion-button"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne"
+                                >
+
+                                    <span>
+                                        <i class="fas fa-shield-alt"></i>
+                                    </span>
+
+                                    Is the Flying Fox ride safe?
+
+                                </button>
+
+                            </h4>
+
+                            <div
+                                id="collapseOne"
+                                class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionExample"
+                            >
+
+                                <div class="accordion-body">
+
+                                    Yes. All participants are equipped with
+                                    certified safety gear including a full-body
+                                    harness, helmet, trolley system, carabiners,
+                                    and safety lanyards. Every ride is supervised
+                                    by trained instructors following international
+                                    safety standards.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 2 -->
+
+                        <div class="accordion-item">
+
+                            <h4 class="accordion-header" id="headingTwo">
+
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo"
+                                >
+
+                                    <span>
+                                        <i class="fas fa-user-check"></i>
+                                    </span>
+
+                                    What are the age and weight requirements?
+
+                                </button>
+
+                            </h4>
+
+                            <div
+                                id="collapseTwo"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#accordionExample"
+                            >
+
+                                <div class="accordion-body">
+
+                                    Riders must meet the minimum age and weight
+                                    requirements specified for each adventure.
+                                    Exact eligibility is displayed on every ride
+                                    page before booking.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 3 -->
+
+                        <div class="accordion-item">
+
+                            <h4 class="accordion-header" id="headingThree">
+
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree"
+                                >
+
+                                    <span>
+                                        <i class="fas fa-calendar-check"></i>
+                                    </span>
+
+                                    How can I book my zipline adventure?
+
+                                </button>
+
+                            </h4>
+
+                            <div
+                                id="collapseThree"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#accordionExample"
+                            >
+
+                                <div class="accordion-body">
+
+                                    Choose your preferred ride, select the date,
+                                    add participant details, complete the secure
+                                    payment, and instantly receive your QR ticket
+                                    via email and WhatsApp.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- FAQ 4 -->
+
+                        <div class="accordion-item">
+
+                            <h4 class="accordion-header" id="headingFour">
+
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFour"
+                                >
+
+                                    <span>
+                                        <i class="fas fa-cloud-rain"></i>
+                                    </span>
+
+                                    What happens if the weather is unsuitable?
+
+                                </button>
+
+                            </h4>
+
+                            <div
+                                id="collapseFour"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#accordionExample"
+                            >
+
+                                <div class="accordion-body">
+
+                                    Safety comes first. If weather conditions are
+                                    unsuitable, our team may temporarily suspend
+                                    operations. You will be offered a rescheduled
+                                    time slot or an alternative solution according
+                                    to our booking policy.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- IMAGE -->
+
+            <div class="col-lg-6">
+
+                <div class="faq-img wow fadeInRight" data-wow-delay=".2s">
+
+                    <div class="ani-img">
+
+                        <img
+                            src="{% static 'frontend/assets/img/faq/01.webp' %}"
+                            alt="Flying Fox Zipline Adventure"
+                        >
+
+                    </div>
+
+                    <div class="faq-counter">
+
+                        <div class="counter-box">
+
+                            <div class="icon">
+
+                                <img
+                                    src="{% static 'frontend/assets/img/icon/guide-2.svg' %}"
+                                    alt=""
+                                >
+
+                            </div>
+
+                            <div class="content">
+
+                                <div class="info">
+
+                                    <span
+                                        class="counter"
+                                        data-count="+"
+                                        data-to="15"
+                                        data-speed="3000"
+                                    >
+                                        15
+                                    </span>
+
+                                    <span class="unit">+</span>
+
+                                </div>
+
+                                <h4 class="title">
+                                    Certified Instructors
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class="counter-box">
+
+                            <div class="icon">
+
+                                <img
+                                    src="{% static 'frontend/assets/img/icon/trip.svg' %}"
+                                    alt=""
+                                >
+
+                            </div>
+
+                            <div class="content">
+
+                                <div class="info">
+
+                                    <span
+                                        class="counter"
+                                        data-count="+"
+                                        data-to="10000"
+                                        data-speed="3000"
+                                    >
+                                        10000
+                                    </span>
+
+                                    <span class="unit">+</span>
+
+                                </div>
+
+                                <h4 class="title">
+                                    Happy Riders
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>      
       <!-- faq area end -->
 
-      <!-- download area -->
-      <div class="download-area">
-        <div class="container-fluid">
-          <div class="download-wrap py-100">
-            <div class="container">
-              <div class="row g-5">
-                <div class="col-lg-5 align-self-center">
-                  <div class="download-content">
-                    <div class="site-heading mb-5 wow fadeInUp" data-wow-delay=".2s">
-                      <span class="site-title-tagline justify-content-start"> <i class="far fa-backpack"></i>Download Our App </span>
-                      <h4 class="site-title mb-10">Touria Android <span>and IOS App is</span> Available!</h4>
-                      <p>
-                        There are many variations of passages available but the majority have suffered in some form going to use a passage
-                        by injected humour.
-                      </p>
-                    </div>
-                    <div class="download-btn wow fadeInUp" data-wow-delay=".4s">
-                      <a href="#" class="play-store"><img src="{% static 'frontend/assets/img/download/play-store.svg' %}" alt="" /></a>
-                      <a href="#" class="app-store"><img src="{% static 'frontend/assets/img/download/app-store.svg' %}" alt="" /></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-7">
-                  <div class="download-img wow fadeInUp" data-wow-delay=".2s">
-                    <img src="{% static 'frontend/assets/img/download/01.webp' %}" alt="" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- download end -->
-
       <!-- blog-area -->
-      <div class="blog-area py-120">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-7 mx-auto">
-              <div class="site-heading text-center wow fadeInUp" data-wow-delay=".2s">
-                <span class="site-title-tagline"><i class="far fa-backpack"></i>Our Blog</span>
-                <h3 class="site-title">Discover the newest updates and expert blog posts.</h3>
-              </div>
-            </div>
-          </div>
-          <div class="row g-4 g-lg-5">
-            <div class="col-md-6 col-lg-4">
-              <div class="blog-item wow fadeInUp" data-wow-delay=".2s">
-                <div class="blog-date">Apr 10, 2026</div>
-                <div class="blog-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/blog/01.webp' %}" alt="Thumb" />
-                  </div>
-                </div>
-                <div class="blog-meta">
-                  <ul>
-                    <li>
-                      <a href="#"><i class="far fa-user-circle"></i> By Alicia Davis</a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="far fa-comments"></i> 2.5k Comments</a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="blog-info">
-                  <h4 class="blog-title">
-                    <a href="blog-single.html">There are many variations of simple printing passages available.</a>
-                  </h4>
-                  <div class="border-top">
-                    <a class="theme-btn" href="blog-single.html">Read More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <div class="blog-item wow fadeInUp" data-wow-delay=".4s">
-                <div class="blog-date">Apr 12, 2026</div>
-                <div class="blog-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/blog/02.webp' %}" alt="Thumb" />
-                  </div>
-                </div>
-                <div class="blog-meta">
-                  <ul>
-                    <li>
-                      <a href="#"><i class="far fa-user-circle"></i> By Alicia Davis</a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="far fa-comments"></i> 1.2k Comments</a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="blog-info">
-                  <h4 class="blog-title">
-                    <a href="blog-single.html">Generator internet repeat its layout word chunk necessary.</a>
-                  </h4>
-                  <div class="border-top">
-                    <a class="theme-btn" href="blog-single.html">Read More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <div class="blog-item wow fadeInUp" data-wow-delay=".6s">
-                <div class="blog-date">Apr 14, 2026</div>
-                <div class="blog-img">
-                  <div class="ani-img">
-                    <img src="{% static 'frontend/assets/img/blog/03.webp' %}" alt="Thumb" />
-                  </div>
-                </div>
-                <div class="blog-meta">
-                  <ul>
-                    <li>
-                      <a href="#"><i class="far fa-user-circle"></i> By Alicia Davis</a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="far fa-comments"></i> 2.8k Comments</a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="blog-info">
-                  <h4 class="blog-title">
-                    <a href="blog-single.html">Survive only five but that repeat chunks also leap into layout.</a>
-                  </h4>
-                  <div class="border-top">
-                    <a class="theme-btn" href="blog-single.html">Read More<i class="fas fa-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="blog-area py-120">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-7 mx-auto">
+        <div
+          class="site-heading text-center wow fadeInUp"
+          data-wow-delay=".2s"
+        >
+          <span class="site-title-tagline">
+            <i class="far fa-backpack"></i>
+            Our Blog
+          </span>
+
+          <h3 class="site-title">
+            Discover the newest updates and expert blog posts.
+          </h3>
         </div>
       </div>
+    </div>
+
+    <div class="row g-4 g-lg-5">
+
+      {% for blog in blogs %}
+<div class="col-md-6 col-lg-4">
+    <div class="blog-item wow fadeInUp">
+
+        <div class="blog-date">
+            {{ blog.created_at|date:"M d, Y" }}
+        </div>
+
+        <div class="blog-img">
+            <div class="ani-img">
+                {% if blog.image %}
+                    <img
+                        src="{{ blog.image.url }}"
+                        alt="{{ blog.title }}"
+                    >
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="blog-info">
+
+            <h4 class="blog-title">
+                <a href="{% url 'blog_detail' blog.slug %}">
+                    {{ blog.title }}
+                </a>
+            </h4>
+
+            <p>
+                {{ blog.description|striptags|truncatewords:18 }}
+            </p>
+
+            <div class="border-top">
+                <a
+                    class="theme-btn"
+                    href="{% url 'blog_detail' blog.slug %}"
+                >
+                    Read More
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="col-12">
+    <div class="text-center">
+        <h4>No blog posts are available.</h4>
+    </div>
+</div>
+{% endfor %}
+
+    </div>
+
+    {% if blogs %}
+    <div class="text-center mt-5">
+      <a href="{% url 'blog' %}" class="theme-btn">
+        View All Blogs
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
       <!-- blog-area end -->
-    </main>
 
-    <!-- footer area -->
-    <footer class="footer-area ft-bg">
-      <div class="text-shape">touria</div>
-      <div class="footer-widget">
-        <div class="container">
-          <div class="footer-widget-wrap pt-100 pb-50">
-            <div class="row g-4">
-              <div class="col-lg-4">
-                <div class="footer-widget-box about-us">
-                  <a href="#" class="footer-logo">
-                    <img src="{% static 'frontend/assets/img/logo/logo-light.webp' %}" alt="" />
-                  </a>
-                  <p>
-                    We are many variations of passages available but the majority have suffered alteration some looking at its layout
-                    believable.
-                  </p>
-                  <div class="footer-social-box mt-70">
-                    <h4>Follow Us On</h4>
-                    <ul class="footer-social">
-                      <li>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fab fa-x-twitter"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-8">
-                <div class="footer-contact">
-                  <div class="footer-contact-wrap">
-                    <div class="footer-contact-item">
-                      <div class="icon">
-                        <img src="{% static 'frontend/assets/img/icon/call.svg' %}" alt="" />
-                      </div>
-                      <div class="content">
-                        <h5>Call Us</h5>
-                        <a href="tel:+21236547898">+2 123 654 7898</a>
-                      </div>
-                    </div>
-                    <div class="footer-contact-item">
-                      <div class="icon">
-                        <img src="{% static 'frontend/assets/img/icon/email.svg' %}" alt="" />
-                      </div>
-                      <div class="content">
-                        <h5>Mail Us</h5>
-                        <a href="mailto:info@example.com">info@example.com</a>
-                      </div>
-                    </div>
-                    <div class="footer-contact-item">
-                      <div class="icon">
-                        <img src="{% static 'frontend/assets/img/icon/address.svg' %}" alt="" />
-                      </div>
-                      <div class="content">
-                        <h5>Our Address</h5>
-                        <p>Milford, New York, USA</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6 col-lg-3">
-                    <div class="footer-widget-box list">
-                      <h4 class="footer-widget-title">Company</h4>
-                      <ul class="footer-list">
-                        <li>
-                          <a href="about.html"><i class="far fa-angle-double-right"></i>About Us</a>
-                        </li>
-                        <li>
-                          <a href="faq.html"><i class="far fa-angle-double-right"></i>FAQ's</a>
-                        </li>
-                        <li>
-                          <a href="blog.html"><i class="far fa-angle-double-right"></i>Update News</a>
-                        </li>
-                        <li>
-                          <a href="contact.html"><i class="far fa-angle-double-right"></i>Contact Us</a>
-                        </li>
-                        <li>
-                          <a href="terms.html"><i class="far fa-angle-double-right"></i>Terms Of Service</a>
-                        </li>
-                        <li>
-                          <a href="privacy.html"><i class="far fa-angle-double-right"></i>Privacy policy</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-6 col-lg-4">
-                    <div class="footer-widget-box list">
-                      <h4 class="footer-widget-title">Popular Tour</h4>
-                      <ul class="footer-list">
-                        <li>
-                          <a href="tour-single.html"><i class="far fa-angle-double-right"></i>Solo Tour</a>
-                        </li>
-                        <li>
-                          <a href="tour-single.html"><i class="far fa-angle-double-right"></i>Family Tour</a>
-                        </li>
-                        <li>
-                          <a href="tour-single.html"><i class="far fa-angle-double-right"></i>Adventure Tour</a>
-                        </li>
-                        <li>
-                          <a href="tour-single.html"><i class="far fa-angle-double-right"></i>Beach Gateways</a>
-                        </li>
-                        <li>
-                          <a href="tour-single.html"><i class="far fa-angle-double-right"></i>Honeymoon Tour</a>
-                        </li>
-                        <li>
-                          <a href="tour-single.html"><i class="far fa-angle-double-right"></i>Group Tour</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-lg-5">
-                    <div class="footer-widget-box">
-                      <h4 class="footer-widget-title">Get In Touch</h4>
-                      <div class="footer-newsletter mt-30">
-                        <p>Subscribe Our Newsletter To Get Latest Update And News</p>
-                        <div class="newsletter-form">
-                          <form action="#">
-                            <div class="form-group mb-0">
-                              <div class="form-icon">
-                                <i class="far fa-envelopes"></i>
-                                <input type="email" class="form-control" placeholder="Your Email" />
-                                <button class="theme-btn" type="submit">
-                                  <img src="{% static 'frontend/assets/img/icon/paper-plane.svg' %}" alt="" />
-                                </button>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="copyright text-center">
-          <p class="copyright-text">&copy; Copyright <span id="date"></span> <a href="#"> Touria </a> All Rights Reserved.</p>
-        </div>
-      </div>
-    </footer>
-    <!-- footer area end -->
+{% endblock %}
 
-    <!-- scroll-top -->
-    <a href="#" id="scroll-top"><i class="fas fa-arrow-up-long"></i></a>
-    <!-- scroll-top end -->
+{% block extra_js %}
 
-    <!-- js -->
-    <script src="{% static 'frontend/assets/js/jquery-3.7.1.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/jquery.magnific-popup.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/isotope.pkgd.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/jquery.appear.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/counter-up.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/wow.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/slimselect.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/flatpickr.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/main.js' %}"></script>
-  </body>
-</html>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const rideCards = document.querySelectorAll(".ride-video-card");
+
+      function resetCard(card, resetTime = false) {
+        const video = card.querySelector(".ride-card-video");
+        const button = card.querySelector(".ride-play-button");
+        const icon = button ? button.querySelector("i") : null;
+
+        if (video) {
+          video.pause();
+
+          if (resetTime) {
+            video.currentTime = 0;
+          }
+        }
+
+        card.classList.remove("is-playing");
+
+        if (icon) {
+          icon.className = "fas fa-play";
+        }
+
+        if (button) {
+          button.setAttribute(
+            "aria-label",
+            "Play ride video"
+          );
+        }
+      }
+
+      function pauseOtherCards(currentCard) {
+        rideCards.forEach(function (card) {
+          if (card !== currentCard) {
+            resetCard(card);
+          }
+        });
+      }
+
+      rideCards.forEach(function (card) {
+        const video = card.querySelector(".ride-card-video");
+        const button = card.querySelector(".ride-play-button");
+        const icon = button ? button.querySelector("i") : null;
+
+        if (!video || !button) {
+          return;
+        }
+
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (video.paused) {
+            pauseOtherCards(card);
+
+            video
+              .play()
+              .then(function () {
+                card.classList.add("is-playing");
+
+                if (icon) {
+                  icon.className = "fas fa-pause";
+                }
+
+                button.setAttribute(
+                  "aria-label",
+                  "Pause ride video"
+                );
+              })
+              .catch(function (error) {
+                console.error(
+                  "Video could not play:",
+                  error
+                );
+              });
+          } else {
+            resetCard(card);
+          }
+        });
+
+        card.addEventListener("click", function (event) {
+          if (!card.classList.contains("is-playing")) {
+            return;
+          }
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          resetCard(card);
+        });
+
+        video.addEventListener("ended", function () {
+          resetCard(card, true);
+        });
+      });
+
+      if (window.jQuery) {
+        $(".ride-video-slider").on(
+          "changed.owl.carousel",
+          function () {
+            rideCards.forEach(function (card) {
+              resetCard(card);
+            });
+          }
+        );
+      }
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $(".ride-video-slider").owlCarousel({
+        loop: false,
+        rewind: true,
+        margin: 24,
+        nav: true,
+        dots: true,
+        autoplay: false,
+        smartSpeed: 700,
+        navText: [
+          '<i class="fas fa-arrow-left"></i>',
+          '<i class="fas fa-arrow-right"></i>'
+        ],
+        responsive: {
+          0: {
+            items: 1,
+            margin: 14
+          },
+          576: {
+            items: 1
+          },
+          768: {
+            items: 2
+          },
+          992: {
+            items: 3
+          },
+          1200: {
+            items: 3
+          }
+        }
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $(".safety-equipment-slider").owlCarousel({
+        loop: true,
+        margin: 20,
+        nav: true,
+        dots: true,
+        autoplay: true,
+        autoplayTimeout: 3200,
+        autoplayHoverPause: true,
+        smartSpeed: 750,
+        navText: [
+          '<i class="fas fa-arrow-left"></i>',
+          '<i class="fas fa-arrow-right"></i>'
+        ],
+        responsive: {
+          0: {
+            items: 1,
+            margin: 14
+          },
+          480: {
+            items: 2,
+            margin: 14
+          },
+          768: {
+            items: 3
+          },
+          992: {
+            items: 4
+          },
+          1200: {
+            items: 5
+          }
+        }
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      const offersSlider = $(".offers-slider");
+
+      offersSlider.owlCarousel({
+        loop: true,
+        margin: 20,
+        nav: false,
+        dots: false,
+        autoplay: true,
+        autoplayTimeout: 4000,
+        autoplayHoverPause: true,
+        smartSpeed: 750,
+        responsive: {
+          0: {
+            items: 1,
+            margin: 14
+          },
+          576: {
+            items: 1
+          },
+          768: {
+            items: 2
+          },
+          1200: {
+            items: 2
+          },
+          1500: {
+            items: 3
+          }
+        }
+      });
+
+      $(".offers-prev").on("click", function () {
+        offersSlider.trigger("prev.owl.carousel");
+      });
+
+      $(".offers-next").on("click", function () {
+        offersSlider.trigger("next.owl.carousel");
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const cards = document.querySelectorAll(".hiw-card");
+
+      const observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("hiw-card-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.15
+        }
+      );
+
+      cards.forEach(function (card) {
+        observer.observe(card);
+      });
+    });
+  </script>
+
+{% endblock %}

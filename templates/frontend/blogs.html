@@ -1,0 +1,306 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Our Blog - Flying Fox Adventure{% endblock %}
+
+{% block nav_blog %}active{% endblock %}
+
+{% block content %}
+  <!-- breadcrumb -->
+  <div class="site-breadcrumb" style="background: url({% static 'frontend/assets/img/about/img-6.jpeg' %})">
+    <div class="container">
+      <h3 class="breadcrumb-title">Our Blog</h3>
+      <ul class="breadcrumb-menu">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li class="active">Our Blog</li>
+      </ul>
+    </div>
+  </div>
+  <!-- breadcrumb end -->
+
+  <!-- blog-area -->
+ <div class="blog-area py-120">
+
+    <div class="container">
+
+        <!-- SECTION HEADING -->
+
+        <div class="row">
+
+            <div class="col-lg-7 mx-auto">
+
+                <div
+                    class="site-heading text-center wow fadeInUp"
+                    data-wow-delay=".2s"
+                >
+
+                    <span class="site-title-tagline">
+
+                        <i class="far fa-backpack"></i>
+
+                        Flying Fox Blog
+
+                    </span>
+
+                    <h3 class="site-title">
+
+                        Adventure Stories, Safety Tips And
+                        <span>Latest Updates</span>
+
+                    </h3>
+
+                    <p>
+
+                        Explore Flying Fox experiences, booking guides,
+                        safety information and adventure updates from Munnar.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BLOG LIST -->
+
+        <div class="row g-4 g-lg-5">
+
+            {% for blog in blogs %}
+
+            <div class="col-md-6 col-lg-4">
+
+                <div
+                    class="blog-item wow fadeInUp"
+                    data-wow-delay=".2s"
+                >
+
+                    <div class="blog-date">
+
+                        {{ blog.created_at|date:"M d, Y" }}
+
+                    </div>
+
+
+                    <div class="blog-img">
+
+                        <a href="{% url 'blog_detail' blog.slug %}">
+
+                            {% if blog.image %}
+
+                                <img
+                                    src="{{ blog.image.url }}"
+                                    alt="{{ blog.title }}"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <img
+                                    src="{% static 'frontend/assets/img/blog/default.webp' %}"
+                                    alt="{{ blog.title }}"
+                                    loading="lazy"
+                                >
+
+                            {% endif %}
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="blog-meta">
+
+                        <ul>
+
+                            <li>
+
+                                <span>
+
+                                    <i class="far fa-user-circle"></i>
+
+                                    Flying Fox Team
+
+                                </span>
+
+                            </li>
+
+                            <li>
+
+                                <span>
+
+                                    <i class="far fa-calendar-alt"></i>
+
+                                    {{ blog.created_at|date:"d M Y" }}
+
+                                </span>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="blog-info">
+
+                        <h4 class="blog-title">
+
+                            <a href="{% url 'blog_detail' blog.slug %}">
+
+                                {{ blog.title }}
+
+                            </a>
+
+                        </h4>
+
+
+                        <p>
+
+                            {{ blog.description|striptags|truncatewords:20 }}
+
+                        </p>
+
+
+                        <a
+                            class="theme-btn"
+                            href="{% url 'blog_detail' blog.slug %}"
+                        >
+
+                            Read More
+
+                            <i class="fas fa-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="col-12">
+
+                <div class="blog-empty-state">
+
+                    <i class="far fa-newspaper"></i>
+
+                    <h4>
+                        No blog posts available
+                    </h4>
+
+                    <p>
+                        New Flying Fox stories and adventure updates
+                        will be published soon.
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- PAGINATION -->
+
+        {% if blogs.paginator.num_pages > 1 %}
+
+        <div class="pagination-area">
+
+            <ul class="pagination">
+
+                {% if blogs.has_previous %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ blogs.previous_page_number }}"
+                        aria-label="Previous"
+                    >
+
+                        <span aria-hidden="true">
+
+                            <i class="fas fa-arrow-left"></i>
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+
+                {% for page_number in blogs.paginator.page_range %}
+
+                    {% if page_number == blogs.number %}
+
+                    <li class="page-item active">
+
+                        <span class="page-link">
+
+                            {{ page_number }}
+
+                        </span>
+
+                    </li>
+
+                    {% else %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ page_number }}"
+                        >
+
+                            {{ page_number }}
+
+                        </a>
+
+                    </li>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if blogs.has_next %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ blogs.next_page_number }}"
+                        aria-label="Next"
+                    >
+
+                        <span aria-hidden="true">
+
+                            <i class="fas fa-arrow-right"></i>
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+  <!-- blog-area end -->
+{% endblock %}

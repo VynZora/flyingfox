@@ -1,0 +1,544 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}
+Chatbot Rules | FlyingFox Admin
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard__form__wraper">
+
+    <div class="create__course__title mb-4 d-flex justify-content-between align-items-center">
+
+        <div>
+            <h4>Chatbot Rules</h4>
+
+            <p class="text-muted mb-0">
+                Manage the chatbot questions, keywords and automatic responses.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'chatbot_rule_create' %}"
+            class="btn btn-primary"
+        >
+            <i class="fas fa-plus"></i>
+            Add Chatbot Rule
+        </a>
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <form
+        method="GET"
+        class="chatbot-rule-filter mb-4"
+    >
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            value="{{ search }}"
+            placeholder="Search rule title..."
+        >
+
+        <select
+            name="status"
+            class="form-select"
+        >
+
+            <option value="">
+                All Status
+            </option>
+
+            <option
+                value="active"
+                {% if selected_status == "active" %}
+                    selected
+                {% endif %}
+            >
+                Active
+            </option>
+
+            <option
+                value="inactive"
+                {% if selected_status == "inactive" %}
+                    selected
+                {% endif %}
+            >
+                Inactive
+            </option>
+
+        </select>
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Filter
+        </button>
+
+        <a
+            href="{% url 'chatbot_rule_list' %}"
+            class="btn btn-secondary"
+        >
+            Clear
+        </a>
+
+    </form>
+
+
+    <div class="custom-table-container">
+
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-light">
+
+                <tr>
+                    <th>Rule</th>
+                    <th>Keywords</th>
+                    <th>Response</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+
+                    <th class="text-center">
+                        Actions
+                    </th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for rule in rules %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ rule.title }}
+                        </strong>
+
+                        {% if rule.action_text %}
+                        <div class="small text-muted">
+                            Button: {{ rule.action_text }}
+                        </div>
+                        {% endif %}
+                    </td>
+
+
+                    <td>
+
+                        <div class="chatbot-keywords">
+
+                            {% for keyword in rule.keywords|slice:":4" %}
+
+                            <span class="keyword-badge">
+                                {{ keyword }}
+                            </span>
+
+                            {% endfor %}
+
+                            {% if rule.keywords|length > 4 %}
+
+                            <span class="keyword-more">
+                                +{{ rule.keywords|length|add:"-4" }}
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="chatbot-response-preview">
+                            {{ rule.response|truncatechars:90 }}
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        <span class="priority-badge">
+                            {{ rule.priority }}
+                        </span>
+                    </td>
+
+
+                    <td>
+
+                        {% if rule.is_active %}
+
+                        <span class="badge bg-success">
+                            Active
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-secondary">
+                            Inactive
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ rule.updated_at|date:"d M Y, h:i A" }}
+                    </td>
+
+
+                    <td class="text-center">
+
+                        <div class="chatbot-rule-actions">
+
+                            <a
+                                href="{% url 'chatbot_rule_update' rule.pk %}"
+                                class="btn btn-sm btn-warning"
+                            >
+                                Edit
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{% url 'chatbot_rule_toggle_status' rule.pk %}"
+                                class="d-inline"
+                            >
+
+                                {% csrf_token %}
+
+                                {% if rule.is_active %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-sm btn-secondary"
+                                >
+                                    Disable
+                                </button>
+
+                                {% else %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-sm btn-success"
+                                >
+                                    Enable
+                                </button>
+
+                                {% endif %}
+
+                            </form>
+
+
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteRule{{ rule.pk }}"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="text-center py-5"
+                    >
+
+                        <i class="fas fa-robot chatbot-empty-icon"></i>
+
+                        <p class="text-muted mt-3 mb-2">
+                            No chatbot rules found.
+                        </p>
+
+                        <a
+                            href="{% url 'chatbot_rule_create' %}"
+                            class="btn btn-primary btn-sm"
+                        >
+                            Add First Rule
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- DELETE MODALS -->
+
+    {% for rule in rules %}
+
+    <div
+        class="modal fade"
+        id="deleteRule{{ rule.pk }}"
+        tabindex="-1"
+        aria-hidden="true"
+    >
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <form
+                    method="POST"
+                    action="{% url 'chatbot_rule_delete' rule.pk %}"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Delete Chatbot Rule
+                        </h5>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                        ></button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        Are you sure you want to delete:
+
+                        <strong>
+                            {{ rule.title }}
+                        </strong>?
+
+                        <div class="alert alert-danger mt-3 mb-0">
+                            Bot responses using this rule will no longer be available.
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+                            Yes, Delete
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+
+    <!-- PAGINATION -->
+
+    {% if rules.paginator.num_pages > 1 %}
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            {% if rules.has_previous %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ rules.previous_page_number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                >
+                    &laquo;
+                </a>
+
+            </li>
+
+            {% endif %}
+
+
+            {% for number in rules.paginator.page_range %}
+
+                {% if number == rules.number %}
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+                        {{ number }}
+                    </span>
+
+                </li>
+
+                {% else %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                    >
+                        {{ number }}
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            {% if rules.has_next %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ rules.next_page_number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                >
+                    &raquo;
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.chatbot-rule-filter {
+    display: grid;
+    grid-template-columns:
+        minmax(250px, 1fr)
+        180px
+        auto
+        auto;
+    gap: 10px;
+    max-width: 850px;
+}
+
+.chatbot-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-width: 280px;
+}
+
+.keyword-badge {
+    display: inline-flex;
+    padding: 4px 8px;
+    border-radius: 20px;
+    color: #1d4ed8;
+    background: #dbeafe;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.keyword-more {
+    display: inline-flex;
+    padding: 4px 8px;
+    border-radius: 20px;
+    color: #6b7280;
+    background: #f3f4f6;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.chatbot-response-preview {
+    max-width: 310px;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.priority-badge {
+    display: inline-flex;
+    min-width: 38px;
+    padding: 5px 8px;
+    border-radius: 7px;
+    align-items: center;
+    justify-content: center;
+    color: #b45309;
+    background: #fef3c7;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.chatbot-rule-actions {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.chatbot-empty-icon {
+    color: #c31103;
+    font-size: 45px;
+}
+
+@media (max-width: 767px) {
+
+    .chatbot-rule-filter {
+        grid-template-columns: 1fr;
+    }
+
+    .custom-table-container {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 1100px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

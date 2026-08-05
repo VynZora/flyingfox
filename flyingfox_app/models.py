@@ -287,22 +287,10 @@ class Blog(OptimizedImageModel):
         max_length=200
     )
 
-    short_description = models.TextField(
-        blank=True
-    )
-
     description = models.TextField()
-
-    is_published = models.BooleanField(
-        default=True
-    )
 
     created_at = models.DateTimeField(
         auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
     )
 
     class Meta:
@@ -393,6 +381,11 @@ class Ride(OptimizedImageModel):
         blank=True
     )
 
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Enable this to show the ride in featured sections."
+    )
+
     is_active = models.BooleanField(
         default=True
     )
@@ -441,33 +434,49 @@ class RideMedia(OptimizedImageModel):
     ride = models.ForeignKey(
         Ride,
         on_delete=models.CASCADE,
-        related_name="media"
+        related_name="media",
     )
 
     media_type = models.CharField(
         max_length=10,
         choices=MEDIA_TYPE_CHOICES,
-        default="image"
+        default="image",
     )
 
     image = models.ImageField(
         upload_to="rides/images/",
         blank=True,
-        null=True
+        null=True,
     )
 
     video = models.FileField(
         upload_to="rides/videos/",
         blank=True,
-        null=True
+        null=True,
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.ride.name} - {self.get_media_type_display()}"
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        if self.media_type == "image" and not self.image:
+            raise ValidationError({
+                "image": "Please upload an image."
+            })
+
+        if self.media_type == "video" and not self.video:
+            raise ValidationError({
+                "video": "Please upload a video."
+            })
 
 class RidePrice(models.Model):
 
@@ -511,7 +520,9 @@ class Booking(models.Model):
 
     STATUS_CHOICES = [
         ("pending", "Pending"),
+        ("payment_pending", "Payment Pending"),
         ("confirmed", "Confirmed"),
+        ("payment_failed", "Payment Failed"),
         ("cancelled", "Cancelled"),
         ("checked_in", "Checked In"),
         ("refunded", "Refunded"),
@@ -523,11 +534,24 @@ class Booking(models.Model):
         editable=False
     )
 
-    user = models.ForeignKey(
-        UserProfile,
-        on_delete=models.PROTECT,
-        related_name="bookings"
-    )
+    # Guest customer information
+    customer_name = models.CharField(
+    max_length=150
+)
+
+    customer_email = models.EmailField()
+
+    customer_phone = models.CharField(
+    max_length=20
+)
+
+    customer_pincode = models.CharField(
+    max_length=10
+)
+
+    time_slot = models.CharField(
+    max_length=50
+)
 
     ride = models.ForeignKey(
         Ride,
@@ -543,6 +567,8 @@ class Booking(models.Model):
 
     booking_date = models.DateField()
 
+    
+
     quantity = models.PositiveIntegerField(
         default=1
     )
@@ -552,18 +578,32 @@ class Booking(models.Model):
         decimal_places=2
     )
 
+    photo_addon = models.BooleanField(
+        default=False
+    )
+
+    video_addon = models.BooleanField(
+        default=False
+    )
+
+    addon_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
     coupon = models.ForeignKey(
-    "Coupon",
-    on_delete=models.SET_NULL,
-    blank=True,
-    null=True,
-    related_name="bookings"
+        "Coupon",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="bookings"
     )
 
     discount_amount = models.DecimalField(
-    max_digits=10,
-    decimal_places=2,
-    default=0
+        max_digits=10,
+        decimal_places=2,
+        default=0
     )
 
     subtotal = models.DecimalField(
@@ -582,6 +622,10 @@ class Booking(models.Model):
         default="pending"
     )
 
+    notifications_sent = models.BooleanField(
+        default=False
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -594,7 +638,100 @@ class Booking(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.booking_id} - {self.user.full_name}"    
+        return (
+            f"{self.booking_id} - "
+            f"{self.customer_name}"
+        )
+
+
+# class Booking(models.Model):
+
+#     STATUS_CHOICES = [
+#         ("pending", "Pending"),
+#         ("confirmed", "Confirmed"),
+#         ("cancelled", "Cancelled"),
+#         ("checked_in", "Checked In"),
+#         ("refunded", "Refunded"),
+#     ]
+
+#     booking_id = models.UUIDField(
+#         default=uuid.uuid4,
+#         unique=True,
+#         editable=False
+#     )
+
+#     user = models.ForeignKey(
+#         UserProfile,
+#         on_delete=models.PROTECT,
+#         related_name="bookings"
+#     )
+
+#     ride = models.ForeignKey(
+#         Ride,
+#         on_delete=models.PROTECT,
+#         related_name="bookings"
+#     )
+
+#     ride_price = models.ForeignKey(
+#         RidePrice,
+#         on_delete=models.PROTECT,
+#         related_name="bookings"
+#     )
+
+#     booking_date = models.DateField()
+
+#     quantity = models.PositiveIntegerField(
+#         default=1
+#     )
+
+#     price_per_person = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2
+#     )
+
+#     coupon = models.ForeignKey(
+#     "Coupon",
+#     on_delete=models.SET_NULL,
+#     blank=True,
+#     null=True,
+#     related_name="bookings"
+#     )
+
+#     discount_amount = models.DecimalField(
+#     max_digits=10,
+#     decimal_places=2,
+#     default=0
+#     )
+
+#     subtotal = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2
+#     )
+
+#     total_amount = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2
+#     )
+
+#     status = models.CharField(
+#         max_length=20,
+#         choices=STATUS_CHOICES,
+#         default="pending"
+#     )
+
+#     created_at = models.DateTimeField(
+#         auto_now_add=True
+#     )
+
+#     updated_at = models.DateTimeField(
+#         auto_now=True
+#     )
+
+#     class Meta:
+#         ordering = ["-created_at"]
+
+#     def __str__(self):
+#         return f"{self.booking_id} - {self.user.full_name}"    
 
 
 class BookingPerson(models.Model):
@@ -615,10 +752,10 @@ class BookingPerson(models.Model):
     )
 
     weight = models.DecimalField(
-    max_digits=6,
-    decimal_places=2,
-    blank=True,
-    null=True
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True
     )
 
     phone = models.CharField(
@@ -631,14 +768,15 @@ class BookingPerson(models.Model):
     )
 
     def __str__(self):
-        return f"{self.full_name} - {self.booking.booking_id}"    
-
-
-
+        return (
+            f"{self.full_name} - "
+            f"{self.booking.booking_id}"
+        )
 class Payment(models.Model):
 
     STATUS_CHOICES = [
         ("created", "Created"),
+        ("authorized", "Authorized"),
         ("paid", "Paid"),
         ("failed", "Failed"),
         ("refunded", "Refunded"),
@@ -665,6 +803,11 @@ class Payment(models.Model):
         blank=True
     )
 
+    gateway_signature = models.CharField(
+        max_length=500,
+        blank=True
+    )
+
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2
@@ -676,6 +819,10 @@ class Payment(models.Model):
         default="created"
     )
 
+    failure_reason = models.TextField(
+        blank=True
+    )
+
     paid_at = models.DateTimeField(
         blank=True,
         null=True
@@ -685,8 +832,70 @@ class Payment(models.Model):
         auto_now_add=True
     )
 
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
     def __str__(self):
-        return f"{self.booking.booking_id} - {self.status}"
+        return (
+            f"{self.booking.booking_id} - "
+            f"{self.status}"
+        )
+
+# class Payment(models.Model):
+
+#     STATUS_CHOICES = [
+#         ("created", "Created"),
+#         ("paid", "Paid"),
+#         ("failed", "Failed"),
+#         ("refunded", "Refunded"),
+#     ]
+
+#     booking = models.OneToOneField(
+#         Booking,
+#         on_delete=models.CASCADE,
+#         related_name="payment"
+#     )
+
+#     gateway = models.CharField(
+#         max_length=30,
+#         default="razorpay"
+#     )
+
+#     gateway_order_id = models.CharField(
+#         max_length=255,
+#         blank=True
+#     )
+
+#     gateway_payment_id = models.CharField(
+#         max_length=255,
+#         blank=True
+#     )
+
+#     amount = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2
+#     )
+
+#     status = models.CharField(
+#         max_length=20,
+#         choices=STATUS_CHOICES,
+#         default="created"
+#     )
+
+#     paid_at = models.DateTimeField(
+#         blank=True,
+#         null=True
+#     )
+
+#     created_at = models.DateTimeField(
+#         auto_now_add=True
+#     )
+
+#     def __str__(self):
+#         return f"{self.booking.booking_id} - {self.status}"
+
+
 
 
 class Ticket(models.Model):
@@ -721,6 +930,28 @@ class Ticket(models.Model):
         null=True
     )
 
+    whatsapp_sent = models.BooleanField(
+        default=False
+    )
+
+    sms_sent = models.BooleanField(
+        default=False
+    )
+
+    sms_message_id = models.CharField(
+        max_length=255,
+        blank=True
+    )
+
+    sms_status = models.CharField(
+        max_length=30,
+        blank=True
+    )
+
+    email_sent = models.BooleanField(
+        default=False
+    )
+
     is_used = models.BooleanField(
         default=False
     )
@@ -735,7 +966,7 @@ class Ticket(models.Model):
     )
 
     def __str__(self):
-        return str(self.ticket_id)        
+        return str(self.ticket_id)
 
 
 
@@ -799,3 +1030,251 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code    
+
+
+class Testimonial(OptimizedImageModel):
+    image_fields = ["image"]
+
+    name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to="testimonials/", blank=True, null=True)
+    review = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.name
+
+
+
+
+
+
+# chatbot related models
+
+import uuid
+
+from django.db import models
+
+
+class ChatbotRule(models.Model):
+    """
+    Admin-managed rule-based chatbot response.
+
+    keywords example:
+    ["price", "cost", "rate", "ride price"]
+    """
+
+    title = models.CharField(
+        max_length=150
+    )
+
+    keywords = models.JSONField(
+        default=list,
+        help_text=(
+            'Enter a JSON list, for example: '
+            '["price", "cost", "rate"]'
+        ),
+    )
+
+    response = models.TextField()
+
+    action_text = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+
+    action_url = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+    priority = models.PositiveIntegerField(
+        default=10
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = [
+            "-priority",
+            "title",
+        ]
+
+    def __str__(self):
+        return self.title
+
+
+class ChatSession(models.Model):
+
+    ONBOARDING_CHOICES = [
+        ("name", "Waiting For Name"),
+        ("phone", "Waiting For Phone"),
+        ("email", "Waiting For Email"),
+        ("completed", "Completed"),
+    ]
+
+    session_id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+    )
+
+    browser_session_key = models.CharField(
+        max_length=100,
+        blank=True,
+        db_index=True,
+    )
+
+    customer_name = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    customer_email = models.EmailField(
+        blank=True,
+    )
+
+    customer_phone = models.CharField(
+        max_length=20,
+        blank=True,
+    )
+
+    onboarding_step = models.CharField(
+        max_length=20,
+        choices=ONBOARDING_CHOICES,
+        default="name",
+    )
+
+    is_closed = models.BooleanField(
+        default=False
+    )
+
+    started_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = ["-started_at"]
+
+    def __str__(self):
+        if self.customer_name:
+            return (
+                f"{self.customer_name} - "
+                f"{self.session_id}"
+            )
+
+        return str(self.session_id)
+class ChatMessage(models.Model):
+
+    SENDER_CHOICES = [
+        ("user", "User"),
+        ("bot", "Bot"),
+        ("admin", "Admin"),
+    ]
+
+    session = models.ForeignKey(
+        ChatSession,
+        on_delete=models.CASCADE,
+        related_name="messages",
+    )
+
+    sender = models.CharField(
+        max_length=10,
+        choices=SENDER_CHOICES,
+    )
+
+    message = models.TextField()
+
+    intent = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+
+    matched_rule = models.ForeignKey(
+        ChatbotRule,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="messages",
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return (
+            f"{self.session.session_id} - "
+            f"{self.sender}"
+        )
+
+
+class ChatEnquiry(models.Model):
+
+    STATUS_CHOICES = [
+        ("new", "New"),
+        ("contacted", "Contacted"),
+        ("closed", "Closed"),
+    ]
+
+    session = models.ForeignKey(
+        ChatSession,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="enquiries",
+    )
+
+    name = models.CharField(
+        max_length=150
+    )
+
+    phone = models.CharField(
+        max_length=20
+    )
+
+    email = models.EmailField(
+        blank=True
+    )
+
+    message = models.TextField()
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="new",
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} - {self.phone}"

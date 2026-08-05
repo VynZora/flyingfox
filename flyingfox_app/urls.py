@@ -272,6 +272,13 @@ path(
     name="coupon_delete"
 ),
 
+ # Admin - Testimonials
+    path('dashboard/testimonials/', views.testimonial_list, name='review_list'),
+    path('dashboard/testimonials/add/', views.testimonial_create, name='testimonial_create'),
+    path('dashboard/testimonials/<int:pk>/edit/', views.testimonial_update, name='testimonial_update'),
+    path('dashboard/testimonials/<int:pk>/delete/', views.testimonial_delete, name='testimonial_delete'),
+
+
 
 
 # ===============================
@@ -308,27 +315,284 @@ path(
         name='ride_detail'
     ),
 
-    # path(
-    #     'gallery/',
-    #     views.gallery,
-    #     name='gallery'
-    # ),
+path('bookings/', views.bookings, name='bookings'),
+path(
+        "booking/review/",
+        views.booking_review,
+        name="booking_review",
+    ),
 
-    # path(
-    #     'about/',
-    #     views.about,
-    #     name='about'
-    # ),
+   # Temporary fake payment success
+    path(
+        "booking/temporary-payment-success/",
+        views.temporary_payment_success,
+        name="temporary_payment_success",
+    ),
 
-    # path(
-    #     'contact/',
-    #     views.contact,
-    #     name='contact'
-    # ),
+    path(
+        "booking/success/<uuid:booking_id>/",
+        views.booking_success,
+        name="booking_success",
+    ),
+
+    path(
+        "ticket/download/<uuid:ticket_id>/",
+        views.download_ticket,
+        name="download_ticket",
+    ),
+
+    path(
+        "ticket/verify/<uuid:qr_token>/",
+        views.verify_ticket,
+        name="verify_ticket",
+    ),
 
 
 
 
+
+
+
+
+# ==========================================
+# STATIC FRONTEND PAGES
+# ==========================================
+
+path(
+    "about/",
+    views.about,
+    name="about"
+),
+
+path(
+    "activity/",
+    views.activity,
+    name="activity"
+),
+
+path(
+    "activity-single/",
+    views.activity_single,
+    name="activity_single"
+),
+
+path(
+    "blog/",
+    views.blog,
+    name="blog"
+),
+
+path(
+    "blog-single/",
+    views.blog_single,
+    name="blog_single"
+),
+
+path(
+    "contact/",
+    views.contact,
+    name="contact"
+),
+
+path(
+    "destination/",
+    views.destination,
+    name="destination"
+),
+
+path(
+    "destination-single/",
+    views.destination_single,
+    name="destination_single"
+),
+
+path(
+    "destination-2/",
+    views.destination_two,
+    name="destination_two"
+),
+
+path(
+    "faq/",
+    views.faq,
+    name="faq"
+),
+
+path(
+    "gallery/",
+    views.gallery,
+    name="gallery"
+),
+
+path(
+    "login/",
+    views.login_page,
+    name="login_page"
+),
+
+path(
+    "register/",
+    views.register,
+    name="register"
+),
+
+path(
+    "team/",
+    views.team,
+    name="team"
+),
+
+path(
+    "privacy/",
+    views.privacy,
+    name="privacy"
+),
+
+path(
+    "terms/",
+    views.terms,
+    name="terms"
+),
+
+path(
+    "testimonial/",
+    views.testimonial,
+    name="testimonial"
+),
+
+path(
+    "tour-2/",
+    views.tour_two,
+    name="tour_two"
+),
+
+path(
+    "forgot-password/",
+    views.forgot_password,
+    name="forgot_password"
+),
+
+path(
+    "coming-soon/",
+    views.coming_soon,
+    name="coming_soon"
+),
+
+path(
+    "404/",
+    views.page_404,
+    name="page_404"
+),
+
+
+
+# Chatbot rule management
+path(
+    "dashboard/chatbot/rules/",
+    views.chatbot_rule_list,
+    name="chatbot_rule_list",
+),
+
+path(
+    "dashboard/chatbot/rules/create/",
+    views.chatbot_rule_create,
+    name="chatbot_rule_create",
+),
+
+path(
+    "dashboard/chatbot/rules/<int:pk>/update/",
+    views.chatbot_rule_update,
+    name="chatbot_rule_update",
+),
+
+path(
+    "dashboard/chatbot/rules/<int:pk>/delete/",
+    views.chatbot_rule_delete,
+    name="chatbot_rule_delete",
+),
+
+path(
+    "dashboard/chatbot/rules/<int:pk>/toggle-status/",
+    views.chatbot_rule_toggle_status,
+    name="chatbot_rule_toggle_status",
+),
+
+path(
+    "chatbot/initialize/",
+    views.chatbot_initialize,
+    name="chatbot_initialize",
+),
+
+path(
+    "chatbot/message/",
+    views.chatbot_message,
+    name="chatbot_message",
+),
+
+
+
+
+# Chat sessions
+
+path(
+    "dashboard/chatbot/sessions/",
+    views.chat_session_list,
+    name="chat_session_list",
+),
+
+path(
+    "dashboard/chatbot/sessions/<int:pk>/",
+    views.chat_session_detail,
+    name="chat_session_detail",
+),
+
+path(
+    "dashboard/chatbot/sessions/<int:pk>/toggle-status/",
+    views.chat_session_toggle_status,
+    name="chat_session_toggle_status",
+),
+
+path(
+    "dashboard/chatbot/sessions/<int:pk>/delete/",
+    views.chat_session_delete,
+    name="chat_session_delete",
+),
+
+
+# Chat enquiries
+
+path(
+    "dashboard/chatbot/enquiries/",
+    views.chat_enquiry_list,
+    name="chat_enquiry_list",
+),
+
+path(
+    "dashboard/chatbot/enquiries/<int:pk>/",
+    views.chat_enquiry_detail,
+    name="chat_enquiry_detail",
+),
+
+path(
+    "dashboard/chatbot/enquiries/<int:pk>/status/",
+    views.chat_enquiry_update_status,
+    name="chat_enquiry_update_status",
+),
+
+path(
+    "dashboard/chatbot/enquiries/<int:pk>/delete/",
+    views.chat_enquiry_delete,
+    name="chat_enquiry_delete",
+),
+
+
+
+# blog
+path(
+    "blogs/<slug:slug>/",
+    views.blog_detail,
+    name="blog_detail",
+),
 
 
 ]

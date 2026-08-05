@@ -116,47 +116,63 @@ Booking Details | FlyingFox Admin
 
 
         <!-- CUSTOMER -->
+ <div class="detail-card">
 
-        <div class="detail-card">
+    <h5>
+        Customer
+    </h5>
 
-            <h5>
-                Customer
-            </h5>
+    <div class="info-row">
 
+        <span>Name</span>
 
-            <div class="info-row">
+        <strong>
+            {{ booking.customer_name }}
+        </strong>
 
-                <span>Name</span>
+    </div>
 
-                <strong>
-                    {{ booking.user.full_name }}
-                </strong>
+    <div class="info-row">
 
-            </div>
+        <span>Email</span>
 
+        <strong>
+            {{ booking.customer_email }}
+        </strong>
 
-            <div class="info-row">
+    </div>
 
-                <span>Email</span>
+    <div class="info-row">
 
-                <strong>
-                    {{ booking.user.email }}
-                </strong>
+        <span>Phone</span>
 
-            </div>
+        <strong>
+            {{ booking.customer_phone }}
+        </strong>
 
+    </div>
 
-            <div class="info-row">
+    <div class="info-row">
 
-                <span>Phone</span>
+        <span>PIN Code</span>
 
-                <strong>
-                    {{ booking.user.phone }}
-                </strong>
+        <strong>
+            {{ booking.customer_pincode }}
+        </strong>
 
-            </div>
+    </div>
 
-        </div>
+    <div class="info-row">
+
+        <span>Time Slot</span>
+
+        <strong>
+            {{ booking.time_slot }}
+        </strong>
+
+    </div>
+
+</div>
 
 
     </div>

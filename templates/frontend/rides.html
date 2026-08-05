@@ -1,0 +1,397 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Tour One - Flying Fox Adventure{% endblock %}
+
+{% block nav_rides %}active{% endblock %}
+
+{% block content %}
+  <!-- breadcrumb -->
+  <div class="site-breadcrumb" style="background: url({% static 'frontend/assets/img/about/img-3.jpg' %})">
+    <div class="container">
+      <h3 class="breadcrumb-title"> Rides</h3>
+      <ul class="breadcrumb-menu">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li class="active">Rides</li>
+      </ul>
+    </div>
+  </div>
+  <!-- breadcrumb end -->
+
+  <!-- tour area -->
+ 
+
+  <div class="tour-area py-120">
+
+    <div class="container">
+
+        <!-- SECTION HEADING -->
+
+        <div class="row">
+
+            <div class="col-lg-7 mx-auto">
+
+                <div
+                    class="site-heading text-center wow fadeInUp"
+                    data-wow-delay=".2s"
+                >
+
+                    <span class="site-title-tagline">
+
+                        <i class="fas fa-mountain"></i>
+
+                        Flying Fox Adventures
+
+                    </span>
+
+                    <h3 class="site-title">
+
+                        Choose Your Perfect
+                        <span>Zipline Adventure</span>
+
+                    </h3>
+
+                    <p>
+
+                        Explore our active Flying Fox rides,
+                        check the current price and duration,
+                        and book your preferred adventure in Munnar.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIDES -->
+
+        <div class="row g-4">
+
+            {% for ride in rides %}
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="tour-item ff-ride-card">
+
+                    {% if ride.is_featured %}
+
+                    <span class="tour-badge">
+
+                        Featured
+
+                    </span>
+
+                    {% endif %}
+
+
+                    <!-- IMAGE -->
+
+                    <div class="tour-img ff-ride-card-image">
+
+                        <a
+                            href="{% url 'ride_detail' ride.slug %}"
+                            aria-label="View {{ ride.name }}"
+                        >
+
+                            {% if ride.ride_images %}
+
+                                {% with first_image=ride.ride_images.0 %}
+
+                                    <img
+                                        src="{{ first_image.image.url }}"
+                                        alt="{{ ride.name }}"
+                                        loading="lazy"
+                                    >
+
+                                {% endwith %}
+
+                            {% else %}
+
+                                <img
+                                    src="{% static 'frontend/assets/img/tour/default.webp' %}"
+                                    alt="{{ ride.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% endif %}
+
+                        </a>
+
+
+                        <img
+                            class="shape"
+                            src="{% static 'frontend/assets/img/shape/01.webp' %}"
+                            alt=""
+                        >
+
+                    </div>
+
+
+                    <!-- CONTENT -->
+
+                    <div class="tour-content">
+
+                        <div class="tour-top">
+
+                            <span class="tour-category">
+
+                                <i class="far fa-tag"></i>
+
+                                Zipline Adventure
+
+                            </span>
+
+                            <span class="tour-place">
+
+                                <i class="far fa-location-dot"></i>
+
+                                Munnar
+
+                            </span>
+
+                        </div>
+
+
+                        <h4 class="tour-title">
+
+                            <a href="{% url 'ride_detail' ride.slug %}">
+
+                                {{ ride.name }}
+
+                            </a>
+
+                        </h4>
+
+
+                        <p class="ff-ride-description">
+
+                            {{ ride.description|striptags|truncatewords:18 }}
+
+                        </p>
+
+
+                        <div class="tour-rate">
+
+                            <span class="badge">
+
+                                <i class="far fa-star"></i>
+
+                                4.9
+
+                            </span>
+
+                            <span class="tour-rate-type">
+
+                                Excellent
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="tour-duration">
+
+                            <i class="far fa-clock"></i>
+
+                            {{ ride.duration }}
+
+                        </div>
+
+
+                        <div class="tour-bottom">
+
+                            <div class="tour-price">
+
+                                {% if ride.current_prices %}
+
+                                    From
+
+                                    <span>
+
+                                        ₹{{ ride.current_prices.0.price|floatformat:0 }}
+
+                                    </span>
+
+                                    <small>
+
+                                        / person
+
+                                    </small>
+
+                                {% else %}
+
+                                    <span class="ff-price-unavailable">
+
+                                        Price unavailable
+
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <a
+                                href="{% url 'ride_detail' ride.slug %}"
+                                class="theme-btn"
+                            >
+
+                                View Ride
+
+                                <i class="fas fa-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="col-12">
+
+                <div class="ff-rides-empty">
+
+                    <i class="fas fa-person-falling-burst"></i>
+
+                    <h4>
+
+                        No rides are available right now
+
+                    </h4>
+
+                    <p>
+
+                        Please check again later or contact our team
+                        for upcoming Flying Fox adventure slots.
+
+                    </p>
+
+                    <a
+                        href="{% url 'contact' %}"
+                        class="theme-btn"
+                    >
+
+                        Contact Us
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- PAGINATION -->
+
+        {% if rides.paginator.num_pages > 1 %}
+
+        <div class="pagination-area">
+
+            <ul class="pagination">
+
+                {% if rides.has_previous %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ rides.previous_page_number }}"
+                        aria-label="Previous"
+                    >
+
+                        <span aria-hidden="true">
+
+                            <i class="fas fa-arrow-left"></i>
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+
+                {% for page_number in rides.paginator.page_range %}
+
+                    {% if page_number == rides.number %}
+
+                    <li class="page-item active">
+
+                        <span class="page-link">
+
+                            {{ page_number }}
+
+                        </span>
+
+                    </li>
+
+                    {% elif page_number >= rides.number|add:"-2" and page_number <= rides.number|add:"2" %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ page_number }}"
+                        >
+
+                            {{ page_number }}
+
+                        </a>
+
+                    </li>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if rides.has_next %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ rides.next_page_number }}"
+                        aria-label="Next"
+                    >
+
+                        <span aria-hidden="true">
+
+                            <i class="fas fa-arrow-right"></i>
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+  
+  <!-- tour area end -->
+{% endblock %}

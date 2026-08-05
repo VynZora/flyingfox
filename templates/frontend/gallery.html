@@ -1,0 +1,198 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Our Gallery - Flying Fox Adventure{% endblock %}
+
+{% block nav_gallery %}active{% endblock %}
+
+{% block content %}
+  <!-- breadcrumb -->
+  <div class="site-breadcrumb" style="background: url({% static 'frontend/assets/img/about/img-6.jpeg' %})">
+    <div class="container">
+      <h3 class="breadcrumb-title">Our Gallery</h3>
+      <ul class="breadcrumb-menu">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li class="active">Our Gallery</li>
+      </ul>
+    </div>
+  </div>
+  <!-- breadcrumb end -->
+
+  <!-- gallery-area -->
+  <div class="gallery-area py-120">
+    <div class="ani-shape">
+      <img class="ani-transY" src="{% static 'frontend/assets/img/shape/08.webp' %}" alt="" />
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-7 mx-auto">
+          <div class="site-heading text-center wow fadeInDown" data-wow-delay=".2s">
+            <span class="site-title-tagline"><i class="far fa-backpack"></i>our Gallery</span>
+            <h3 class="site-title">Let's Check Our Photo Gallery</h3>
+            <div class="heading-divider"></div>
+          </div>
+        </div>
+      </div>
+     <div class="row g-4 popup-gallery">
+
+{% for item in gallery_items %}
+
+<div
+    class="col-md-3 wow fadeInUp"
+    data-wow-delay=".2s"
+>
+
+    <div class="gallery-item">
+
+        <div class="gallery-img">
+
+            {% if item.image %}
+
+                <img
+                    src="{{ item.image.url }}"
+                    alt="{{ item.category.name }}"
+                >
+
+            {% elif item.video %}
+
+                <video
+                    muted
+                    autoplay
+                    loop
+                    playsinline
+                >
+
+                    <source
+                        src="{{ item.video.url }}"
+                        type="video/mp4"
+                    >
+
+                </video>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="gallery-content">
+
+            {% if item.image %}
+
+                <a
+                    class="popup-img gallery-link"
+                    href="{{ item.image.url }}"
+                >
+
+                    <i class="fal fa-plus"></i>
+
+                </a>
+
+            {% elif item.video %}
+
+                <a
+                    class="popup-video gallery-link"
+                    href="{{ item.video.url }}"
+                >
+
+                    <i class="fas fa-play"></i>
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<div class="col-12">
+
+    <div class="text-center">
+
+        <h4>
+
+            No gallery items found.
+
+        </h4>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+    </div>
+  </div>
+
+
+
+  {% if gallery_items.has_other_pages %}
+
+<div class="pagination-area">
+
+    <ul class="pagination">
+
+        {% if gallery_items.has_previous %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="?page={{ gallery_items.previous_page_number }}"
+            >
+
+                <i class="fas fa-arrow-left"></i>
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+
+        {% for page in gallery_items.paginator.page_range %}
+
+        <li class="page-item {% if gallery_items.number == page %}active{% endif %}">
+
+            <a
+                class="page-link"
+                href="?page={{ page }}"
+            >
+
+                {{ page }}
+
+            </a>
+
+        </li>
+
+        {% endfor %}
+
+
+        {% if gallery_items.has_next %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="?page={{ gallery_items.next_page_number }}"
+            >
+
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+</div>
+
+{% endif %}
+  <!-- gallery-area end -->
+{% endblock %}

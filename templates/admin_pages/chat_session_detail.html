@@ -1,0 +1,352 @@
+{% extends "admin_pages/base.html" %}
+
+{% block title %}
+Chat Conversation | FlyingFox Admin
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard__form__wraper">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+
+        <div>
+
+            <h4>
+                Chat Conversation
+            </h4>
+
+            <p class="text-muted mb-0">
+                {{ chat_session.session_id }}
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'chat_session_list' %}"
+            class="btn btn-secondary"
+        >
+            Back
+        </a>
+
+    </div>
+
+
+    <div class="customer-information mb-4">
+
+        <div>
+            <span>Name</span>
+            <strong>
+                {{ chat_session.customer_name|default:"Not provided" }}
+            </strong>
+        </div>
+
+        <div>
+            <span>Phone</span>
+            <strong>
+                {{ chat_session.customer_phone|default:"Not provided" }}
+            </strong>
+        </div>
+
+        <div>
+            <span>Email</span>
+            <strong>
+                {{ chat_session.customer_email|default:"Not provided" }}
+            </strong>
+        </div>
+
+        <div>
+            <span>Started</span>
+            <strong>
+                {{ chat_session.started_at|date:"d M Y, h:i A" }}
+            </strong>
+        </div>
+
+    </div>
+
+
+    <div class="conversation-card">
+
+        {% for message in chat_messages %}
+
+        <div class="conversation-row
+            {% if message.sender == 'user' %}
+                customer-message
+            {% elif message.sender == 'admin' %}
+                admin-message
+            {% else %}
+                bot-message
+            {% endif %}
+        ">
+
+            <div class="conversation-bubble">
+
+                <div class="message-sender">
+
+                    {% if message.sender == "user" %}
+                        Customer
+                    {% elif message.sender == "admin" %}
+                        Admin
+                    {% else %}
+                        Flying Fox Assistant
+                    {% endif %}
+
+                </div>
+
+                <div class="message-content">
+                    {{ message.message|linebreaksbr }}
+                </div>
+
+                <div class="message-meta">
+
+                    {{ message.created_at|date:"d M Y, h:i A" }}
+
+                    {% if message.intent %}
+                        · {{ message.intent }}
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <p class="text-center text-muted py-5">
+            No messages found.
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="session-actions mt-4">
+
+        <form
+            method="POST"
+            action="{% url 'chat_session_toggle_status' chat_session.pk %}"
+        >
+
+            {% csrf_token %}
+
+            {% if chat_session.is_closed %}
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                >
+                    Reopen Session
+                </button>
+
+            {% else %}
+
+                <button
+                    type="submit"
+                    class="btn btn-warning"
+                >
+                    Close Session
+                </button>
+
+            {% endif %}
+
+        </form>
+
+
+        <button
+            type="button"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteSessionModal"
+        >
+            Delete Session
+        </button>
+
+    </div>
+
+</div>
+
+
+<div
+    class="modal fade"
+    id="deleteSessionModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form
+                method="POST"
+                action="{% url 'chat_session_delete' chat_session.pk %}"
+            >
+
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Delete Chat Session
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+                    Delete this complete conversation and all connected messages?
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >
+                        Yes, Delete
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.customer-information {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(170px, 1fr));
+    gap: 15px;
+}
+
+.customer-information > div {
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.customer-information span {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.customer-information strong {
+    display: block;
+    margin-top: 5px;
+}
+
+.conversation-card {
+    max-height: 650px;
+    overflow-y: auto;
+    padding: 24px;
+    border-radius: 14px;
+    background: #f3f4f6;
+}
+
+.conversation-row {
+    display: flex;
+    margin-bottom: 18px;
+}
+
+.customer-message {
+    justify-content: flex-end;
+}
+
+.bot-message,
+.admin-message {
+    justify-content: flex-start;
+}
+
+.conversation-bubble {
+    max-width: 72%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.customer-message .conversation-bubble {
+    color: #ffffff;
+    background: #c31103;
+    border-bottom-right-radius: 4px;
+}
+
+.bot-message .conversation-bubble {
+    border-bottom-left-radius: 4px;
+}
+
+.admin-message .conversation-bubble {
+    color: #ffffff;
+    background: #2563eb;
+}
+
+.message-sender {
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.message-content {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.message-meta {
+    margin-top: 7px;
+    opacity: 0.7;
+    font-size: 10px;
+}
+
+.session-actions {
+    display: flex;
+    gap: 10px;
+}
+
+@media (max-width: 900px) {
+
+    .customer-information {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media (max-width: 575px) {
+
+    .customer-information {
+        grid-template-columns: 1fr;
+    }
+
+    .conversation-bubble {
+        max-width: 90%;
+    }
+
+}
+
+</style>
+
+{% endblock %}

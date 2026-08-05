@@ -153,13 +153,17 @@ Bookings | FlyingFox Admin
 
                     <td>
 
-                        <strong>
-                            {{ booking.user.full_name }}
-                        </strong>
+<strong>
+    {{ booking.customer_name }}
+</strong>
 
-                        <div class="small text-muted">
-                            {{ booking.user.phone }}
-                        </div>
+<div class="small text-muted">
+    {{ booking.customer_phone }}
+</div>
+
+<div class="small text-muted">
+    {{ booking.customer_email }}
+</div>
 
                     </td>
 
@@ -331,7 +335,7 @@ Bookings | FlyingFox Admin
                                     Are you sure you want to delete this booking for
 
                                     <strong>
-                                        {{ booking.user.full_name }}
+                                       {{ booking.customer_name }}
                                     </strong>?
 
 
@@ -406,70 +410,195 @@ Bookings | FlyingFox Admin
     </div>
 
 
-    <!-- PAGINATION -->
+   <!-- PAGINATION -->
 
-    {% if bookings.has_other_pages %}
+{% if bookings.paginator.num_pages > 1 %}
 
-    <nav class="mt-4">
+<div class="booking-pagination-wrap">
 
-        <ul class="pagination justify-content-center">
+    <div class="booking-pagination-info">
 
+        Showing
+
+        <strong>
+            {{ bookings.start_index }}
+        </strong>
+
+        to
+
+        <strong>
+            {{ bookings.end_index }}
+        </strong>
+
+        of
+
+        <strong>
+            {{ bookings.paginator.count }}
+        </strong>
+
+        bookings
+
+    </div>
+
+
+    <nav aria-label="Booking pagination">
+
+        <ul class="pagination booking-pagination mb-0">
+
+            <!-- FIRST -->
 
             {% if bookings.has_previous %}
 
-            <li class="page-item">
+                <li class="page-item">
 
-                <a
-                    class="page-link"
-                    href="?page={{ bookings.previous_page_number }}&search={{ search }}&status={{ selected_status }}"
-                >
-                    &laquo;
-                </a>
+                    <a
+                        class="page-link"
+                        href="?page=1&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        aria-label="First page"
+                    >
+                        <i class="fas fa-angles-left"></i>
+                    </a>
 
-            </li>
+                </li>
+
+            {% else %}
+
+                <li class="page-item disabled">
+
+                    <span class="page-link">
+                        <i class="fas fa-angles-left"></i>
+                    </span>
+
+                </li>
 
             {% endif %}
 
 
+            <!-- PREVIOUS -->
+
+            {% if bookings.has_previous %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ bookings.previous_page_number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        aria-label="Previous page"
+                    >
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+
+                </li>
+
+            {% else %}
+
+                <li class="page-item disabled">
+
+                    <span class="page-link">
+                        <i class="fas fa-angle-left"></i>
+                    </span>
+
+                </li>
+
+            {% endif %}
+
+
+            <!-- PAGE NUMBERS -->
+
             {% for number in bookings.paginator.page_range %}
 
-            <li class="page-item {% if bookings.number == number %}active{% endif %}">
+                {% if number == bookings.number %}
 
-                <a
-                    class="page-link"
-                    href="?page={{ number }}&search={{ search }}&status={{ selected_status }}"
-                >
+                    <li class="page-item active">
 
-                    {{ number }}
+                        <span class="page-link">
+                            {{ number }}
+                        </span>
 
-                </a>
+                    </li>
 
-            </li>
+                {% elif number >= bookings.number|add:"-2" and number <= bookings.number|add:"2" %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        >
+                            {{ number }}
+                        </a>
+
+                    </li>
+
+                {% endif %}
 
             {% endfor %}
 
 
+            <!-- NEXT -->
+
             {% if bookings.has_next %}
 
-            <li class="page-item">
+                <li class="page-item">
 
-                <a
-                    class="page-link"
-                    href="?page={{ bookings.next_page_number }}&search={{ search }}&status={{ selected_status }}"
-                >
-                    &raquo;
-                </a>
+                    <a
+                        class="page-link"
+                        href="?page={{ bookings.next_page_number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        aria-label="Next page"
+                    >
+                        <i class="fas fa-angle-right"></i>
+                    </a>
 
-            </li>
+                </li>
+
+            {% else %}
+
+                <li class="page-item disabled">
+
+                    <span class="page-link">
+                        <i class="fas fa-angle-right"></i>
+                    </span>
+
+                </li>
 
             {% endif %}
 
+
+            <!-- LAST -->
+
+            {% if bookings.has_next %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ bookings.paginator.num_pages }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        aria-label="Last page"
+                    >
+                        <i class="fas fa-angles-right"></i>
+                    </a>
+
+                </li>
+
+            {% else %}
+
+                <li class="page-item disabled">
+
+                    <span class="page-link">
+                        <i class="fas fa-angles-right"></i>
+                    </span>
+
+                </li>
+
+            {% endif %}
 
         </ul>
 
     </nav>
 
-    {% endif %}
+</div>
+
+{% endif %}
 
 </div>
 
@@ -550,6 +679,89 @@ Bookings | FlyingFox Admin
 
     }
 
+}
+
+
+.booking-pagination-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 28px;
+    padding: 18px 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.booking-pagination-info {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.booking-pagination-info strong {
+    color: #1f2937;
+}
+
+.booking-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.booking-pagination .page-item {
+    margin: 0;
+}
+
+.booking-pagination .page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 6px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    color: #4b5563;
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+.booking-pagination .page-link:hover {
+    border-color: #f97316;
+    color: #f97316;
+    background: #fff7ed;
+}
+
+.booking-pagination .page-item.active .page-link {
+    border-color: #f97316;
+    color: #ffffff;
+    background: #f97316;
+}
+
+.booking-pagination .page-item.disabled .page-link {
+    color: #c4c8cf;
+    background: #f8f9fa;
+    cursor: not-allowed;
+}
+
+@media (max-width: 767px) {
+    .booking-pagination-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .booking-pagination {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .booking-pagination-info {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 </style>

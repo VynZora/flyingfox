@@ -1,0 +1,438 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}Create Testimonial | Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard sp_bottom_100">
+    <div class="container-fluid full__width__padding">
+        <div class="row">
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12">
+                <div class="dashboard__section__title">
+                    <h4 class="mb-0">Add Testimonial</h4>
+
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <form method="post" enctype="multipart/form-data" class="needs-validation form-wrapper"
+                            novalidate>
+                            {% csrf_token %}
+                            <div class="row">
+                                <!-- Name -->
+                                <div class="col-12 mb-4">
+                                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" id="name" class="form-control modern-input"
+                                        placeholder="Enter person's name" required>
+                                    <div class="invalid-feedback">Please provide a name.</div>
+                                </div>
+
+                                <!-- Profile Image -->
+                                <div class="col-12 mb-4">
+                                    <label for="image" class="form-label">Profile Picture</label>
+                                    <input type="file" name="image" id="image"
+                                        class="form-control modern-input testimonial-image-input"
+                                        data-preview-id="imagePreview" accept="image/*">
+                                    <div class="form-text">Recommended size: 300x300 pixels. Max size: 2MB</div>
+                                    <div id="imagePreview" class="testimonial-image-preview mt-2" style="display:none;">
+                                    </div>
+                                </div>
+
+                                <!-- Rating -->
+                                <!-- <div class="col-12 mb-4">
+                                    <label for="rating" class="form-label">Rating <span class="text-danger">*</span></label>
+                                    <select name="rating" id="rating" class="form-select modern-input" required>
+                                        <option value="">-- Select Rating --</option>
+                                        <option value="1">1 Star</option>
+                                        <option value="2">2 Stars</option>
+                                        <option value="3">3 Stars</option>
+                                        <option value="4">4 Stars</option>
+                                        <option value="5">5 Stars</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a rating.</div>
+                                </div> -->
+
+                                <!-- Review -->
+                                <div class="col-12 mb-4">
+                                    <label for="review" class="form-label">Review <span
+                                            class="text-danger">*</span></label>
+                                    <textarea name="review" id="review"
+                                        class="form-control uni-description modern-input" rows="5"
+                                        placeholder="Enter the testimonial review" required></textarea>
+                                    <div class="form-text">Recommended length: 90 words for best display on the website.
+                                    </div>
+                                    <div class="invalid-feedback">Please provide a review.</div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="col-12 mt-4">
+                                    <div class="dashboard__form__button">
+                                        <button type="submit" class="default__button">Add Testimonial</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    * FIX: CKEditor Toolbar Sticky Position Issues */
+    /* ============================================ */
+
+    /* Disable default sticky behavior */
+    .ck.ck-editor__top.ck-reset_all {
+        position: relative !important;
+        top: auto !important;
+        z-index: 10 !important;
+    }
+
+    /* Ensure toolbar stays within its container */
+    .ck.ck-sticky-panel .ck-sticky-panel__content {
+        position: relative !important;
+        top: auto !important;
+    }
+
+    /* Remove any fixed positioning from toolbar */
+    .ck.ck-toolbar {
+        position: relative !important;
+        top: auto !important;
+    }
+
+    /* Container for CKEditor to constrain toolbar */
+    .ck-editor {
+        position: relative !important;
+        overflow: visible !important;
+    }
+
+    /* Ensure editor main container doesn't have overflow issues */
+    .ck.ck-editor__main {
+        overflow: visible !important;
+    }
+
+    /* Make editable area fully auto-expanding */
+    .ck-editor__editable_inline {
+        min-height: 200px;
+        /* Start with comfortable minimum height */
+        height: auto !important;
+        /* Allow automatic expansion */
+        overflow-y: visible !important;
+        /* No scrollbar - content expands naturally */
+        overflow-x: hidden !important;
+        position: relative !important;
+    }
+
+    /* Prevent toolbar from overlapping with navigation or header */
+    .ck-editor__top {
+        position: static !important;
+    }
+
+    /* Additional fix for sticky panel */
+    .ck-sticky-panel {
+        position: static !important;
+    }
+
+    /* Ensure proper z-index hierarchy */
+    .ck.ck-editor {
+        z-index: 1 !important;
+    }
+
+    .ck.ck-balloon-panel {
+        z-index: 1000 !important;
+    }
+</style>
+
+<style>
+    /* CKEditor List Styles - Fix for bullets and numbers */
+    .ck-editor__editable ul,
+    .ck-editor__editable ol {
+        padding-left: 40px !important;
+    }
+
+    .ck-editor__editable ul {
+        list-style-type: disc !important;
+        list-style-position: outside !important;
+    }
+
+    .ck-editor__editable ol {
+        list-style-type: decimal !important;
+        list-style-position: outside !important;
+    }
+
+    .ck-editor__editable li {
+        display: list-item !important;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .ck-editor__editable ul li {
+        list-style-type: disc !important;
+    }
+
+    .ck-editor__editable ol li {
+        list-style-type: decimal !important;
+    }
+
+    /* Nested lists */
+    .ck-editor__editable ul ul {
+        list-style-type: circle !important;
+    }
+
+    .ck-editor__editable ul ul ul {
+        list-style-type: square !important;
+    }
+
+
+    /* ---------------- CORE RESPONSIVENESS & SAFETY ---------------- */
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .dashboard {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .container-fluid.full__width__padding {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Form Wrapper */
+    .form-wrapper {
+        max-width: 900px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        overflow-x: hidden;
+    }
+
+    /* Inputs / Textareas / Selects / Files */
+    img,
+    input,
+    textarea,
+    select,
+    .form-control,
+    .modern-input,
+    .form-text {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        word-wrap: break-word;
+    }
+
+    /* CKEditor safety */
+    .ck-editor__editable_inline,
+    .ck-content {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    /* Form Inputs Style */
+    .modern-input {
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        font-size: 1rem;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .modern-input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+    }
+
+    /* Buttons */
+    .dashboard__form__button {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .dashboard__form__button .default__button {
+        background: #4f46e5;
+        color: #fff;
+        padding: 0.85rem 1.6rem;
+        border-radius: 8px;
+        font-weight: 500;
+        border: none;
+        transition: background 0.3s;
+    }
+
+    .dashboard__form__button .default__button:hover {
+        background: #4338ca;
+    }
+
+    /* Image Preview */
+    .testimonial-image-preview {
+        max-width: 150px;
+        height: 150px;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .testimonial-image-preview img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+    /* Section Title */
+    .dashboard__section__title {
+        border-bottom: 1px solid #eaeaea;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    /* ---------------- RESPONSIVE BREAKPOINTS ---------------- */
+    @media (max-width: 1200px) {
+        .form-wrapper {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .dashboard__form__button {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .dashboard__form__button button,
+        .dashboard__form__button a {
+            width: 100%;
+        }
+
+        .testimonial-image-preview {
+            width: 100%;
+            height: 200px;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        html,
+        body,
+        .dashboard {
+            overflow-x: hidden !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .dashboard__section__title h4 {
+            font-size: 1.25rem;
+        }
+
+        .modern-input {
+            font-size: 0.95rem;
+            padding: 0.75rem 0.9rem;
+        }
+
+        .default__button {
+            font-size: 0.95rem;
+            padding: 0.75rem 1.2rem;
+        }
+
+        body,
+        .dashboard,
+        .container-fluid.full__width__padding {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        ClassicEditor
+            .create(document.querySelector('#review'), {
+                toolbar: [
+                    'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',
+                    '|', 'insertTable', 'blockQuote', 'undo', 'redo', 'imageUpload'
+                ]
+            })
+            .then(editor => {
+                // Enable Base64 image upload
+                editor.plugins.get('FileRepository').createUploadAdapter = loader => {
+                    return {
+                        upload: () => loader.file
+                            .then(file => new Promise((resolve, reject) => {
+                                const reader = new FileReader();
+                                reader.onload = () => resolve({ default: reader.result });
+                                reader.onerror = error => reject(error);
+                                reader.readAsDataURL(file);
+                            })),
+                        abort: () => { }
+                    };
+                };
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // CKEditor for Review
+
+        // Image preview
+        document.querySelectorAll('.testimonial-image-input').forEach(input => {
+            input.addEventListener('change', function () {
+                const previewId = this.getAttribute('data-preview-id');
+                const preview = document.getElementById(previewId);
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.style.display = 'flex';
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    preview.style.display = 'none';
+                    preview.innerHTML = '';
+                }
+            });
+        });
+
+        // Form validation
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    });
+</script>
+{% endblock %}
