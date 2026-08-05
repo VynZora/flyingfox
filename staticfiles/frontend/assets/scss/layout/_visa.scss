@@ -1,0 +1,154 @@
+@use "../utils" as *;
+
+/* ===================
+46. Visa css 
+====================== */
+
+.visa-area {
+  .visa-item {
+    background: var(--color-white);
+    box-shadow: var(--box-shadow);
+    border-radius: 25px;
+    padding: 15px;
+
+    &:hover .visa-img img {
+      transform: scale(1.1);
+    }
+  }
+
+  .visa-img {
+    overflow: hidden;
+    border-radius: 15px;
+
+    img {
+      border-radius: 15px;
+    }
+  }
+
+  .visa-content {
+    padding-top: 20px;
+
+    h4 {
+      a {
+        color: var(--color-dark);
+
+        &:hover {
+          color: var(--theme-color);
+        }
+      }
+    }
+  }
+
+  .visa-meta {
+    margin-top: 18px;
+
+    ul {
+      li {
+        display: inline-block;
+        margin-right: 10px;
+        color: var(--body-text-color);
+        margin-bottom: 10px;
+
+        i {
+          width: 30px;
+          height: 30px;
+          line-height: 28px;
+          border: 1px solid var(--border-info-color);
+          text-align: center;
+          color: var(--color-dark);
+          font-size: 15px;
+          border-radius: 50px;
+        }
+      }
+    }
+  }
+
+  .visa-bottom {
+    border-top: 1px solid var(--border-info-color);
+    margin-top: 15px;
+    padding-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .visa-price {
+      span {
+        color: var(--theme-color2);
+        font-weight: 500;
+        font-size: 17px;
+      }
+    }
+
+    .theme-btn {
+      padding: 5px 5px 5px 15px;
+    }
+  }
+}
+
+/* visa-single */
+.visa-single {
+  .sidebar {
+    .widget {
+      background: var(--theme-bg-light2);
+      padding: 25px;
+      border-radius: 15px;
+
+      h4 {
+        color: var(--color-dark);
+        margin-bottom: 20px;
+        font-weight: 500;
+      }
+    }
+
+    .visa-info {
+      ul {
+        li {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin: 15px 0;
+
+          .list-title {
+            font-size: 16px;
+            color: var(--color-dark);
+            font-weight: 500;
+
+            i {
+              width: 35px;
+              height: 35px;
+              line-height: 32px;
+              border: 1px solid var(--border-info-color);
+              text-align: center;
+              border-radius: 10px;
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+
+    .visa-banner {
+      .img {
+        img {
+          border-radius: 15px;
+        }
+      }
+    }
+  }
+}
+
+.visa-single-list i {
+  color: var(--theme-color);
+  margin-right: 10px;
+}
+
+.visa-details {
+  h3 {
+    color: var(--color-dark);
+    font-weight: 700;
+  }
+
+  img {
+    border-radius: 15px;
+  }
+}

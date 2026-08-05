@@ -1,0 +1,150 @@
+@use "../utils" as *;
+
+/*====================
+31. Testimonial css 
+======================*/
+
+.testimonial {
+
+  &-item {
+    position: relative;
+    margin: 2px;
+
+    .content {
+      background: var(--color-white);
+      border-radius: 33px;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+
+      &.item-pd{
+      padding: 40px;
+    }
+
+      .icon {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        background: var(--theme-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50px 50px 50px 0;
+        opacity: 1;
+        z-index: -1;
+
+        img {
+          width: 40px !important;
+          @include filter-white;
+        }
+
+
+      }
+
+      .rating {
+        color: var(--color-yellow);
+        margin-bottom: 10px;
+      }
+
+      .quote p {
+        color: var(--body-text-color);
+      }
+
+      .bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 40px;
+        padding-top: 40px;
+        border-top: 1px solid var(--border-info-color);
+
+        .img {
+          img {
+            width: 45px;
+          }
+        }
+      }
+
+      .author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        &-img img {
+          width: 55px;
+          border-radius: 50px;
+        }
+
+        &-info {
+          h4 {
+            font-size: 18px;
+            color: var(--color-dark);
+          }
+
+          p {
+            color: var(--theme-color);
+          }
+        }
+      }
+    }
+
+
+    
+  }
+
+  &-box {
+    background: var(--color-white);
+    padding: 5px;
+    border-radius: 25px;
+
+    & > .content {
+      padding: 15px;
+      margin-top: 18px;
+      background: var(--theme-bg-light2);
+      border-radius: 20px;
+    }
+
+    .img {
+      img {
+        border-radius: 20px;
+        width: 100%;
+      }
+    }
+  }
+}
+
+/* testimonial-slider */
+.testimonial-slider {
+  .owl-dots {
+    text-align: center;
+    margin-top: 30px;
+
+    .owl-dot {
+      span {
+        background: var(--theme-color);
+        margin: 5px 7px;
+        border-radius: 10px;
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        transition: var(--transition);
+        position: relative;
+      }
+
+      &.active span {
+        background-color: var(--theme-color);
+      }
+
+      &.active span::before {
+        content: "";
+        position: absolute;
+        inset: -4px;
+        border: 1.6px solid var(--theme-color);
+        border-radius: 50px;
+      }
+    }
+  }
+}

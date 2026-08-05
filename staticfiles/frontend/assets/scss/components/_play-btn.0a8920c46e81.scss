@@ -1,0 +1,47 @@
+@use "../utils" as *;
+
+/*===================
+11. Play btn
+=====================*/
+
+.play-btn {
+  display: inline-block;
+  padding: 0;
+  height: 75px;
+  width: 75px;
+  line-height: 75px;
+  font-size: 20px;
+  text-align: center;
+  background: var(--theme-color);
+  color: var(--color-white);
+  position: absolute;
+  border-radius: 50%;
+  z-index: 1;
+
+  &:hover {
+    color: var(--color-white);
+  }
+
+  i::after {
+    content: "";
+    @include position(absolute);
+    z-index: -1;
+    background-color: var(--theme-color);
+    border-radius: 50px;
+    animation: ripple-wave 1s linear infinite;
+    transform: scale(1);
+    transition: all 0.5s ease-in-out;
+  }
+}
+
+@keyframes ripple-wave {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}

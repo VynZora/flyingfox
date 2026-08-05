@@ -1,0 +1,10 @@
+@use './mixin' as *;
+@use './variable' as *;
+@use './typography' as *;
+
+
+// theme root variable
+:root {
+    @include theme-variable-gen($theme-font);
+    @include theme-variable-gen($theme-variable);
+}

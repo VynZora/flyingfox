@@ -1,0 +1,225 @@
+@use "../utils" as *;
+
+/*====================
+47. Banner css
+======================*/
+
+.banner {
+  &-area {
+    position: relative;
+  }
+
+  &-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border-radius: 35px;
+    background: var(--color-white);
+
+    @media #{$max-991} {
+      flex-direction: column;
+    }
+  }
+
+  &-img {
+    img {
+      width: 300px;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 35px 0 0 35px;
+
+      @media #{$max-991} {
+        border-radius: 35px 35px 0 0;
+      }
+    }
+  }
+
+  &-content {
+    padding: 10px 15px 10px 0;
+
+    @media #{$max-991} {
+      padding: 0 20px 20px 20px;
+    }
+
+    h4 {
+      font-size: 18px;
+      margin-bottom: 8px;
+
+      span {
+        color: var(--theme-color);
+      }
+    }
+
+    p {
+      color: var(--body-text-color);
+      margin: 0 0 12px 0;
+    }
+
+    .theme-btn {
+      padding: 4px 4px 4px 15px;
+      vertical-align: middle;
+    }
+  }
+
+  &-slider {
+    &.owl-theme {
+      .owl-nav {
+        margin-top: 0px;
+
+        button {
+          color: var(--theme-color);
+          font-size: 25px;
+          margin: 0;
+          margin-top: -28px;
+          padding: 0;
+          background: var(--color-white);
+          display: inline-block;
+          cursor: pointer;
+          height: 45px;
+          width: 45px;
+          border-radius: 50px;
+          line-height: 45px;
+          text-align: center;
+          box-shadow: 0 3px 24px rgb(0 0 0 / 10%);
+          position: absolute;
+          top: 50%;
+          transform: translate(0, -50%);
+          transition: var(--transition);
+
+          &:hover {
+            background: var(--theme-color);
+            color: var(--color-white);
+          }
+        }
+
+        .owl-prev {
+          left: -25px;
+
+          @media #{$max-767} {
+            left: -4px;
+          }
+        }
+
+        .owl-next {
+          right: -25px;
+
+          @media #{$max-767} {
+            right: -4px;
+          }
+        }
+      }
+    }
+    .owl-dots {
+      text-align: center;
+      margin-top: 30px;
+
+      .owl-dot {
+        span {
+          background: transparent;
+          margin: 5px;
+          border: 2px solid var(--theme-color);
+          border-radius: 50px;
+          width: 12px;
+          height: 12px;
+          display: inline-block;
+          transition: var(--transition);
+        }
+
+        &.active span {
+          background: var(--theme-color);
+        }
+      }
+    }
+  }
+
+  /* banner area 2 */
+  &-area2{
+    .banner-img {
+      img{
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+      }
+    }
+
+    .banner-content{
+      position: absolute;
+      left: 30px;
+      top: 20px;
+      padding: 0;
+
+      h4{
+        font-size: 50px;
+        color: var(--color-white);
+        font-weight: bold;
+        line-height: 1;
+        margin-bottom: 0;
+      }
+
+      span{
+        color: var(--color-white);
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: 1px;
+      }
+
+      .theme-btn{
+        background: var(--color-dark);
+        margin-top: 15px;
+      }
+    }
+  }
+}
+
+
+
+.banner-img-wrap {
+  display: flex;
+  gap: 15px;
+
+  .img-item {
+    flex: 1;
+    width: 120px;
+    height: 400px;
+    background-size: cover;
+    transition: 0.4s;
+    position: relative;
+
+    a {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 65px;
+      height: 65px;
+      line-height: 65px;
+      background: var(--theme-color);
+      color: var(--color-white);
+      text-align: center;
+      font-size: 30px;
+      border-radius: 50px;
+      box-shadow: var(--box-shadow);
+    }
+
+    &:hover a {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      border-radius: 50em;
+    }
+
+    &.active {
+      flex: 3;
+
+      img {
+        border-radius: 50px;
+      }
+    }
+  }
+}

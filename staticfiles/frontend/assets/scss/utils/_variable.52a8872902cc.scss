@@ -1,0 +1,31 @@
+/*====================
+2. Theme variables
+======================*/
+
+$theme-variable: (
+  theme-color: #f98225,
+  theme-color2: #3772fc,
+  theme-bg-light: #f6f6f6,
+  theme-bg-light2: #faf4f0,
+  body-text-color: #757f95,
+  color-white: #ffffff,
+  color-dark: #2a4456,
+  color-green: #15d4c9,
+  color-blue: #2075fe,
+  color-skyblue: #00bfff,
+  color-purple: #a855f7,
+  color-yellow: #fba707,
+  color-gray: #ececec,
+  color-red: #fd6a6a,
+  box-shadow: 0 0 40px 5px rgb(0 0 0 / 5%),
+  box-shadow2: 0 0 15px rgba(0, 0, 0, 0.17),
+  box-shadow3: 0 0 40px 5px rgb(142 121 249 / 5%),
+  transition: all 0.5s ease-in-out,
+  transition2: all 0.3s ease-in-out,
+  border-info-color: rgba(0, 0, 0, 0.08),
+  border-info-color2: rgba(0, 0, 0, 0.05),
+  border-white-color: rgba(255, 255, 255, 0.08),
+  border-white-color2: rgba(255, 255, 255, 0.15),
+  footer-bg: #2a4456,
+  footer-text-color: #f5faff,
+);

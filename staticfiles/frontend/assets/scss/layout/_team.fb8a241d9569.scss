@@ -1,0 +1,174 @@
+@use "../utils" as *;
+
+/* ===================
+30. Team css 
+====================== */
+
+.team {
+  &-area {
+    position: relative;
+  }
+
+  &-img {
+    position: relative;
+
+    img {
+      border-radius: 50px;
+    }
+  }
+
+  &-social-btn {
+    position: absolute;
+    right: -3px;
+    bottom: 0;
+    width: 60px;
+    height: 60px;
+    background: var(--color-white);
+    border-top-left-radius: 50%;
+    padding: 8px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      bottom: 0;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      box-shadow: 5px 5px 0 5px var(--color-white);
+      border-bottom-right-radius: 20px;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: -20px;
+      right: 3px;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      box-shadow: 5px 5px 0 5px var(--color-white);
+      border-bottom-right-radius: 20px;
+    }
+
+    button {
+      width: 42px;
+      height: 42px;
+      line-height: 42px;
+      background: var(--theme-color);
+      color: var(--color-white);
+      border-radius: 50px;
+      text-align: center;
+      font-size: 18px;
+      border: none;
+    }
+  }
+
+  &-social {
+    position: absolute;
+    right: 9px;
+    bottom: 25px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+
+    a {
+      display: block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin-bottom: 5px;
+      background: var(--color-white);
+      color: var(--theme-color);
+      border-radius: 50px;
+
+      &:hover {
+        background: var(--theme-color);
+        color: var(--color-white);
+      }
+    }
+
+    &-wrap {
+      &:hover .team-social {
+        opacity: 1;
+        visibility: visible;
+        bottom: 60px;
+      }
+    }
+  }
+
+  &-content {
+    margin-top: 10px;
+
+    h4 a {
+      color: var(--color-dark);
+      font-size: 22px;
+
+      &:hover {
+        color: var(--theme-color);
+      }
+    }
+
+    span {
+      color: var(--theme-color);
+      font-weight: 500;
+      font-size: 15px;
+    }
+  }
+}
+
+/* team-area 2 */
+.team-area2 {
+  .team-item {
+    text-align: center;
+    border: 1px solid var(--border-info-color);
+    padding: 20px 10px;
+    border-radius: 10px;
+  }
+
+  .team-item:hover {
+    border-color: transparent;
+    outline: 1.6px solid var(--theme-color);
+  }
+
+  .team-img {
+    img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  .team-content {
+    margin-top: 15px;
+  }
+
+  .team-social-btn {
+    &::before,
+    &::after {
+      display: none;
+    }
+
+    button {
+      border-radius: 50px;
+    }
+  }
+
+  .team-social {
+    background: var(--theme-color);
+    border-radius: 50px;
+    padding: 5px 8px;
+
+    a {
+      width: unset;
+      height: unset;
+      line-height: unset;
+      background: transparent;
+      border-radius: unset;
+      color: var(--color-white);
+      margin: 2px 0;
+    }
+  }
+}

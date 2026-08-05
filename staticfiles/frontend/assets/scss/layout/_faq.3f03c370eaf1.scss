@@ -1,0 +1,136 @@
+@use "../utils" as *;
+
+/*====================
+29. Faq css 
+======================*/
+
+.faq-area {
+  .accordion {
+    &-item {
+      border: none;
+      background: var(--color-white);
+      border-radius: 15px;
+      margin-bottom: 25px;
+      border: 1px solid var(--border-info-color);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &-button {
+      border-radius: 0px;
+      background: transparent;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--color-dark);
+      padding: 12px;
+      box-shadow: none;
+
+      @media #{$max-991} {
+        font-size: 16px;
+      }
+
+      &-button:focus {
+        box-shadow: none;
+      }
+
+      &::after {
+        content: "\f107";
+        background: none;
+        color: var(--color-dark);
+        font-size: 24px;
+        font-weight: 500;
+        font-family: "Font Awesome 6 pro";
+        width: unset;
+        height: unset;
+        margin-top: 2px;
+        margin-right: 3px;
+      }
+
+      &:not(.collapsed) {
+        color: var(--theme-color);
+        background: transparent;
+        box-shadow: 0 0.8px 0 0 var(--border-info-color);
+      }
+
+      &:not(.collapsed)::after {
+        content: "\f107";
+        transform: rotate(-180deg);
+        margin-top: 0;
+      }
+
+      span {
+        width: 40px;
+        height: 40px;
+        margin-right: 15px;
+
+        i {
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+          border-radius: 50px;
+          background: var(--theme-color);
+          text-align: center;
+          color: var(--color-white);
+        }
+      }
+    }
+
+    &-body {
+      color: var(--body-text-color);
+    }
+  }
+
+  .faq-content {
+    @media #{$max-991} {
+      margin-bottom: 50px;
+    }
+  }
+
+  .faq-img {
+    text-align: right;
+    position: relative;
+
+    img {
+      width: 74%;
+      border-radius: 30px;
+    }
+  }
+
+  .faq-counter {
+    position: absolute;
+    left: 8%;
+    bottom: 15%;
+
+    .counter-box {
+      background: var(--color-white);
+      box-shadow: var(--box-shadow);
+      margin-top: 30px;
+      min-width: 260px;
+      justify-content: start;
+      text-align: left;
+
+      .icon {
+        flex-shrink: 0;
+        width: 82px;
+        height: 82px;
+        line-height: 75px;
+        background: var(--theme-color);
+        border-radius: 50px;
+        text-align: center;
+        box-shadow: var(--box-shadow);
+
+        img {
+          width: 45px;
+          border-radius: 0;
+          @include filter-white;
+        }
+      }
+
+      .title {
+        margin-top: 5px;
+      }
+    }
+  }
+}
