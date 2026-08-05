@@ -593,6 +593,11 @@ path(
     views.blog_detail,
     name="blog_detail",
 ),
-
+# offer
+ path("offers/", views.offer_list, name="offer_list"),
+    path("offers/create/", views.offer_create, name="offer_create"),
+    path("offers/<slug:slug>/", views.offer_detail, name="offer_detail"),
+    path("offers/<slug:slug>/edit/", views.offer_update, name="offer_update"),
+    path("offers/<slug:slug>/delete/", views.offer_delete, name="offer_delete"),
 
 ]

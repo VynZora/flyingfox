@@ -1278,3 +1278,145 @@ class ChatEnquiry(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.phone}"
+
+class Offer(models.Model):
+
+    STATUS_CHOICES = [
+    ("upcoming", "Upcoming"),
+    ("active", "Active"),
+    ("expired", "Expired"),
+]
+    title = models.CharField(
+        max_length=200
+    )
+
+    slug = models.SlugField(
+        unique=True,
+        blank=True
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    banner_image = models.ImageField(
+        upload_to="offers/",
+        blank=True,
+        null=True
+    )
+
+    rides = models.ManyToManyField(
+        Ride,
+        related_name="offers",
+        blank=True
+    )
+
+    coupon = models.OneToOneField(
+        Coupon,
+        on_delete=models.CASCADE,
+        related_name="offer",
+        blank=True,
+        null=True,
+        editable=False
+    )
+
+    discount_type = models.CharField(
+        max_length=20,
+        choices=Coupon.DISCOUNT_TYPE_CHOICES
+    )
+
+    discount_value = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    start_date = models.DateField()
+
+    end_date = models.DateField()
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="expired",
+        editable=False
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Manually disable an offer regardless of dates."
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title} ({self.status})"
+
+    def generate_coupon_code(self):
+        import random
+        import string
+
+        base = slugify(self.title).upper().replace("-", "")[:6] or "OFFER"
+
+        while True:
+            code = f"{base}{''.join(random.choices(string.digits, k=4))}"
+            if not Coupon.objects.filter(code=code).exists():
+                return code
+
+    def refresh_status(self):
+        today = timezone.now().date()
+
+        if self.is_active and self.start_date <= today <= self.end_date:
+            self.status = "active"
+        else:
+            self.status = "expired"
+
+    def save(self, *args, **kwargs):
+
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+
+            while Offer.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        self.refresh_status()
+
+        creating_coupon = self.coupon_id is None
+
+        super().save(*args, **kwargs)
+
+        if creating_coupon:
+            self.coupon = Coupon.objects.create(
+                code=self.generate_coupon_code(),
+                discount_type=self.discount_type,
+                discount_value=self.discount_value,
+                valid_from=self.start_date,
+                valid_until=self.end_date,
+                is_active=self.is_active,
+            )
+            super().save(update_fields=["coupon"])
+
+    def sync_coupon(self):
+        """Call after setting self.rides (M2M) — e.g. in admin's save_related,
+        or after form.save_m2m() — to push rides/dates onto the linked coupon."""
+        if self.coupon:
+            self.coupon.rides.set(self.rides.all())
+            self.coupon.valid_from = self.start_date
+            self.coupon.valid_until = self.end_date
+            self.coupon.discount_type = self.discount_type
+            self.coupon.discount_value = self.discount_value
+            self.coupon.is_active = self.is_active
+            self.coupon.save()

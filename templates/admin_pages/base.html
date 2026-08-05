@@ -51,7 +51,7 @@
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="{% static 'assets/images/favicon/favicon-16x16.png' %}"
+      href="{% static 'assets/logo.png' %}"
     />
     <link
       rel="manifest"
@@ -59,7 +59,7 @@
     />
     <link
       rel="shortcut icon"
-      href="{% static 'assets/images/favicon/favicon.ico' %}"
+      href="{% static 'assets/logo.png' %}"
     />
 
 
@@ -1230,7 +1230,20 @@
 
 </li>
 
+<li>
 
+   <a 
+        href="{% url 'offer_list' %}"
+        class="{% if request.resolver_match.url_name == 'offer_list' or request.resolver_match.url_name == 'offer_create' or request.resolver_match.url_name == 'offer_update' or request.resolver_match.url_name == 'offer_detail' %}active{% endif %}"
+    >
+
+        <i class="icofont-gift"></i>
+
+        Offers
+
+    </a>
+
+</li>
 
 <li>
 

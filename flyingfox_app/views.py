@@ -11,6 +11,7 @@ from django.db.models.functions import Lower
 from django.db.models import Q, Count
 from django.db import transaction
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Prefetch
 from datetime import date
 from django.utils.dateparse import parse_date
@@ -28,7 +29,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.db.models import Prefetch
 from django.utils.dateparse import parse_date
-
+from .forms import OfferForm
 import qrcode
 
 from reportlab.lib.pagesizes import A4
@@ -76,7 +77,7 @@ from .models import (
     BookingPerson,
     Payment,
     Ticket,
-    Coupon,Testimonial
+    Coupon,Testimonial,Offer
 )
 
 
@@ -7683,4 +7684,211 @@ def blog_detail(request, slug):
         {
             "blog": blog,
         },
+    )
+
+from .forms import OfferForm
+
+
+# ==========================================
+# OFFER CRUD
+# ==========================================
+
+# ==========================================
+# OFFER CRUD
+# ==========================================
+
+@_admin_required
+def offer_list(request):
+
+    offers_qs = (
+        Offer.objects
+        .prefetch_related("rides")
+        .select_related("coupon")
+        .all()
+    )
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    status = request.GET.get(
+        "status",
+        ""
+    ).strip()
+
+    if search:
+        offers_qs = offers_qs.filter(
+            Q(title__icontains=search) |
+            Q(coupon__code__icontains=search) |
+            Q(rides__name__icontains=search)
+        ).distinct()
+
+    if status:
+        offers_qs = offers_qs.filter(
+            status=status
+        )
+
+    # refresh status for accurate display without forcing a write
+    for offer in offers_qs:
+        offer.refresh_status()
+
+    paginator = Paginator(
+        offers_qs,
+        10
+    )
+
+    offers = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    return render(
+        request,
+        "admin_pages/offer_list.html",
+        {
+            "offers": offers,
+            "search": search,
+            "selected_status": status,
+            "status_choices": Offer.STATUS_CHOICES,
+        }
+    )
+
+
+@_admin_required
+def offer_create(request):
+
+    if request.method == "POST":
+
+        form = OfferForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            offer = form.save()
+
+            offer.sync_coupon()
+
+            messages.success(
+                request,
+                f"Offer created successfully. Coupon code: {offer.coupon.code}"
+            )
+
+            return redirect(
+                "offer_list"
+            )
+
+        messages.error(
+            request,
+            "Please correct the errors below."
+        )
+
+    else:
+
+        form = OfferForm()
+
+    return render(
+        request,
+        "admin_pages/offer_form.html",
+        {
+            "form": form,
+        }
+    )
+
+
+@_admin_required
+def offer_update(request, slug):
+
+    offer = get_object_or_404(
+        Offer,
+        slug=slug
+    )
+
+    if request.method == "POST":
+
+        form = OfferForm(
+            request.POST,
+            request.FILES,
+            instance=offer
+        )
+
+        if form.is_valid():
+
+            offer = form.save()
+
+            offer.sync_coupon()
+
+            messages.success(
+                request,
+                "Offer updated successfully."
+            )
+
+            return redirect(
+                "offer_list"
+            )
+
+        messages.error(
+            request,
+            "Please correct the errors below."
+        )
+
+    else:
+
+        form = OfferForm(
+            instance=offer
+        )
+
+    return render(
+        request,
+        "admin_pages/offer_form.html",
+        {
+            "form": form,
+            "offer": offer,
+        }
+    )
+
+
+@_admin_required
+def offer_detail(request, slug):
+
+    offer = get_object_or_404(
+        Offer.objects
+        .prefetch_related("rides")
+        .select_related("coupon"),
+        slug=slug
+    )
+
+    offer.refresh_status()
+
+    return render(
+        request,
+        "admin_pages/offer_detail.html",
+        {
+            "offer": offer,
+        }
+    )
+
+
+@_admin_required
+def offer_delete(request, slug):
+
+    offer = get_object_or_404(
+        Offer,
+        slug=slug
+    )
+
+    if request.method == "POST":
+
+        title = offer.title
+
+        offer.delete()
+
+        messages.success(
+            request,
+            f'Offer "{title}" deleted successfully.'
+        )
+
+    return redirect(
+        "offer_list"
     )
