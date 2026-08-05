@@ -932,7 +932,7 @@ label {
 ======================*/
 .site-breadcrumb {
   display: flex;
-  height: 600px; 
+  height: 600px;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -11896,3 +11896,240 @@ span.flatpickr-weekday {
 }
 
 /* gallery page css end 
+
+
+
+
+/* ride details page css start */
+
+/* Ride detail image-only hero */
+
+.ride-image-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.ride-image-slide {
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.ride-image-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.ride-image-slider .owl-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.ride-image-slider .owl-nav button.owl-prev,
+.ride-image-slider .owl-nav button.owl-next {
+    width: 52px;
+    height: 52px;
+    margin: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--theme-color);
+    font-size: 18px;
+    pointer-events: auto;
+    transition: 0.3s ease;
+}
+
+.ride-image-slider .owl-nav button.owl-prev:hover,
+.ride-image-slider .owl-nav button.owl-next:hover {
+    background: var(--theme-color);
+    color: #ffffff;
+}
+
+.ride-image-slider .owl-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 25px;
+    transform: translateX(-50%);
+}
+
+.ride-image-slider .owl-dots .owl-dot span {
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.ride-image-slider .owl-dots .owl-dot.active span {
+    width: 28px;
+    border-radius: 10px;
+    background: var(--theme-color);
+}
+
+@media (max-width: 991px) {
+    .ride-image-slide {
+        height: 500px;
+    }
+}
+
+@media (max-width: 767px) {
+    .ride-image-slide {
+        height: 400px;
+    }
+
+    .ride-image-slider .owl-nav {
+        padding: 0 15px;
+    }
+
+    .ride-image-slider .owl-nav button.owl-prev,
+    .ride-image-slider .owl-nav button.owl-next {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+
+
+/* =========================================
+   Ride details image hero
+========================================= */
+
+.ride-image-hero {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #111;
+}
+
+.ride-image-slider {
+    position: relative;
+    width: 100%;
+}
+
+.ride-image-slide {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.ride-image-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Owl Carousel corrections */
+
+.ride-image-slider .owl-stage-outer,
+.ride-image-slider .owl-stage,
+.ride-image-slider .owl-item {
+    height: 600px;
+}
+
+.ride-image-slider .owl-item .ride-image-slide {
+    height: 600px;
+}
+
+/* Navigation */
+
+.ride-image-slider .owl-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 35px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.ride-image-slider .owl-nav button.owl-prev,
+.ride-image-slider .owl-nav button.owl-next {
+    width: 52px;
+    height: 52px;
+    margin: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #c31103;
+    font-size: 18px;
+    pointer-events: auto;
+    transition: 0.3s ease;
+}
+
+.ride-image-slider .owl-nav button.owl-prev:hover,
+.ride-image-slider .owl-nav button.owl-next:hover {
+    background: #c31103;
+    color: #fff;
+}
+
+/* Dots */
+
+.ride-image-slider .owl-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 25px;
+    z-index: 10;
+    transform: translateX(-50%);
+}
+
+.ride-image-slider .owl-dots .owl-dot span {
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.ride-image-slider .owl-dots .owl-dot.active span {
+    width: 28px;
+    border-radius: 20px;
+    background: #c31103;
+}
+
+@media (max-width: 991px) {
+    .ride-image-slide,
+    .ride-image-slider .owl-stage-outer,
+    .ride-image-slider .owl-stage,
+    .ride-image-slider .owl-item,
+    .ride-image-slider .owl-item .ride-image-slide {
+        height: 500px;
+    }
+}
+
+@media (max-width: 767px) {
+    .ride-image-slide,
+    .ride-image-slider .owl-stage-outer,
+    .ride-image-slider .owl-stage,
+    .ride-image-slider .owl-item,
+    .ride-image-slider .owl-item .ride-image-slide {
+        height: 380px;
+    }
+
+    .ride-image-slider .owl-nav {
+        padding: 0 15px;
+    }
+
+    .ride-image-slider .owl-nav button.owl-prev,
+    .ride-image-slider .owl-nav button.owl-next {
+        width: 42px;
+        height: 42px;
+    }
+}
+
+/* ride details page css end */
