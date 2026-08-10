@@ -1,0 +1,45 @@
+/*====================
+32. Partner css 
+======================*/
+
+.partner-area {
+  .partner-slider.ps-border {
+    border-bottom: 1px solid var(--border-info-color);
+  }
+
+  .partner-img {
+    background: var(--theme-bg-light);
+    border-radius: 15px;
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .partner-wrap {
+    background: var(--theme-color);
+    padding: 40px 20px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: url(../img/shape/16.png);
+      background-repeat: no-repeat;
+      opacity: 0.7;
+    }
+
+    img {
+      filter: brightness(0) invert(1);
+    }
+
+    &.mt-ng {
+      margin-top: -80px;
+    }
+  }
+}

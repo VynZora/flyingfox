@@ -1,0 +1,95 @@
+@use "function" as *;
+
+// theme root variable generate
+@mixin theme-variable-gen($variables) {
+  @each $name, $variable in $variables {
+    --#{$name}: #{$variable};
+  }
+}
+
+// spacingNumberGen(10 start number, 10 increase number, 15 total spacing number)
+$spacing: spacingNumberGen(10, 10, 15);
+$unit: px;
+$start-xy: 70; // start py or px at 70
+$directions: (
+  // l: left,
+  t: top,
+  // r: right,
+  b: bottom,
+  y: (top, bottom),
+  // x: (left, right),
+);
+
+@mixin generateSpacing($property, $prefix) {
+  // space loop
+  @each $space in $spacing {
+    // directions loop
+    @each $key, $val in $directions {
+      .#{$prefix}#{$key}-#{$space} {
+        @if $key != x and $key != y {
+          #{$property}-#{$val}: $space + $unit;
+        } @else {
+          @if $space >= $start-xy {
+            @each $direction in $val {
+              #{$property}-#{$direction}: $space + $unit;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// flex alignment positions
+@mixin flex($position: center) {
+  display: flex;
+  align-items: $position;
+  justify-content: $position;
+}
+
+// positioning types (absolute, fixed)
+@mixin position($position: absolute) {
+  position: $position;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// transform position
+@mixin transform($position) {
+  position: absolute;
+
+  @if $position == center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  } @else if $position == left {
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  } @else if $position == right {
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+  } @else {
+    @warn "Unknown position `#{$position}` passed to transform mixin.";
+  }
+}
+
+// background support
+@mixin bg-support($important: false) {
+  background-repeat: no-repeat #{if($important, "!important", "")};
+  background-position: center #{if($important, "!important", "")};
+  background-size: cover #{if($important, "!important", "")};
+}
+
+// filter image white color
+@mixin filter-white {
+  filter: brightness(0) invert(1);
+}
+
+// background rgb color
+@mixin bg-opacity($color, $opacity) {
+  background: rgb(from $color r g b / $opacity);
+}

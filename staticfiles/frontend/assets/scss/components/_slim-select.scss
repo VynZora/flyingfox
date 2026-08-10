@@ -1,0 +1,93 @@
+/*====================
+8. Slim select css
+======================*/
+
+.ss-main {
+  min-height: 50px;
+  border-radius: 10px;
+  padding-left: 15px;
+  margin-bottom: 20px;
+  color: var(--color-dark);
+  background: var(--color-white);
+  border-color: var(--border-info-color);
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  .ss-arrow {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+
+    path {
+      stroke: var(--color-dark);
+      stroke-width: 15;
+    }
+  }
+
+  .ss-values {
+    .ss-single {
+      margin-left: 0;
+    }
+  }
+}
+
+.form-icon .ss-main {
+  padding: 10px 10px 10px 40px;
+}
+
+.ss-content {
+  border-color: var(--border-info-color);
+  background: var(--color-white);
+
+  &.ss-dir-above {
+    border-radius: 10px 10px 0 0;
+  }
+
+  &.ss-dir-below {
+    border-radius: 0 0 10px 10px;
+  }
+
+  .ss-search {
+    padding-left: 0;
+    padding-right: 0;
+    border-color: var(--border-info-color);
+
+    input {
+      color: var(--body-text-color);
+      background: var(--theme-bg-light);
+      padding: 6px 15px;
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      &::placeholder {
+        color: var(--body-text-color);
+      }
+    }
+  }
+
+  .ss-list {
+    padding: 10px 15px;
+
+    .ss-option {
+      color: var(--color-dark);
+      padding: 5px 5px 5px 15px;
+    }
+
+    .ss-option:hover:not(.ss-disabled) {
+      color: var(--color-white);
+      background-color: var(--theme-color);
+      border-left: 0;
+      border-radius: 8px;
+    }
+
+    .ss-option.ss-highlighted,
+    .ss-option:not(.ss-disabled).ss-selected {
+      color: var(--theme-color);
+      background-color: transparent;
+    }
+  }
+}

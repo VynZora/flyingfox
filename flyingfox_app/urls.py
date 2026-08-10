@@ -600,4 +600,5 @@ path(
     path("offers/<slug:slug>/edit/", views.offer_update, name="offer_update"),
     path("offers/<slug:slug>/delete/", views.offer_delete, name="offer_delete"),
 
+
 ]

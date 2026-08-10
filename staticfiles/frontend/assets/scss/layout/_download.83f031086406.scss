@@ -1,0 +1,82 @@
+@use "../utils" as *;
+
+/*====================
+48. Download css
+======================*/
+
+.download {
+  &-wrap {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--theme-bg-light2);
+    border-radius: 20px;
+    z-index: 1;
+
+    @media #{$max-991}{
+      padding-bottom: 0px;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url(../img/shape/04.png);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      z-index: -1;
+    }
+  }
+
+  &-img {
+    position: absolute;
+    bottom: 0;
+    text-align: right;
+
+    @media #{$max-991} {
+      position: relative;
+    }
+
+    img {
+      width: 88%;
+    }
+  }
+
+  &-content {
+    @media #{$max-767} {
+      padding: 40px 20px;
+    }
+
+    .site-heading {
+      .site-title {
+        @media #{$bet-992-1199} {
+          font-size: 35px;
+        }
+      }
+
+      p {
+        @media #{$bet-992-1199} {
+          display: none;
+        }
+      }
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .play-store {
+        width: 135px;
+      }
+
+      img {
+        border-radius: 8px;
+      }
+    }
+  }
+}

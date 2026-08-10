@@ -1,0 +1,87 @@
+@use "../utils" as *;
+
+/* ===================
+24. Video css 
+====================== */
+
+.video {
+  &-content {
+    position: relative;
+    @include bg-support;
+    background-attachment: fixed;
+
+    &::before {
+      content: "";
+      @include position(absolute);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .play-btn {
+      display: inline-block;
+      padding: 0;
+      height: 75px;
+      width: 75px;
+      text-align: center;
+      border-radius: 50%;
+      @include transform(center);
+    }
+  }
+
+  &-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
+    height: 470px;
+    z-index: 1;
+
+    @media #{$max-767} {
+      height: 250px;
+    }
+  }
+}
+
+/* video-area-2 */
+.video-area-2 {
+  position: relative;
+
+  .video-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: var(--color-dark);
+    width: 100%;
+    height: 540px;
+  }
+
+  .video-bg::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../img/shape/17.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.04;
+  }
+
+  .video-content {
+    border-radius: 50em;
+    border: 15px solid var(--color-white);
+
+    &::before {
+      border-radius: 50em;
+    }
+
+    .video-wrap {
+      height: 430px;
+
+      @media #{$max-767} {
+        height: 250px;
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+/*====================
+13. Theme button
+======================*/
+
+.theme-border-btn,
+.theme-btn2,
+.theme-btn {
+  font-size: 16px;
+  color: var(--color-white);
+  padding: 5px 5px 5px 20px;
+  transition: all 0.5s;
+  text-transform: capitalize;
+  position: relative;
+  border-radius: 50px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  border: none;
+  background: var(--theme-color);
+  box-shadow: var(--box-shadow);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    height: 300px;
+    width: 300px;
+    background: var(--color-dark);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%) scale(0);
+    transition: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: -1;
+  }
+
+  &:hover::before {
+    transform: translateY(-50%) translateX(-50%) scale(1);
+  }
+
+  i {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    background: var(--color-white);
+    color: var(--color-dark);
+    text-align: center;
+    border-radius: 50px;
+    transform: rotate(-40deg);
+    transition: var(--transition2);
+  }
+
+  &:hover i {
+    transform: rotate(0deg);
+  }
+
+  span {
+    margin-right: 5px;
+  }
+}
+
+.theme-btn {
+  &:hover {
+    color: var(--color-white);
+  }
+}
+
+.theme-btn2 {
+  background: var(--theme-color2);
+  color: var(--color-white);
+
+  &::before {
+    background: var(--color-dark);
+  }
+
+  &:hover {
+    color: var(--color-white);
+  }
+}
+
+.theme-border-btn {
+  color: var(--theme-color);
+  border: 2px solid var(--theme-color);
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+
+  &::before {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--theme-color);
+    color: var(--color-white);
+  }
+}

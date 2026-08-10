@@ -1,0 +1,139 @@
+@use "../utils" as *;
+
+/*====================
+28. Coming soon css 
+======================*/
+
+.coming {
+  &-soon {
+    position: relative;
+    @include bg-support(true);
+    min-height: 100vh;
+    width: 100%;
+    z-index: 1;
+
+    &::before {
+      content: "";
+      @include position(absolute);
+      background: rgba(0, 0, 0, 0.7);
+      z-index: -1;
+    }
+  }
+
+  &-wrap {
+    @include flex(center);
+    height: 75vh;
+  }
+
+  &-content {
+    text-align: center;
+  }
+
+  &-info {
+    h1 {
+      color: var(--color-white);
+      font-weight: 700;
+      font-size: 50px;
+
+      @media #{$max-767} {
+        font-size: 40px;
+      }
+    }
+    p {
+      font-size: 18px;
+      color: var(--color-white);
+      margin-top: 10px;
+    }
+  }
+}
+
+.coming-countdown {
+  &-wrap {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .time-wrap {
+    @include flex(center);
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .time {
+    background: var(--color-white);
+    width: 125px;
+    border-radius: 15px;
+    padding: 14px 10px;
+
+    span {
+      display: block;
+
+      &:first-child {
+        color: var(--theme-color);
+        font-weight: 700;
+        font-size: 38px;
+        line-height: 1;
+      }
+    }
+
+    .unit {
+      color: var(--color-dark);
+      font-weight: 500;
+    }
+  }
+
+  .divider {
+    display: none;
+  }
+}
+
+.coming-newsletter-form {
+  .form-group {
+    position: relative;
+
+    .form-control {
+      padding: 17px 150px 17px 20px;
+      border-radius: 50px;
+      border-color: transparent;
+      color: var(--color-dark);
+
+      &::placeholder {
+        color: var(--color-dark);
+      }
+
+      &:focus {
+        border-color: var(--theme-color);
+      }
+    }
+  }
+
+  .theme-btn {
+    position: absolute;
+    right: 5px;
+    top: 6px;
+    padding: 9px 15px;
+  }
+}
+
+.coming-social {
+  margin-top: 40px;
+  text-align: center;
+
+  a {
+    display: inline-block;
+    background: var(--theme-color);
+    color: var(--color-white);
+    margin: 5px;
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+    border-radius: 50px;
+    transition: 0.5s;
+    box-shadow: var(--box-shadow2);
+
+    &:hover {
+      background: var(--theme-color2);
+    }
+  }
+}

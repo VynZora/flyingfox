@@ -1718,7 +1718,7 @@
       <!-- dynamic gallery section end -->
 
       <!-- testimonial section -->
-      <section class="testimonial-area pt-120 pb-80">
+      {% comment %} <section class="testimonial-area pt-120 pb-80">
         <div class="container">
 
           <div class="row">
@@ -1905,7 +1905,204 @@
           {% endif %}
 
         </div>
-      </section>
+      </section> {% endcomment %}
+<div class="testimonial-area bg pt-120 pb-120">
+
+    <div class="container">
+
+        <!-- SECTION HEADING -->
+
+        <div class="row">
+
+            <div class="col-lg-7 mx-auto">
+
+                <div
+                    class="site-heading text-center wow fadeInUp"
+                    data-wow-delay=".2s"
+                >
+
+                    <span class="site-title-tagline">
+
+                        <i class="far fa-backpack"></i>
+
+                        Testimonials
+
+                    </span>
+
+                    <h3 class="site-title">
+
+                        Real Stories From Our
+                        <span>Happy Flying Fox Riders</span>
+
+                    </h3>
+
+                    <p>
+
+                        Discover what our guests say about their
+                        Flying Fox adventure, safety experience,
+                        professional guides and unforgettable moments
+                        in Munnar.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TESTIMONIAL SLIDER -->
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                {% if testimonials %}
+
+                <div
+                    class="testimonial-slider owl-carousel owl-theme wow fadeInUp"
+                    data-wow-delay=".1s"
+                >
+
+                    {% for testimonial in testimonials %}
+
+                    <div class="testimonial-item">
+
+                        <div class="content item-pd">
+
+                            <!-- QUOTE ICON -->
+
+                            <div class="icon">
+
+                                <img
+                                    src="{% static 'frontend/assets/img/icon/quote.svg' %}"
+                                    alt="Quote"
+                                >
+
+                            </div>
+
+
+                            <!-- RATING -->
+
+                            <div class="rating">
+
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+
+                            </div>
+
+
+                            <!-- REVIEW -->
+
+                            <div class="quote">
+
+                                <p>
+
+                                    {{ testimonial.review|safe}}
+
+                                </p>
+
+                            </div>
+
+
+                            <!-- CUSTOMER -->
+
+                            <div class="bottom">
+
+                                <div class="author">
+
+                                    <div class="author-img">
+
+                                        {% if testimonial.image %}
+
+                                            <img
+                                                src="{{ testimonial.image.url }}"
+                                                alt="{{ testimonial.name }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% else %}
+
+                                            <img
+                                                src="{% static 'frontend/assets/img/testimonial/default.webp' %}"
+                                                alt="{{ testimonial.name }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="author-info">
+
+                                        <h4>
+
+                                            {{ testimonial.name }}
+
+                                        </h4>
+
+                                        <p>
+
+                                            Flying Fox Rider
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="img">
+
+                                    <img
+                                        src="{% static 'frontend/assets/img/icon/icon-google.svg' %}"
+                                        alt="Google Review"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% else %}
+
+                <div class="testimonial-empty">
+
+                    <i class="far fa-comment-smile"></i>
+
+                    <h4>
+                        No testimonials available yet
+                    </h4>
+
+                    <p>
+                        Customer reviews will appear here once added
+                        through the admin dashboard.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
       <!-- testimonial section end -->
 
       <!-- feature-area -->

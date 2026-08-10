@@ -3576,19 +3576,42 @@ def rides(request):
 
 
 def ride_detail(request, slug):
+    today = date.today()
+
+    ride_images = RideMedia.objects.filter(
+        media_type="image",
+        image__isnull=False,
+    ).exclude(
+        image=""
+    ).order_by("created_at")
 
     ride = get_object_or_404(
-        Ride,
+        Ride.objects.prefetch_related(
+            Prefetch(
+                "media",
+                queryset=ride_images,
+                to_attr="uploaded_images",
+            )
+        ),
         slug=slug,
-        is_active=True
+        is_active=True,
     )
+
+    current_price = RidePrice.objects.filter(
+        ride=ride,
+        is_active=True,
+        start_date__lte=today,
+        end_date__gte=today,
+    ).order_by("-start_date").first()
 
     return render(
         request,
-        'frontend/ride_detail.html',
+        "frontend/ride-detail.html",
         {
-            'ride': ride
-        }
+            "ride": ride,
+            "ride_images": ride.uploaded_images,
+            "current_price": current_price,
+        },
     )
 
 def bookings(request):
@@ -6037,7 +6060,14 @@ def verify_ticket(request, qr_token):
 # ==========================================
 
 def about(request):
-    return render(request, "frontend/about.html")
+
+    testimonials = (
+        Testimonial.objects
+        .all()
+        .order_by("-created_at")[:10]
+    )
+
+    return render(request, "frontend/about.html", {"testimonials": testimonials})
 
 
 def activity(request):
@@ -7672,14 +7702,25 @@ def chat_enquiry_delete(
 # blog details 
 
 def blog_detail(request, slug):
-
     blog = get_object_or_404(
         Blog,
         slug=slug,
     )
 
+    recent_blogs = (
+        Blog.objects
+        .exclude(pk=blog.pk)
+        .order_by("-created_at")[:3]
+    )
+
+    context = {
+        "blog": blog,
+        "recent_blogs": recent_blogs,
+    }
+
     return render(
         request,
+<<<<<<< HEAD
         "frontend/blog_detail.html",
         {
             "blog": blog,
@@ -7891,4 +7932,8 @@ def offer_delete(request, slug):
 
     return redirect(
         "offer_list"
+=======
+        "frontend/blog-detail.html",
+        context,
+>>>>>>> c83e6fd6785c9b2b38b9c3c26f94307eb59c09e0
     )

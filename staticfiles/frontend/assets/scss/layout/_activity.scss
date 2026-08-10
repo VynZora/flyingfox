@@ -1,0 +1,167 @@
+@use "../utils" as *;
+
+/*====================
+45. Activity css
+======================*/
+
+.activity-area {
+  .activity-img {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+
+    & > img {
+      border-radius: 20px;
+    }
+
+    &:hover img {
+      transform: scale(1.1);
+    }
+
+    &:hover .activity-content {
+      bottom: 30px;
+    }
+  }
+
+  .activity-content {
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--color-white);
+    box-shadow: var(--box-shadow);
+    border-radius: 15px;
+    padding: 10px;
+    transition: var(--transition);
+    z-index: 1;
+
+    .icon {
+      width: 55px;
+      height: 55px;
+      border: 1px solid var(--border-info-color);
+      border-radius: 7px;
+      padding: 5px;
+    }
+
+    h4 {
+      font-weight: 500;
+
+      a {
+        color: var(--color-dark);
+
+        &:hover {
+          color: var(--theme-color);
+        }
+      }
+    }
+  }
+}
+
+.activity-slider {
+  &.owl-theme {
+    .owl-nav {
+      margin-top: 0px;
+
+      button {
+        color: var(--theme-color);
+        font-size: 25px;
+        margin: 0;
+        padding: 0;
+        background: var(--color-white);
+        display: inline-block;
+        cursor: pointer;
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+        border-radius: 50px;
+        text-align: center;
+        box-shadow: 0 3px 24px rgb(0 0 0 / 10%);
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        transition: var(--transition);
+
+        &:hover {
+          background: var(--theme-color);
+          color: var(--color-white);
+        }
+      }
+
+      .owl-prev {
+        left: -15px;
+
+        @media #{$max-767} {
+          left: -4px;
+        }
+      }
+
+      .owl-next {
+        right: -15px;
+
+        @media #{$max-767} {
+          right: -4px;
+        }
+      }
+    }
+  }
+}
+
+/* activity-single */
+.activity-single {
+  .sidebar {
+    .widget {
+      background: var(--theme-bg-light2);
+      padding: 25px;
+      border-radius: 15px;
+
+      h4 {
+        color: var(--color-dark);
+        margin-bottom: 20px;
+        font-weight: 500;
+      }
+    }
+    .category-list {
+      a {
+        display: block;
+        margin: 10px 0;
+        font-weight: 500;
+
+        &:hover {
+          color: var(--theme-color);
+        }
+
+        i {
+          color: var(--theme-color);
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .activity-banner {
+      .img {
+        img {
+          border-radius: 15px;
+        }
+      }
+    }
+  }
+}
+
+.activity-single-list i {
+  color: var(--theme-color);
+  margin-right: 10px;
+}
+
+.activity-details {
+  h3 {
+    color: var(--color-dark);
+    font-weight: 700;
+  }
+
+  img {
+    border-radius: 15px;
+  }
+}

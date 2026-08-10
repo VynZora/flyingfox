@@ -1,0 +1,179 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% block title %}
+{{ ride.name }} | Flying Fox Adventure
+{% endblock %}
+
+{% block content %}
+
+<!-- Ride image-only hero slider -->
+<section class="ride-image-hero">
+
+    {% if ride_images %}
+
+        <div class="ride-image-slider owl-carousel owl-theme">
+
+            {% for media in ride_images %}
+
+                <div class="ride-image-slide">
+                    <img
+                        src="{{ media.image.url }}"
+                        alt="{{ ride.name }}"
+                    >
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="ride-image-slide">
+            <img
+                src="{% static 'frontend/assets/img/breadcrumb/01.webp' %}"
+                alt="{{ ride.name }}"
+            >
+        </div>
+
+    {% endif %}
+
+</section>
+<!-- Ride image-only hero slider end -->
+
+
+<!-- Keep your previous body section below this -->
+
+<div class="destination-single py-120">
+    <div class="container">
+        <div class="row g-4 g-lg-5">
+
+            <div class="col-lg-4">
+                <div class="sidebar">
+
+                    <div class="destination-info">
+                        <h4>Ride Information</h4>
+
+                        <ul>
+                            <li>
+                                <span class="list-title">
+                                    <i class="fal fa-clock"></i>
+                                    Duration
+                                </span>
+
+                                <span class="list-value">
+                                    {{ ride.duration }}
+                                </span>
+                            </li>
+
+                            <li>
+                                <span class="list-title">
+                                    <i class="fal fa-shield-check"></i>
+                                    Status
+                                </span>
+
+                                <span class="list-value">
+                                    {% if ride.is_active %}
+                                        Available
+                                    {% else %}
+                                        Unavailable
+                                    {% endif %}
+                                </span>
+                            </li>
+
+                            {% if current_price %}
+                                <li>
+                                    <span class="list-title">
+                                        <i class="fal fa-indian-rupee-sign"></i>
+                                        Price
+                                    </span>
+
+                                    <span class="list-value">
+                                        ₹{{ current_price.price }}
+                                    </span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div class="destination-banner mt-5">
+                        <div class="img">
+                            <a href="{% url 'bookings' %}">
+                                <img
+                                    src="{% static 'frontend/assets/img/banner/b1.webp' %}"
+                                    alt="Book {{ ride.name }}"
+                                >
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-lg-8">
+
+                <div class="destination-details">
+
+                    <h1 class="mb-10">
+                        {{ ride.name }}
+                    </h1>
+
+                    <div class="mb-20">
+                        {{ ride.description|linebreaks }}
+                    </div>
+
+                    {% if ride.safety_notes %}
+
+                        <div class="mt-30">
+                            <h4 class="mb-15">
+                                Safety Information
+                            </h4>
+
+                            <div>
+                                {{ ride.safety_notes|linebreaks }}
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const $rideImageSlider = $(".ride-image-slider");
+
+    if (!$rideImageSlider.length) {
+        return;
+    }
+
+    const slideCount = $rideImageSlider.find(".ride-image-slide").length;
+
+    $rideImageSlider.owlCarousel({
+        items: 1,
+        loop: slideCount > 1,
+        margin: 0,
+        nav: slideCount > 1,
+        dots: slideCount > 1,
+        autoplay: slideCount > 1,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        smartSpeed: 1000,
+        animateOut: "fadeOut",
+        navText: [
+            '<i class="fas fa-arrow-left"></i>',
+            '<i class="fas fa-arrow-right"></i>'
+        ]
+    });
+});
+</script>
+{% endblock %}

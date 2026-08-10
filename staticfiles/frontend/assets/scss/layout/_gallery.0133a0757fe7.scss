@@ -1,0 +1,74 @@
+@use "../utils" as *;
+
+/*====================
+50. Gallery css
+======================*/
+
+.gallery {
+  &-area {
+    position: relative;
+  }
+
+  &-item {
+    position: relative;
+    width: 100%;
+  }
+
+  &-img {
+    height: 100%;
+
+    img {
+      width: 100%;
+      border-radius: 40px;
+    }
+  }
+
+  &-content {
+    @include position(absolute);
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: var(--theme-color);
+      border-radius: 40px;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+
+    &:hover::before {
+      opacity: 0.9;
+      visibility: visible;
+    }
+
+    &:hover .gallery-link {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  &-link {
+    width: 70px;
+    height: 70px;
+    @include flex(center);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 0.5s;
+    border-radius: 50px;
+    opacity: 0;
+    visibility: hidden;
+    font-size: 50px;
+    color: var(--color-white);
+
+    &:hover {
+      color: var(--color-white);
+    }
+  }
+}
