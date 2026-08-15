@@ -1,0 +1,3716 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Offers & Deals - Flying Fox Adventure
+{% endblock %}
+
+
+{% block nav_offers %}
+active
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   OFFERS PAGE
+========================================================= */
+
+.ff-offers-page {
+    position: relative;
+
+    padding:
+        120px
+        0
+        100px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+
+/* decorative circles */
+
+.ff-offers-page::before {
+    content: "";
+
+    position: absolute;
+
+    width: 520px;
+    height: 520px;
+
+    top: 140px;
+    left: -300px;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.07);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.ff-offers-page::after {
+    content: "";
+
+    position: absolute;
+
+    width: 420px;
+    height: 420px;
+
+    right: -230px;
+    bottom: 130px;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.06);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.ff-offers-page .container {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.ff-offers-heading {
+    max-width: 830px;
+
+    margin:
+        0
+        auto
+        35px;
+
+    text-align: center;
+}
+
+
+.ff-offers-heading-tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    color: #c31103;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.6px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offers-heading h1 {
+    margin:
+        0
+        0
+        17px;
+
+    color: #171717;
+
+    font-size:
+        clamp(
+            44px,
+            5vw,
+            72px
+        );
+
+    font-weight: 900;
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offers-heading h1 span {
+    color: #c31103;
+}
+
+
+.ff-offers-heading p {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    color: #666666;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.ff-offer-stats {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin:
+        30px
+        0
+        35px;
+}
+
+
+.ff-offer-stat {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    min-height: 42px;
+
+    padding:
+        8px
+        15px;
+
+    color: #555555;
+
+    background: #fff5f3;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.10);
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.ff-offer-stat strong {
+    color: #c31103;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.ff-offer-search-wrap {
+    max-width: 570px;
+
+    margin:
+        0
+        auto
+        32px;
+}
+
+
+.ff-offer-search {
+    position: relative;
+
+    display: flex;
+
+    width: 100%;
+
+    align-items: center;
+
+    padding:
+        6px
+        6px
+        6px
+        20px;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.18);
+
+    border-radius: 50px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.055);
+}
+
+
+.ff-offer-search i {
+    color: #c31103;
+}
+
+
+.ff-offer-search input {
+    width: 100%;
+
+    min-width: 0;
+
+    padding:
+        10px
+        12px;
+
+    color: #222222;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+    font-size: 13px;
+}
+
+
+.ff-offer-search button {
+    display: inline-flex;
+
+    min-width: 105px;
+    min-height: 43px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        8px
+        17px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border: none;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.ff-offer-filter-wrap {
+    display: flex;
+
+    justify-content: center;
+
+    margin-bottom: 45px;
+}
+
+
+.ff-offer-filter {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 9px;
+}
+
+
+.ff-offer-filter-btn {
+    min-height: 47px;
+
+    padding:
+        9px
+        20px;
+
+    color: #292929;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.20);
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        all
+        0.3s ease;
+}
+
+
+.ff-offer-filter-btn:hover {
+    color: #c31103;
+
+    background: #fff5f3;
+}
+
+
+.ff-offer-filter-btn.active {
+    color: #ffffff;
+
+    background: #c31103;
+
+    border-color: #c31103;
+
+    box-shadow:
+        0 10px 25px
+        rgba(195, 17, 3, 0.20);
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.ff-offers-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 25px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.ff-offer-card {
+    position: relative;
+
+    display: flex;
+
+    min-width: 0;
+    height: 100%;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.09);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(0, 0, 0, 0.075);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+.ff-offer-card:hover {
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        0 20px 48px
+        rgba(195, 17, 3, 0.13);
+}
+
+
+.ff-offer-card.ff-offer-hidden {
+    display: none;
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.ff-offer-image-link {
+    display: block;
+
+    color: inherit;
+
+    text-decoration: none;
+}
+
+
+.ff-offer-image {
+    position: relative;
+
+    width: 100%;
+    height: 320px;
+
+    overflow: hidden;
+
+    background: #f4f4f4;
+}
+
+
+.ff-offer-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition:
+        transform
+        0.55s ease;
+}
+
+
+.ff-offer-card:hover
+.ff-offer-image img {
+    transform: scale(1.045);
+}
+
+
+/* fallback if no banner */
+
+.ff-offer-no-image {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #db1709,
+            #a70d03
+        );
+}
+
+
+.ff-offer-no-image i {
+    font-size: 38px;
+}
+
+
+.ff-offer-no-image span {
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.ff-offer-status {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    z-index: 4;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    min-height: 31px;
+
+    padding:
+        5px
+        11px;
+
+    color: #ffffff;
+
+    border-radius: 50px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.15);
+}
+
+
+.ff-offer-status.active {
+    background: #17944d;
+}
+
+
+.ff-offer-status.upcoming {
+    background: #f39a09;
+}
+
+
+.ff-offer-status.expired {
+    background: #666666;
+}
+
+
+.ff-offer-status-dot {
+    width: 7px;
+    height: 7px;
+
+    background: #ffffff;
+
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   DISCOUNT
+========================================================= */
+
+.ff-offer-discount {
+    position: absolute;
+
+    left: 15px;
+    bottom: 15px;
+
+    z-index: 4;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        7px
+        12px;
+
+    color: #c31103;
+
+    background: #ffffff;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.13);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.ff-offer-content {
+    display: flex;
+
+    flex: 1;
+
+    flex-direction: column;
+
+    padding: 23px;
+}
+
+
+.ff-offer-content h3 {
+    margin:
+        0
+        0
+        10px;
+
+    color: #191919;
+
+    font-size: 20px;
+
+    font-weight: 850;
+
+    line-height: 1.3;
+}
+
+
+.ff-offer-title-link {
+    color: inherit;
+
+    text-decoration: none;
+}
+
+
+.ff-offer-title-link:hover {
+    color: #c31103;
+}
+
+
+.ff-offer-description {
+    margin-bottom: 17px;
+
+    color: #6a6a6a;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   RIDES
+========================================================= */
+
+.ff-offer-rides {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-bottom: 18px;
+}
+
+
+.ff-offer-ride-tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding:
+        5px
+        9px;
+
+    color: #c31103;
+
+    background: #fff2ef;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+.ff-offer-details {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+    margin-bottom: 20px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid
+        rgba(195, 17, 3, 0.09);
+}
+
+
+.ff-offer-detail {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    color: #606060;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+.ff-offer-detail i {
+    width: 17px;
+
+    margin-top: 3px;
+
+    color: #c31103;
+}
+
+
+/* =========================================================
+   COUPON
+========================================================= */
+
+.ff-offer-coupon {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    padding:
+        10px
+        12px;
+
+    background: #fff8f6;
+
+    border:
+        1px dashed
+        rgba(195, 17, 3, 0.28);
+
+    border-radius: 11px;
+}
+
+
+.ff-offer-coupon span {
+    color: #777777;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offer-coupon strong {
+    color: #c31103;
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   BOTTOM
+========================================================= */
+
+.ff-offer-bottom {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: auto;
+}
+
+
+.ff-offer-value small {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #8a8a8a;
+
+    font-size: 10px;
+}
+
+
+.ff-offer-value strong {
+    display: block;
+
+    color: #c31103;
+
+    font-size: 22px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   VIEW BUTTON
+========================================================= */
+
+.ff-offer-view {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-height: 45px;
+
+    padding:
+        7px
+        8px
+        7px
+        17px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        all
+        0.3s ease;
+}
+
+
+.ff-offer-view:hover {
+    color: #ffffff;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 9px 23px
+        rgba(195, 17, 3, 0.23);
+}
+
+
+.ff-offer-view i {
+    display: inline-flex;
+
+    width: 30px;
+    height: 30px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #c31103;
+
+    background: #ffffff;
+
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.ff-no-offers {
+    grid-column:
+        1 / -1;
+
+    padding:
+        70px
+        30px;
+
+    text-align: center;
+
+    background: #fff7f5;
+
+    border:
+        1px dashed
+        rgba(195, 17, 3, 0.18);
+
+    border-radius: 25px;
+}
+
+
+.ff-no-offers-icon {
+    display: inline-flex;
+
+    width: 72px;
+    height: 72px;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border-radius: 50%;
+
+    font-size: 25px;
+}
+
+
+.ff-no-offers h3 {
+    margin-bottom: 8px;
+
+    color: #222222;
+
+    font-size: 25px;
+
+    font-weight: 850;
+}
+
+
+.ff-no-offers p {
+    margin: 0;
+
+    color: #777777;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   NOTE
+========================================================= */
+
+.ff-offer-note-box {
+    margin-top: 50px;
+
+    padding:
+        22px
+        25px;
+
+    color: #666666;
+
+    background: #fff7f5;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.10);
+
+    border-radius: 17px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+.ff-offer-note-box i {
+    margin-right: 6px;
+
+    color: #c31103;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1199px) {
+
+    .ff-offers-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+@media (max-width: 991px) {
+
+    .ff-offers-page {
+        padding:
+            100px
+            0
+            75px;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .ff-offers-page {
+        padding:
+            80px
+            0
+            60px;
+    }
+
+
+    .ff-offers-heading h1 {
+        font-size: 42px;
+    }
+
+
+    .ff-offers-heading p {
+        font-size: 13px;
+    }
+
+
+    .ff-offer-search {
+        border-radius: 15px;
+    }
+
+
+    .ff-offer-search button {
+        min-width: auto;
+
+        padding:
+            8px
+            14px;
+    }
+
+
+    .ff-offer-search button span {
+        display: none;
+    }
+
+
+    .ff-offer-filter-wrap {
+        display: block;
+
+        overflow-x: auto;
+
+        scrollbar-width: none;
+    }
+
+
+    .ff-offer-filter-wrap::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .ff-offer-filter {
+        width: max-content;
+
+        flex-wrap: nowrap;
+
+        justify-content: flex-start;
+    }
+
+
+    .ff-offers-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .ff-offer-image {
+        height: 250px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .ff-offers-heading h1 {
+        font-size: 36px;
+    }
+
+
+    .ff-offer-image {
+        height: 215px;
+    }
+
+
+    .ff-offer-content {
+        padding: 19px;
+    }
+
+
+    .ff-offer-content h3 {
+        font-size: 18px;
+    }
+
+
+    .ff-offer-bottom {
+        align-items: flex-end;
+    }
+
+}
+
+{% comment %} offers css start {% endcomment %}
+/* =========================================================
+   OFFERS TOP AREA
+========================================================= */
+
+.ff-offers-top {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(360px, 0.85fr);
+
+    align-items: center;
+
+    gap: 80px;
+
+    margin-bottom: 60px;
+
+    padding-bottom: 45px;
+
+    border-bottom:
+        1px solid rgba(195, 17, 3, 0.10);
+}
+
+
+/* =========================================================
+   LEFT CONTENT
+========================================================= */
+
+.ff-offers-top-left {
+    max-width: 720px;
+}
+
+
+.ff-offers-heading-tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+    color: #c31103;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offers-heading-tag i {
+    font-size: 12px;
+}
+
+
+.ff-offers-top-left h1 {
+    margin:
+        0
+        0
+        20px;
+
+    color: #171717;
+
+    font-size:
+        clamp(
+            45px,
+            5vw,
+            72px
+        );
+
+    font-weight: 900;
+
+    line-height: 0.98;
+
+    letter-spacing: -2.5px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offers-top-left h1 span {
+    color: #c31103;
+}
+
+
+.ff-offers-top-left p {
+    max-width: 660px;
+
+    margin: 0;
+
+    color: #686868;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   RIGHT SEARCH AREA
+========================================================= */
+
+.ff-offers-top-right {
+    width: 100%;
+
+    max-width: 520px;
+
+    margin-left: auto;
+}
+
+
+/* small heading above search */
+
+.ff-search-title {
+    margin-bottom: 16px;
+}
+
+
+.ff-search-title span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #c31103;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-search-title h4 {
+    margin: 0;
+
+    color: #202020;
+
+    font-size: 22px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   SEARCH BAR
+========================================================= */
+
+.ff-offer-search {
+    position: relative;
+
+    display: flex;
+
+    width: 100%;
+
+    align-items: center;
+
+    padding:
+        7px
+        7px
+        7px
+        21px;
+
+    background: #ffffff;
+
+    border:
+        1px solid rgba(195, 17, 3, 0.20);
+
+    border-radius: 50px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.07);
+
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.ff-offer-search:focus-within {
+    border-color: rgba(195, 17, 3, 0.55);
+
+    box-shadow:
+        0 15px 38px rgba(195, 17, 3, 0.10);
+}
+
+
+/* first search icon only */
+
+.ff-offer-search > i {
+    flex-shrink: 0;
+
+    color: #c31103;
+
+    font-size: 15px;
+}
+
+
+/* input */
+
+.ff-offer-search input {
+    width: 100%;
+    min-width: 0;
+
+    padding:
+        11px
+        14px;
+
+    color: #222222;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    font-size: 13px;
+}
+
+
+.ff-offer-search input::placeholder {
+    color: #9b9b9b;
+}
+
+
+/* search button */
+
+.ff-offer-search button {
+    display: inline-flex;
+
+    min-width: 115px;
+    min-height: 46px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding:
+        8px
+        18px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border: none;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+
+.ff-offer-search button:hover {
+    background: #a90e02;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(195, 17, 3, 0.22);
+}
+
+
+.ff-offer-search button i {
+    color: #ffffff;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   OFFERS GRID
+========================================================= */
+
+.ff-offers-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 25px;
+}
+
+
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1199px) {
+
+    .ff-offers-top {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(330px, 0.75fr);
+
+        gap: 45px;
+    }
+
+
+    .ff-offers-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-offers-top {
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+
+        margin-bottom: 45px;
+    }
+
+
+    .ff-offers-top-left {
+        max-width: 750px;
+    }
+
+
+    .ff-offers-top-right {
+        max-width: 650px;
+
+        margin-left: 0;
+    }
+
+
+    .ff-offers-top-left h1 {
+        font-size: 55px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-offers-top {
+        gap: 25px;
+
+        margin-bottom: 35px;
+
+        padding-bottom: 35px;
+    }
+
+
+    .ff-offers-top-left h1 {
+        font-size: 42px;
+
+        letter-spacing: -1.5px;
+    }
+
+
+    .ff-offers-top-left p {
+        font-size: 13px;
+
+        line-height: 1.7;
+    }
+
+
+    .ff-search-title h4 {
+        font-size: 19px;
+    }
+
+
+    .ff-offer-search {
+        padding:
+            5px
+            5px
+            5px
+            16px;
+    }
+
+
+    .ff-offer-search button {
+        min-width: 48px;
+        width: 48px;
+        height: 44px;
+
+        padding: 0;
+    }
+
+
+    .ff-offer-search button span {
+        display: none;
+    }
+
+
+    .ff-offers-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .ff-offers-top-left h1 {
+        font-size: 36px;
+    }
+
+
+    .ff-offers-heading-tag {
+        font-size: 11px;
+    }
+
+
+    .ff-offer-search input {
+        padding:
+            10px
+            9px;
+
+        font-size: 12px;
+    }
+
+}
+
+{% comment %} offers css end  {% endcomment %}
+
+
+
+
+
+
+{% comment %} hero section css start {% endcomment %}
+
+/* =========================================================
+   FLYING FOX RIDES HERO
+   RED MATHEMATICAL / MOUNTAIN PATTERN
+========================================================= */
+
+.ff-rides-math-hero {
+    position: relative;
+
+    width: 100%;
+    min-height: 650px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            #ef3125 0%,
+            #d91b10 45%,
+            #b90d05 100%
+        );
+
+    isolation: isolate;
+}
+
+
+/* =========================================================
+   CANVAS PATTERN
+========================================================= */
+
+.ff-rides-math-hero #ffRidePattern {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    z-index: 1;
+
+    display: block;
+
+    pointer-events: none;
+
+    /* Makes the white mathematical pattern clearer */
+    opacity: 1;
+
+    /* Gives thin lines slightly more visibility */
+    filter:
+        brightness(1.35)
+        contrast(1.12);
+}
+
+
+/* =========================================================
+   VERY SUBTLE BACKGROUND OVERLAY
+========================================================= */
+
+.ff-rides-math-hero::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 48%,
+            rgba(255, 255, 255, 0.06) 0%,
+            rgba(255, 255, 255, 0.015) 40%,
+            rgba(120, 0, 0, 0.10) 100%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   SOFT LOWER GRADIENT
+========================================================= */
+
+.ff-rides-math-hero::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 2;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(120, 0, 0, 0.02) 0%,
+            rgba(120, 0, 0, 0.00) 45%,
+            rgba(120, 0, 0, 0.08) 100%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.ff-rides-math-hero > .container {
+    position: relative;
+
+    z-index: 5;
+
+    width: 100%;
+}
+
+
+.ff-rides-hero-content {
+    position: relative;
+
+    text-align: center;
+
+    padding: 150px 20px 70px;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.ff-rides-math-hero .breadcrumb-title {
+    margin: 0 0 18px;
+
+    color: #ffffff;
+
+    font-size: clamp(48px, 5vw, 72px);
+
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    letter-spacing: -1.5px;
+
+    text-shadow:
+        0 4px 18px rgba(80, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+
+.ff-rides-math-hero .breadcrumb-menu {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li {
+    position: relative;
+
+    color: rgba(255, 255, 255, 0.90);
+
+    font-size: 17px;
+
+    font-weight: 600;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li a {
+    color: #ffffff;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        color 0.3s ease,
+        opacity 0.3s ease;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li a:hover {
+    color: #ffffff;
+
+    opacity: 0.75;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li.active {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-rides-math-hero {
+        min-height: 520px;
+    }
+
+
+    .ff-rides-hero-content {
+        padding:
+            130px
+            20px
+            60px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-title {
+        font-size: 54px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-rides-math-hero {
+        min-height: 430px;
+    }
+
+
+    .ff-rides-hero-content {
+        padding:
+            110px
+            15px
+            45px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-title {
+        font-size: 42px;
+
+        letter-spacing: -0.5px;
+
+        margin-bottom: 14px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-menu {
+        gap: 8px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-menu li {
+        font-size: 15px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .ff-rides-math-hero {
+        min-height: 390px;
+    }
+
+
+    .ff-rides-hero-content {
+        padding:
+            100px
+            12px
+            40px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-title {
+        font-size: 36px;
+    }
+
+}
+{% comment %} hero section css end  {% endcomment %}
+
+
+
+
+
+/* =========================================================
+   FIX OFFERS TOP TITLE + SEARCH
+========================================================= */
+
+.ff-offers-top {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(360px, 0.85fr) !important;
+
+    align-items: center;
+
+    gap: 70px;
+
+    margin-bottom: 55px;
+
+    padding-bottom: 40px;
+
+    border-bottom:
+        1px solid rgba(195, 17, 3, 0.10);
+}
+
+
+/* LEFT */
+
+.ff-offers-top-left {
+    display: block !important;
+
+    width: 100%;
+
+    max-width: 720px !important;
+
+    text-align: left !important;
+}
+
+
+.ff-offers-heading-tag {
+    display: inline-flex !important;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    color: #c31103;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offers-top-left h1 {
+    display: block !important;
+
+    margin: 0 0 18px !important;
+
+    color: #171717 !important;
+
+    font-size: clamp(45px, 5vw, 68px) !important;
+
+    font-weight: 900 !important;
+
+    line-height: 1 !important;
+
+    letter-spacing: -2px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offers-top-left h1 span {
+    color: #c31103 !important;
+}
+
+
+.ff-offers-top-left p {
+    display: block !important;
+
+    max-width: 650px;
+
+    margin: 0 !important;
+
+    color: #666666;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   RIGHT SEARCH
+========================================================= */
+
+.ff-offers-top-right {
+    display: block !important;
+
+    width: 100% !important;
+
+    max-width: 500px !important;
+
+    margin-left: auto !important;
+}
+
+
+.ff-search-title {
+    display: block !important;
+
+    margin-bottom: 14px;
+}
+
+
+.ff-search-title span {
+    display: block !important;
+
+    margin-bottom: 4px;
+
+    color: #c31103;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-search-title h4 {
+    display: block !important;
+
+    margin: 0;
+
+    color: #202020;
+
+    font-size: 22px;
+
+    font-weight: 800;
+}
+
+
+/* SEARCH BAR */
+
+.ff-offer-search {
+    position: relative;
+
+    display: flex !important;
+
+    width: 100%;
+
+    align-items: center;
+
+    padding:
+        7px
+        7px
+        7px
+        20px;
+
+    background: #ffffff;
+
+    border:
+        1px solid rgba(195, 17, 3, 0.20);
+
+    border-radius: 50px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.07);
+}
+
+
+.ff-offer-search > i {
+    flex-shrink: 0;
+
+    color: #c31103;
+
+    font-size: 15px;
+}
+
+
+.ff-offer-search input {
+    display: block !important;
+
+    width: 100%;
+
+    min-width: 0;
+
+    padding:
+        11px
+        14px;
+
+    color: #222222;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+    font-size: 13px;
+}
+
+
+.ff-offer-search button {
+    display: inline-flex !important;
+
+    min-width: 115px;
+    min-height: 46px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding:
+        8px
+        18px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border: none;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.ff-offer-search button span {
+    display: inline !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-offers-top {
+        grid-template-columns: 1fr !important;
+
+        gap: 30px;
+    }
+
+
+    .ff-offers-top-right {
+        max-width: 650px !important;
+
+        margin-left: 0 !important;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .ff-offers-top-left h1 {
+        font-size: 42px !important;
+    }
+
+
+    .ff-offer-search button {
+        min-width: 48px;
+
+        width: 48px;
+
+        padding: 0;
+    }
+
+
+    .ff-offer-search button span {
+        display: none !important;
+    }
+
+}
+
+
+
+
+
+
+/* =========================================================
+   OFFER CARD ACTION BUTTONS - FINAL FIX
+========================================================= */
+
+.ff-offer-actions {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    gap: 8px;
+
+    margin-top: auto;
+}
+
+
+/* =========================================================
+   BOOK NOW
+========================================================= */
+
+.ff-offer-book-now {
+    display: flex !important;
+
+    width: 100% !important;
+    min-height: 50px;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 20px;
+
+    color: #ffffff !important;
+
+    background: #c31103 !important;
+
+    border: 1px solid #c31103;
+
+    border-radius: 10px !important;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-align: center;
+    text-transform: uppercase;
+
+    line-height: 1;
+
+    box-shadow: none !important;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.ff-offer-book-now:hover {
+    color: #ffffff !important;
+
+    background: #a90e02 !important;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   VIEW DETAILS
+========================================================= */
+
+.ff-offer-view {
+    position: relative;
+
+    display: flex !important;
+
+    width: 100% !important;
+    min-height: 50px !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 9px !important;
+
+    padding: 12px 55px 12px 20px !important;
+
+    color: #c31103 !important;
+
+    background: #fff3f0 !important;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.20) !important;
+
+    border-radius: 10px !important;
+
+    font-size: 12px !important;
+    font-weight: 800 !important;
+
+    text-align: center;
+
+    text-transform: uppercase;
+
+    line-height: 1 !important;
+
+    box-shadow: none !important;
+
+    transform: none !important;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+/* =========================================================
+   VIEW DETAILS ARROW
+========================================================= */
+
+.ff-offer-view i {
+    position: absolute;
+
+    top: 50%;
+    right: 12px;
+
+    display: flex !important;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 !important;
+
+    color: #c31103 !important;
+
+    background: #ffffff !important;
+
+    border-radius: 50% !important;
+
+    font-size: 11px;
+
+    line-height: 1;
+
+    transform: translateY(-50%);
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+
+/* =========================================================
+   VIEW DETAILS HOVER
+========================================================= */
+
+.ff-offer-view:hover {
+    color: #ffffff !important;
+
+    background: #c31103 !important;
+
+    border-color: #c31103 !important;
+
+    transform: none !important;
+
+    box-shadow: none !important;
+}
+
+
+.ff-offer-view:hover i {
+    color: #c31103 !important;
+
+    background: #ffffff !important;
+
+    transform:
+        translateY(-50%)
+        translateX(2px);
+}
+
+
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     BREADCRUMB
+========================================================= -->
+
+
+
+<div class="site-breadcrumb ff-rides-math-hero">
+
+    <!-- Mathematical pattern -->
+    <canvas id="ffMathPattern"></canvas>
+
+    <div class="container">
+
+        <div class="ff-rides-hero-content">
+
+            <h3 class="breadcrumb-title">
+                Offers
+            </h3>
+
+            <ul class="breadcrumb-menu">
+
+                <li>
+                    <a href="{% url 'home' %}">
+                        Home
+                    </a>
+                </li>
+
+                <li class="active">
+                    Offers
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<!-- =========================================================
+     OFFERS
+========================================================= -->
+
+<section class="ff-offers-page">
+
+    <div class="container">
+
+
+          <!-- TOP TITLE + SEARCH -->
+        <div class="ff-offers-top">
+
+            <div class="ff-offers-top-left">
+
+                <span class="ff-offers-heading-tag">
+                    <i class="fas fa-tags"></i>
+                    Flying Fox Adventure Deals
+                </span>
+
+                <h1>
+                    Adventure
+                    <span>Offers</span>
+                </h1>
+
+                <p>
+                    Discover our latest Flying Fox Adventure deals,
+                    promotional discounts and limited-time offers.
+                    Choose your favourite ride and make your Munnar
+                    adventure even more exciting.
+                </p>
+
+            </div>
+
+
+            <div class="ff-offers-top-right">
+
+                <form
+                    method="GET"
+                    action="{% url 'offers' %}"
+                    class="ff-offer-search"
+                >
+
+                    <i class="fas fa-search"></i>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search offers, rides or coupon code..."
+                    >
+
+                    <button type="submit">
+
+                        <span>
+                            Search
+                        </span>
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             STATUS FILTER
+        ====================================================== -->
+
+        {% comment %} <div class="ff-offer-filter-wrap">
+
+            <div class="ff-offer-filter">
+
+
+                <button
+                    type="button"
+                    class="ff-offer-filter-btn active"
+                    data-filter="all"
+                >
+                    All Offers
+                </button>
+
+
+                <button
+                    type="button"
+                    class="ff-offer-filter-btn"
+                    data-filter="active"
+                >
+                    Active
+                </button>
+
+
+                <button
+                    type="button"
+                    class="ff-offer-filter-btn"
+                    data-filter="upcoming"
+                >
+                    Upcoming
+                </button>
+
+
+                <button
+                    type="button"
+                    class="ff-offer-filter-btn"
+                    data-filter="expired"
+                >
+                    Expired
+                </button>
+
+
+            </div>
+
+        </div> {% endcomment %}
+
+
+
+        <!-- =====================================================
+             DYNAMIC DATABASE OFFERS
+        ====================================================== -->
+
+<div class="ff-offers-grid">
+
+
+    {% for offer in offers %}
+
+
+        <article
+    class="ff-offer-card"
+    data-status="{{ offer.computed_status }}"
+>
+
+    <!-- =========================================
+         OFFER IMAGE
+    ========================================== -->
+
+    <a
+        href="{% url 'frontend_offer_detail' offer.slug %}"
+        class="ff-offer-image-link"
+    >
+
+        <div class="ff-offer-image">
+
+            {% if offer.banner_image %}
+
+                <img
+                    src="{{ offer.banner_image.url }}"
+                    alt="{{ offer.title }}"
+                    loading="lazy"
+                >
+
+            {% else %}
+
+                <div class="ff-offer-no-image">
+
+                    <i class="fas fa-ticket-alt"></i>
+
+                    <span>
+                        Flying Fox Offer
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </a>
+
+
+    <!-- =========================================
+         CONTENT
+    ========================================== -->
+
+    <div class="ff-offer-content">
+
+
+        <!-- TITLE -->
+
+        <h3>
+
+            <a
+                href="{% url 'frontend_offer_detail' offer.slug %}"
+                class="ff-offer-title-link"
+            >
+                {{ offer.title }}
+            </a>
+
+        </h3>
+
+
+        <!-- =====================================
+             DISCOUNT + VALID DATE
+        ====================================== -->
+
+        <div class="ff-offer-meta">
+
+            <!-- DISCOUNT -->
+
+            <span class="ff-offer-meta-item ff-offer-meta-discount">
+
+                <i class="fas fa-tag"></i>
+
+                {{ offer.discount_label }}
+
+            </span>
+
+
+            <!-- VALID UNTIL -->
+
+            <span class="ff-offer-meta-item">
+
+                <i class="far fa-calendar-alt"></i>
+
+                Valid until
+                {{ offer.end_date|date:"d M Y" }}
+
+            </span>
+
+        </div>
+
+
+        <!-- =====================================
+             APPLICABLE RIDE
+        ====================================== -->
+
+        {% if offer.ride %}
+
+            <div class="ff-offer-ride">
+
+                <i class="fas fa-circle-check"></i>
+
+                <span>
+                    {{ offer.ride.name }}
+                </span>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             BUTTONS
+        ====================================== -->
+
+        <div class="ff-offer-actions">
+
+            <!-- BOOK NOW -->
+
+            <a
+                href="{% url 'bookings' %}"
+                class="ff-offer-book-now"
+            >
+                Book Now
+            </a>
+
+
+            <!-- VIEW DETAILS -->
+
+            <a
+                href="{% url 'frontend_offer_detail' offer.slug %}"
+                class="ff-offer-view"
+            >
+                View Details
+
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</article>
+
+
+
+    {% empty %}
+
+
+        <!-- =================================================
+             NO OFFERS
+        ================================================== -->
+
+        <div class="ff-no-offers">
+
+
+            <div class="ff-no-offers-icon">
+
+                <i class="fas fa-ticket-alt"></i>
+
+            </div>
+
+
+            <h3>
+                No Offers Found
+            </h3>
+
+
+            <p>
+
+                {% if search %}
+
+                    No Flying Fox Adventure offers matched
+                    "<strong>{{ search }}</strong>".
+
+                {% else %}
+
+                    There are currently no Flying Fox Adventure
+                    offers available.
+
+                {% endif %}
+
+            </p>
+
+
+        </div>
+
+
+    {% endfor %}
+
+
+</div>
+
+
+
+        <!-- =====================================================
+             NOTE
+        ====================================================== -->
+
+        {% if offers %}
+
+        <div class="ff-offer-note-box">
+
+            <i class="fas fa-circle-info"></i>
+
+            Offers are subject to availability, selected ride,
+            booking date, weather conditions and applicable
+            terms & conditions.
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const filterButtons =
+            document.querySelectorAll(
+                ".ff-offer-filter-btn"
+            );
+
+
+        const offerCards =
+            document.querySelectorAll(
+                ".ff-offer-card"
+            );
+
+
+        /* =====================================================
+           FILTER
+        ===================================================== */
+
+        filterButtons.forEach(
+            function (button) {
+
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+
+                        const selectedStatus =
+                            this.dataset.filter;
+
+
+                        /* -----------------------------------------
+                           BUTTON ACTIVE
+                        ----------------------------------------- */
+
+                        filterButtons.forEach(
+                            function (filterButton) {
+
+                                filterButton.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                        this.classList.add(
+                            "active"
+                        );
+
+
+                        /* -----------------------------------------
+                           FILTER CARDS
+                        ----------------------------------------- */
+
+                        offerCards.forEach(
+                            function (card) {
+
+
+                                const cardStatus =
+                                    card.dataset.status;
+
+
+                                if (
+                                    selectedStatus === "all"
+                                    ||
+                                    cardStatus === selectedStatus
+                                ) {
+
+                                    card.classList.remove(
+                                        "ff-offer-hidden"
+                                    );
+
+                                }
+
+                                else {
+
+                                    card.classList.add(
+                                        "ff-offer-hidden"
+                                    );
+
+                                }
+
+
+                            }
+                        );
+
+
+                    }
+                );
+
+
+            }
+        );
+
+
+    }
+);
+
+</script>
+
+
+
+
+ {% comment %} hero pattern js start {% endcomment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("ffMathPattern");
+
+    if (!canvas) {
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+
+    /* =========================================================
+       SETTINGS
+       Change these values to control the whole pattern
+    ========================================================= */
+
+    const SETTINGS = {
+
+        // Overall pattern scale
+        patternScale: 1.55,
+
+        // White line visibility
+        circleOpacity: 0.18,
+        diamondOpacity: 0.15,
+        rectangleOpacity: 0.12,
+        radialOpacity: 0.14,
+        diagonalOpacity: 0.11,
+        fanOpacity: 0.11,
+        crossOpacity: 0.10,
+
+        // Thickness
+        circleWidth: 0.95,
+        diamondWidth: 0.90,
+        rectangleWidth: 0.85,
+        radialWidth: 0.80,
+        diagonalWidth: 0.75,
+        fanWidth: 0.75,
+        crossWidth: 0.70
+    };
+
+
+    /* =========================================================
+       RESIZE CANVAS
+    ========================================================= */
+
+    function resizeCanvas() {
+
+        const parent = canvas.parentElement;
+
+        width = parent.clientWidth;
+        height = parent.clientHeight;
+
+        dpr = Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+
+        ctx.setTransform(
+            dpr,
+            0,
+            0,
+            dpr,
+            0,
+            0
+        );
+
+        drawPattern();
+    }
+
+
+    /* =========================================================
+       BASIC LINE
+    ========================================================= */
+
+    function drawLine(
+        x1,
+        y1,
+        x2,
+        y2,
+        opacity = 0.12,
+        lineWidth = 0.8
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+
+        ctx.strokeStyle =
+            `rgba(255,255,255,${opacity})`;
+
+        ctx.lineWidth = lineWidth;
+
+        ctx.stroke();
+    }
+
+
+    /* =========================================================
+       CONCENTRIC CIRCLES
+    ========================================================= */
+
+    function drawConcentricCircles(
+        cx,
+        cy,
+        maxRadius,
+        count,
+        opacity = SETTINGS.circleOpacity
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const radius =
+                (maxRadius / count) * i;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                cx,
+                cy,
+                radius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.strokeStyle =
+                `rgba(255,255,255,${opacity})`;
+
+            ctx.lineWidth =
+                SETTINGS.circleWidth;
+
+            ctx.stroke();
+        }
+    }
+
+
+    /* =========================================================
+       DIAMOND / ROTATED SQUARE RINGS
+    ========================================================= */
+
+    function drawDiamondRings(
+        cx,
+        cy,
+        maxSize,
+        count
+    ) {
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= count; i++) {
+
+            const size =
+                (maxSize / count) * i;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.diamondOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.diamondWidth;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       RECTANGULAR RINGS
+    ========================================================= */
+
+    function drawRectangularRings(
+        cx,
+        cy,
+        maxWidth,
+        maxHeight,
+        count
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const ratio =
+                i / count;
+
+            const currentWidth =
+                maxWidth * ratio;
+
+            const currentHeight =
+                maxHeight * ratio;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.rectangleOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.rectangleWidth;
+
+            ctx.strokeRect(
+                cx - currentWidth / 2,
+                cy - currentHeight / 2,
+                currentWidth,
+                currentHeight
+            );
+        }
+    }
+
+
+    /* =========================================================
+       RADIAL SPOKES
+    ========================================================= */
+
+    function drawRadialSystem(
+        cx,
+        cy,
+        radius,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const angle =
+                (Math.PI * 2 / count) * i;
+
+            const startRadius =
+                radius * 0.14;
+
+            const startX =
+                cx +
+                Math.cos(angle) *
+                startRadius;
+
+            const startY =
+                cy +
+                Math.sin(angle) *
+                startRadius;
+
+            const endX =
+                cx +
+                Math.cos(angle) *
+                radius;
+
+            const endY =
+                cy +
+                Math.sin(angle) *
+                radius;
+
+            drawLine(
+                startX,
+                startY,
+                endX,
+                endY,
+                SETTINGS.radialOpacity,
+                SETTINGS.radialWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       ORDERED DIAGONAL GRID
+    ========================================================= */
+
+    function drawDiagonalLines() {
+
+        /*
+         * Larger spacing gives us the clean
+         * geometric structure instead of noise.
+         */
+
+        const spacing = 105;
+
+        const extra =
+            Math.max(width, height) * 1.5;
+
+
+        /* -----------------------------------------
+           LEFT TOP -> RIGHT BOTTOM
+        ----------------------------------------- */
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                -height * 0.30,
+
+                x + height * 1.75,
+                height * 1.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+
+
+        /* -----------------------------------------
+           LEFT BOTTOM -> RIGHT TOP
+        ----------------------------------------- */
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                height * 1.30,
+
+                x + height * 1.75,
+                -height * 0.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       FAN LINES
+    ========================================================= */
+
+    function drawFan(
+        originX,
+        originY,
+        targetX,
+        targetY,
+        spread,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const offset =
+                (
+                    i -
+                    (count - 1) / 2
+                ) * spread;
+
+            drawLine(
+                originX,
+                originY + offset,
+
+                targetX,
+                targetY - offset,
+
+                SETTINGS.fanOpacity,
+                SETTINGS.fanWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       CENTER CROSSING MESH
+    ========================================================= */
+
+    function drawCenterCrossLines(
+        cx,
+        cy
+    ) {
+
+        const spacing = 52;
+
+        const count = 12;
+
+        for (
+            let i = -count;
+            i <= count;
+            i++
+        ) {
+
+            const offset =
+                i * spacing;
+
+
+            /* LEFT -> RIGHT */
+
+            drawLine(
+                -width * 0.10,
+                cy + offset,
+
+                width * 1.10,
+                cy - offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+
+
+            /* OPPOSITE */
+
+            drawLine(
+                -width * 0.10,
+                cy - offset,
+
+                width * 1.10,
+                cy + offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       SIDE CIRCULAR SYSTEMS
+    ========================================================= */
+
+    function drawSideCircles() {
+
+        const sideRadius =
+            Math.max(
+                height * 0.48,
+                width * 0.10
+            );
+
+
+        /* LEFT TOP */
+
+        drawConcentricCircles(
+            width * 0.02,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        /* RIGHT TOP */
+
+        drawConcentricCircles(
+            width * 0.98,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        /* LEFT BOTTOM */
+
+        drawConcentricCircles(
+            width * 0.08,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+
+
+        /* RIGHT BOTTOM */
+
+        drawConcentricCircles(
+            width * 0.92,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+    }
+
+
+    /* =========================================================
+       LARGE OUTER DIAMONDS
+    ========================================================= */
+
+    function drawOuterDiamonds(
+        cx,
+        cy
+    ) {
+
+        const maxSize =
+            Math.max(
+                width * 1.15,
+                height * 2.3
+            );
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= 16; i++) {
+
+            const ratio =
+                i / 16;
+
+            const size =
+                maxSize * ratio;
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.075)";
+
+            ctx.lineWidth = 0.75;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       HORIZONTAL GEOMETRY
+    ========================================================= */
+
+    function drawHorizontalGeometry(
+        cx,
+        cy
+    ) {
+
+        const lineCount = 11;
+
+        const spacing = 42;
+
+        for (
+            let i = -lineCount;
+            i <= lineCount;
+            i++
+        ) {
+
+            const y =
+                cy + i * spacing;
+
+            drawLine(
+                0,
+                y,
+                width,
+                y,
+                0.055,
+                0.6
+            );
+        }
+    }
+
+
+    /* =========================================================
+       MAIN PATTERN
+    ========================================================= */
+
+    function drawPattern() {
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        /* -----------------------------------------------------
+           CENTER POSITION
+        ----------------------------------------------------- */
+
+        const cx =
+            width / 2;
+
+        const cy =
+            height * 0.58;
+
+
+        /*
+         * IMPORTANT:
+         *
+         * This is much larger than your old calculation.
+         *
+         * Old:
+         * Math.min(width * 0.31, height * 0.58)
+         *
+         * New:
+         * Hero height controls the base size and then
+         * patternScale enlarges the whole structure.
+         */
+
+        const mainRadius =
+            Math.max(
+                height * 0.62,
+                width * 0.22
+            ) * SETTINGS.patternScale;
+
+
+        /* =====================================================
+           LAYER 1
+           Large background diagonals
+        ===================================================== */
+
+        drawDiagonalLines();
+
+
+        /* =====================================================
+           LAYER 2
+           Large outer diamond geometry
+        ===================================================== */
+
+        drawOuterDiamonds(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 3
+           Side circle systems
+        ===================================================== */
+
+        drawSideCircles();
+
+
+        /* =====================================================
+           LAYER 4
+           Large left/right fan
+        ===================================================== */
+
+        drawFan(
+            -width * 0.05,
+            height * 0.20,
+
+            width * 1.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        drawFan(
+            width * 1.05,
+            height * 0.20,
+
+            -width * 0.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        /* =====================================================
+           LAYER 5
+           Horizontal geometry
+        ===================================================== */
+
+        drawHorizontalGeometry(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 6
+           Center crossing mesh
+        ===================================================== */
+
+        drawCenterCrossLines(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 7
+           HUGE MAIN CIRCULAR SYSTEM
+        ===================================================== */
+
+        drawConcentricCircles(
+            cx,
+            cy,
+            mainRadius,
+            34,
+            SETTINGS.circleOpacity
+        );
+
+
+        /* =====================================================
+           LAYER 8
+           LARGE DIAMOND SYSTEM
+        ===================================================== */
+
+        drawDiamondRings(
+            cx,
+            cy,
+            mainRadius * 2.15,
+            28
+        );
+
+
+        /* =====================================================
+           LAYER 9
+           RECTANGLE SYSTEM
+        ===================================================== */
+
+        drawRectangularRings(
+            cx,
+            cy,
+
+            mainRadius * 2.65,
+            mainRadius * 1.50,
+
+            16
+        );
+
+
+        /* =====================================================
+           LAYER 10
+           RADIAL SPOKES
+        ===================================================== */
+
+        drawRadialSystem(
+            cx,
+            cy,
+            mainRadius * 1.08,
+            64
+        );
+    }
+
+
+    /* =========================================================
+       INITIALIZE
+    ========================================================= */
+
+    resizeCanvas();
+
+
+    /* =========================================================
+       RESPONSIVE RESIZE
+    ========================================================= */
+
+    let resizeTimer;
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            clearTimeout(
+                resizeTimer
+            );
+
+            resizeTimer =
+                setTimeout(
+                    resizeCanvas,
+                    120
+                );
+        }
+    );
+
+});
+</script>
+{% comment %} hero pattern js end {% endcomment %}
+
+{% endblock %}

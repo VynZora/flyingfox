@@ -1,0 +1,4108 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ offer.title }} - Flying Fox Adventure
+{% endblock %}
+
+{% block nav_offers %}active{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   OFFER DETAIL PAGE
+========================================================= */
+
+.ff-offer-page {
+    position: relative;
+
+    padding: 150px 0 100px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+
+/* soft decorative background */
+
+.ff-offer-page::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    top: 100px;
+    right: -250px;
+
+    border: 1px solid rgba(195, 17, 3, 0.08);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.ff-offer-page::after {
+    content: "";
+
+    position: absolute;
+
+    width: 320px;
+    height: 320px;
+
+    left: -160px;
+    top: 650px;
+
+    border: 1px solid rgba(195, 17, 3, 0.07);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.ff-offer-hero {
+    position: relative;
+
+    min-height: 510px;
+
+    overflow: hidden;
+
+    border-radius: 34px;
+
+    background: #c31103;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.14);
+}
+
+
+/* =========================================================
+   HERO IMAGE
+========================================================= */
+
+.ff-offer-hero-image {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition: transform 0.8s ease;
+}
+
+
+.ff-offer-hero:hover .ff-offer-hero-image {
+    transform: scale(1.025);
+}
+
+
+/* =========================================================
+   HERO OVERLAY
+========================================================= */
+
+.ff-offer-hero-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.78) 0%,
+            rgba(0, 0, 0, 0.54) 38%,
+            rgba(0, 0, 0, 0.10) 75%,
+            rgba(0, 0, 0, 0.04) 100%
+        );
+}
+
+
+/* no image version */
+
+.ff-offer-hero.no-image {
+    background:
+        linear-gradient(
+            135deg,
+            #d51608,
+            #a40c02
+        );
+}
+
+
+.ff-offer-hero.no-image .ff-offer-hero-overlay {
+    background: transparent;
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.ff-offer-hero-content {
+    position: relative;
+
+    z-index: 3;
+
+    display: flex;
+
+    min-height: 510px;
+
+    flex-direction: column;
+    justify-content: flex-end;
+
+    max-width: 790px;
+
+    padding: 55px;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.ff-offer-status {
+    display: inline-flex;
+
+    width: fit-content;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+    padding: 8px 15px;
+
+    color: #c31103;
+
+    background: #ffffff;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offer-status-dot {
+    width: 8px;
+    height: 8px;
+
+    background: #21a65a;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 5px rgba(33, 166, 90, 0.18);
+}
+
+
+/* expired */
+
+.ff-offer-status.expired
+.ff-offer-status-dot {
+    background: #777777;
+
+    box-shadow:
+        0 0 0 5px rgba(100, 100, 100, 0.15);
+}
+
+
+/* upcoming */
+
+.ff-offer-status.upcoming
+.ff-offer-status-dot {
+    background: #f3a000;
+
+    box-shadow:
+        0 0 0 5px rgba(243, 160, 0, 0.18);
+}
+
+
+/* =========================================================
+   DISCOUNT BADGE
+========================================================= */
+
+.ff-offer-discount-badge {
+    display: inline-flex;
+
+    width: fit-content;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 16px;
+
+    padding: 9px 16px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border-radius: 50px;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    box-shadow:
+        0 10px 25px rgba(195, 17, 3, 0.30);
+}
+
+
+/* =========================================================
+   HERO TITLE
+========================================================= */
+
+.ff-offer-hero-content h1 {
+    max-width: 760px;
+
+    margin: 0 0 14px;
+
+    color: #ffffff;
+
+    font-size: clamp(42px, 5vw, 72px);
+
+    font-weight: 900;
+
+    line-height: 1.02;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offer-hero-content p {
+    max-width: 670px;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-size: 16px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   SHARE BUTTON
+========================================================= */
+
+.ff-offer-share {
+    position: absolute;
+
+    top: 25px;
+    right: 25px;
+
+    z-index: 5;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-height: 45px;
+
+    padding: 8px 16px;
+
+    color: #c31103;
+
+    background: #ffffff;
+
+    border: none;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.12);
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease;
+}
+
+
+.ff-offer-share:hover {
+    color: #ffffff;
+
+    background: #c31103;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.ff-offer-main-content {
+    margin-top: 65px;
+}
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.ff-offer-section-tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 10px;
+
+    color: #c31103;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.ff-offer-intro h2 {
+    margin-bottom: 18px;
+
+    color: #171717;
+
+    font-size: clamp(35px, 4vw, 54px);
+
+    font-weight: 900;
+
+    line-height: 1.08;
+}
+
+
+.ff-offer-intro h2 span {
+    color: #c31103;
+}
+
+
+.ff-offer-description {
+    margin-bottom: 30px;
+
+    color: #626262;
+
+    font-size: 16px;
+
+    line-height: 1.85;
+
+    white-space: pre-line;
+}
+
+
+/* =========================================================
+   INFORMATION GRID
+========================================================= */
+
+.ff-offer-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 30px;
+}
+
+
+.ff-offer-info-card {
+    padding: 22px 16px;
+
+    background: #fff7f5;
+
+    border:
+        1px solid rgba(195, 17, 3, 0.10);
+
+    border-radius: 18px;
+
+    text-align: center;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.ff-offer-info-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.06);
+}
+
+
+.ff-offer-info-icon {
+    display: inline-flex;
+
+    width: 45px;
+    height: 45px;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border-radius: 50%;
+
+    font-size: 16px;
+}
+
+
+.ff-offer-info-card span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #888888;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offer-info-card strong {
+    display: block;
+
+    color: #1c1c1c;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   CONTENT CARDS
+========================================================= */
+
+.ff-offer-card {
+    margin-bottom: 24px;
+
+    padding: 30px;
+
+    background: #ffffff;
+
+    border:
+        1px solid rgba(195, 17, 3, 0.09);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.055);
+}
+
+
+.ff-offer-card-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 20px;
+}
+
+
+.ff-offer-card-title i {
+    display: flex;
+
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border-radius: 50%;
+}
+
+
+.ff-offer-card-title h3 {
+    margin: 0;
+
+    color: #1c1c1c;
+
+    font-size: 22px;
+    font-weight: 850;
+}
+
+
+/* =========================================================
+   RIDES
+========================================================= */
+
+.ff-offer-rides {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+.ff-offer-ride {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 15px;
+
+    color: #333333;
+
+    background: #fff8f6;
+
+    border-radius: 15px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+.ff-offer-ride i {
+    color: #c31103;
+}
+
+
+/* =========================================================
+   OFFER CONDITIONS
+========================================================= */
+
+.ff-offer-condition-list {
+    margin: 0;
+
+    padding: 0;
+
+    list-style: none;
+}
+
+
+.ff-offer-condition-list li {
+    position: relative;
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 13px;
+
+    color: #616161;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+.ff-offer-condition-list li:last-child {
+    margin-bottom: 0;
+}
+
+
+.ff-offer-condition-list i {
+    margin-top: 5px;
+
+    color: #c31103;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.ff-offer-sidebar {
+    position: sticky;
+
+    top: 135px;
+}
+
+
+/* =========================================================
+   BOOKING CARD
+========================================================= */
+
+.ff-offer-book-card {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 32px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #d51507 0%,
+            #c31103 50%,
+            #8f0c02 100%
+        );
+
+    border-radius: 26px;
+
+    box-shadow:
+        0 20px 55px rgba(195, 17, 3, 0.22);
+}
+
+
+/* decorative circle */
+
+.ff-offer-book-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: -100px;
+    bottom: -120px;
+
+    border:
+        35px solid rgba(255, 255, 255, 0.06);
+
+    border-radius: 50%;
+}
+
+
+.ff-offer-book-card > * {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.ff-offer-book-label {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 14px;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+}
+
+
+.ff-offer-book-card h3 {
+    margin-bottom: 10px;
+
+    color: #ffffff;
+
+    font-size: 25px;
+
+    font-weight: 850;
+
+    line-height: 1.2;
+}
+
+
+.ff-offer-book-description {
+    margin-bottom: 22px;
+
+    color: rgba(255, 255, 255, 0.78);
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   DISCOUNT DISPLAY
+========================================================= */
+
+.ff-offer-big-discount {
+    margin-bottom: 22px;
+
+    padding-bottom: 22px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.16);
+}
+
+
+.ff-offer-big-discount small {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: rgba(255, 255, 255, 0.70);
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offer-big-discount strong {
+    display: block;
+
+    color: #ffffff;
+
+    font-size: 45px;
+
+    font-weight: 900;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   COUPON
+========================================================= */
+
+.ff-offer-coupon {
+    margin-bottom: 22px;
+
+    padding: 17px;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    border:
+        1px dashed rgba(255, 255, 255, 0.45);
+
+    border-radius: 15px;
+}
+
+
+.ff-offer-coupon small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-offer-coupon-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.ff-offer-coupon-code {
+    color: #ffffff;
+
+    font-size: 19px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+
+.ff-copy-coupon {
+    display: inline-flex;
+
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    color: #c31103;
+
+    background: #ffffff;
+
+    border: none;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   BOOK BUTTON
+========================================================= */
+
+.ff-offer-book-btn {
+    display: flex;
+
+    width: 100%;
+
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 57px;
+
+    padding:
+        8px
+        9px
+        8px
+        21px;
+
+    color: #c31103;
+
+    background: #ffffff;
+
+    border-radius: 50px;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.ff-offer-book-btn:hover {
+    color: #c31103;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+.ff-offer-book-btn i {
+    display: inline-flex;
+
+    width: 40px;
+    height: 40px;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   DISABLED BUTTON
+========================================================= */
+
+.ff-offer-unavailable {
+    display: flex;
+
+    width: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 55px;
+
+    color: #777777;
+
+    background: #eeeeee;
+
+    border-radius: 50px;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   BOOK NOTE
+========================================================= */
+
+.ff-offer-note {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 17px;
+
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 11px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   RELATED OFFERS
+========================================================= */
+
+.ff-related-offers {
+    padding: 90px 0;
+
+    background: #fff7f5;
+}
+
+
+.ff-related-offer {
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.07);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+.ff-related-offer:hover {
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.10);
+}
+
+
+.ff-related-offer-image {
+    position: relative;
+
+    height: 210px;
+
+    overflow: hidden;
+
+    background: #eeeeee;
+}
+
+
+.ff-related-offer-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 0.5s ease;
+}
+
+
+.ff-related-offer:hover
+.ff-related-offer-image img {
+    transform: scale(1.05);
+}
+
+
+.ff-related-offer-content {
+    padding: 21px;
+}
+
+
+.ff-related-offer-content h4 {
+    margin-bottom: 8px;
+
+    color: #191919;
+
+    font-size: 19px;
+
+    font-weight: 800;
+}
+
+
+.ff-related-offer-content p {
+    margin-bottom: 14px;
+
+    color: #777777;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+.ff-related-offer-link {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #c31103;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-offer-page {
+        padding-top: 125px;
+    }
+
+    .ff-offer-hero,
+    .ff-offer-hero-content {
+        min-height: 450px;
+    }
+
+    .ff-offer-info-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .ff-offer-sidebar {
+        position: static;
+
+        margin-top: 25px;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .ff-offer-page {
+        padding:
+            110px
+            0
+            70px;
+    }
+
+    .ff-offer-hero {
+        min-height: 420px;
+
+        border-radius: 23px;
+    }
+
+    .ff-offer-hero-content {
+        min-height: 420px;
+
+        padding: 28px 22px;
+    }
+
+    .ff-offer-hero-content h1 {
+        font-size: 40px;
+    }
+
+    .ff-offer-share {
+        top: 15px;
+        right: 15px;
+    }
+
+    .ff-offer-info-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .ff-offer-rides {
+        grid-template-columns: 1fr;
+    }
+
+    .ff-offer-card {
+        padding: 23px 20px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .ff-offer-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ff-offer-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .ff-offer-share span {
+        display: none;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+{% comment %} terms and condition start {% endcomment %}
+/* =========================================================
+   TERMS & CONDITIONS
+   FLYING FOX - TWO COLUMN ACCORDION
+========================================================= */
+
+.ff-offer-terms-section {
+    position: relative;
+
+    width: 100%;
+
+    padding: 95px 0;
+
+    overflow: hidden;
+
+    background: #c31103;
+}
+
+
+/* =========================================================
+   DECORATIVE BACKGROUND
+========================================================= */
+
+.ff-terms-shape {
+    position: absolute;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.ff-terms-shape-one {
+    width: 500px;
+    height: 500px;
+
+    top: -270px;
+    left: -180px;
+}
+
+
+.ff-terms-shape-two {
+    width: 400px;
+    height: 400px;
+
+    right: -180px;
+    bottom: -220px;
+}
+
+
+/* subtle gradient */
+
+.ff-offer-terms-section::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(255,255,255,0.06),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(0,0,0,0.09),
+            transparent 32%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   CONTAINER CONTENT
+========================================================= */
+
+.ff-offer-terms-section .container {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   MAIN TWO-COLUMN GRID
+========================================================= */
+
+.ff-terms-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(300px, 0.8fr)
+        minmax(500px, 1.5fr);
+
+    align-items: start;
+
+    gap: 85px;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+.ff-terms-left {
+    position: sticky;
+
+    top: 160px;
+
+    padding-top: 12px;
+}
+
+
+/* label */
+
+.ff-terms-label {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 18px;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-terms-label i {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   MAIN HEADING
+========================================================= */
+
+.ff-terms-title {
+    max-width: 430px;
+
+    margin:
+        0
+        0
+        22px;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(
+            48px,
+            5vw,
+            76px
+        );
+
+    font-weight: 900;
+
+    line-height: 0.95;
+
+    letter-spacing: -2.5px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-terms-title span {
+    display: block;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.ff-terms-description {
+    max-width: 440px;
+
+    margin:
+        0
+        0
+        30px;
+
+    color: rgba(255, 255, 255, 0.80);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   LITTLE TRUST / INFORMATION CARD
+========================================================= */
+
+.ff-terms-highlight {
+    display: flex;
+
+    max-width: 430px;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    padding:
+        18px
+        20px;
+
+    background:
+        rgba(255, 255, 255, 0.09);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.13);
+
+    border-radius: 17px;
+}
+
+
+.ff-terms-highlight-icon {
+    display: inline-flex;
+
+    width: 43px;
+    height: 43px;
+
+    flex: 0 0 43px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #c31103;
+
+    background: #ffffff;
+
+    border-radius: 50%;
+}
+
+
+.ff-terms-highlight strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+.ff-terms-highlight p {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.70);
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.ff-terms-right {
+    width: 100%;
+}
+
+
+.ff-terms-accordion {
+    display: flex;
+
+    width: 100%;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   ACCORDION ITEM
+========================================================= */
+
+.ff-terms-item {
+    width: 100%;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 26px
+        rgba(60, 0, 0, 0.10);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.ff-terms-item:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 16px 35px
+        rgba(60, 0, 0, 0.14);
+}
+
+
+/* =========================================================
+   QUESTION
+========================================================= */
+
+.ff-terms-question {
+    display: flex;
+
+    width: 100%;
+
+    min-height: 76px;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding:
+        18px
+        20px
+        18px
+        27px;
+
+    color: #171717;
+
+    background: #ffffff;
+
+    border: none;
+
+    outline: none;
+
+    text-align: left;
+
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+
+.ff-terms-question > span:first-child {
+    color: #171717;
+
+    font-size: 15px;
+
+    font-weight: 750;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   PLUS BUTTON
+========================================================= */
+
+.ff-terms-icon {
+    display: inline-flex;
+
+    width: 44px;
+    height: 44px;
+
+    flex:
+        0
+        0
+        44px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #c31103;
+
+    background: #fff0ed;
+
+    border-radius: 50%;
+
+    font-size: 13px;
+
+    transition:
+        color 0.35s ease,
+        background 0.35s ease,
+        transform 0.35s ease;
+}
+
+
+/* OPEN STATE */
+
+.ff-terms-item.active
+.ff-terms-icon {
+    color: #ffffff;
+
+    background: #c31103;
+
+    transform:
+        rotate(45deg);
+}
+
+
+/* =========================================================
+   ANSWER
+========================================================= */
+
+.ff-terms-answer {
+    max-height: 0;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    background: #ffffff;
+
+    transition:
+        max-height 0.45s ease,
+        opacity 0.3s ease;
+}
+
+
+.ff-terms-item.active
+.ff-terms-answer {
+    opacity: 1;
+}
+
+
+.ff-terms-answer-inner {
+    position: relative;
+
+    padding:
+        0
+        70px
+        24px
+        27px;
+
+    color: #686868;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+}
+
+
+/* divider above answer */
+
+.ff-terms-answer-inner::before {
+    content: "";
+
+    display: block;
+
+    width: 100%;
+    height: 1px;
+
+    margin-bottom: 18px;
+
+    background: #eeeeee;
+}
+
+
+.ff-terms-answer-inner strong {
+    color: #c31103;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   ACTIVE ITEM
+========================================================= */
+
+.ff-terms-item.active {
+    box-shadow:
+        0 18px 42px
+        rgba(70, 0, 0, 0.16);
+}
+
+
+/* =========================================================
+   LARGE SCREEN
+========================================================= */
+
+@media (min-width: 1400px) {
+
+    .ff-offer-terms-section .container {
+        max-width: 1360px;
+    }
+
+
+    .ff-terms-layout {
+        gap: 100px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1199px) {
+
+    .ff-terms-layout {
+        grid-template-columns:
+            0.8fr
+            1.2fr;
+
+        gap: 55px;
+    }
+
+
+    .ff-terms-title {
+        font-size: 54px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET / MOBILE STACK
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-offer-terms-section {
+        padding:
+            75px
+            0;
+    }
+
+
+    .ff-terms-layout {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+    }
+
+
+    .ff-terms-left {
+        position: static;
+
+        max-width: 700px;
+    }
+
+
+    .ff-terms-title {
+        max-width: 650px;
+
+        font-size: 52px;
+    }
+
+
+    .ff-terms-title span {
+        display: inline;
+    }
+
+
+    .ff-terms-description {
+        max-width: 650px;
+    }
+
+
+    .ff-terms-highlight {
+        max-width: 600px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-offer-terms-section {
+        padding:
+            60px
+            0;
+    }
+
+
+    .ff-terms-layout {
+        gap: 35px;
+    }
+
+
+    .ff-terms-title {
+        margin-bottom: 17px;
+
+        font-size: 39px;
+
+        letter-spacing: -1.4px;
+    }
+
+
+    .ff-terms-description {
+        font-size: 13px;
+
+        line-height: 1.7;
+    }
+
+
+    .ff-terms-highlight {
+        padding:
+            15px;
+    }
+
+
+    .ff-terms-accordion {
+        gap: 10px;
+    }
+
+
+    .ff-terms-item {
+        border-radius: 15px;
+    }
+
+
+    .ff-terms-question {
+        min-height: 68px;
+
+        padding:
+            14px
+            14px
+            14px
+            18px;
+    }
+
+
+    .ff-terms-question > span:first-child {
+        font-size: 13px;
+    }
+
+
+    .ff-terms-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        font-size: 11px;
+    }
+
+
+    .ff-terms-answer-inner {
+        padding:
+            0
+            18px
+            20px;
+
+        font-size: 13px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .ff-offer-terms-section {
+        padding:
+            48px
+            0;
+    }
+
+
+    .ff-terms-label {
+        font-size: 10px;
+    }
+
+
+    .ff-terms-title {
+        font-size: 33px;
+    }
+
+
+    .ff-terms-highlight {
+        display: none;
+    }
+
+
+    .ff-terms-question {
+        gap: 12px;
+    }
+
+
+    .ff-terms-question > span:first-child {
+        font-size: 12.5px;
+    }
+
+}
+{% comment %} terms and contintion end  {% endcomment %}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     OFFER DETAIL PAGE
+========================================================= -->
+
+<section class="ff-offer-page">
+
+    <div class="container">
+
+
+        <!-- =====================================================
+             HERO SECTION
+        ====================================================== -->
+
+        <div
+            class="ff-offer-hero {% if not offer.banner_image %}no-image{% endif %}"
+        >
+
+            {% if offer.banner_image %}
+
+                <img
+                    src="{{ offer.banner_image.url }}"
+                    alt="{{ offer.title }}"
+                    class="ff-offer-hero-image"
+                >
+
+            {% endif %}
+
+
+            <div class="ff-offer-hero-overlay"></div>
+
+
+            <!-- SHARE BUTTON -->
+
+            <button
+                type="button"
+                class="ff-offer-share"
+                id="ffOfferShare"
+            >
+
+                <span>Share</span>
+
+                <i class="fas fa-share-alt"></i>
+
+            </button>
+
+
+            <!-- HERO CONTENT -->
+
+            <div class="ff-offer-hero-content">
+
+
+                <!-- ============================================
+                     OFFER STATUS
+                ============================================= -->
+
+                {% if offer.computed_status == "active" %}
+
+                    <span class="ff-offer-status active">
+
+                        <span class="ff-offer-status-dot"></span>
+
+                        Live Offer
+
+                    </span>
+
+
+                {% elif offer.computed_status == "upcoming" %}
+
+                    <span class="ff-offer-status upcoming">
+
+                        <span class="ff-offer-status-dot"></span>
+
+                        Upcoming Offer
+
+                    </span>
+
+
+                {% elif offer.computed_status == "expired" %}
+
+                    <span class="ff-offer-status expired">
+
+                        <span class="ff-offer-status-dot"></span>
+
+                        Offer Ended
+
+                    </span>
+
+
+                {% else %}
+
+                    <span class="ff-offer-status expired">
+
+                        <span class="ff-offer-status-dot"></span>
+
+                        Currently Unavailable
+
+                    </span>
+
+                {% endif %}
+
+
+                <!-- DISCOUNT -->
+
+                <span class="ff-offer-discount-badge">
+
+                    <i class="fas fa-tags"></i>
+
+                    {{ offer.discount_label }}
+
+                </span>
+
+
+                <!-- TITLE -->
+
+                <h1>
+                    {{ offer.title }}
+                </h1>
+
+
+                <!-- OFFER TYPE -->
+
+                <p>
+
+                    {{ offer.get_offer_type_display }}
+
+                    {% if offer.ride %}
+
+                        · {{ offer.ride.name }}
+
+                    {% endif %}
+
+                </p>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <div class="ff-offer-main-content">
+
+            <div class="row g-4">
+
+
+                <!-- =================================================
+                     LEFT CONTENT
+                ================================================== -->
+
+                <div class="col-lg-8">
+
+
+                    <!-- =============================================
+                         INTRODUCTION
+                    ============================================== -->
+
+                    <div class="ff-offer-intro">
+
+                        <span class="ff-offer-section-tag">
+
+                            <i class="fas fa-bolt"></i>
+
+                            Flying Fox Special Deal
+
+                        </span>
+
+
+                        <h2>
+
+                            Fly More.
+
+                            <span>
+                                Pay Less.
+                            </span>
+
+                        </h2>
+
+
+                        {% if offer.description %}
+
+                            <div class="ff-offer-description">
+
+                                {{ offer.description|safe|linebreaksbr }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         OFFER INFORMATION
+                    ================================================== -->
+
+                    <div class="ff-offer-info-grid">
+
+
+                        <!-- START DATE -->
+
+                        <div class="ff-offer-info-card">
+
+                            <div class="ff-offer-info-icon">
+
+                                <i class="far fa-person-falling"></i>
+
+                            </div>
+
+                            <span>
+                                 Applicable Ride
+                            </span>
+
+                            <strong>
+                                 {{ offer.ride.name }}
+                            </strong>
+
+                        </div>
+
+
+
+
+                        <!-- END DATE -->
+
+                        <div class="ff-offer-info-card">
+
+                            <div class="ff-offer-info-icon">
+
+                                <i class="far fa-calendar-check"></i>
+
+                            </div>
+
+                            <span>
+                                Valid Until
+                            </span>
+
+                            <strong>
+                                {{ offer.end_date|date:"d M Y" }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- DISCOUNT -->
+
+                        <div class="ff-offer-info-card">
+
+                            <div class="ff-offer-info-icon">
+
+                                <i class="fas fa-tags"></i>
+
+                            </div>
+
+                            <span>
+                                Offer
+                            </span>
+
+                            <strong>
+                                {{ offer.discount_label }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- OFFER TYPE -->
+
+                        <div class="ff-offer-info-card">
+
+                            <div class="ff-offer-info-icon">
+
+                                <i class="fas fa-gift"></i>
+
+                            </div>
+
+                            <span>
+                                Offer Type
+                            </span>
+
+                            <strong>
+                                {{ offer.get_offer_type_display }}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         APPLICABLE RIDE
+                    ================================================== -->
+
+                    {% comment %} {% if offer.ride %}
+
+                        <div class="ff-offer-card">
+
+                            <div class="ff-offer-card-title">
+
+                                <i class="fas fa-person-falling"></i>
+
+                                <h3>
+                                    Applicable Ride
+                                </h3>
+
+                            </div>
+
+
+                            <div class="ff-offer-rides">
+
+                                <div class="ff-offer-ride">
+
+                                    <i class="fas fa-check-circle"></i>
+
+                                    <span>
+                                        {{ offer.ride.name }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %} {% endcomment %}
+
+
+
+                    <!-- =================================================
+                         OFFER DETAILS / CONDITIONS
+                    ================================================== -->
+
+                    <div class="ff-offer-card">
+
+                        <div class="ff-offer-card-title">
+
+                            <i class="fas fa-circle-info"></i>
+
+                            <h3>
+                                Offer Details
+                            </h3>
+
+                        </div>
+
+
+                        <ul class="ff-offer-condition-list">
+
+
+                            <!-- OFFER TYPE -->
+
+                            <li>
+
+                                <i class="fas fa-circle-check"></i>
+
+                                <span>
+
+                                    Offer Type:
+
+                                    <strong>
+                                        {{ offer.get_offer_type_display }}
+                                    </strong>
+
+                                </span>
+
+                            </li>
+
+
+
+                            <!-- DISCOUNT -->
+
+                            <li>
+
+                                <i class="fas fa-circle-check"></i>
+
+                                <span>
+
+                                    Discount:
+
+                                    <strong>
+                                        {{ offer.discount_label }}
+                                    </strong>
+
+                                </span>
+
+                            </li>
+
+
+
+                            <!-- MINIMUM BOOKING AMOUNT -->
+
+                            {% if offer.minimum_booking_amount %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        Minimum booking amount:
+
+                                        <strong>
+                                            ₹{{ offer.minimum_booking_amount|floatformat:"-2" }}
+                                        </strong>
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- MAXIMUM DISCOUNT -->
+
+                            {% if offer.maximum_discount %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        Maximum discount:
+
+                                        <strong>
+                                            ₹{{ offer.maximum_discount|floatformat:"-2" }}
+                                        </strong>
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- MINIMUM PARTICIPANTS -->
+
+                            {% if offer.minimum_participants > 1 %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        Minimum participants required:
+
+                                        <strong>
+                                            {{ offer.minimum_participants }}
+                                        </strong>
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- BUY X GET Y -->
+
+                            {% if offer.offer_type == "buy_x_get_y" %}
+
+                                {% if offer.buy_quantity and offer.free_quantity %}
+
+                                    <li>
+
+                                        <i class="fas fa-circle-check"></i>
+
+                                        <span>
+
+                                            Book for
+
+                                            <strong>
+                                                {{ offer.buy_quantity }}
+                                            </strong>
+
+                                            participant{{ offer.buy_quantity|pluralize }}
+
+                                            and get
+
+                                            <strong>
+                                                {{ offer.free_quantity }}
+                                            </strong>
+
+                                            participant{{ offer.free_quantity|pluralize }}
+
+                                            free.
+
+                                        </span>
+
+                                    </li>
+
+                                {% endif %}
+
+                            {% endif %}
+
+
+
+                            <!-- FIRST BOOKING -->
+
+                            {% if offer.first_booking_only %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        This offer is available only for your
+
+                                        <strong>
+                                            first booking.
+                                        </strong>
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- MAX USES -->
+
+                            {% if offer.max_uses %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        This offer is limited to
+
+                                        <strong>
+                                            {{ offer.max_uses }}
+                                        </strong>
+
+                                        total uses.
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- MAX USES PER USER -->
+
+                            {% if offer.max_uses_per_user %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        Maximum
+
+                                        <strong>
+                                            {{ offer.max_uses_per_user }}
+                                        </strong>
+
+                                        use{{ offer.max_uses_per_user|pluralize }}
+
+                                        per customer.
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- AUTO APPLY -->
+
+                            {% if offer.auto_apply %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        This discount will be
+
+                                        <strong>
+                                            applied automatically
+                                        </strong>
+
+                                        during booking when all conditions are met.
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- COUPON REQUIRED -->
+
+                            {% if offer.coupon_required and offer.coupon_code %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        Coupon code
+
+                                        <strong>
+                                            {{ offer.coupon_code }}
+                                        </strong>
+
+                                        must be entered during checkout.
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         HOW TO USE
+                    ================================================== -->
+
+                    <div class="ff-offer-card">
+
+                        <div class="ff-offer-card-title">
+
+                            <i class="fas fa-ticket-alt"></i>
+
+                            <h3>
+                                How To Use This Offer
+                            </h3>
+
+                        </div>
+
+
+                        <ul class="ff-offer-condition-list">
+
+
+                            <!-- STEP 1 -->
+
+                            <li>
+
+                                <i class="fas fa-circle-check"></i>
+
+                                <span>
+
+                                    {% if offer.ride %}
+
+                                        Choose the
+
+                                        <strong>
+                                            {{ offer.ride.name }}
+                                        </strong>
+
+                                        ride for your adventure.
+
+                                    {% else %}
+
+                                        Select your preferred Flying Fox ride.
+
+                                    {% endif %}
+
+                                </span>
+
+                            </li>
+
+
+
+                            <!-- STEP 2 -->
+
+                            <li>
+
+                                <i class="fas fa-circle-check"></i>
+
+                                <span>
+
+                                    Select your preferred booking date and
+                                    available time slot.
+
+                                </span>
+
+                            </li>
+
+
+
+                            <!-- STEP 3 -->
+
+                            {% if offer.coupon_required and offer.coupon_code %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        Enter coupon code
+
+                                        <strong>
+                                            {{ offer.coupon_code }}
+                                        </strong>
+
+                                        during checkout.
+
+                                    </span>
+
+                                </li>
+
+
+                            {% elif offer.auto_apply %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        No coupon code is required.
+                                        The offer will be automatically applied
+                                        when your booking is eligible.
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- STEP 4 -->
+
+                            {% if offer.minimum_participants > 1 %}
+
+                                <li>
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    <span>
+
+                                        Add at least
+
+                                        <strong>
+                                            {{ offer.minimum_participants }}
+                                        </strong>
+
+                                        participants to qualify for this offer.
+
+                                    </span>
+
+                                </li>
+
+                            {% endif %}
+
+
+
+                            <!-- STEP 5 -->
+
+                            <li>
+
+                                <i class="fas fa-circle-check"></i>
+
+                                <span>
+
+                                    Complete participant information and
+                                    continue to secure payment.
+
+                                </span>
+
+                            </li>
+
+
+
+                            <!-- STEP 6 -->
+
+                            <li>
+
+                                <i class="fas fa-circle-check"></i>
+
+                                <span>
+
+                                    After successful booking, your digital
+                                    Flying Fox ticket will be generated.
+
+                                </span>
+
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     RIGHT SIDEBAR
+                ================================================== -->
+
+                <div class="col-lg-4">
+
+                    <aside class="ff-offer-sidebar">
+
+
+                        <div class="ff-offer-book-card">
+
+
+                            <!-- LABEL -->
+
+                            <span class="ff-offer-book-label">
+
+                                <i class="fas fa-bolt"></i>
+
+                                {% if offer.computed_status == "active" %}
+
+                                    Limited-Time Offer
+
+                                {% elif offer.computed_status == "upcoming" %}
+
+                                    Upcoming Offer
+
+                                {% elif offer.computed_status == "expired" %}
+
+                                    Offer Ended
+
+                                {% else %}
+
+                                    Offer Unavailable
+
+                                {% endif %}
+
+                            </span>
+
+
+
+                            <!-- TITLE -->
+
+                            <h3>
+                                {{ offer.title }}
+                            </h3>
+
+
+
+                            <!-- DESCRIPTION -->
+
+                            <p class="ff-offer-book-description">
+
+                                {% if offer.computed_status == "active" %}
+
+                                    Book your Flying Fox adventure before
+                                    {{ offer.end_date|date:"d M Y" }}
+                                    and enjoy this special offer.
+
+                                {% elif offer.computed_status == "upcoming" %}
+
+                                    This offer becomes available on
+                                    {{ offer.start_date|date:"d M Y" }}.
+
+                                {% elif offer.computed_status == "expired" %}
+
+                                    This special offer ended on
+                                    {{ offer.end_date|date:"d M Y" }}.
+
+                                {% else %}
+
+                                    This offer is currently unavailable.
+
+                                {% endif %}
+
+                            </p>
+
+
+
+                            <!-- ==========================================
+                                 DISCOUNT
+                            =========================================== -->
+
+                            <div class="ff-offer-big-discount">
+
+                                <small>
+                                    You Get
+                                </small>
+
+                                <strong>
+                                    {{ offer.discount_label }}
+                                </strong>
+
+                            </div>
+
+
+
+                            <!-- ==========================================
+                                 COUPON CODE
+                            =========================================== -->
+
+                            {% if offer.coupon_required and offer.coupon_code %}
+
+                                <div class="ff-offer-coupon">
+
+                                    <small>
+                                        Offer Coupon Code
+                                    </small>
+
+
+                                    <div class="ff-offer-coupon-row">
+
+                                        <span
+                                            class="ff-offer-coupon-code"
+                                            id="ffOfferCoupon"
+                                        >
+
+                                            {{ offer.coupon_code }}
+
+                                        </span>
+
+
+                                        <button
+                                            type="button"
+                                            class="ff-copy-coupon"
+                                            id="ffCopyCoupon"
+                                            aria-label="Copy coupon"
+                                        >
+
+                                            <i class="far fa-copy"></i>
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                            {% elif offer.auto_apply %}
+
+                                <div class="ff-offer-coupon">
+
+                                    <small>
+                                        Coupon
+                                    </small>
+
+
+                                    <div class="ff-offer-coupon-row">
+
+                                        <span class="ff-offer-coupon-code">
+
+                                            AUTO APPLIED
+
+                                        </span>
+
+                                        <i class="fas fa-check-circle"></i>
+
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- ==========================================
+                                 BOOK BUTTON
+                            =========================================== -->
+
+                            {% if offer.computed_status == "active" %}
+
+                                <a
+                                    href="{% url 'bookings' %}"
+                                    class="ff-offer-book-btn"
+                                >
+
+                                    <span>
+                                        Book This Offer
+                                    </span>
+
+                                    <i class="fas fa-arrow-right"></i>
+
+                                </a>
+
+
+                            {% elif offer.computed_status == "upcoming" %}
+
+                                <div class="ff-offer-unavailable">
+
+                                    Offer Starts
+                                    {{ offer.start_date|date:"d M Y" }}
+
+                                </div>
+
+
+                            {% elif offer.computed_status == "expired" %}
+
+                                <div class="ff-offer-unavailable">
+
+                                    This Offer Has Ended
+
+                                </div>
+
+
+                            {% else %}
+
+                                <div class="ff-offer-unavailable">
+
+                                    Offer Currently Unavailable
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- NOTE -->
+
+                            <div class="ff-offer-note">
+
+                                <i class="fas fa-circle-info"></i>
+
+                                <span>
+
+                                    Final ride availability depends on your
+                                    selected date and time slot.
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </aside>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     RELATED OFFERS
+========================================================= -->
+
+{% if related_offers %}
+
+<section class="ff-related-offers">
+
+    <div class="container">
+
+
+        <!-- HEADING -->
+
+        <div class="site-heading text-center mb-5">
+
+            <span class="site-title-tagline">
+
+                <i class="fas fa-tags"></i>
+
+                More Adventure Deals
+
+            </span>
+
+
+            <h3 class="site-title">
+
+                More Ways To
+
+                <span>
+                    Save & Fly
+                </span>
+
+            </h3>
+
+        </div>
+
+
+
+        <!-- OFFER GRID -->
+
+        <div class="row g-4">
+
+
+            {% for related in related_offers %}
+
+                <div class="col-md-6 col-xl-4">
+
+
+                    <article class="ff-related-offer">
+
+
+                        <!-- IMAGE -->
+
+                        <a
+                            href="{% url 'frontend_offer_detail' related.slug %}"
+                            class="ff-related-offer-image-link"
+                        >
+
+                            <div class="ff-related-offer-image">
+
+
+                                {% if related.banner_image %}
+
+                                    <img
+                                        src="{{ related.banner_image.url }}"
+                                        alt="{{ related.title }}"
+                                        loading="lazy"
+                                    >
+
+                                {% else %}
+
+                                    <div class="ff-related-offer-no-image">
+
+                                        <i class="fas fa-tags"></i>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                            </div>
+
+                        </a>
+
+
+
+                        <!-- CONTENT -->
+
+                        <div class="ff-related-offer-content">
+
+
+                            <h4>
+
+                                <a
+                                    href="{% url 'frontend_offer_detail' related.slug %}"
+                                >
+
+                                    {{ related.title }}
+
+                                </a>
+
+                            </h4>
+
+
+
+                            <div class="ff-related-offer-meta">
+
+
+                                <!-- DISCOUNT -->
+
+                                <span class="ff-related-offer-discount">
+
+                                    <i class="fas fa-tags"></i>
+
+                                    {{ related.discount_label }}
+
+                                </span>
+
+
+
+                                <!-- DATE -->
+
+                                <span class="ff-related-offer-date">
+
+                                    <i class="far fa-calendar-alt"></i>
+
+                                    Valid until
+                                    {{ related.end_date|date:"d M Y" }}
+
+                                </span>
+
+
+                            </div>
+
+
+
+                            <!-- RIDE -->
+
+                            {% if related.ride %}
+
+                                <p>
+
+                                    <i class="fas fa-check-circle"></i>
+
+                                    {{ related.ride.name }}
+
+                                </p>
+
+                            {% endif %}
+
+
+
+                            <div class="ff-related-offer-actions">
+
+
+                                <a
+                                    href="{% url 'bookings' %}"
+                                    class="ff-related-offer-book"
+                                >
+
+                                    Book Now
+
+                                </a>
+
+
+                                <a
+                                    href="{% url 'frontend_offer_detail' related.slug %}"
+                                    class="ff-related-offer-details"
+                                >
+
+                                    View Details
+
+                                    <i class="fas fa-arrow-right"></i>
+
+                                </a>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </article>
+
+
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+<!-- =========================================================
+     TERMS & CONDITIONS
+========================================================= -->
+
+<section class="ff-offer-terms-section">
+
+
+    <!-- DECORATIVE SHAPES -->
+
+    <div class="ff-terms-shape ff-terms-shape-one"></div>
+
+    <div class="ff-terms-shape ff-terms-shape-two"></div>
+
+
+
+    <div class="container">
+
+
+        <div class="ff-terms-layout">
+
+
+            <!-- =================================================
+                 LEFT
+            ================================================== -->
+
+            <div class="ff-terms-left">
+
+
+                <span class="ff-terms-label">
+
+                    <i class="fas fa-file-contract"></i>
+
+                    Important Information
+
+                </span>
+
+
+
+                <h2 class="ff-terms-title">
+
+                    Terms &
+
+                    <span>
+                        Conditions
+                    </span>
+
+                </h2>
+
+
+
+                <p class="ff-terms-description">
+
+                    Everything you need to know before using this special
+                    Flying Fox Adventure offer. Please review the conditions
+                    carefully before completing your booking.
+
+                </p>
+
+
+
+                <div class="ff-terms-highlight">
+
+
+                    <div class="ff-terms-highlight-icon">
+
+                        <i class="fas fa-shield-alt"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Book With Confidence
+                        </strong>
+
+                        <p>
+
+                            Our team follows strict safety and booking
+                            procedures for every adventure.
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE ACCORDION
+            ================================================== -->
+
+            <div class="ff-terms-right">
+
+
+                <div class="ff-terms-accordion">
+
+
+                    <!-- =========================================
+                         ITEM 1
+                    ========================================== -->
+
+                    <div class="ff-terms-item active">
+
+
+                        <button
+                            type="button"
+                            class="ff-terms-question"
+                            aria-expanded="true"
+                        >
+
+                            <span>
+                                When is this offer valid?
+                            </span>
+
+                            <span class="ff-terms-icon">
+
+                                <i class="fas fa-plus"></i>
+
+                            </span>
+
+                        </button>
+
+
+                        <div class="ff-terms-answer">
+
+
+                            <div class="ff-terms-answer-inner">
+
+                                This offer is valid from
+
+                                <strong>
+                                    {{ offer.start_date|date:"d M Y" }}
+                                </strong>
+
+                                until
+
+                                <strong>
+                                    {{ offer.end_date|date:"d M Y" }}
+                                </strong>.
+
+                                Bookings must satisfy all offer requirements
+                                during this validity period.
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ITEM 2 - PARTICIPANTS
+                    ========================================== -->
+
+                    <div class="ff-terms-item">
+
+
+                        <button
+                            type="button"
+                            class="ff-terms-question"
+                            aria-expanded="false"
+                        >
+
+                            <span>
+                                Are there participant requirements?
+                            </span>
+
+                            <span class="ff-terms-icon">
+
+                                <i class="fas fa-plus"></i>
+
+                            </span>
+
+                        </button>
+
+
+                        <div class="ff-terms-answer">
+
+
+                            <div class="ff-terms-answer-inner">
+
+
+                                {% if offer.minimum_participants > 1 %}
+
+                                    A minimum of
+
+                                    <strong>
+                                        {{ offer.minimum_participants }}
+                                    </strong>
+
+                                    participants is required to qualify for
+                                    this offer.
+
+                                {% else %}
+
+                                    This offer does not require a special
+                                    minimum group size beyond the normal
+                                    booking requirements.
+
+                                {% endif %}
+
+
+                                {% if offer.first_booking_only %}
+
+                                    This promotion is also available only
+                                    for a customer's
+
+                                    <strong>
+                                        first booking.
+                                    </strong>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ITEM 3 - RIDE
+                    ========================================== -->
+
+                    <div class="ff-terms-item">
+
+
+                        <button
+                            type="button"
+                            class="ff-terms-question"
+                            aria-expanded="false"
+                        >
+
+                            <span>
+                                Which ride can I use this offer for?
+                            </span>
+
+                            <span class="ff-terms-icon">
+
+                                <i class="fas fa-plus"></i>
+
+                            </span>
+
+                        </button>
+
+
+                        <div class="ff-terms-answer">
+
+
+                            <div class="ff-terms-answer-inner">
+
+
+                                {% if offer.ride %}
+
+                                    This offer applies to the
+
+                                    <strong>
+                                        {{ offer.ride.name }}
+                                    </strong>
+
+                                    ride.
+
+                                {% else %}
+
+                                    This offer is not currently restricted
+                                    to a specific ride. Final eligibility
+                                    will be confirmed during booking.
+
+                                {% endif %}
+
+
+                                Final participation remains subject to
+                                availability and approval by our trained
+                                safety team.
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ITEM 4 - COUPON
+                    ========================================== -->
+
+                    <div class="ff-terms-item">
+
+
+                        <button
+                            type="button"
+                            class="ff-terms-question"
+                            aria-expanded="false"
+                        >
+
+                            <span>
+                                Do I need a coupon code?
+                            </span>
+
+                            <span class="ff-terms-icon">
+
+                                <i class="fas fa-plus"></i>
+
+                            </span>
+
+                        </button>
+
+
+                        <div class="ff-terms-answer">
+
+
+                            <div class="ff-terms-answer-inner">
+
+
+                                {% if offer.coupon_required and offer.coupon_code %}
+
+                                    Yes. Enter coupon code
+
+                                    <strong>
+                                        {{ offer.coupon_code }}
+                                    </strong>
+
+                                    during checkout to claim this offer.
+
+
+                                {% elif offer.auto_apply %}
+
+                                    No coupon code is required.
+
+                                    <strong>
+                                        This offer is applied automatically
+                                    </strong>
+
+                                    when your booking meets the required
+                                    conditions.
+
+
+                                {% else %}
+
+                                    No coupon code is currently required
+                                    for this offer.
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ITEM 5 - DISCOUNT LIMIT
+                    ========================================== -->
+
+                    {% if offer.maximum_discount %}
+
+                        <div class="ff-terms-item">
+
+
+                            <button
+                                type="button"
+                                class="ff-terms-question"
+                                aria-expanded="false"
+                            >
+
+                                <span>
+                                    Is there a maximum discount?
+                                </span>
+
+                                <span class="ff-terms-icon">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </span>
+
+                            </button>
+
+
+                            <div class="ff-terms-answer">
+
+
+                                <div class="ff-terms-answer-inner">
+
+                                    The maximum discount available under
+                                    this offer is
+
+                                    <strong>
+                                        ₹{{ offer.maximum_discount|floatformat:"-2" }}
+                                    </strong>.
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- =========================================
+                         ITEM 6 - MINIMUM BOOKING
+                    ========================================== -->
+
+                    {% if offer.minimum_booking_amount %}
+
+                        <div class="ff-terms-item">
+
+
+                            <button
+                                type="button"
+                                class="ff-terms-question"
+                                aria-expanded="false"
+                            >
+
+                                <span>
+                                    Is there a minimum booking amount?
+                                </span>
+
+                                <span class="ff-terms-icon">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </span>
+
+                            </button>
+
+
+                            <div class="ff-terms-answer">
+
+
+                                <div class="ff-terms-answer-inner">
+
+                                    Your booking amount must be at least
+
+                                    <strong>
+                                        ₹{{ offer.minimum_booking_amount|floatformat:"-2" }}
+                                    </strong>
+
+                                    to qualify for this promotion.
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- =========================================
+                         ITEM 7 - USAGE LIMIT
+                    ========================================== -->
+
+                    {% if offer.max_uses or offer.max_uses_per_user %}
+
+                        <div class="ff-terms-item">
+
+
+                            <button
+                                type="button"
+                                class="ff-terms-question"
+                                aria-expanded="false"
+                            >
+
+                                <span>
+                                    Are there usage limits?
+                                </span>
+
+                                <span class="ff-terms-icon">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </span>
+
+                            </button>
+
+
+                            <div class="ff-terms-answer">
+
+
+                                <div class="ff-terms-answer-inner">
+
+
+                                    {% if offer.max_uses %}
+
+                                        This promotion is limited to
+
+                                        <strong>
+                                            {{ offer.max_uses }}
+                                        </strong>
+
+                                        total uses.
+
+                                    {% endif %}
+
+
+                                    {% if offer.max_uses_per_user %}
+
+                                        Each customer may use this offer up to
+
+                                        <strong>
+                                            {{ offer.max_uses_per_user }}
+                                        </strong>
+
+                                        time{{ offer.max_uses_per_user|pluralize }}.
+
+                                    {% endif %}
+
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =====================================================
+           SHARE OFFER
+        ===================================================== */
+
+        const shareButton =
+            document.getElementById(
+                "ffOfferShare"
+            );
+
+
+        if (shareButton) {
+
+            shareButton.addEventListener(
+                "click",
+                async function () {
+
+
+                    const shareData = {
+
+                        title:
+                            "{{ offer.title|escapejs }}",
+
+                        text:
+                            "Check out this Flying Fox Adventure offer!",
+
+                        url:
+                            window.location.href
+
+                    };
+
+
+                    if (navigator.share) {
+
+                        try {
+
+                            await navigator.share(
+                                shareData
+                            );
+
+                        } catch (error) {
+
+                            // Share dialog closed by user.
+
+                        }
+
+                    } else {
+
+                        try {
+
+                            await navigator.clipboard.writeText(
+                                window.location.href
+                            );
+
+
+                            const originalHTML =
+                                shareButton.innerHTML;
+
+
+                            shareButton.innerHTML =
+                                '<span>Copied</span> <i class="fas fa-check"></i>';
+
+
+                            setTimeout(
+                                function () {
+
+                                    shareButton.innerHTML =
+                                        originalHTML;
+
+                                },
+                                1800
+                            );
+
+
+                        } catch (error) {
+
+                            console.log(
+                                "Unable to copy offer link."
+                            );
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        /* =====================================================
+           COPY COUPON
+        ===================================================== */
+
+        const copyButton =
+            document.getElementById(
+                "ffCopyCoupon"
+            );
+
+
+        const couponElement =
+            document.getElementById(
+                "ffOfferCoupon"
+            );
+
+
+        if (
+            copyButton &&
+            couponElement
+        ) {
+
+            copyButton.addEventListener(
+                "click",
+                async function () {
+
+
+                    const coupon =
+                        couponElement
+                        .textContent
+                        .trim();
+
+
+                    try {
+
+                        await navigator.clipboard.writeText(
+                            coupon
+                        );
+
+
+                        const originalHTML =
+                            copyButton.innerHTML;
+
+
+                        copyButton.innerHTML =
+                            '<i class="fas fa-check"></i>';
+
+
+                        setTimeout(
+                            function () {
+
+                                copyButton.innerHTML =
+                                    originalHTML;
+
+                            },
+                            1600
+                        );
+
+
+                    } catch (error) {
+
+                        console.log(
+                            "Coupon could not be copied."
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+    }
+);
+</script>
+
+
+
+{% comment %} terms and contition js start {% endcomment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const termsItems =
+        document.querySelectorAll(".ff-terms-item");
+
+
+    /* =====================================================
+       FUNCTION - CLOSE ITEM
+    ===================================================== */
+
+    function closeItem(item) {
+
+        const answer =
+            item.querySelector(".ff-terms-answer");
+
+        const button =
+            item.querySelector(".ff-terms-question");
+
+        item.classList.remove("active");
+
+        if (answer) {
+            answer.style.maxHeight = null;
+        }
+
+        if (button) {
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+    }
+
+
+    /* =====================================================
+       FUNCTION - OPEN ITEM
+    ===================================================== */
+
+    function openItem(item) {
+
+        const answer =
+            item.querySelector(".ff-terms-answer");
+
+        const button =
+            item.querySelector(".ff-terms-question");
+
+        item.classList.add("active");
+
+        if (answer) {
+
+            answer.style.maxHeight =
+                answer.scrollHeight + "px";
+
+        }
+
+        if (button) {
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       INITIAL STATE
+    ===================================================== */
+
+    termsItems.forEach(function (item) {
+
+        if (item.classList.contains("active")) {
+
+            openItem(item);
+
+        } else {
+
+            closeItem(item);
+
+        }
+
+    });
+
+
+    /* =====================================================
+       CLICK
+    ===================================================== */
+
+    termsItems.forEach(function (item) {
+
+        const button =
+            item.querySelector(".ff-terms-question");
+
+        if (!button) {
+            return;
+        }
+
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const currentlyOpen =
+                    item.classList.contains("active");
+
+
+                /* Close everything first */
+
+                termsItems.forEach(function (otherItem) {
+
+                    closeItem(otherItem);
+
+                });
+
+
+                /* Open clicked item only if it wasn't open */
+
+                if (!currentlyOpen) {
+
+                    openItem(item);
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       FIX HEIGHT AFTER RESIZE
+    ===================================================== */
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            const activeItem =
+                document.querySelector(
+                    ".ff-terms-item.active"
+                );
+
+            if (!activeItem) {
+                return;
+            }
+
+
+            const answer =
+                activeItem.querySelector(
+                    ".ff-terms-answer"
+                );
+
+
+            if (answer) {
+
+                answer.style.maxHeight =
+                    answer.scrollHeight + "px";
+
+            }
+
+        }
+    );
+
+});
+</script>
+{% comment %} terms and contition js end  {% endcomment %}
+
+
+
+{% endblock %}

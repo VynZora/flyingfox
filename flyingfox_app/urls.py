@@ -105,6 +105,27 @@ path(
 # ==========================================
  path('dashboard/contacts/', views.view_contacts, name='view_contacts'),
  path('dashboard/contacts/<int:pk>/delete/', views.delete_contact, name='delete_contact'),
+ # ==========================================
+# ADMIN - CONTACT ENQUIRIES
+# ==========================================
+
+path(
+    "dashboard/contact-enquiries/",
+    views.contact_enquiry_list,
+    name="contact_enquiry_list"
+),
+
+path(
+    "dashboard/contact-enquiries/<int:pk>/",
+    views.contact_enquiry_detail,
+    name="contact_enquiry_detail"
+),
+
+path(
+    "dashboard/contact-enquiries/<int:pk>/delete/",
+    views.contact_enquiry_delete,
+    name="contact_enquiry_delete"
+),
 
 
 # ==========================================
@@ -298,11 +319,29 @@ path(
 ),
 
 path(
+    "verify-otp/",
+    views.verify_login_otp,
+    name="verify_login_otp"
+),
+
+path(
+    "resend-otp/",
+    views.resend_login_otp,
+    name="resend_login_otp"
+),
+
+
+path(
+    "my-account/",
+    views.user_dashboard,
+    name="user_dashboard"
+),
+
+path(
     "logout/",
     views.user_logout,
     name="user_logout"
 ),
-
 
 
  path('', views.home, name='home'),
@@ -317,10 +356,28 @@ path(
 
 path('bookings/', views.bookings, name='bookings'),
 path(
-        "booking/review/",
-        views.booking_review,
-        name="booking_review",
-    ),
+    "booking/review/",
+    views.booking_review,
+    name="booking_review",
+),
+
+path(
+    "booking/confirm/",
+    views.booking_confirm,
+    name="booking_confirm",
+),
+
+path(
+    "booking/payment/verify/",
+    views.booking_payment_verify,
+    name="booking_payment_verify",
+),
+
+path(
+    "booking/payment/success/<uuid:booking_id>/",
+    views.booking_payment_success,
+    name="booking_payment_success",
+),
 
    # Temporary fake payment success
     path(
@@ -593,12 +650,26 @@ path(
     views.blog_detail,
     name="blog_detail",
 ),
+
+# offers management 
+
+path(
+    "offers/",
+    views.offers,
+    name="offers"
+),
+
+path(
+    "offers/<slug:slug>/",
+    views.frontend_offer_detail,
+    name="frontend_offer_detail",
+),
 # offer
- path("offers/", views.offer_list, name="offer_list"),
-    path("offers/create/", views.offer_create, name="offer_create"),
-    path("offers/<slug:slug>/", views.offer_detail, name="offer_detail"),
-    path("offers/<slug:slug>/edit/", views.offer_update, name="offer_update"),
-    path("offers/<slug:slug>/delete/", views.offer_delete, name="offer_delete"),
+path("dashboard/offers/", views.offer_list, name="offer_list"),
+path("dashboard/offers/create/", views.offer_create, name="offer_create"),
+path("dashboard/offers/<slug:slug>/", views.offer_detail, name="offer_detail"),
+path("dashboard/offers/<slug:slug>/edit/", views.offer_update, name="offer_update"),
+path("dashboard/offers/<slug:slug>/delete/", views.offer_delete, name="offer_delete"),
 
 
 ]

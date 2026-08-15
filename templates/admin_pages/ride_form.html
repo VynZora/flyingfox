@@ -70,11 +70,10 @@
             </label>
 
             <textarea
-                name="description"
-                id="rideDescription"
-                class="form-control"
-                required
-            >{% if ride %}{{ ride.description }}{% else %}{{ form_data.description|default:'' }}{% endif %}</textarea>
+    name="description"
+    id="rideDescription"
+    class="form-control"
+>{% if ride %}{{ ride.description }}{% else %}{{ form_data.description|default:'' }}{% endif %}</textarea>
 
         </div>
 
@@ -487,12 +486,18 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    const descriptionField =
+        document.querySelector("#rideDescription");
+
+    const rideForm =
+        document.querySelector("#rideMainForm");
+
+    let descriptionEditor = null;
+
+
     /* =========================================
        CKEDITOR
     ========================================= */
-
-    const descriptionField =
-        document.querySelector("#rideDescription");
 
     if (descriptionField) {
 
@@ -517,6 +522,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 ]
 
             })
+            .then(function (editor) {
+
+                descriptionEditor = editor;
+
+                console.log(
+                    "CKEditor initialized successfully"
+                );
+
+            })
             .catch(function (error) {
 
                 console.error(
@@ -525,6 +539,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
             });
+
+    }
+
+
+    /* =========================================
+       FORM SUBMIT
+    ========================================= */
+
+    if (rideForm) {
+
+        rideForm.addEventListener(
+            "submit",
+            function () {
+
+                console.log(
+                    "Ride form submit event fired"
+                );
+
+                if (descriptionEditor) {
+
+                    descriptionField.value =
+                        descriptionEditor.getData();
+
+                    console.log(
+                        "Description synchronized"
+                    );
+
+                }
+
+            }
+        );
 
     }
 
@@ -563,9 +608,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             function (event) {
 
                                 const box =
-                                    document.createElement(
-                                        "div"
-                                    );
+                                    document.createElement("div");
 
                                 box.className =
                                     "ride-media-card";

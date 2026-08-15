@@ -98,7 +98,6 @@
             </a>
             <div class="mobile-menu-right">
               <div class="mobile-menu-btn">
-                <button type="button" class="nav-right-link search-box-outer"><i class="far fa-search"></i></button>
               </div>
               <button
                 class="navbar-toggler"
@@ -123,7 +122,7 @@
                 </button>
               </div>
               <div class="offcanvas-body gap-xl-4">
-                <ul class="navbar-nav justify-content-end flex-grow-1">
+                <ul class="navbar-nav justify-content-center flex-grow-1">
 
                   <li class="nav-item">
                     <a class="nav-link {% block nav_home %}{% endblock %}" href="{% url 'home' %}">
@@ -141,6 +140,12 @@
                     <a class="nav-link {% block nav_rides %}{% endblock %}" href="{% url 'rides' %}">
                       Rides
                     </a>
+                  </li>
+
+                  <li class="nav-item">
+                     <a  class="nav-link {% block nav_offers %}{% endblock %}" href="{% url 'offers' %}">
+                      Offers
+                      </a>
                   </li>
 
                   <li class="nav-item">
@@ -165,8 +170,49 @@
                 <!-- nav-right -->
                 <div class="nav-right">
                   <div class="nav-btn">
+{% if request.session.user_id %}
+
+    <a
+        href="{% url 'user_dashboard' %}"
+        class="theme-btn"
+    >
+        My Account
+        <i class="fas fa-user"></i>
+    </a>
+
+{% else %}
+
+    <a
+        href="{% url 'user_signin' %}"
+        class="theme-btn"
+    >
+        Login
+        <i class="fas fa-user"></i>
+    </a>
+
+{% endif %}
+                  </div>
+                  <div class="nav-btn">
                     <a href="{% url 'bookings' %}" class="theme-btn">Book Now<i class="fas fa-arrow-right"></i></a>
                   </div>
+
+
+                    <!-- Sidebar Button -->
+    <button
+        type="button"
+        class="sidebar-btn nav-right-link"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebarPopup"
+        aria-controls="sidebarPopup"
+        aria-label="Open sidebar"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+
+
                 </div>
               </div>
             </div>
@@ -177,184 +223,731 @@
     </header>
     <!-- header area end -->
 
-    <!-- popup search -->
-    <div class="search-popup">
-      <button class="close-search"><span class="far fa-times"></span></button>
-      <form action="#">
-        <div class="form-group">
-          <input type="search" name="search-field" class="form-control" placeholder="Search Here..." required />
-          <button type="submit"><i class="far fa-search"></i></button>
-        </div>
-      </form>
+    <!-- =====================================================
+     SIDEBAR POPUP
+===================================================== -->
+
+<div
+    class="sidebar-popup offcanvas offcanvas-end"
+    tabindex="-1"
+    id="sidebarPopup"
+    aria-labelledby="sidebarPopupLabel"
+>
+
+    <!-- Sidebar Header -->
+    <div class="offcanvas-header">
+
+        <a
+            href="{% url 'home' %}"
+            class="sidebar-popup-logo"
+            id="sidebarPopupLabel"
+        >
+            <img
+                src="{% static 'frontend/assets/img/logo/logo.png' %}"
+                alt="Flying Fox Adventure"
+            />
+        </a>
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+        >
+            <i class="far fa-xmark"></i>
+        </button>
+
     </div>
-    <!-- popup search end -->
+
+
+    <!-- Sidebar Body -->
+    <div class="sidebar-popup-wrap offcanvas-body">
+
+        <div class="sidebar-popup-content">
+
+
+            <!-- About -->
+            <div class="sidebar-popup-about">
+
+                <h4>
+                    About Flying Fox
+                </h4>
+
+                <p>
+                    Experience the thrill of soaring above Munnar's
+                    breathtaking valleys with professional adventure
+                    guides, quality safety equipment, and unforgettable
+                    Flying Fox experiences.
+                </p>
+
+            </div>
+
+
+            <!-- Contact -->
+            <div class="sidebar-popup-contact">
+
+                <h4>
+                    Contact Info
+                </h4>
+
+                <ul>
+
+                    <!-- Email -->
+                    <li>
+
+                        <div class="icon">
+                            <i class="far fa-envelope"></i>
+                        </div>
+
+                        <div class="content">
+
+                            <h5>
+                                Email
+                            </h5>
+
+                            <a href="mailto:adventureflyingfox@gmail.com">
+                                adventureflyingfox@gmail.com
+                            </a>
+
+                        </div>
+
+                    </li>
+
+
+                    <!-- Phone -->
+                    <li>
+
+                        <div class="icon">
+                            <i class="far fa-phone"></i>
+                        </div>
+
+                        <div class="content">
+
+                            <h5>
+                                Phone
+                            </h5>
+
+                            <a href="tel:+917907219198">
+                                +91 7907219198
+                            </a>
+
+                        </div>
+
+                    </li>
+
+
+                    <!-- Address -->
+                    <li>
+
+                        <div class="icon">
+                            <i class="far fa-location-dot"></i>
+                        </div>
+
+                        <div class="content">
+
+                            <h5>
+                                Address
+                            </h5>
+
+                            <span>
+                                Thekkumkanam, Kerala
+                            </span>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- Social -->
+            <div class="sidebar-popup-social">
+
+                <h4>
+                    Follow Us
+                </h4>
+
+                <a href="#" aria-label="Facebook">
+                    <i class="fab fa-facebook"></i>
+                </a>
+
+                <a href="#" aria-label="X">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+
+                <a href="#" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+
+                <a href="#" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- sidebar popup end -->
 
     <main class="main">
       {% block content %}{% endblock %}
     </main>
 
     <!-- footer area -->
-    <footer class="footer-area ft-bg">
-      <div class="footer-widget">
+    <!-- =========================================================
+     FOOTER AREA
+========================================================= -->
+
+<footer class="footer-area fta-2 light pb-40">
+
+    <!-- Decorative shapes -->
+
+    <div class="footer-shape">
+
+        <img
+            class="shape-1"
+            src="{% static 'frontend/assets/img/shape/05.webp' %}"
+            alt="">
+
+        <img
+            class="shape-2"
+            src="{% static 'frontend/assets/img/shape/06.webp' %}"
+            alt=""
+        >
+
+        <img
+            class="shape-3"
+            src="{% static 'frontend/assets/img/shape/07.webp' %}"
+            alt=""
+        >
+
+    </div>
+
+
+    <div class="footer-widget">
+
         <div class="container">
-          <div class="footer-widget-wrap pt-100 pb-50">
-            <div class="row g-4">
-              <div class="col-lg-4">
-                <div class="footer-widget-box about-us">
-                  <a href="#" class="footer-logo">
-                    <img src="{% static 'frontend/assets/img/logo/logo-light.png' %}" alt="" />
-                  </a>
-                  <p>
-                    Experience the thrill of soaring above Munnar's breathtaking valleys with world-class safety, professional guides, and unforgettable Flying Fox adventures designed for every thrill seeker.
-                  </p>
-                  <div class="footer-social-box mt-70">
-                    <h4>Follow Us On</h4>
-                    <ul class="footer-social">
-                      <li>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fab fa-x-twitter"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-8">
-                <div class="footer-contact">
-                  <div class="footer-contact-wrap">
-                    <div class="footer-contact-item">
-                      <div class="icon">
-                        <img src="{% static 'frontend/assets/img/icon/call.svg' %}" alt="" />
-                      </div>
-                      <div class="content">
-                        <h5>Call Us</h5>
-                        <a href="tel:+21236547898">+2 123 654 7898</a>
-                      </div>
-                    </div>
-                    <div class="footer-contact-item">
-                      <div class="icon">
-                        <img src="{% static 'frontend/assets/img/icon/email.svg' %}" alt="" />
-                      </div>
-                      <div class="content">
-                        <h5>Mail Us</h5>
-                        <a href="mailto:info@example.com">info@example.com</a>
-                      </div>
-                    </div>
-                    <div class="footer-contact-item">
-                      <div class="icon">
-                        <img src="{% static 'frontend/assets/img/icon/address.svg' %}" alt="" />
-                      </div>
-                      <div class="content">
-                        <h5>Our Address</h5>
-                        <p>Munnar, Kerala, India</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6 col-lg-3">
-                    <div class="footer-widget-box list">
-                      <h4 class="footer-widget-title">Company</h4>
-                      <ul class="footer-list">
-                        <li>
-                          <a href="{% url 'about' %}"><i class="far fa-angle-double-right"></i>About Us</a>
-                        </li>
-                        <li>
-                          <a href="{% url 'faq' %}"><i class="far fa-angle-double-right"></i>FAQ's</a>
-                        </li>
-                        <li>
-                          <a href="{% url 'blog' %}"><i class="far fa-angle-double-right"></i>Update News</a>
-                        </li>
-                        <li>
-                          <a href="{% url 'contact' %}"><i class="far fa-angle-double-right"></i>Contact Us</a>
-                        </li>
-                        {% comment %} <li>
-                          <a href="{% url 'terms' %}"><i class="far fa-angle-double-right"></i>Terms Of Service</a>
-                        </li> {% endcomment %}
-                        {% comment %} <li>
-                          <a href="{% url 'privacy' %}"><i class="far fa-angle-double-right"></i>Privacy policy</a>
-                        </li> {% endcomment %}
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-6 col-lg-4">
-                    <div class="footer-widget-box list">
 
-    <h4 class="footer-widget-title">
-        Popular Rides
-    </h4>
+            <div class="footer-widget-wrap pt-70 pb-50">
 
-    <ul class="footer-list">
+                <div class="row g-4">
 
-        {% for ride in footer_popular_rides %}
 
-        <li>
+                    <!-- =====================================================
+                         ABOUT
+                    ====================================================== -->
 
-            <a href="{% url 'ride_detail' ride.slug %}">
+                    <div class="col-lg-5">
 
-                <i class="far fa-angle-double-right"></i>
+                        <div class="footer-widget-box about-us">
 
-                {{ ride.name }}
+                            <a
+                                href="{% url 'home' %}"
+                                class="footer-logo"
+                            >
 
-            </a>
+                                <img
+                                    src="{% static 'frontend/assets/img/logo/logo.png' %}"
+                                    alt="Flying Fox Adventure"
+                                >
 
-        </li>
+                            </a>
 
-        {% empty %}
 
-        <li>
+                            <p>
+                                Experience the thrill of soaring above
+                                Munnar's breathtaking valleys with
+                                world-class safety, professional guides,
+                                and unforgettable Flying Fox adventures
+                                designed for every thrill seeker.
+                            </p>
 
-            <span>No rides available.</span>
 
-        </li>
+                            <!-- FOLLOW US -->
 
-        {% endfor %}
+                            {% comment %} <div class="footer-download mt-4">
 
-    </ul>
+                                <h4>
+                                    Follow Us On
+                                </h4>
 
-</div>
-                  </div>
-                  <div class="col-lg-5">
-                    <div class="footer-widget-box">
-                      <h4 class="footer-widget-title">Get In Touch</h4>
-                      <div class="footer-newsletter mt-30">
-                        <p>Subscribe Our Newsletter To Get Latest Update And News</p>
-                        <div class="newsletter-form">
-                          <form action="#">
-                            <div class="form-group mb-0">
-                              <div class="form-icon">
-                                <i class="far fa-envelopes"></i>
-                                <input type="email" class="form-control" placeholder="Your Email" />
-                                <button class="theme-btn" type="submit">
-                                  <img src="{% static 'frontend/assets/img/icon/paper-plane.svg' %}" alt="" />
-                                </button>
-                              </div>
-                            </div>
-                          </form>
+
+                                <ul class="footer-social">
+
+                                    <li>
+
+                                        <a
+                                            href="#"
+                                            aria-label="Facebook"
+                                        >
+
+                                            <i class="fab fa-facebook-f"></i>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a
+                                            href="#"
+                                            aria-label="Instagram"
+                                        >
+
+                                            <i class="fab fa-instagram"></i>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a
+                                            href="#"
+                                            aria-label="YouTube"
+                                        >
+
+                                            <i class="fab fa-youtube"></i>
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a
+                                            href="#"
+                                            aria-label="WhatsApp"
+                                        >
+
+                                            <i class="fab fa-whatsapp"></i>
+
+                                        </a>
+
+                                    </li>
+
+                                </ul>
+
+                            </div>  {% endcomment %}
+
                         </div>
-                      </div>
+
                     </div>
-                  </div>
+
+
+
+                    <!-- =====================================================
+                         COMPANY
+                    ====================================================== -->
+
+                    <div class="col-6 col-lg-2">
+
+                        <div class="footer-widget-box list">
+
+                            <h4 class="footer-widget-title">
+                                Company
+                            </h4>
+
+
+                            <ul class="footer-list">
+
+                                <li>
+
+                                    <a href="{% url 'about' %}">
+
+                                        <i class="far fa-angle-double-right"></i>
+
+                                        About Us
+
+                                    </a>
+
+                                </li>
+
+
+                                {% comment %} <li>
+
+                                    <a href="{% url 'faq' %}">
+
+                                        <i class="far fa-angle-double-right"></i>
+
+                                        FAQ's
+
+                                    </a>
+
+                                </li> {% endcomment %}
+
+
+                                {% comment %} <li>
+
+                                    <a href="{% url 'blog' %}">
+
+                                        <i class="far fa-angle-double-right"></i>
+
+                                        Update News
+
+                                    </a>
+
+                                </li> {% endcomment %}
+
+
+                                <li>
+
+                                    <a href="{% url 'contact' %}">
+
+                                        <i class="far fa-angle-double-right"></i>
+
+                                        Contact Us
+
+                                    </a>
+
+                                </li>
+
+
+                                <li>
+
+                                    <a href="{% url 'rides' %}">
+
+                                        <i class="far fa-angle-double-right"></i>
+
+                                        Our Rides
+
+                                    </a>
+
+                                </li>
+
+
+                                <li>
+
+                                    <a href="{% url 'offers' %}">
+
+                                        <i class="far fa-angle-double-right"></i>
+
+                                        Offers
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         POPULAR RIDES
+                    ====================================================== -->
+
+                    <div class="col-6 col-lg-2">
+
+                        <div class="footer-widget-box list">
+
+                            <h4 class="footer-widget-title">
+                                Popular Rides
+                            </h4>
+
+
+                            <ul class="footer-list">
+
+                                {% for ride in footer_popular_rides %}
+
+                                    <li>
+
+                                        <a
+                                            href="{% url 'ride_detail' ride.slug %}"
+                                        >
+
+                                            <i class="far fa-angle-double-right"></i>
+
+                                            {{ ride.name }}
+
+                                        </a>
+
+                                    </li>
+
+                                {% empty %}
+
+                                    <li>
+
+                                        <span>
+                                            No rides available.
+                                        </span>
+
+                                    </li>
+
+                                {% endfor %}
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         GET IN TOUCH
+                    ====================================================== -->
+
+                    <div class="col-lg-3">
+
+                        <div class="footer-widget-box">
+
+                            <h4 class="footer-widget-title">
+                                Get In Touch
+                            </h4>
+
+
+                            <div class="footer-contact">
+
+
+                                <!-- PHONE -->
+
+                                <div class="footer-contact-item">
+
+                                    <div class="icon">
+
+                                        <img
+                                            src="{% static 'frontend/assets/img/icon/call-red.svg' %}"
+                                            alt="Call Flying Fox Adventure"
+                                        >
+
+                                    </div>
+
+
+                                    <div class="content">
+
+                                        <h5>
+                                            Call Us
+                                        </h5>
+
+                                        <a href="tel:+917907219198">
+                                            +91 7907219198
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- EMAIL -->
+
+                                <div class="footer-contact-item">
+
+                                    <div class="icon">
+
+                                        <img
+                                            src="{% static 'frontend/assets/img/icon/email-red.svg' %}"
+                                            alt="Email Flying Fox Adventure"
+                                        >
+
+                                    </div>
+
+
+                                    <div class="content">
+
+                                        <h5>
+                                            Mail Us
+                                        </h5>
+
+                                        <a href="mailto:adventureflyingfox@gmail.com">
+
+                                            adventureflyingfox@gmail.com
+
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- ADDRESS -->
+
+                                {% comment %} <div class="footer-contact-item">
+
+                                    <div class="icon">
+
+                                        <img
+                                            src="{% static 'frontend/assets/img/icon/address-red.svg' %}"
+                                            alt="Flying Fox Adventure Address"
+                                        >
+
+                                    </div>
+
+
+                                    <div class="content">
+
+                                        <h5>
+                                            Our Address
+                                        </h5>
+
+                                        <p>
+                                            Thekkumkanam, Kerala
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- OPENING TIME -->
+
+                                <div class="footer-contact-item">
+
+                                    <div class="icon">
+
+                                        <img
+                                            src="{% static 'frontend/assets/img/icon/clock-red.svg' %}"
+                                            alt="Flying Fox Adventure Opening Hours"
+                                        >
+
+                                    </div>
+
+
+                                    <div class="content">
+
+                                        <h5>
+                                            Opening Hours
+                                        </h5>
+
+                                        <p>
+                                            8:30 AM – 6:00 PM
+                                        </p>
+
+                                    </div>
+
+                                </div> {% endcomment %}
+
+
+                            </div>
+
+
+                            <!-- SOCIAL -->
+
+                            <ul class="footer-social">
+
+                                <li>
+
+                                    <a
+                                        href="#"
+                                        aria-label="Facebook"
+                                    >
+
+                                        <i class="fab fa-facebook-f"></i>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li>
+
+                                    <a
+                                        href="#"
+                                        aria-label="Instagram"
+                                    >
+
+                                        <i class="fab fa-instagram"></i>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li>
+
+                                    <a
+                                        href="#"
+                                        aria-label="YouTube"
+                                    >
+
+                                        <i class="fab fa-youtube"></i>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li>
+
+                                    <a
+                                        href="#"
+                                        aria-label="WhatsApp"
+                                    >
+
+                                        <i class="fab fa-whatsapp"></i>
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+
                 </div>
-              </div>
+
             </div>
-          </div>
+
         </div>
-      </div>
-      <div class="container">
+
+    </div>
+
+
+
+    <!-- =========================================================
+         COPYRIGHT
+    ========================================================= -->
+
+    <div class="container">
+
         <div class="copyright text-center">
-          <p class="copyright-text">&copy; Copyright <span id="date"></span> <a href="#"> vynzora </a> All Rights Reserved.</p>
+
+            <p class="copyright-text">
+
+                &copy; Copyright
+
+                <span id="date"></span>
+
+                <a href="{% url 'home' %}">
+                    Flying Fox Adventure
+                </a>
+
+                All Rights Reserved.
+
+                <span class="ff-footer-credit">
+                    Designed by
+                    <a href="#">
+                        Vynzora
+                    </a>
+                </span>
+
+            </p>
+
         </div>
-      </div>
-    </footer>
-    <!-- footer area end -->
+
+    </div>
+
+</footer>
+
+<!-- footer area end -->
 
     <!-- =====================================================
      FLYING FOX CHATBOT
@@ -439,8 +1032,7 @@
             <div
                 class="ff-chatbot-messages"
                 id="ffChatbotMessages"
-                aria-live="polite"
-            >
+                aria-live="polite">
 
                 <div class="ff-chatbot-message ff-bot-message">
 
@@ -469,6 +1061,70 @@
                 </div>
 
             </div>
+
+
+            <!-- ==========================================
+     CHATBOT LANGUAGE OPTIONS
+=========================================== -->
+
+<div
+    id="chatbotLanguageOptions"
+    class="chatbot-language-options"
+    style="display: none;"
+>
+
+    <button
+        type="button"
+        class="chatbot-language-btn"
+        data-language="en"
+    >
+        <span class="language-flag">🇬🇧</span>
+
+        <span class="language-name">
+            English
+        </span>
+    </button>
+
+
+    <button
+        type="button"
+        class="chatbot-language-btn"
+        data-language="ml"
+    >
+        <span class="language-flag">🇮🇳</span>
+
+        <span class="language-name">
+            മലയാളം
+        </span>
+    </button>
+
+
+    <button
+        type="button"
+        class="chatbot-language-btn"
+        data-language="hi"
+    >
+        <span class="language-flag">🇮🇳</span>
+
+        <span class="language-name">
+            हिंदी
+        </span>
+    </button>
+
+
+    <button
+        type="button"
+        class="chatbot-language-btn"
+        data-language="ta"
+    >
+        <span class="language-flag">🇮🇳</span>
+
+        <span class="language-name">
+            தமிழ்
+        </span>
+    </button>
+
+</div>
 
 
             <!-- Quick reply buttons -->
@@ -564,9 +1220,9 @@
         src="{% static 'frontend/assets/js/flyingfox-chatbot.js' %}"
     ></script>
 
-    <!-- scroll-top -->
+    {% comment %} <!-- scroll-top -->
     <a href="#" id="scroll-top"><i class="fas fa-arrow-up-long"></i></a>
-    <!-- scroll-top end -->
+    <!-- scroll-top end --> {% endcomment %}
 
     <!-- js -->
     <script src="{% static 'frontend/assets/js/jquery-3.7.1.min.js' %}"></script>

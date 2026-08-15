@@ -1,0 +1,1674 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+
+{% block title %}
+{{ blog.title }} - Flying Fox Adventure
+{% endblock %}
+
+
+{% block nav_blog %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     BLOG DETAIL BREADCRUMB
+========================================================= -->
+
+<div class="site-breadcrumb ff-about-math-hero">
+
+    <canvas id="ffMathPattern"></canvas>
+
+    <div class="container">
+
+        <div class="ff-about-hero-content">
+
+            <h3 class="breadcrumb-title">
+                Blog Details
+            </h3>
+
+
+            <ul class="breadcrumb-menu">
+
+                <li>
+                    <a href="{% url 'home' %}">
+                        Home
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="{% url 'blog' %}">
+                        Blog
+                    </a>
+                </li>
+
+
+                <li class="active">
+                    {{ blog.title|truncatewords:5 }}
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- breadcrumb end -->
+
+
+
+<!-- =========================================================
+     BLOG SINGLE
+========================================================= -->
+
+<div class="blog-single py-120">
+
+    <div class="container">
+
+        <div class="row g-5">
+
+
+            <!-- =================================================
+                 LEFT SIDE - BLOG CONTENT
+            ================================================== -->
+
+            <div class="col-lg-8">
+
+                <div class="blog-single-content">
+
+
+                    <!-- =========================================
+                         FEATURED IMAGE
+                    ========================================== -->
+
+                    <div class="blog-single-img mb-30">
+
+                        {% if blog.image %}
+
+                            <img
+                                src="{{ blog.image.url }}"
+                                alt="{{ blog.title }}"
+                                class="img-fluid w-100"
+                            >
+
+                        {% else %}
+
+                            <img
+                                src="{% static 'frontend/assets/img/blog/default.webp' %}"
+                                alt="{{ blog.title }}"
+                                class="img-fluid w-100"
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         BLOG META
+                    ========================================== -->
+
+                    <div class="blog-meta">
+
+                        <div class="blog-meta-left">
+
+                            <ul>
+
+                                <li>
+
+                                    <i class="far fa-user-circle"></i>
+
+                                    Flying Fox Team
+
+                                </li>
+
+
+                                <li>
+
+                                    <i class="far fa-calendar-alt"></i>
+
+                                    {{ blog.created_at|date:"d M Y" }}
+
+                                </li>
+
+
+                                <li>
+
+                                    <i class="far fa-location-dot"></i>
+
+                                    Munnar, Kerala
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         BLOG TITLE
+                    ========================================== -->
+
+                    <h1 class="blog-details-title mb-20">
+
+                        {{ blog.title }}
+
+                    </h1>
+
+
+
+                    <!-- =========================================
+                         BLOG DESCRIPTION
+                    ========================================== -->
+
+                    <div class="ff-blog-detail-description">
+
+                        {{ blog.description|striptags|linebreaksbr }}
+
+                    </div>
+
+
+                    <!-- =========================================================
+     BOOK YOUR RIDE CTA
+========================================================= -->
+
+<div class="ff-blog-book-widget ff-blog-book-widget-content">
+
+    <span class="ff-blog-book-label">
+
+        <i class="fas fa-bolt"></i>
+
+        Ready For Adventure?
+
+    </span>
+
+
+    <h3>
+
+        Fly Above
+        <span>Munnar</span>
+
+    </h3>
+
+
+    <p>
+
+        Turn inspiration into adventure. Experience Flying Fox
+        above the breathtaking hills, valleys and landscapes of
+        Munnar with professional guidance and safety equipment.
+
+    </p>
+
+
+    <a
+        href="{% url 'bookings' %}"
+        class="theme-btn"
+    >
+
+        Book Your Ride
+
+        <i class="fas fa-arrow-right"></i>
+
+    </a>
+
+</div>
+
+                 
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE - SIDEBAR
+            ================================================== -->
+
+            <div class="col-lg-4">
+
+                <aside class="blog-sidebar">
+
+
+                    <!-- =========================================
+                         ABOUT WIDGET
+                    ========================================== -->
+
+                    <div class="widget">
+
+                        <h4 class="widget-title">
+
+                            Flying Fox Adventure
+
+                        </h4>
+
+
+                        <div class="ff-blog-sidebar-about">
+                            <p>
+
+                                Experience thrilling Flying Fox adventures
+                                surrounded by the beautiful hills, valleys
+                                and landscapes of Munnar.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         RECENT POSTS
+                    ========================================== -->
+
+                    {% if recent_blogs %}
+
+                    <div class="widget">
+
+                        <h4 class="widget-title">
+
+                            Recent Posts
+
+                        </h4>
+
+
+                        <div class="recent-post">
+
+
+                            {% for recent_blog in recent_blogs %}
+
+                            <div class="recent-post-item">
+
+
+                                <!-- IMAGE -->
+
+                                <div class="recent-post-img">
+
+                                    <a
+                                        href="{% url 'blog_detail' recent_blog.slug %}"
+                                    >
+
+                                        {% if recent_blog.image %}
+
+                                            <img
+                                                src="{{ recent_blog.image.url }}"
+                                                alt="{{ recent_blog.title }}"
+                                            >
+
+                                        {% else %}
+
+                                            <img
+                                                src="{% static 'frontend/assets/img/blog/default.webp' %}"
+                                                alt="{{ recent_blog.title }}"
+                                            >
+
+                                        {% endif %}
+
+                                    </a>
+
+                                </div>
+
+
+
+                                <!-- CONTENT -->
+
+                                <div class="recent-post-info">
+
+                                    <h6>
+
+                                        <a
+                                            href="{% url 'blog_detail' recent_blog.slug %}"
+                                        >
+
+                                            {{ recent_blog.title|truncatewords:7 }}
+
+                                        </a>
+
+                                    </h6>
+
+
+                                    <span>
+
+                                        <i class="far fa-clock"></i>
+
+                                        {{ recent_blog.created_at|date:"d M Y" }}
+
+                                    </span>
+
+                                </div>
+
+
+                            </div>
+
+                            {% endfor %}
+
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    <!-- =========================================
+                         QUICK LINKS
+                    ========================================== -->
+
+                    <div class="widget">
+
+                        <h4 class="widget-title">
+
+                            Explore
+
+                        </h4>
+
+
+                        <div class="category-list">
+
+
+                            <a href="{% url 'rides' %}">
+
+                                <i class="far fa-angle-double-right"></i>
+
+                                Flying Fox Rides
+
+                            </a>
+
+
+                            <a href="{% url 'offers' %}">
+
+                                <i class="far fa-angle-double-right"></i>
+
+                                Latest Offers
+
+                            </a>
+
+
+                            <a href="{% url 'gallery' %}">
+
+                                <i class="far fa-angle-double-right"></i>
+
+                                Adventure Gallery
+
+                            </a>
+
+
+                            <a href="{% url 'about' %}">
+
+                                <i class="far fa-angle-double-right"></i>
+
+                                About Flying Fox
+
+                            </a>
+
+
+                            <a href="{% url 'contact' %}">
+
+                                <i class="far fa-angle-double-right"></i>
+
+                                Contact Us
+
+                            </a>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                </aside>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- blog single end -->
+
+
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   BLOG DETAIL SMALL CUSTOM IMPROVEMENTS
+
+   Your main Touria blog-single CSS is already inside style.css.
+========================================================= */
+
+
+/* Main image */
+
+.blog-single-img {
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 26px;
+}
+
+
+.blog-single-img img {
+    width: 100%;
+
+    max-height: 620px;
+
+    object-fit: cover;
+
+    border-radius: 26px;
+}
+
+
+
+/* Description */
+
+.ff-blog-detail-description {
+    color: var(--body-text-color);
+
+    font-size: 16px;
+
+    line-height: 1.9;
+}
+
+
+.ff-blog-detail-description p {
+    margin-bottom: 22px;
+}
+
+
+
+/* =========================================================
+   AUTHOR BOX
+========================================================= */
+
+.ff-blog-author-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-top: 35px;
+
+    padding: 26px;
+
+    border: 1px solid
+        rgba(195, 17, 3, 0.12);
+
+    border-radius: 22px;
+
+    background: #fff8f7;
+}
+
+
+.ff-blog-author-icon {
+    width: 72px;
+    height: 72px;
+
+    min-width: 72px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    font-size: 28px;
+}
+
+
+.ff-blog-author-content span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #c31103;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.ff-blog-author-content h4 {
+    margin-bottom: 6px;
+
+    font-size: 21px;
+}
+
+
+.ff-blog-author-content p {
+    margin: 0;
+}
+
+
+
+/* =========================================================
+   SIDEBAR ABOUT
+========================================================= */
+
+.ff-blog-sidebar-about {
+    text-align: left;
+}
+
+
+.ff-blog-sidebar-icon {
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    font-size: 24px;
+}
+
+
+.ff-blog-sidebar-about p {
+    margin-bottom: 22px;
+
+    line-height: 1.7;
+}
+
+
+
+/* =========================================================
+   RECENT POSTS
+========================================================= */
+
+.blog-sidebar .recent-post-img {
+    width: 90px;
+    height: 75px;
+
+    min-width: 90px;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+}
+
+
+.blog-sidebar .recent-post-img img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+}
+
+
+.blog-sidebar .recent-post-info h6 {
+    margin-bottom: 6px;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+}
+
+
+.blog-sidebar .recent-post-info h6 a {
+    color: var(--color-dark);
+}
+
+
+.blog-sidebar .recent-post-info h6 a:hover {
+    color: #c31103;
+}
+
+
+.blog-sidebar .recent-post-info span {
+    color: var(--body-text-color);
+
+    font-size: 12px;
+}
+
+
+.blog-sidebar .recent-post-info span i {
+    margin-right: 5px;
+
+    color: #c31103;
+}
+
+
+
+/* =========================================================
+   BOOKING WIDGET
+========================================================= */
+
+.ff-blog-book-widget {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 35px 30px;
+
+    border-radius: 25px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #db160c,
+            #a90b03
+        );
+}
+
+
+.ff-blog-book-widget::before {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    right: -75px;
+    top: -75px;
+
+    border: 1px solid
+        rgba(255,255,255,0.15);
+
+    border-radius: 50%;
+}
+
+
+.ff-blog-book-widget::after {
+    content: "";
+
+    position: absolute;
+
+    width: 130px;
+    height: 130px;
+
+    right: -45px;
+    top: -45px;
+
+    border: 1px solid
+        rgba(255,255,255,0.12);
+
+    border-radius: 50%;
+}
+
+
+.ff-blog-book-label {
+    position: relative;
+
+    z-index: 2;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 14px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+.ff-blog-book-widget h3 {
+    position: relative;
+
+    z-index: 2;
+
+    margin-bottom: 15px;
+
+    color: #ffffff;
+
+    font-size: 31px;
+}
+
+
+.ff-blog-book-widget h3 span {
+    display: block;
+
+    color: #ffffff;
+}
+
+
+.ff-blog-book-widget p {
+    position: relative;
+
+    z-index: 2;
+
+    margin-bottom: 22px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.86
+        );
+}
+
+
+.ff-blog-book-widget .theme-btn {
+    position: relative;
+
+    z-index: 2;
+
+    background: #ffffff;
+
+    color: #c31103;
+}
+
+
+.ff-blog-book-widget .theme-btn:hover {
+    color: #ffffff;
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .blog-sidebar {
+        margin-top: 30px;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .blog-single {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+
+
+    .blog-single .blog-details-title {
+        font-size: 28px;
+    }
+
+
+    .blog-single .blog-meta-left ul {
+        flex-wrap: wrap;
+
+        justify-content: flex-start;
+    }
+
+
+    .ff-blog-author-box {
+        align-items: flex-start;
+
+        padding: 20px;
+    }
+
+
+    .ff-blog-author-icon {
+        width: 55px;
+        height: 55px;
+
+        min-width: 55px;
+
+        font-size: 21px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .ff-blog-author-box {
+        flex-direction: column;
+    }
+
+
+    .blog-single-img img {
+        min-height: 250px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block extra_js%}
+
+  {% comment %} hero pattern js start {% endcomment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("ffMathPattern");
+
+    if (!canvas) {
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+
+    /* =========================================================
+       SETTINGS
+       Change these values to control the whole pattern
+    ========================================================= */
+
+    const SETTINGS = {
+
+        // Overall pattern scale
+        patternScale: 1.55,
+
+        // White line visibility
+        circleOpacity: 0.18,
+        diamondOpacity: 0.15,
+        rectangleOpacity: 0.12,
+        radialOpacity: 0.14,
+        diagonalOpacity: 0.11,
+        fanOpacity: 0.11,
+        crossOpacity: 0.10,
+
+        // Thickness
+        circleWidth: 0.95,
+        diamondWidth: 0.90,
+        rectangleWidth: 0.85,
+        radialWidth: 0.80,
+        diagonalWidth: 0.75,
+        fanWidth: 0.75,
+        crossWidth: 0.70
+    };
+
+
+    /* =========================================================
+       RESIZE CANVAS
+    ========================================================= */
+
+    function resizeCanvas() {
+
+        const parent = canvas.parentElement;
+
+        width = parent.clientWidth;
+        height = parent.clientHeight;
+
+        dpr = Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+
+        ctx.setTransform(
+            dpr,
+            0,
+            0,
+            dpr,
+            0,
+            0
+        );
+
+        drawPattern();
+    }
+
+
+    /* =========================================================
+       BASIC LINE
+    ========================================================= */
+
+    function drawLine(
+        x1,
+        y1,
+        x2,
+        y2,
+        opacity = 0.12,
+        lineWidth = 0.8
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+
+        ctx.strokeStyle =
+            `rgba(255,255,255,${opacity})`;
+
+        ctx.lineWidth = lineWidth;
+
+        ctx.stroke();
+    }
+
+
+    /* =========================================================
+       CONCENTRIC CIRCLES
+    ========================================================= */
+
+    function drawConcentricCircles(
+        cx,
+        cy,
+        maxRadius,
+        count,
+        opacity = SETTINGS.circleOpacity
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const radius =
+                (maxRadius / count) * i;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                cx,
+                cy,
+                radius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.strokeStyle =
+                `rgba(255,255,255,${opacity})`;
+
+            ctx.lineWidth =
+                SETTINGS.circleWidth;
+
+            ctx.stroke();
+        }
+    }
+
+
+    /* =========================================================
+       DIAMOND / ROTATED SQUARE RINGS
+    ========================================================= */
+
+    function drawDiamondRings(
+        cx,
+        cy,
+        maxSize,
+        count
+    ) {
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= count; i++) {
+
+            const size =
+                (maxSize / count) * i;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.diamondOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.diamondWidth;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       RECTANGULAR RINGS
+    ========================================================= */
+
+    function drawRectangularRings(
+        cx,
+        cy,
+        maxWidth,
+        maxHeight,
+        count
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const ratio =
+                i / count;
+
+            const currentWidth =
+                maxWidth * ratio;
+
+            const currentHeight =
+                maxHeight * ratio;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.rectangleOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.rectangleWidth;
+
+            ctx.strokeRect(
+                cx - currentWidth / 2,
+                cy - currentHeight / 2,
+                currentWidth,
+                currentHeight
+            );
+        }
+    }
+
+
+    /* =========================================================
+       RADIAL SPOKES
+    ========================================================= */
+
+    function drawRadialSystem(
+        cx,
+        cy,
+        radius,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const angle =
+                (Math.PI * 2 / count) * i;
+
+            const startRadius =
+                radius * 0.14;
+
+            const startX =
+                cx +
+                Math.cos(angle) *
+                startRadius;
+
+            const startY =
+                cy +
+                Math.sin(angle) *
+                startRadius;
+
+            const endX =
+                cx +
+                Math.cos(angle) *
+                radius;
+
+            const endY =
+                cy +
+                Math.sin(angle) *
+                radius;
+
+            drawLine(
+                startX,
+                startY,
+                endX,
+                endY,
+                SETTINGS.radialOpacity,
+                SETTINGS.radialWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       ORDERED DIAGONAL GRID
+    ========================================================= */
+
+    function drawDiagonalLines() {
+
+        /*
+         * Larger spacing gives us the clean
+         * geometric structure instead of noise.
+         */
+
+        const spacing = 105;
+
+        const extra =
+            Math.max(width, height) * 1.5;
+
+
+        /* -----------------------------------------
+           LEFT TOP -> RIGHT BOTTOM
+        ----------------------------------------- */
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                -height * 0.30,
+
+                x + height * 1.75,
+                height * 1.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+
+
+        /* -----------------------------------------
+           LEFT BOTTOM -> RIGHT TOP
+        ----------------------------------------- */
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                height * 1.30,
+
+                x + height * 1.75,
+                -height * 0.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       FAN LINES
+    ========================================================= */
+
+    function drawFan(
+        originX,
+        originY,
+        targetX,
+        targetY,
+        spread,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const offset =
+                (
+                    i -
+                    (count - 1) / 2
+                ) * spread;
+
+            drawLine(
+                originX,
+                originY + offset,
+
+                targetX,
+                targetY - offset,
+
+                SETTINGS.fanOpacity,
+                SETTINGS.fanWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       CENTER CROSSING MESH
+    ========================================================= */
+
+    function drawCenterCrossLines(
+        cx,
+        cy
+    ) {
+
+        const spacing = 52;
+
+        const count = 12;
+
+        for (
+            let i = -count;
+            i <= count;
+            i++
+        ) {
+
+            const offset =
+                i * spacing;
+
+
+            /* LEFT -> RIGHT */
+
+            drawLine(
+                -width * 0.10,
+                cy + offset,
+
+                width * 1.10,
+                cy - offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+
+
+            /* OPPOSITE */
+
+            drawLine(
+                -width * 0.10,
+                cy - offset,
+
+                width * 1.10,
+                cy + offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       SIDE CIRCULAR SYSTEMS
+    ========================================================= */
+
+    function drawSideCircles() {
+
+        const sideRadius =
+            Math.max(
+                height * 0.48,
+                width * 0.10
+            );
+
+
+        /* LEFT TOP */
+
+        drawConcentricCircles(
+            width * 0.02,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        /* RIGHT TOP */
+
+        drawConcentricCircles(
+            width * 0.98,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        /* LEFT BOTTOM */
+
+        drawConcentricCircles(
+            width * 0.08,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+
+
+        /* RIGHT BOTTOM */
+
+        drawConcentricCircles(
+            width * 0.92,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+    }
+
+
+    /* =========================================================
+       LARGE OUTER DIAMONDS
+    ========================================================= */
+
+    function drawOuterDiamonds(
+        cx,
+        cy
+    ) {
+
+        const maxSize =
+            Math.max(
+                width * 1.15,
+                height * 2.3
+            );
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= 16; i++) {
+
+            const ratio =
+                i / 16;
+
+            const size =
+                maxSize * ratio;
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.075)";
+
+            ctx.lineWidth = 0.75;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       HORIZONTAL GEOMETRY
+    ========================================================= */
+
+    function drawHorizontalGeometry(
+        cx,
+        cy
+    ) {
+
+        const lineCount = 11;
+
+        const spacing = 42;
+
+        for (
+            let i = -lineCount;
+            i <= lineCount;
+            i++
+        ) {
+
+            const y =
+                cy + i * spacing;
+
+            drawLine(
+                0,
+                y,
+                width,
+                y,
+                0.055,
+                0.6
+            );
+        }
+    }
+
+
+    /* =========================================================
+       MAIN PATTERN
+    ========================================================= */
+
+    function drawPattern() {
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        /* -----------------------------------------------------
+           CENTER POSITION
+        ----------------------------------------------------- */
+
+        const cx =
+            width / 2;
+
+        const cy =
+            height * 0.58;
+
+
+        /*
+         * IMPORTANT:
+         *
+         * This is much larger than your old calculation.
+         *
+         * Old:
+         * Math.min(width * 0.31, height * 0.58)
+         *
+         * New:
+         * Hero height controls the base size and then
+         * patternScale enlarges the whole structure.
+         */
+
+        const mainRadius =
+            Math.max(
+                height * 0.62,
+                width * 0.22
+            ) * SETTINGS.patternScale;
+
+
+        /* =====================================================
+           LAYER 1
+           Large background diagonals
+        ===================================================== */
+
+        drawDiagonalLines();
+
+
+        /* =====================================================
+           LAYER 2
+           Large outer diamond geometry
+        ===================================================== */
+
+        drawOuterDiamonds(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 3
+           Side circle systems
+        ===================================================== */
+
+        drawSideCircles();
+
+
+        /* =====================================================
+           LAYER 4
+           Large left/right fan
+        ===================================================== */
+
+        drawFan(
+            -width * 0.05,
+            height * 0.20,
+
+            width * 1.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        drawFan(
+            width * 1.05,
+            height * 0.20,
+
+            -width * 0.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        /* =====================================================
+           LAYER 5
+           Horizontal geometry
+        ===================================================== */
+
+        drawHorizontalGeometry(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 6
+           Center crossing mesh
+        ===================================================== */
+
+        drawCenterCrossLines(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 7
+           HUGE MAIN CIRCULAR SYSTEM
+        ===================================================== */
+
+        drawConcentricCircles(
+            cx,
+            cy,
+            mainRadius,
+            34,
+            SETTINGS.circleOpacity
+        );
+
+
+        /* =====================================================
+           LAYER 8
+           LARGE DIAMOND SYSTEM
+        ===================================================== */
+
+        drawDiamondRings(
+            cx,
+            cy,
+            mainRadius * 2.15,
+            28
+        );
+
+
+        /* =====================================================
+           LAYER 9
+           RECTANGLE SYSTEM
+        ===================================================== */
+
+        drawRectangularRings(
+            cx,
+            cy,
+
+            mainRadius * 2.65,
+            mainRadius * 1.50,
+
+            16
+        );
+
+
+        /* =====================================================
+           LAYER 10
+           RADIAL SPOKES
+        ===================================================== */
+
+        drawRadialSystem(
+            cx,
+            cy,
+            mainRadius * 1.08,
+            64
+        );
+    }
+
+
+    /* =========================================================
+       INITIALIZE
+    ========================================================= */
+
+    resizeCanvas();
+
+
+    /* =========================================================
+       RESPONSIVE RESIZE
+    ========================================================= */
+
+    let resizeTimer;
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            clearTimeout(
+                resizeTimer
+            );
+
+            resizeTimer =
+                setTimeout(
+                    resizeCanvas,
+                    120
+                );
+        }
+    );
+
+});
+</script>
+{% comment %} hero pattern js end {% endcomment %}
+{% endblock %}

@@ -15,6 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const chatbotMessages = document.getElementById("ffChatbotMessages");
 
+  /* =========================================
+   LANGUAGE OPTIONS
+========================================= */
+
+  const languageOptionsContainer = document.getElementById(
+    "chatbotLanguageOptions",
+  );
+
+  const languageButtons = document.querySelectorAll(".chatbot-language-btn");
+
   const quickRepliesContainer = document.getElementById(
     "ffChatbotQuickReplies",
   );
@@ -98,6 +108,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     quickRepliesContainer.hidden = !visible;
+  }
+
+  /* =========================================
+         SHOW / HIDE LANGUAGE OPTIONS
+========================================= */
+
+  function setLanguageOptionsVisible(visible) {
+    if (!languageOptionsContainer) {
+      return;
+    }
+
+    languageOptionsContainer.style.display = visible ? "grid" : "none";
+
+    /*
+     * User should not type until a
+     * language has been selected.
+     */
+    chatbotInput.disabled = visible;
+
+    if (chatbotSend) {
+      chatbotSend.disabled = visible;
+    }
+
+    if (visible) {
+      chatbotInput.placeholder = "Please select a language first";
+    } else {
+      chatbotInput.placeholder = "Type your message...";
+    }
   }
 
   /* =========================================
@@ -221,6 +259,118 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  async function selectChatbotLanguage(languageCode, languageName) {
+    if (!config.messageUrl) {
+      console.error("Chatbot message URL is missing.");
+      return;
+    }
+
+    /*
+     * Immediately hide the language buttons
+     * so they cannot be clicked multiple times.
+     */
+    setLanguageOptionsVisible(false);
+
+    /*
+     * Show the selected language as a user message.
+     */
+    addMessage(languageName, "user");
+
+    /*
+     * Show bot typing animation.
+     */
+    showTypingIndicator();
+
+    try {
+      const response = await fetch(config.messageUrl, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+          "X-Requested-With": "XMLHttpRequest",
+        },
+
+        body: JSON.stringify({
+          message: languageCode,
+          language: languageCode,
+        }),
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) {
+        const htmlResponse = await response.text();
+
+        console.error("Chatbot HTML response:", htmlResponse);
+
+        throw new Error("Chatbot server returned an invalid response.");
+      }
+
+      const data = await response.json();
+
+      removeTypingIndicator();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Unable to select language.");
+      }
+
+      /*
+       * Display translated bot response.
+       *
+       * Example Malayalam:
+       * "കൊള്ളാം! ആരംഭിക്കുന്നതിന് മുമ്പ്,
+       * നിങ്ങളുടെ മുഴുവൻ പേര് അറിയാമോ?"
+       */
+      addMessage(data.response, "bot");
+
+      /*
+       * Django normally returns false here because
+       * language selection has finished.
+       */
+      setLanguageOptionsVisible(data.show_language_options === true);
+
+      /*
+       * Quick replies stay hidden while collecting
+       * name / phone / email.
+       */
+      setQuickRepliesVisible(data.show_quick_replies === true);
+
+      /*
+       * Enable the message box again.
+       */
+      chatbotInput.disabled = false;
+
+      if (chatbotSend) {
+        chatbotSend.disabled = false;
+      }
+
+      chatbotInput.placeholder = "Type your message...";
+
+      /*
+       * Put cursor in message input.
+       */
+      chatbotInput.focus();
+    } catch (error) {
+      removeTypingIndicator();
+
+      console.error("Language selection error:", error);
+
+      addMessage(
+        error.message || "Unable to select language.",
+        "bot",
+        null,
+        true,
+      );
+
+      /*
+       * If selection failed,
+       * show language buttons again.
+       */
+      setLanguageOptionsVisible(true);
+    }
+  }
+
   /* =========================================
            INITIALIZE CHATBOT
         ========================================= */
@@ -273,8 +423,22 @@ document.addEventListener("DOMContentLoaded", function () {
        */
       chatbotMessages.innerHTML = "";
 
+      /*
+       * Show the welcome message returned
+       * from Django.
+       */
       addMessage(data.response, "bot");
 
+      /*
+       * Django tells JavaScript whether
+       * language buttons should be visible.
+       */
+      setLanguageOptionsVisible(data.show_language_options === true);
+
+      /*
+       * Normal quick replies should remain
+       * hidden during language selection.
+       */
       setQuickRepliesVisible(data.show_quick_replies === true);
 
       chatbotInitialized = true;
@@ -418,7 +582,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* =========================================
            OPEN / CLOSE EVENTS
-        ========================================= */
+  ========================================= */
 
   chatbotToggle.addEventListener("click", function () {
     if (chatbotWindow.classList.contains("is-open")) {
@@ -434,21 +598,97 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* =========================================
            FORM SUBMIT
-        ========================================= */
+  ========================================= */
 
   chatbotForm.addEventListener("submit", function (event) {
     event.preventDefault();
+
+    /*
+     * Do not allow normal message submission
+     * while language selection is visible.
+     */
+    if (
+      languageOptionsContainer &&
+      languageOptionsContainer.style.display !== "none"
+    ) {
+      return;
+    }
 
     sendMessage(chatbotInput.value);
   });
 
   /* =========================================
+           LANGUAGE BUTTONS
+  ========================================= */
+
+  languageButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      /*
+       * Example:
+       *
+       * data-language="ml"
+       *
+       * becomes:
+       *
+       * languageCode = "ml"
+       */
+      const languageCode = button.dataset.language;
+
+      /*
+       * Button text becomes the user message.
+       *
+       * Example:
+       * English
+       * മലയാളം
+       * हिंदी
+       * தமிழ்
+       */
+      const languageName = button.textContent.trim();
+
+      /*
+       * Safety check.
+       */
+      if (!languageCode) {
+        console.error("Language code missing from button.");
+
+        return;
+      }
+
+      /*
+       * Prevent double clicking.
+       */
+      languageButtons.forEach(function (languageButton) {
+        languageButton.disabled = true;
+      });
+
+      /*
+       * Send selected language to Django.
+       */
+      selectChatbotLanguage(languageCode, languageName).finally(function () {
+        /*
+         * Enable buttons again.
+         *
+         * They will normally be hidden after
+         * successful language selection.
+         */
+        languageButtons.forEach(function (languageButton) {
+          languageButton.disabled = false;
+        });
+      });
+    });
+  });
+
+  /* =========================================
            QUICK REPLY BUTTONS
-        ========================================= */
+  ========================================= */
 
   quickReplyButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       const message = button.dataset.message;
+
+      if (!message) {
+        return;
+      }
 
       sendMessage(message);
     });
@@ -456,7 +696,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* =========================================
            ESCAPE KEY
-        ========================================= */
+  ========================================= */
 
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" && chatbotWindow.classList.contains("is-open")) {

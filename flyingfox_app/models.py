@@ -10,6 +10,10 @@ from django.contrib.auth.models import User
 import uuid
 
 
+from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
+
+
 # class Coupon(models.Model):
 #     DISCOUNT_TYPES = (
 #         ("percentage", "Percentage"),
@@ -330,36 +334,134 @@ class ContactMessage(models.Model):
 
 
 class UserProfile(models.Model):
+
+    # =====================================================
+    # GENDER
+    # =====================================================
+
+    GENDER_CHOICES = [
+        ("male", "Male"),
+        ("female", "Female"),
+        ("other", "Other"),
+    ]
+
+
+    # =====================================================
+    # BASIC INFORMATION
+    # =====================================================
+
     full_name = models.CharField(
-        max_length=150
+        max_length=150,
+        blank=True,
+        default=""
     )
 
-    email = models.EmailField(
-        unique=True
-    )
 
+    # Mobile OTP is currently your login identity
     phone = models.CharField(
         max_length=20,
-        unique=True
+        unique=True,
+        db_index=True
     )
 
-    password = models.CharField(
-        max_length=128
+
+    # User can add email after login
+    email = models.EmailField(
+        unique=True,
+        blank=True,
+        null=True
     )
+
+
+    # =====================================================
+    # PROFILE INFORMATION
+    # =====================================================
+
+    gender = models.CharField(
+        max_length=20,
+        choices=GENDER_CHOICES,
+        blank=True,
+        default=""
+    )
+
+
+    date_of_birth = models.DateField(
+        blank=True,
+        null=True
+    )
+
+
+    address = models.TextField(
+        blank=True,
+        default=""
+    )
+
+
+    pincode = models.CharField(
+        max_length=10,
+        blank=True,
+        default=""
+    )
+
+
+    region = models.CharField(
+        max_length=100,
+        blank=True,
+        default=""
+    )
+
+
+    # =====================================================
+    # COMMUNICATION PREFERENCES
+    # =====================================================
+
+    whatsapp_updates = models.BooleanField(
+        default=True
+    )
+
+
+    email_updates = models.BooleanField(
+        default=False
+    )
+
+
+    # =====================================================
+    # VERIFICATION
+    # =====================================================
+
+    phone_verified = models.BooleanField(
+        default=False
+    )
+
+
+    # =====================================================
+    # TIMESTAMPS
+    # =====================================================
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+
     class Meta:
         ordering = ["-created_at"]
 
+
     def __str__(self):
-        return f"{self.full_name} - {self.email}"
+
+        if self.full_name:
+            return f"{self.full_name} - {self.phone}"
+
+        return self.phone
 
 
 
-class Ride(OptimizedImageModel):
+class Ride(models.Model):
 
     name = models.CharField(
         max_length=200
@@ -492,7 +594,11 @@ class RidePrice(models.Model):
 
     price = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
+        validators=[
+            MinValueValidator(Decimal("0.00")),
+            MaxValueValidator(Decimal("99999999.99")),
+        ]
     )
 
     is_active = models.BooleanField(
@@ -504,9 +610,7 @@ class RidePrice(models.Model):
     )
 
     class Meta:
-        ordering = [
-            "-start_date"
-        ]
+        ordering = ["-start_date"]
 
     def __str__(self):
         return (
@@ -514,6 +618,7 @@ class RidePrice(models.Model):
             f"{self.start_date} to {self.end_date} - "
             f"₹{self.price}"
         )
+
 
 
 class Booking(models.Model):
@@ -534,24 +639,44 @@ class Booking(models.Model):
         editable=False
     )
 
-    # Guest customer information
-    customer_name = models.CharField(
-    max_length=150
-)
+    # ==========================================
+    # USER
+    # ==========================================
 
-    customer_email = models.EmailField()
+    user = models.ForeignKey(
+        UserProfile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="bookings"
+    )
+
+    # ==========================================
+    # CUSTOMER DETAILS
+    # ==========================================
+
+    customer_name = models.CharField(
+        max_length=150
+    )
+
+    customer_email = models.EmailField(
+        blank=True,
+        default=""
+    )
 
     customer_phone = models.CharField(
-    max_length=20
-)
+        max_length=20
+    )
 
     customer_pincode = models.CharField(
-    max_length=10
-)
+        max_length=10,
+        blank=True,
+        default=""
+    )
 
-    time_slot = models.CharField(
-    max_length=50
-)
+    # ==========================================
+    # RIDE
+    # ==========================================
 
     ride = models.ForeignKey(
         Ride,
@@ -567,11 +692,21 @@ class Booking(models.Model):
 
     booking_date = models.DateField()
 
-    
+    time_slot = models.CharField(
+        max_length=50
+    )
+
+    # ==========================================
+    # PARTICIPANTS
+    # ==========================================
 
     quantity = models.PositiveIntegerField(
         default=1
     )
+
+    # ==========================================
+    # PRICE
+    # ==========================================
 
     price_per_person = models.DecimalField(
         max_digits=10,
@@ -592,12 +727,22 @@ class Booking(models.Model):
         default=0
     )
 
-    coupon = models.ForeignKey(
-        "Coupon",
+    # ==========================================
+    # OFFER
+    # ==========================================
+
+    offer = models.ForeignKey(
+        "Offer",
         on_delete=models.SET_NULL,
-        blank=True,
         null=True,
+        blank=True,
         related_name="bookings"
+    )
+
+    applied_coupon_code = models.CharField(
+        max_length=50,
+        blank=True,
+        default=""
     )
 
     discount_amount = models.DecimalField(
@@ -605,6 +750,10 @@ class Booking(models.Model):
         decimal_places=2,
         default=0
     )
+
+    # ==========================================
+    # TOTALS
+    # ==========================================
 
     subtotal = models.DecimalField(
         max_digits=10,
@@ -615,6 +764,10 @@ class Booking(models.Model):
         max_digits=10,
         decimal_places=2
     )
+
+    # ==========================================
+    # STATUS
+    # ==========================================
 
     status = models.CharField(
         max_length=20,
@@ -642,6 +795,7 @@ class Booking(models.Model):
             f"{self.booking_id} - "
             f"{self.customer_name}"
         )
+
 
 
 # class Booking(models.Model):
@@ -1119,7 +1273,15 @@ class ChatbotRule(models.Model):
 
 class ChatSession(models.Model):
 
+    LANGUAGE_CHOICES = [
+        ("en", "English"),
+        ("ml", "Malayalam"),
+        ("hi", "Hindi"),
+        ("ta", "Tamil"),
+    ]
+
     ONBOARDING_CHOICES = [
+        ("language", "Waiting For Language"),
         ("name", "Waiting For Name"),
         ("phone", "Waiting For Phone"),
         ("email", "Waiting For Email"),
@@ -1136,6 +1298,16 @@ class ChatSession(models.Model):
         max_length=100,
         blank=True,
         db_index=True,
+    )
+
+    # -----------------------------------------
+    # LANGUAGE
+    # -----------------------------------------
+
+    language = models.CharField(
+        max_length=10,
+        choices=LANGUAGE_CHOICES,
+        default="en",
     )
 
     customer_name = models.CharField(
@@ -1155,25 +1327,26 @@ class ChatSession(models.Model):
     onboarding_step = models.CharField(
         max_length=20,
         choices=ONBOARDING_CHOICES,
-        default="name",
+        default="language",
     )
 
     is_closed = models.BooleanField(
-        default=False
+        default=False,
     )
 
     started_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     updated_at = models.DateTimeField(
-        auto_now=True
+        auto_now=True,
     )
 
     class Meta:
         ordering = ["-started_at"]
 
     def __str__(self):
+
         if self.customer_name:
             return (
                 f"{self.customer_name} - "
@@ -1181,6 +1354,9 @@ class ChatSession(models.Model):
             )
 
         return str(self.session_id)
+
+
+    
 class ChatMessage(models.Model):
 
     SENDER_CHOICES = [
@@ -1189,23 +1365,42 @@ class ChatMessage(models.Model):
         ("admin", "Admin"),
     ]
 
+
     session = models.ForeignKey(
         ChatSession,
         on_delete=models.CASCADE,
         related_name="messages",
     )
 
+
     sender = models.CharField(
         max_length=10,
         choices=SENDER_CHOICES,
     )
 
+
+    # What user actually typed
     message = models.TextField()
+
+
+    # English version used internally
+    translated_message = models.TextField(
+        blank=True,
+    )
+
+
+    # en / ml / hi / ta
+    language = models.CharField(
+        max_length=10,
+        blank=True,
+    )
+
 
     intent = models.CharField(
         max_length=100,
         blank=True,
     )
+
 
     matched_rule = models.ForeignKey(
         ChatbotRule,
@@ -1215,14 +1410,18 @@ class ChatMessage(models.Model):
         related_name="messages",
     )
 
+
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
+
 
     class Meta:
         ordering = ["created_at"]
 
+
     def __str__(self):
+
         return (
             f"{self.session.session_id} - "
             f"{self.sender}"
@@ -1279,18 +1478,245 @@ class ChatEnquiry(models.Model):
     def __str__(self):
         return f"{self.name} - {self.phone}"
 
+
+
+
+
+
+class ContactEnquiry(models.Model):
+
+    name = models.CharField(
+        max_length=150
+    )
+
+    email = models.EmailField()
+
+    subject = models.CharField(
+        max_length=250
+    )
+
+    message = models.TextField()
+
+    is_read = models.BooleanField(
+        default=False
+    )
+
+    email_sent = models.BooleanField(
+        default=False
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+
+    class Meta:
+        ordering = [
+            "-created_at"
+        ]
+
+        verbose_name = "Contact Enquiry"
+        verbose_name_plural = "Contact Enquiries"
+
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
+
+
+
+
+
+# class Offer(models.Model):
+
+#     STATUS_CHOICES = [
+#     ("upcoming", "Upcoming"),
+#     ("active", "Active"),
+#     ("expired", "Expired"),
+# ]
+#     title = models.CharField(
+#         max_length=200
+#     )
+
+#     slug = models.SlugField(
+#         unique=True,
+#         blank=True
+#     )
+
+#     description = models.TextField(
+#         blank=True
+#     )
+
+#     banner_image = models.ImageField(
+#         upload_to="offers/",
+#         blank=True,
+#         null=True
+#     )
+
+#     rides = models.ManyToManyField(
+#         Ride,
+#         related_name="offers",
+#         blank=True
+#     )
+
+#     coupon = models.OneToOneField(
+#         Coupon,
+#         on_delete=models.CASCADE,
+#         related_name="offer",
+#         blank=True,
+#         null=True,
+#         editable=False
+#     )
+
+#     discount_type = models.CharField(
+#         max_length=20,
+#         choices=Coupon.DISCOUNT_TYPE_CHOICES
+#     )
+
+#     discount_value = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2
+#     )
+
+#     start_date = models.DateField()
+
+#     end_date = models.DateField()
+
+#     status = models.CharField(
+#         max_length=20,
+#         choices=STATUS_CHOICES,
+#         default="expired",
+#         editable=False
+#     )
+
+#     is_active = models.BooleanField(
+#         default=True,
+#         help_text="Manually disable an offer regardless of dates."
+#     )
+
+#     created_at = models.DateTimeField(
+#         auto_now_add=True
+#     )
+
+#     updated_at = models.DateTimeField(
+#         auto_now=True
+#     )
+
+#     class Meta:
+#         ordering = ["-created_at"]
+
+#     def __str__(self):
+#         return f"{self.title} ({self.status})"
+
+#     def generate_coupon_code(self):
+#         import random
+#         import string
+
+#         base = slugify(self.title).upper().replace("-", "")[:6] or "OFFER"
+
+#         while True:
+#             code = f"{base}{''.join(random.choices(string.digits, k=4))}"
+#             if not Coupon.objects.filter(code=code).exists():
+#                 return code
+
+#     def refresh_status(self):
+#         today = timezone.localdate()
+
+#         if not self.is_active:
+#            self.status = "expired"
+
+#         elif today < self.start_date:
+#            self.status = "upcoming"
+
+#         elif self.start_date <= today <= self.end_date:
+#             self.status = "active"
+
+#         else:
+#             self.status = "expired"
+
+#         return self.status
+
+#     def save(self, *args, **kwargs):
+
+#         if not self.slug:
+#             base_slug = slugify(self.title)
+#             slug = base_slug
+#             counter = 1
+
+#             while Offer.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+#                 slug = f"{base_slug}-{counter}"
+#                 counter += 1
+
+#             self.slug = slug
+
+#         self.refresh_status()
+
+#         creating_coupon = self.coupon_id is None
+
+#         super().save(*args, **kwargs)
+
+#         if creating_coupon:
+#             self.coupon = Coupon.objects.create(
+#                 code=self.generate_coupon_code(),
+#                 discount_type=self.discount_type,
+#                 discount_value=self.discount_value,
+#                 valid_from=self.start_date,
+#                 valid_until=self.end_date,
+#                 is_active=self.is_active,
+#             )
+#             super().save(update_fields=["coupon"])
+
+#     def sync_coupon(self):
+#         """Call after setting self.rides (M2M) — e.g. in admin's save_related,
+#         or after form.save_m2m() — to push rides/dates onto the linked coupon."""
+#         if self.coupon:
+#             self.coupon.rides.set(self.rides.all())
+#             self.coupon.valid_from = self.start_date
+#             self.coupon.valid_until = self.end_date
+#             self.coupon.discount_type = self.discount_type
+#             self.coupon.discount_value = self.discount_value
+#             self.coupon.is_active = self.is_active
+#             self.coupon.save()
+
+
+
+from django.db import models
+from django.utils import timezone
+from django.utils.text import slugify
+
+
 class Offer(models.Model):
 
-    STATUS_CHOICES = [
-    ("upcoming", "Upcoming"),
-    ("active", "Active"),
-    ("expired", "Expired"),
-]
+    # =========================================================
+    # OFFER TYPES
+    # =========================================================
+
+    OFFER_TYPES = [
+        ("percentage", "Percentage Discount"),
+        ("fixed", "Fixed Amount Discount"),
+        ("buy_x_get_y", "Buy X Get Y"),
+        ("group", "Group Discount"),
+        ("first_booking", "First Booking"),
+        ("weekday", "Weekday Offer"),
+        ("early_bird", "Early Bird"),
+        ("birthday", "Birthday Offer"),
+        ("coupon", "Coupon Offer"),
+    ]
+
+
+    # =========================================================
+    # BASIC INFORMATION
+    # =========================================================
+
     title = models.CharField(
         max_length=200
     )
 
     slug = models.SlugField(
+        max_length=220,
         unique=True,
         blank=True
     )
@@ -1305,118 +1731,328 @@ class Offer(models.Model):
         null=True
     )
 
-    rides = models.ManyToManyField(
-        Ride,
+
+    # =========================================================
+    # OFFER TYPE
+    # =========================================================
+
+    offer_type = models.CharField(
+        max_length=30,
+        choices=OFFER_TYPES,
+        default="percentage"
+    )
+
+
+    # =========================================================
+    # APPLICABLE RIDE
+    #
+    # ONE OFFER -> ONE RIDE
+    # ONE RIDE  -> MANY OFFERS
+    # =========================================================
+
+    ride = models.ForeignKey(
+        "Ride",
+        on_delete=models.CASCADE,
         related_name="offers",
+        null=True,
         blank=True
     )
 
-    coupon = models.OneToOneField(
-        Coupon,
-        on_delete=models.CASCADE,
-        related_name="offer",
-        blank=True,
-        null=True,
-        editable=False
-    )
 
-    discount_type = models.CharField(
-        max_length=20,
-        choices=Coupon.DISCOUNT_TYPE_CHOICES
-    )
+    # =========================================================
+    # DISCOUNT SETTINGS
+    # =========================================================
 
     discount_value = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
+        default=0
     )
+
+    minimum_booking_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    maximum_discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True
+    )
+
+
+    # =========================================================
+    # PARTICIPANT SETTINGS
+    # =========================================================
+
+    minimum_participants = models.PositiveIntegerField(
+        default=1
+    )
+
+
+    # =========================================================
+    # BUY X GET Y SETTINGS
+    # =========================================================
+
+    buy_quantity = models.PositiveIntegerField(
+        blank=True,
+        null=True
+    )
+
+    free_quantity = models.PositiveIntegerField(
+        blank=True,
+        null=True
+    )
+
+
+    # =========================================================
+    # OFFER VALIDITY
+    # =========================================================
 
     start_date = models.DateField()
 
     end_date = models.DateField()
 
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="expired",
-        editable=False
-    )
+
+    # =========================================================
+    # OFFER STATUS
+    # =========================================================
 
     is_active = models.BooleanField(
-        default=True,
-        help_text="Manually disable an offer regardless of dates."
+        default=True
     )
+
+
+    # =========================================================
+    # OFFER APPLICATION
+    # =========================================================
+
+    auto_apply = models.BooleanField(
+        default=False
+    )
+
+    coupon_required = models.BooleanField(
+        default=False
+    )
+
+    coupon_code = models.CharField(
+        max_length=50,
+        blank=True
+    )
+
+
+    # =========================================================
+    # USER RESTRICTIONS
+    # =========================================================
+
+    first_booking_only = models.BooleanField(
+        default=False
+    )
+
+    max_uses = models.PositiveIntegerField(
+        blank=True,
+        null=True
+    )
+
+    max_uses_per_user = models.PositiveIntegerField(
+        default=1
+    )
+
+
+    # =========================================================
+    # CREATED DATE
+    # =========================================================
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
 
-    class Meta:
-        ordering = ["-created_at"]
-
-    def __str__(self):
-        return f"{self.title} ({self.status})"
-
-    def generate_coupon_code(self):
-        import random
-        import string
-
-        base = slugify(self.title).upper().replace("-", "")[:6] or "OFFER"
-
-        while True:
-            code = f"{base}{''.join(random.choices(string.digits, k=4))}"
-            if not Coupon.objects.filter(code=code).exists():
-                return code
-
-    def refresh_status(self):
-        today = timezone.now().date()
-
-        if self.is_active and self.start_date <= today <= self.end_date:
-            self.status = "active"
-        else:
-            self.status = "expired"
+    # =========================================================
+    # AUTOMATIC SLUG
+    # =========================================================
 
     def save(self, *args, **kwargs):
 
         if not self.slug:
+
             base_slug = slugify(self.title)
             slug = base_slug
             counter = 1
 
-            while Offer.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+            while Offer.objects.filter(
+                slug=slug
+            ).exclude(
+                pk=self.pk
+            ).exists():
+
                 slug = f"{base_slug}-{counter}"
                 counter += 1
 
             self.slug = slug
 
-        self.refresh_status()
-
-        creating_coupon = self.coupon_id is None
-
         super().save(*args, **kwargs)
 
-        if creating_coupon:
-            self.coupon = Coupon.objects.create(
-                code=self.generate_coupon_code(),
-                discount_type=self.discount_type,
-                discount_value=self.discount_value,
-                valid_from=self.start_date,
-                valid_until=self.end_date,
-                is_active=self.is_active,
-            )
-            super().save(update_fields=["coupon"])
 
-    def sync_coupon(self):
-        """Call after setting self.rides (M2M) — e.g. in admin's save_related,
-        or after form.save_m2m() — to push rides/dates onto the linked coupon."""
-        if self.coupon:
-            self.coupon.rides.set(self.rides.all())
-            self.coupon.valid_from = self.start_date
-            self.coupon.valid_until = self.end_date
-            self.coupon.discount_type = self.discount_type
-            self.coupon.discount_value = self.discount_value
-            self.coupon.is_active = self.is_active
-            self.coupon.save()
+    # =========================================================
+    # COMPUTED STATUS
+    # =========================================================
+
+    @property
+    def computed_status(self):
+
+        today = timezone.localdate()
+
+        if not self.is_active:
+            return "inactive"
+
+        if today < self.start_date:
+            return "upcoming"
+
+        if today > self.end_date:
+            return "expired"
+
+        return "active"
+
+
+    # =========================================================
+    # DISCOUNT LABEL
+    # =========================================================
+
+    @property
+    def discount_label(self):
+
+        if self.offer_type == "percentage":
+
+            value = self.discount_value
+
+            if value == value.to_integral():
+                value = int(value)
+
+            return f"{value}% OFF"
+
+
+        if self.offer_type == "fixed":
+
+            value = self.discount_value
+
+            if value == value.to_integral():
+                value = int(value)
+
+            return f"₹{value} OFF"
+
+
+        if self.offer_type == "buy_x_get_y":
+
+            if self.buy_quantity and self.free_quantity:
+                return (
+                    f"Buy {self.buy_quantity} "
+                    f"Get {self.free_quantity} Free"
+                )
+
+            return "Buy X Get Y"
+
+
+        if self.offer_type == "group":
+
+            value = self.discount_value
+
+            if value == value.to_integral():
+                value = int(value)
+
+            return f"{value}% Group Discount"
+
+
+        if self.offer_type == "first_booking":
+
+            value = self.discount_value
+
+            if value == value.to_integral():
+                value = int(value)
+
+            return f"{value}% First Booking Discount"
+
+
+        if self.offer_type == "weekday":
+
+            value = self.discount_value
+
+            if value == value.to_integral():
+                value = int(value)
+
+            return f"{value}% Weekday Discount"
+
+
+        if self.offer_type == "early_bird":
+
+            value = self.discount_value
+
+            if value == value.to_integral():
+                value = int(value)
+
+            return f"{value}% Early Bird Discount"
+
+
+        if self.offer_type == "birthday":
+
+            value = self.discount_value
+
+            if value == value.to_integral():
+                value = int(value)
+
+            return f"{value}% Birthday Discount"
+
+
+        if self.offer_type == "coupon":
+
+            if self.discount_value:
+
+                value = self.discount_value
+
+                if value == value.to_integral():
+                    value = int(value)
+
+                return f"{value}% OFF"
+
+            return "Coupon Offer"
+
+
+        return "Special Offer"
+
+
+    # =========================================================
+    # CHECK IF OFFER IS CURRENTLY VALID
+    # =========================================================
+
+    def is_currently_valid(self):
+
+        return self.computed_status == "active"
+
+
+    # =========================================================
+    # STRING REPRESENTATION
+    # =========================================================
+
+    def __str__(self):
+
+        if self.ride:
+
+            return f"{self.title} - {self.ride.name}"
+
+        return self.title
+
+
+    # =========================================================
+    # META
+    # =========================================================
+
+    class Meta:
+
+        ordering = [
+            "-created_at"
+        ]
+
+        verbose_name = "Offer"
+        verbose_name_plural = "Offers"

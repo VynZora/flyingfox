@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Offers List | FlyingFox Admin
+    Offers List | FlyingFox Admin
 {% endblock %}
 
 
@@ -11,9 +11,9 @@ Offers List | FlyingFox Admin
 <div class="dashboard__form__wraper">
 
 
-    <!-- =========================
+    <!-- =====================================================
          HEADER
-    ========================== -->
+    ====================================================== -->
 
     <div class="create__course__title mb-4">
 
@@ -24,25 +24,30 @@ Offers List | FlyingFox Admin
             </h4>
 
             <p class="text-muted mb-0">
-                Manage promotional offers and their linked coupons.
+                Manage Flying Fox promotional offers, discounts and eligibility rules.
             </p>
 
         </div>
+
 
         <a
             href="{% url 'offer_create' %}"
             class="btn btn-primary"
         >
+
             <i class="fas fa-plus me-1"></i>
+
             Add Offer
+
         </a>
 
     </div>
 
 
-    <!-- =========================
-         SEARCH & FILTER
-    ========================== -->
+
+    <!-- =====================================================
+         SEARCH / FILTER
+    ====================================================== -->
 
     <div class="user-toolbar mb-4">
 
@@ -50,6 +55,7 @@ Offers List | FlyingFox Admin
             method="GET"
             class="user-search-form"
         >
+
 
             <div class="search-box">
 
@@ -60,6 +66,7 @@ Offers List | FlyingFox Admin
                     class="form-control"
                     placeholder="Search title, coupon code or ride..."
                 >
+
 
                 <button
                     type="submit"
@@ -73,16 +80,17 @@ Offers List | FlyingFox Admin
             </div>
 
 
+
             <select
                 name="status"
                 class="form-select"
                 onchange="this.form.submit()"
-                style="max-width: 160px;"
             >
 
                 <option value="">
                     All Status
                 </option>
+
 
                 {% for value, label in status_choices %}
 
@@ -90,7 +98,9 @@ Offers List | FlyingFox Admin
                         value="{{ value }}"
                         {% if selected_status == value %}selected{% endif %}
                     >
+
                         {{ label }}
+
                     </option>
 
                 {% endfor %}
@@ -98,14 +108,15 @@ Offers List | FlyingFox Admin
             </select>
 
 
+
             {% if search or selected_status %}
 
-            
-                href="{% url 'offer_list' %}"
-                class="btn btn-light"
-            >
-                Clear
-            </a>
+                <a
+                    href="{% url 'offer_list' %}"
+                    class="btn btn-light"
+                >
+                    Clear
+                </a>
 
             {% endif %}
 
@@ -114,9 +125,10 @@ Offers List | FlyingFox Admin
     </div>
 
 
-    <!-- =========================
+
+    <!-- =====================================================
          TABLE
-    ========================== -->
+    ====================================================== -->
 
     <div class="custom-table-container">
 
@@ -138,7 +150,7 @@ Offers List | FlyingFox Admin
                     </th>
 
                     <th>
-                        Coupon Code
+                        Type
                     </th>
 
                     <th>
@@ -146,11 +158,15 @@ Offers List | FlyingFox Admin
                     </th>
 
                     <th>
+                        Coupon
+                    </th>
+
+                    <th>
                         Rides
                     </th>
 
                     <th>
-                        Duration
+                        Validity
                     </th>
 
                     <th>
@@ -171,373 +187,466 @@ Offers List | FlyingFox Admin
 
                 {% for offer in offers %}
 
-
-                <tr>
-
-
-                    <!-- OFFER -->
-
-                    <td>
-
-                        <div class="user-info-cell">
-
-                            {% if offer.banner_image %}
-
-                                <img
-                                    src="{{ offer.banner_image.url }}"
-                                    alt="{{ offer.title }}"
-                                    class="offer-thumb"
-                                >
-
-                            {% else %}
-
-                                <div class="user-avatar-list">
-
-                                    {{ offer.title|first|upper }}
-
-                                </div>
-
-                            {% endif %}
+                    <tr>
 
 
-                            <div>
+                        <!-- =========================================
+                             OFFER
+                        ========================================== -->
 
-                                <strong class="user-full-name">
+                        <td>
 
-                                    {{ offer.title }}
+                            <div class="offer-info-cell">
 
-                                </strong>
 
-                                <div class="user-id">
+                                {% if offer.banner_image %}
 
-                                    Offer ID: #{{ offer.id }}
+                                    <img
+                                        src="{{ offer.banner_image.url }}"
+                                        alt="{{ offer.title }}"
+                                        class="offer-thumb"
+                                    >
+
+                                {% else %}
+
+                                    <div class="offer-avatar">
+
+                                        {{ offer.title|first|upper }}
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <div>
+
+                                    <strong class="offer-title">
+
+                                        {{ offer.title }}
+
+                                    </strong>
+
+
+                                    <div class="offer-id">
+
+                                        #{{ offer.id }}
+
+                                    </div>
 
                                 </div>
 
                             </div>
 
-                        </div>
-
-                    </td>
+                        </td>
 
 
-                    <!-- COUPON CODE -->
 
-                    <td>
+                        <!-- =========================================
+                             TYPE
+                        ========================================== -->
 
-                        {% if offer.coupon %}
+                        <td>
 
-                            <span class="offer-coupon-badge">
+                            <span class="offer-type-badge">
 
-                                {{ offer.coupon.code }}
+                                {{ offer.get_offer_type_display }}
 
                             </span>
 
-                        {% else %}
+                        </td>
 
-                            <span class="text-muted">
-                                —
-                            </span>
 
-                        {% endif %}
 
-                    </td>
+                        <!-- =========================================
+                             DISCOUNT
+                        ========================================== -->
 
+                        <td>
 
-                    <!-- DISCOUNT -->
+                            <strong class="offer-discount">
 
-                    <td>
+                                {{ offer.discount_label }}
 
-                        {% if offer.discount_type == "percentage" %}
+                            </strong>
 
-                            {{ offer.discount_value }}% off
 
-                        {% else %}
+                            {% if offer.maximum_discount %}
 
-                            ₹{{ offer.discount_value }} off
+                                <small class="offer-table-note">
 
-                        {% endif %}
+                                    Max:
+                                    ₹{{ offer.maximum_discount|floatformat:"-2" }}
 
-                    </td>
+                                </small>
 
+                            {% endif %}
 
-                    <!-- RIDES -->
+                        </td>
 
-                  <!-- RIDES -->
 
-<td>
 
-    {% with rides=offer.rides.all %}
+                        <!-- =========================================
+                             COUPON
+                        ========================================== -->
 
-        {% if rides %}
+                        <td>
 
-            <div class="offer-ride-names">
+                            {% if offer.coupon_code %}
 
-                {% for ride in rides %}
+                                <span class="offer-coupon-badge">
 
-                    <span class="offer-ride-tag">
-                        {{ ride.name }}
-                    </span>
+                                    {{ offer.coupon_code }}
 
-                {% endfor %}
+                                </span>
 
-            </div>
+                            {% elif offer.coupon_required %}
 
-        {% else %}
+                                <span class="offer-warning-badge">
 
-            <span class="text-muted">
-                No rides
-            </span>
+                                    Required
 
-        {% endif %}
+                                </span>
 
-    {% endwith %}
+                            {% else %}
 
-</td>
+                                <span class="text-muted">
+                                    —
+                                </span>
 
-                    <!-- DURATION -->
+                            {% endif %}
 
-                    <td>
+                        </td>
 
-                        <div>
 
-                            {{ offer.start_date|date:"d M Y" }}
 
-                        </div>
+                        <!-- =========================================
+                             RIDES
+                        ========================================== -->
 
-                        <small class="text-muted">
+                        <td>
 
-                            to {{ offer.end_date|date:"d M Y" }}
+{% if offer.ride %}
 
-                        </small>
+    <span class="offer-ride-tag">
+        {{ offer.ride.name }}
+    </span>
 
-                    </td>
+{% else %}
 
+    <span class="text-muted">
+        No Ride
+    </span>
 
-                    <!-- STATUS -->
+{% endif %}
 
-                    <td>
+                        </td>
 
-                        {% if offer.status == "active" %}
 
-                            <span class="badge bg-success">
-                                Active
-                            </span>
 
-                        {% else %}
+                        <!-- =========================================
+                             VALIDITY
+                        ========================================== -->
 
-                            <span class="badge bg-secondary">
-                                Expired
-                            </span>
+                        <td>
 
-                        {% endif %}
+                            <div class="offer-date">
 
-                    </td>
+                                {{ offer.start_date|date:"d M Y" }}
 
+                            </div>
 
-                    <!-- ACTIONS -->
+                            <small class="offer-table-note">
 
-                    <td class="text-center">
+                                to
+                                {{ offer.end_date|date:"d M Y" }}
 
-    <div class="offer-action-buttons">
+                            </small>
 
-        <a
-            href="{% url 'offer_update' offer.slug %}"
-            class="offer-btn offer-btn-update"
-        >
-            Update
-        </a>
+                        </td>
 
-        <button
-            type="button"
-            class="offer-btn offer-btn-delete"
-            data-bs-toggle="modal"
-            data-bs-target="#deleteOfferModal{{ offer.id }}"
-        >
-            Delete
-        </button>
 
-    </div>
 
-</td>
+                        <!-- =========================================
+                             STATUS
+                        ========================================== -->
 
-</tr>
+                        <td>
 
-                <!-- =========================
-                     DELETE MODAL
-                ========================== -->
+                            {% if offer.computed_status == "active" %}
 
-                <div
-                    class="modal fade"
-                    id="deleteOfferModal{{ offer.id }}"
-                    tabindex="-1"
-                    aria-labelledby="deleteOfferModalLabel{{ offer.id }}"
-                    aria-hidden="true"
-                >
+                                <span class="offer-status offer-status-active">
 
-                    <div class="modal-dialog modal-dialog-centered">
+                                    <span></span>
 
-                        <div class="modal-content">
+                                    Active
 
+                                </span>
 
-                            <form
-                                method="POST"
-                                action="{% url 'offer_delete' offer.slug %}"
-                            >
 
-                                {% csrf_token %}
+                            {% elif offer.computed_status == "upcoming" %}
 
+                                <span class="offer-status offer-status-upcoming">
 
-                                <div class="modal-header">
+                                    <span></span>
 
-                                    <h5
-                                        class="modal-title"
-                                        id="deleteOfferModalLabel{{ offer.id }}"
-                                    >
-                                        Delete Offer
-                                    </h5>
+                                    Upcoming
 
+                                </span>
 
-                                    <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    ></button>
 
-                                </div>
+                            {% elif offer.computed_status == "expired" %}
 
+                                <span class="offer-status offer-status-expired">
 
-                                <div class="modal-body">
+                                    <span></span>
 
+                                    Expired
 
-                                    <p>
+                                </span>
 
-                                        Are you sure you want to delete
 
-                                        <strong>
+                            {% else %}
 
-                                            {{ offer.title }}
+                                <span class="offer-status offer-status-inactive">
 
-                                        </strong>?
+                                    <span></span>
 
-                                    </p>
+                                    Inactive
 
+                                </span>
 
-                                    <div
-                                        class="
-                                            alert
-                                            alert-warning
-                                            mb-0
-                                        "
-                                    >
+                            {% endif %}
 
-                                        <i
-                                            class="
-                                                fas
-                                                fa-exclamation-triangle
-                                                me-1
-                                            "
-                                        ></i>
+                        </td>
 
-                                        This will also delete the linked coupon
-                                        (code: {{ offer.coupon.code }}). This
-                                        action cannot be undone.
+
+
+                        <!-- =========================================
+                             ACTIONS
+                        ========================================== -->
+
+                        <td class="text-center">
+
+                            <div class="offer-action-buttons">
+
+
+                                <!-- VIEW -->
+
+                                <a
+                                    href="{% url 'offer_detail' offer.slug %}"
+                                    class="offer-btn offer-btn-view"
+                                    title="View Offer"
+                                >
+
+                                    <i class="fas fa-eye"></i>
+
+                                </a>
+
+
+                                <!-- UPDATE -->
+
+                                <a
+                                    href="{% url 'offer_update' offer.slug %}"
+                                    class="offer-btn offer-btn-update"
+                                    title="Update Offer"
+                                >
+
+                                    <i class="fas fa-pen"></i>
+
+                                </a>
+
+
+                                <!-- DELETE -->
+
+                                <button
+                                    type="button"
+                                    class="offer-btn offer-btn-delete"
+                                    title="Delete Offer"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteOfferModal{{ offer.id }}"
+                                >
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- =================================================
+                         DELETE MODAL
+                    ================================================== -->
+
+                    <div
+                        class="modal fade"
+                        id="deleteOfferModal{{ offer.id }}"
+                        tabindex="-1"
+                        aria-labelledby="deleteOfferModalLabel{{ offer.id }}"
+                        aria-hidden="true"
+                    >
+
+                        <div class="modal-dialog modal-dialog-centered">
+
+                            <div class="modal-content">
+
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'offer_delete' offer.slug %}"
+                                >
+
+                                    {% csrf_token %}
+
+
+                                    <div class="modal-header">
+
+                                        <h5
+                                            class="modal-title"
+                                            id="deleteOfferModalLabel{{ offer.id }}"
+                                        >
+
+                                            Delete Offer
+
+                                        </h5>
+
+
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"
+                                        ></button>
 
                                     </div>
 
 
-                                </div>
+                                    <div class="modal-body">
 
 
-                                <div class="modal-footer">
+                                        <p>
+
+                                            Are you sure you want to delete
+
+                                            <strong>
+                                                {{ offer.title }}
+                                            </strong>?
+
+                                        </p>
 
 
-                                    <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-                                        Cancel
-                                    </button>
+                                        <div class="alert alert-warning mb-0">
+
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+
+                                            This offer will be permanently deleted.
+                                            This action cannot be undone.
+
+                                        </div>
+
+                                    </div>
 
 
-                                    <button
-                                        type="submit"
-                                        class="btn btn-danger"
-                                    >
+                                    <div class="modal-footer">
 
-                                        <i class="fas fa-trash me-1"></i>
-
-                                        Yes, Delete
-
-                                    </button>
-
-
-                                </div>
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                        >
+                                            Cancel
+                                        </button>
 
 
-                            </form>
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger"
+                                        >
 
+                                            <i class="fas fa-trash me-1"></i>
+
+                                            Yes, Delete
+
+                                        </button>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
-
 
                 {% empty %}
 
 
-                <tr>
+                    <tr>
 
-                    <td
-                        colspan="7"
-                        class="text-center py-5"
-                    >
+                        <td
+                            colspan="8"
+                            class="text-center py-5"
+                        >
 
-                        <div class="empty-users">
+                            <div class="empty-offers">
 
-                            <i class="fas fa-tags"></i>
+                                <div class="empty-offer-icon">
 
-                            <h5>
-                                No Offers Found
-                            </h5>
+                                    <i class="fas fa-tags"></i>
 
-                            {% if search or selected_status %}
+                                </div>
 
-                                <p>
-                                    No offers match your search or filter.
-                                </p>
 
-                                
-                                    href="{% url 'offer_list' %}"
-                                    class="btn btn-primary btn-sm"
-                                >
-                                    Clear Filters
-                                </a>
+                                <h5>
+                                    No Offers Found
+                                </h5>
 
-                            {% else %}
 
-                                <p>
-                                    No offers have been created yet.
-                                </p>
+                                {% if search or selected_status %}
 
-                                <a
-                                    href="{% url 'offer_create' %}"
-                                    class="btn btn-primary btn-sm"
-                                >
-                                    Create your first offer
-                                </a>
+                                    <p>
+                                        No offers match your search or filter.
+                                    </p>
 
-                            {% endif %}
 
-                        </div>
+                                    <a
+                                        href="{% url 'offer_list' %}"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        Clear Filters
+                                    </a>
 
-                    </td>
+                                {% else %}
 
-                </tr>
+                                    <p>
+                                        No offers have been created yet.
+                                    </p>
+
+
+                                    <a
+                                        href="{% url 'offer_create' %}"
+                                        class="btn btn-primary btn-sm"
+                                    >
+
+                                        <i class="fas fa-plus me-1"></i>
+
+                                        Create Your First Offer
+
+                                    </a>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
 
 
                 {% endfor %}
@@ -551,112 +660,87 @@ Offers List | FlyingFox Admin
 
 
 
-    <!-- =========================
+    <!-- =====================================================
          PAGINATION
-    ========================== -->
+    ====================================================== -->
 
     {% if offers.has_other_pages %}
 
-
-    <nav
-        class="mt-4"
-        aria-label="Offers pagination"
-    >
-
-        <ul
-            class="
-                pagination
-                justify-content-center
-            "
+        <nav
+            class="mt-4"
+            aria-label="Offers pagination"
         >
 
-
-            {% if offers.has_previous %}
-
-            <li class="page-item">
-
-                
-                    class="page-link"
-                    href="?page={{ offers.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
-                >
-
-                    &laquo;
-
-                </a>
-
-            </li>
-
-            {% endif %}
+            <ul class="pagination justify-content-center">
 
 
-
-            {% for i in offers.paginator.page_range %}
-
-
-                {% if offers.number == i %}
-
-                    <li
-                        class="
-                            page-item
-                            active
-                        "
-                    >
-
-                        <span class="page-link">
-
-                            {{ i }}
-
-                        </span>
-
-                    </li>
-
-
-                {% else %}
-
+                {% if offers.has_previous %}
 
                     <li class="page-item">
 
-                        
+                        <a
                             class="page-link"
-                            href="?page={{ i }}{% if search %}&search={{ search }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
+                            href="?page={{ offers.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
                         >
-
-                            {{ i }}
-
+                            &laquo;
                         </a>
 
                     </li>
 
+                {% endif %}
+
+
+
+                {% for i in offers.paginator.page_range %}
+
+                    {% if offers.number == i %}
+
+                        <li class="page-item active">
+
+                            <span class="page-link">
+                                {{ i }}
+                            </span>
+
+                        </li>
+
+                    {% else %}
+
+                        <li class="page-item">
+
+                            <a
+                                class="page-link"
+                                href="?page={{ i }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
+                            >
+                                {{ i }}
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+
+                {% if offers.has_next %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ offers.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
+                        >
+                            &raquo;
+                        </a>
+
+                    </li>
 
                 {% endif %}
 
 
-            {% endfor %}
+            </ul>
 
-
-
-            {% if offers.has_next %}
-
-            <li class="page-item">
-
-                
-                    class="page-link"
-                    href="?page={{ offers.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
-                >
-
-                    &raquo;
-
-                </a>
-
-            </li>
-
-            {% endif %}
-
-
-        </ul>
-
-    </nav>
-
+        </nav>
 
     {% endif %}
 
@@ -671,40 +755,49 @@ Offers List | FlyingFox Admin
 
 <style>
 
-/* =========================================
+/* =========================================================
    HEADER
-========================================= */
+========================================================= */
 
 .create__course__title {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     flex-wrap: wrap;
+
     gap: 12px;
 }
 
 
-/* =========================================
+/* =========================================================
    TOOLBAR
-========================================= */
+========================================================= */
 
 .user-toolbar {
     display: flex;
+
     align-items: center;
     justify-content: flex-end;
 }
 
-
 .user-search-form {
+    width: 100%;
+    max-width: 760px;
+
     display: flex;
+
     align-items: center;
 
     gap: 8px;
-
-    width: 100%;
-    max-width: 600px;
 }
 
+.user-search-form > .form-select {
+    width: 170px;
+
+    flex: 0 0 170px;
+}
 
 .search-box {
     position: relative;
@@ -712,50 +805,47 @@ Offers List | FlyingFox Admin
     flex: 1;
 }
 
-
 .search-box input {
-    padding-right: 45px;
-
     min-height: 42px;
-}
 
+    padding-right: 45px;
+}
 
 .search-btn {
     position: absolute;
 
-    right: 5px;
     top: 50%;
+    right: 5px;
 
     transform: translateY(-50%);
 
     width: 34px;
     height: 34px;
 
-    border: none;
-
-    border-radius: 6px;
-
-    background: #f97316;
-
-    color: #fff;
-
     display: flex;
 
     align-items: center;
     justify-content: center;
-}
 
+    border: none;
+    border-radius: 6px;
+
+    background: #c31103;
+    color: #ffffff;
+}
 
 .search-btn:hover {
-    background: #ea580c;
+    background: #9f0e02;
 }
 
 
-/* =========================================
-   OFFER CELL
-========================================= */
+/* =========================================================
+   OFFER
+========================================================= */
 
-.user-info-cell {
+.offer-info-cell {
+    min-width: 180px;
+
     display: flex;
 
     align-items: center;
@@ -763,53 +853,49 @@ Offers List | FlyingFox Admin
     gap: 11px;
 }
 
-
-.user-avatar-list {
-    width: 38px;
-    height: 38px;
+.offer-thumb {
+    width: 46px;
+    height: 46px;
 
     flex-shrink: 0;
 
-    border-radius: 50%;
+    object-fit: cover;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.offer-avatar {
+    width: 46px;
+    height: 46px;
+
+    flex: 0 0 46px;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    background: #fff7ed;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
 
-    color: #f97316;
+    background: #fff1f0;
+    color: #c31103;
 
-    font-size: 14px;
-    font-weight: 700;
-
-    border: 1px solid #fed7aa;
+    font-size: 15px;
+    font-weight: 800;
 }
 
+.offer-title {
+    display: block;
 
-.offer-thumb {
-    width: 38px;
-    height: 38px;
-
-    flex-shrink: 0;
-
-    border-radius: 8px;
-
-    object-fit: cover;
-
-    border: 1px solid #e5e7eb;
-}
-
-
-.user-full-name {
     color: #1f2937;
 
     font-size: 13px;
+    line-height: 1.4;
 }
 
-
-.user-id {
+.offer-id {
     margin-top: 2px;
 
     color: #9ca3af;
@@ -818,127 +904,318 @@ Offers List | FlyingFox Admin
 }
 
 
+/* =========================================================
+   TYPE
+========================================================= */
+
+.offer-type-badge {
+    display: inline-flex;
+
+    padding: 5px 9px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+
+    background: #f9fafb;
+
+    color: #4b5563;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DISCOUNT
+========================================================= */
+
+.offer-discount {
+    display: block;
+
+    color: #c31103;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
+.offer-table-note {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #9ca3af;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   COUPON
+========================================================= */
+
 .offer-coupon-badge {
     display: inline-block;
 
-    padding: 3px 10px;
+    padding: 4px 9px;
+
+    border: 1px dashed #c31103;
+    border-radius: 6px;
+
+    background: #fff3f2;
+
+    color: #c31103;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.04em;
+}
+
+.offer-warning-badge {
+    display: inline-block;
+
+    padding: 4px 8px;
 
     border-radius: 6px;
 
     background: #fff7ed;
 
-    color: #f97316;
+    color: #ea580c;
 
-    border: 1px solid #fed7aa;
-
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
-
-    letter-spacing: 0.03em;
 }
 
 
-.offer-ride-count {
-    font-size: 12px;
+/* =========================================================
+   RIDES
+========================================================= */
+
+.offer-ride-names {
+    max-width: 200px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 4px;
+}
+
+.offer-ride-tag {
+    display: inline-flex;
+
+    padding: 3px 7px;
+
+    border-radius: 5px;
+
+    background: #f3f4f6;
 
     color: #4b5563;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.offer-all-rides {
+    display: inline-flex;
+
+    padding: 4px 8px;
+
+    border-radius: 6px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 10px;
+    font-weight: 700;
 }
 
 
-/* =========================================
+/* =========================================================
+   DATE
+========================================================= */
+
+.offer-date {
+    color: #374151;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.offer-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 5px 9px;
+
+    border-radius: 50px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.offer-status > span {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+}
+
+.offer-status-active {
+    background: #ecfdf5;
+    color: #15803d;
+}
+
+.offer-status-active > span {
+    background: #22c55e;
+}
+
+.offer-status-upcoming {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.offer-status-upcoming > span {
+    background: #3b82f6;
+}
+
+.offer-status-expired {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.offer-status-expired > span {
+    background: #9ca3af;
+}
+
+.offer-status-inactive {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.offer-status-inactive > span {
+    background: #ef4444;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.offer-action-buttons {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+}
+
+.offer-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+.offer-btn:hover {
+    transform: translateY(-1px);
+}
+
+.offer-btn-view {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.offer-btn-update {
+    background: #fef3c7;
+    color: #a16207;
+}
+
+.offer-btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+
+/* =========================================================
    EMPTY
-========================================= */
+========================================================= */
 
-.empty-users {
-    padding: 25px 10px;
+.empty-offers {
+    padding: 20px;
 }
 
+.empty-offer-icon {
+    width: 55px;
+    height: 55px;
 
-.empty-users > i {
-    margin-bottom: 12px;
+    display: flex;
 
-    color: #f97316;
+    align-items: center;
+    justify-content: center;
 
-    font-size: 38px;
+    margin: 0 auto 12px;
+
+    border-radius: 50%;
+
+    background: #fff1f0;
+
+    color: #c31103;
+
+    font-size: 22px;
 }
 
-
-.empty-users h5 {
+.empty-offers h5 {
     margin-bottom: 5px;
 
     font-weight: 700;
 }
 
-
-.empty-users p {
+.empty-offers p {
     color: #9ca3af;
 
     font-size: 12px;
 }
-/* =========================================
-   ACTION BUTTONS (pill style)
-========================================= */
 
-.offer-action-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
 
-.offer-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 8px 22px;
-
-    border: none;
-    border-radius: 8px;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    cursor: pointer;
-    text-decoration: none;
-
-    transition: filter 0.15s ease, transform 0.1s ease;
-    white-space: nowrap;
-}
-
-.offer-btn:hover {
-    filter: brightness(0.95);
-    text-decoration: none;
-}
-
-.offer-btn:active {
-    transform: scale(0.97);
-}
-
-.offer-btn-update {
-    background: #ffc107;
-    color: #1f2937;
-}
-
-.offer-btn-update:hover {
-    background: #ffca2c;
-    color: #1f2937;
-}
-
-.offer-btn-delete {
-    background: #e63757;
-    color: #fff;
-}
-
-.offer-btn-delete:hover {
-    background: #d92e4c;
-    color: #fff;
-}
-
-/* =========================================
+/* =========================================================
    MOBILE
-========================================= */
+========================================================= */
 
 @media (max-width: 767px) {
 
@@ -946,21 +1223,28 @@ Offers List | FlyingFox Admin
         justify-content: flex-start;
     }
 
-
     .user-search-form {
         max-width: 100%;
 
         flex-wrap: wrap;
     }
 
+    .search-box {
+        flex: 0 0 100%;
+    }
+
+    .user-search-form > .form-select {
+        width: auto;
+
+        flex: 1;
+    }
 
     .custom-table-container {
         overflow-x: auto;
     }
 
-
     .table {
-        min-width: 950px;
+        min-width: 1150px;
     }
 
 }

@@ -1327,6 +1327,39 @@
 
 
 
+<li class="has-dropdown
+    {% if request.resolver_match.url_name in 'offer_list offer_create offer_detail offer_update offer_delete' %}
+        open
+    {% endif %}
+">
+
+    <a href="#">
+        <i class="icofont-sale-discount"></i>
+        Offers
+    </a>
+
+    <ul class="submenu">
+
+        <li>
+            <a href="{% url 'offer_list' %}"
+               class="{% if request.resolver_match.url_name in 'offer_list offer_detail offer_update offer_delete' %}active{% endif %}">
+                Offer List
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'offer_create' %}"
+               class="{% if request.resolver_match.url_name == 'offer_create' %}active{% endif %}">
+                Add New Offer
+            </a>
+        </li>
+
+    </ul>
+
+</li>
+
+
+
 
                     <li
                         class="has-dropdown {% if request.resolver_match.url_name == 'list_image' or request.resolver_match.url_name == 'category_list' %}open{% endif %}">
@@ -1379,6 +1412,21 @@
                                     Service Inquiries
                                 </a>
                             </li> {% endcomment %}
+
+                             <li>
+            <a
+                href="{% url 'contact_enquiry_list' %}"
+                class="
+                    {% if request.resolver_match.url_name == 'contact_enquiry_list' or request.resolver_match.url_name == 'contact_enquiry_detail' %}
+                        active
+                    {% endif %}
+                "
+            >
+                Email  Enquiries
+            </a>
+        </li>
+
+
 
                             <li>
                                 <a href="{% url 'view_contacts' %}"

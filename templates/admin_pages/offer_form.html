@@ -2,218 +2,976 @@
 {% load static %}
 
 {% block title %}
-    {% if offer %}Edit Offer{% else %}Create Offer{% endif %} | Flying fox
+    {% if offer %}
+        Edit Offer
+    {% else %}
+        Create Offer
+    {% endif %}
+    | Flying Fox
 {% endblock %}
+
 
 {% block content %}
 
 <div class="content-card">
 
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
     <div class="card-header">
-        <h3 class="card-title">
-            {% if offer %}
-                Edit Offer
-            {% else %}
-                Create Offer
-            {% endif %}
-        </h3>
 
-        <a href="{% url 'offer_list' %}" class="card-action">
-            <i class="icofont-arrow-left"></i> Back to Offers
-        </a>
-    </div>
+        <div>
 
-    {% if form.non_field_errors %}
-        <div class="alert alert-danger">
-            {% for error in form.non_field_errors %}
-                <div>{{ error }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <form method="POST" enctype="multipart/form-data" id="offerForm">
-        {% csrf_token %}
-
-        <div class="row">
-
-            <div class="col-md-8 mb-3">
-                <label for="{{ form.title.id_for_label }}" class="form-label">
-                    Title <span class="text-danger">*</span>
-                </label>
-                {{ form.title }}
-                {% if form.title.errors %}
-                    <div class="field-error d-block">
-                        {{ form.title.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- STATUS TOGGLE -->
-
+            <h3 class="card-title">
 
                 {% if offer %}
-                    <div class="coupon-code-hint">
-                        Coupon code: <strong>{{ offer.coupon.code }}</strong>
-                    </div>
+                    Edit Offer
                 {% else %}
-                    
+                    Create Offer
                 {% endif %}
 
-                {% if form.is_active.errors %}
-                    <div class="field-error d-block">
-                        {{ form.is_active.errors|join:", " }}
-                    </div>
-                {% endif %}
+            </h3>
+
+            <p class="text-muted mb-0">
+                Configure offer eligibility, discount rules and claiming options.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'offer_list' %}"
+            class="card-action"
+        >
+
+            <i class="icofont-arrow-left"></i>
+
+            Back to Offers
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         NON FIELD ERRORS
+    ====================================================== -->
+
+    {% if form.non_field_errors %}
+
+        <div class="alert alert-danger mt-3">
+
+            {% for error in form.non_field_errors %}
+
+                <div>
+                    {{ error }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         FORM
+    ====================================================== -->
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        id="offerForm"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- =================================================
+             BASIC INFORMATION
+        ================================================== -->
+
+        <div class="offer-section-card">
+
+            <div class="offer-section-heading">
+
+                <div class="offer-section-icon">
+                    <i class="fas fa-tag"></i>
+                </div>
+
+                <div>
+
+                    <h4>
+                        Basic Information
+                    </h4>
+
+                    <p>
+                        Enter the main promotional information.
+                    </p>
+
+                </div>
 
             </div>
 
-        </div>
 
-        <!-- DESCRIPTION WITH CKEDITOR -->
+            <div class="row">
 
-        <div class="mb-3">
-            <label for="{{ form.description.id_for_label }}" class="form-label">
-                Description
-            </label>
 
-            {{ form.description }}
+                <!-- TITLE -->
 
-            {% if form.description.errors %}
-                <div class="field-error d-block">
-                    {{ form.description.errors|join:", " }}
-                </div>
-            {% endif %}
-        </div>
+                <div class="col-md-8 mb-3">
 
-        <div class="mb-3">
-            <label for="{{ form.banner_image.id_for_label }}" class="form-label">
-                Banner Image
-            </label>
-
-            {% if offer and offer.banner_image %}
-                <div class="mb-2">
-                    <img
-                        src="{{ offer.banner_image.url }}"
-                        alt="{{ offer.title }}"
-                        style="max-width: 220px; height: auto; border-radius: 8px;"
-                        class="img-thumbnail"
+                    <label
+                        for="{{ form.title.id_for_label }}"
+                        class="form-label"
                     >
+
+                        Offer Title
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+                    {{ form.title }}
+
+                    {% if form.title.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.title.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
                 </div>
-            {% endif %}
 
-            {{ form.banner_image }}
-            {% if form.banner_image.errors %}
-                <div class="field-error d-block">
-                    {{ form.banner_image.errors|join:", " }}
+
+                <!-- ACTIVE -->
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label d-block">
+                        Offer Availability
+                    </label>
+
+
+                    <div class="status-toggle-box">
+
+                        <label class="toggle-switch">
+
+                            {{ form.is_active }}
+
+                            <span class="toggle-slider"></span>
+
+                        </label>
+
+
+                        <span class="status-toggle-text">
+
+                            {% if form.is_active.value %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-text">
+                        Turn this off to manually disable the offer.
+                    </div>
+
+
+                    {% if form.is_active.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.is_active.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
                 </div>
-            {% endif %}
-        </div>
 
-        <!-- RIDES DROPDOWN -->
+            </div>
 
-        <div class="mb-3">
 
-            <label class="form-label">
-                Rides <span class="text-danger">*</span>
-            </label>
+            <!-- DESCRIPTION -->
 
-            <div class="rides-dropdown" id="ridesDropdown">
+            <div class="mb-3">
 
-                <button
-                    type="button"
-                    class="rides-dropdown-toggle"
-                    id="ridesDropdownToggle"
+                <label
+                    for="{{ form.description.id_for_label }}"
+                    class="form-label"
                 >
-                    <span id="ridesSelectedText">Select rides</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
+                    Description
+                </label>
 
-                <div class="rides-dropdown-menu" id="ridesDropdownMenu">
-                    {{ form.rides }}
+                {{ form.description }}
+
+                {% if form.description.errors %}
+
+                    <div class="field-error d-block">
+
+                        {{ form.description.errors|join:", " }}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- BANNER -->
+
+            <div class="mb-0">
+
+                <label
+                    for="{{ form.banner_image.id_for_label }}"
+                    class="form-label"
+                >
+                    Banner Image
+                </label>
+
+
+                {% if offer and offer.banner_image %}
+
+                    <div class="offer-current-image">
+
+                        <img
+                            src="{{ offer.banner_image.url }}"
+                            alt="{{ offer.title }}"
+                        >
+
+                    </div>
+
+                {% endif %}
+
+
+                {{ form.banner_image }}
+
+
+                <div class="form-text">
+                    Recommended banner ratio: approximately 16:9.
+                </div>
+
+
+                {% if form.banner_image.errors %}
+
+                    <div class="field-error d-block">
+
+                        {{ form.banner_image.errors|join:", " }}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             APPLICABLE RIDES
+        ================================================== -->
+
+<div class="offer-section-card">
+
+    <div class="offer-section-heading">
+
+        <div class="offer-section-icon">
+            <i class="fas fa-bolt"></i>
+        </div>
+
+        <div>
+
+            <h4>
+                Applicable Ride
+            </h4>
+
+            <p>
+                Select the ride this offer applies to.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="mb-3">
+
+        <label
+            for="{{ form.ride.id_for_label }}"
+            class="form-label"
+        >
+            Ride
+        </label>
+
+        {{ form.ride }}
+
+        {% if form.ride.errors %}
+
+            <div class="field-error d-block">
+                {{ form.ride.errors|join:", " }}
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+
+        <!-- =================================================
+             OFFER TYPE / DISCOUNT
+        ================================================== -->
+
+        <div class="offer-section-card">
+
+            <div class="offer-section-heading">
+
+                <div class="offer-section-icon">
+                    <i class="fas fa-percent"></i>
+                </div>
+
+                <div>
+
+                    <h4>
+                        Discount Rules
+                    </h4>
+
+                    <p>
+                        Decide how the promotional discount is calculated.
+                    </p>
+
                 </div>
 
             </div>
 
-            <div class="form-text">
-                Click to open and select one or more rides.
-            </div>
 
-            {% if form.rides.errors %}
-                <div class="field-error d-block">
-                    {{ form.rides.errors|join:", " }}
+            <div class="row">
+
+
+                <!-- OFFER TYPE -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="{{ form.offer_type.id_for_label }}"
+                        class="form-label"
+                    >
+
+                        Offer Type
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+                    {{ form.offer_type }}
+
+
+                    {% if form.offer_type.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.offer_type.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
                 </div>
-            {% endif %}
+
+
+                <!-- DISCOUNT VALUE -->
+
+                <div
+                    class="col-md-6 mb-3"
+                    id="discountValueField"
+                >
+
+                    <label
+                        for="{{ form.discount_value.id_for_label }}"
+                        class="form-label"
+                        id="discountValueLabel"
+                    >
+                        Discount Value
+                    </label>
+
+                    {{ form.discount_value }}
+
+
+                    <div
+                        class="form-text"
+                        id="discountHelp"
+                    >
+                        Select an offer type to see how this value is used.
+                    </div>
+
+
+                    {% if form.discount_value.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.discount_value.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- BUY X GET Y -->
+
+            <div
+                class="offer-sub-section"
+                id="buyGetFields"
+            >
+
+                <div class="offer-sub-title">
+
+                    <i class="fas fa-gift"></i>
+
+                    Buy X Get Y Settings
+
+                </div>
+
+
+                <div class="row">
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label
+                            for="{{ form.buy_quantity.id_for_label }}"
+                            class="form-label"
+                        >
+                            Buy Quantity
+                        </label>
+
+                        {{ form.buy_quantity }}
+
+                        <div class="form-text">
+                            Example: enter 3 for Buy 3.
+                        </div>
+
+                        {% if form.buy_quantity.errors %}
+
+                            <div class="field-error d-block">
+
+                                {{ form.buy_quantity.errors|join:", " }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label
+                            for="{{ form.free_quantity.id_for_label }}"
+                            class="form-label"
+                        >
+                            Free Quantity
+                        </label>
+
+                        {{ form.free_quantity }}
+
+                        <div class="form-text">
+                            Example: enter 1 for Get 1 Free.
+                        </div>
+
+                        {% if form.free_quantity.errors %}
+
+                            <div class="field-error d-block">
+
+                                {{ form.free_quantity.errors|join:", " }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BOOKING RULES -->
+
+            <div class="row">
+
+
+                <div class="col-md-4 mb-3">
+
+                    <label
+                        for="{{ form.minimum_booking_amount.id_for_label }}"
+                        class="form-label"
+                    >
+                        Minimum Booking Amount
+                    </label>
+
+                    {{ form.minimum_booking_amount }}
+
+                    <div class="form-text">
+                        ₹0 means no minimum amount.
+                    </div>
+
+                    {% if form.minimum_booking_amount.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.minimum_booking_amount.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <label
+                        for="{{ form.maximum_discount.id_for_label }}"
+                        class="form-label"
+                    >
+                        Maximum Discount
+                    </label>
+
+                    {{ form.maximum_discount }}
+
+                    <div class="form-text">
+                        Optional cap, useful for percentage offers.
+                    </div>
+
+                    {% if form.maximum_discount.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.maximum_discount.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <label
+                        for="{{ form.minimum_participants.id_for_label }}"
+                        class="form-label"
+                    >
+                        Minimum Participants
+                    </label>
+
+                    {{ form.minimum_participants }}
+
+                    <div class="form-text">
+                        Minimum riders required to claim this offer.
+                    </div>
+
+                    {% if form.minimum_participants.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.minimum_participants.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
 
         </div>
 
-        <div class="row">
 
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.discount_type.id_for_label }}" class="form-label">
-                    Discount Type <span class="text-danger">*</span>
-                </label>
-                {{ form.discount_type }}
-                {% if form.discount_type.errors %}
-                    <div class="field-error d-block">
-                        {{ form.discount_type.errors|join:", " }}
-                    </div>
-                {% endif %}
+
+        <!-- =================================================
+             VALIDITY
+        ================================================== -->
+
+        <div class="offer-section-card">
+
+            <div class="offer-section-heading">
+
+                <div class="offer-section-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+
+                <div>
+
+                    <h4>
+                        Offer Validity
+                    </h4>
+
+                    <p>
+                        Set when customers can use this offer.
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.discount_value.id_for_label }}" class="form-label">
-                    Discount Value <span class="text-danger">*</span>
-                </label>
-                {{ form.discount_value }}
-                {% if form.discount_value.errors %}
-                    <div class="field-error d-block">
-                        {{ form.discount_value.errors|join:", " }}
-                    </div>
-                {% endif %}
+
+            <div class="row">
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="{{ form.start_date.id_for_label }}"
+                        class="form-label"
+                    >
+
+                        Start Date
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+                    {{ form.start_date }}
+
+
+                    {% if form.start_date.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.start_date.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="{{ form.end_date.id_for_label }}"
+                        class="form-label"
+                    >
+
+                        End Date
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+                    {{ form.end_date }}
+
+
+                    {% if form.end_date.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.end_date.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
             </div>
 
         </div>
 
-        <div class="row">
 
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.start_date.id_for_label }}" class="form-label">
-                    Start Date <span class="text-danger">*</span>
-                </label>
-                {{ form.start_date }}
-                {% if form.start_date.errors %}
-                    <div class="field-error d-block">
-                        {{ form.start_date.errors|join:", " }}
-                    </div>
-                {% endif %}
+
+        <!-- =================================================
+             CLAIMING SETTINGS
+        ================================================== -->
+
+        <div class="offer-section-card">
+
+            <div class="offer-section-heading">
+
+                <div class="offer-section-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+
+                <div>
+
+                    <h4>
+                        Claiming Settings
+                    </h4>
+
+                    <p>
+                        Control how customers receive this offer.
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.end_date.id_for_label }}" class="form-label">
-                    End Date <span class="text-danger">*</span>
+
+            <div class="offer-check-grid">
+
+
+                <!-- AUTO APPLY -->
+
+                <label class="offer-setting-box">
+
+                    {{ form.auto_apply }}
+
+                    <span class="offer-setting-icon">
+                        <i class="fas fa-magic"></i>
+                    </span>
+
+                    <span>
+
+                        <strong>
+                            Auto Apply
+                        </strong>
+
+                        <small>
+                            Automatically apply to eligible bookings.
+                        </small>
+
+                    </span>
+
                 </label>
-                {{ form.end_date }}
-                {% if form.end_date.errors %}
+
+
+                <!-- FIRST BOOKING -->
+
+                <label class="offer-setting-box">
+
+                    {{ form.first_booking_only }}
+
+                    <span class="offer-setting-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+
+                    <span>
+
+                        <strong>
+                            First Booking Only
+                        </strong>
+
+                        <small>
+                            Only customers without previous successful bookings.
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <!-- COUPON -->
+
+                <label class="offer-setting-box">
+
+                    {{ form.coupon_required }}
+
+                    <span class="offer-setting-icon">
+                        <i class="fas fa-key"></i>
+                    </span>
+
+                    <span>
+
+                        <strong>
+                            Coupon Required
+                        </strong>
+
+                        <small>
+                            Customer must enter a valid coupon code.
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <!-- COUPON CODE -->
+
+            <div
+                class="offer-sub-section mt-3"
+                id="couponCodeField"
+            >
+
+                <label
+                    for="{{ form.coupon_code.id_for_label }}"
+                    class="form-label"
+                >
+                    Coupon Code
+                </label>
+
+                {{ form.coupon_code }}
+
+                <div class="form-text">
+                    Example: FLY20, MUNNAR500 or WELCOME15.
+                </div>
+
+
+                {% if form.coupon_code.errors %}
+
                     <div class="field-error d-block">
-                        {{ form.end_date.errors|join:", " }}
+
+                        {{ form.coupon_code.errors|join:", " }}
+
                     </div>
+
                 {% endif %}
-                <div class="coupon-code-hint">
-                        A coupon code will be generated automatically.
-                    </div>
+
             </div>
 
         </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
+
+
+        <!-- =================================================
+             USAGE LIMITS
+        ================================================== -->
+
+        <div class="offer-section-card">
+
+            <div class="offer-section-heading">
+
+                <div class="offer-section-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+
+                <div>
+
+                    <h4>
+                        Usage Limits
+                    </h4>
+
+                    <p>
+                        Restrict how many times this offer may be claimed.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="{{ form.max_uses.id_for_label }}"
+                        class="form-label"
+                    >
+                        Maximum Total Uses
+                    </label>
+
+                    {{ form.max_uses }}
+
+                    <div class="form-text">
+                        Leave blank for unlimited total uses.
+                    </div>
+
+
+                    {% if form.max_uses.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.max_uses.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="{{ form.max_uses_per_user.id_for_label }}"
+                        class="form-label"
+                    >
+                        Maximum Uses Per User
+                    </label>
+
+                    {{ form.max_uses_per_user }}
+
+                    <div class="form-text">
+                        Usually keep this as 1.
+                    </div>
+
+
+                    {% if form.max_uses_per_user.errors %}
+
+                        <div class="field-error d-block">
+
+                            {{ form.max_uses_per_user.errors|join:", " }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <div class="offer-form-actions">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+
                 <i class="icofont-check-circled"></i>
-                {% if offer %}Update Offer{% else %}Create Offer{% endif %}
+
+                {% if offer %}
+                    Update Offer
+                {% else %}
+                    Create Offer
+                {% endif %}
+
             </button>
 
-            <a href="{% url 'offer_list' %}" class="btn btn-outline-secondary">
+
+            <a
+                href="{% url 'offer_list' %}"
+                class="btn btn-outline-secondary"
+            >
                 Cancel
             </a>
+
         </div>
 
     </form>
@@ -223,13 +981,94 @@
 {% endblock %}
 
 
+
 {% block extra_css %}
 
 <style>
 
-/* =========================================
+/* =========================================================
+   SECTION CARDS
+========================================================= */
+
+.offer-section-card {
+    margin-bottom: 22px;
+    padding: 22px;
+
+    border: 1px solid #e8e8e8;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+.offer-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.offer-section-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff1f0;
+    color: #c31103;
+
+    font-size: 16px;
+}
+
+.offer-section-heading h4 {
+    margin: 0 0 3px;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.offer-section-heading p {
+    margin: 0;
+
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.offer-current-image {
+    margin-bottom: 12px;
+}
+
+.offer-current-image img {
+    width: 240px;
+    max-width: 100%;
+    height: 135px;
+
+    display: block;
+
+    object-fit: cover;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+
+/* =========================================================
    RIDES DROPDOWN
-========================================= */
+========================================================= */
 
 .rides-dropdown {
     position: relative;
@@ -238,176 +1077,380 @@
 
 .rides-dropdown-toggle {
     width: 100%;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 14px;
-    background: #fff;
+
+    padding: 11px 14px;
+
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    font-size: 14px;
-    color: #111827;
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-}
 
-.rides-dropdown-toggle:hover {
-    border-color: #2563eb;
+    background: #ffffff;
+    color: #111827;
+
+    font-size: 14px;
+
+    cursor: pointer;
 }
 
 .rides-dropdown.open .rides-dropdown-toggle {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
+    border-color: #c31103;
 
-.rides-dropdown.open .rides-dropdown-toggle i {
-    transform: rotate(180deg);
+    box-shadow:
+        0 0 0 3px
+        rgba(195, 17, 3, 0.08);
 }
 
 .rides-dropdown-toggle i {
-    font-size: 12px;
     color: #6b7280;
+
+    font-size: 12px;
+
     transition: transform 0.2s ease;
+}
+
+.rides-dropdown.open
+.rides-dropdown-toggle i {
+    transform: rotate(180deg);
 }
 
 .rides-dropdown-menu {
     display: none;
+
     position: absolute;
+
     top: calc(100% + 6px);
     left: 0;
     right: 0;
-    background: #fff;
+
+    z-index: 50;
+
+    max-height: 240px;
+
+    overflow-y: auto;
+
+    padding: 8px;
+
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    max-height: 220px;
-    overflow-y: auto;
-    z-index: 50;
-    padding: 8px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 12px 30px
+        rgba(0, 0, 0, 0.10);
 }
 
-.rides-dropdown.open .rides-dropdown-menu {
+.rides-dropdown.open
+.rides-dropdown-menu {
     display: block;
 }
 
 .rides-dropdown-menu ul {
+    margin: 0;
+    padding: 0;
+
     list-style: none;
-    margin: 0;
-    padding: 0;
 }
 
-.rides-dropdown-menu ul li {
+.rides-dropdown-menu li {
     margin: 0;
-    padding: 0;
 }
 
-.rides-dropdown-menu ul li label {
+.rides-dropdown-menu label {
     display: flex;
     align-items: center;
+
     gap: 10px;
-    padding: 8px 10px;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #1f2937;
-    cursor: pointer;
-    font-weight: 400;
+
+    width: 100%;
+
     margin: 0;
+    padding: 9px 10px;
+
+    border-radius: 6px;
+
+    color: #333;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
 }
 
-.rides-dropdown-menu ul li label:hover {
-    background: #f3f4f6;
+.rides-dropdown-menu label:hover {
+    background: #fff3f2;
 }
 
-.rides-dropdown-menu ul li input[type="checkbox"] {
+.rides-dropdown-menu input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    cursor: pointer;
-    accent-color: #2563eb;
+
+    accent-color: #c31103;
 }
 
 
-/* =========================================
-   STATUS TOGGLE BOX
-========================================= */
+/* =========================================================
+   STATUS TOGGLE
+========================================================= */
 
 .status-toggle-box {
     display: flex;
     align-items: center;
+
     gap: 10px;
+
     padding: 8px 0;
 }
 
 .status-toggle-text {
+    color: #1f2937;
+
     font-size: 14px;
     font-weight: 600;
-    color: #1f2937;
-}
-
-.coupon-code-hint {
-    margin-top: 6px;
-    font-size: 12px;
-    color: #6b7280;
 }
 
 .toggle-switch {
     position: relative;
+
     display: inline-block;
+
     width: 46px;
     height: 26px;
+
     margin: 0;
+
     flex-shrink: 0;
 }
 
 .toggle-switch input.toggle-switch-input {
-    opacity: 0;
+    position: absolute;
+
     width: 0;
     height: 0;
-    position: absolute;
+
+    opacity: 0;
 }
 
 .toggle-slider {
     position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #d1d5db;
+
+    inset: 0;
+
     border-radius: 34px;
-    transition: background-color 0.2s ease;
+
+    background: #d1d5db;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
 }
 
 .toggle-slider::before {
     content: "";
+
     position: absolute;
-    height: 20px;
-    width: 20px;
+
     left: 3px;
     bottom: 3px;
-    background-color: #fff;
+
+    width: 20px;
+    height: 20px;
+
     border-radius: 50%;
-    transition: transform 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+    background: #ffffff;
+
+    box-shadow:
+        0 1px 3px
+        rgba(0, 0, 0, 0.20);
+
+    transition: 0.2s ease;
 }
 
-.toggle-switch-input:checked + .toggle-slider {
-    background-color: #22c55e;
+.toggle-switch-input:checked
++ .toggle-slider {
+    background: #22c55e;
 }
 
-.toggle-switch-input:checked + .toggle-slider::before {
+.toggle-switch-input:checked
++ .toggle-slider::before {
     transform: translateX(20px);
 }
 
-.toggle-switch-input:focus + .toggle-slider {
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+
+/* =========================================================
+   SUB SECTION
+========================================================= */
+
+.offer-sub-section {
+    margin-bottom: 20px;
+    padding: 16px;
+
+    border: 1px solid #eeeeee;
+    border-radius: 10px;
+
+    background: #fafafa;
 }
 
-/* =========================================
-   CKEDITOR CONTAINER
-========================================= */
+.offer-sub-title {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 15px;
+
+    color: #333;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.offer-sub-title i {
+    color: #c31103;
+}
+
+
+/* =========================================================
+   SETTINGS BOXES
+========================================================= */
+
+.offer-check-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.offer-setting-box {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin: 0;
+    padding: 15px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    cursor: pointer;
+}
+
+.offer-setting-box input {
+    margin-top: 5px;
+
+    accent-color: #c31103;
+}
+
+.offer-setting-icon {
+    width: 35px;
+    height: 35px;
+
+    flex: 0 0 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #fff2f1;
+    color: #c31103;
+}
+
+.offer-setting-box strong,
+.offer-setting-box small {
+    display: block;
+}
+
+.offer-setting-box strong {
+    margin-bottom: 3px;
+
+    color: #222;
+
+    font-size: 13px;
+}
+
+.offer-setting-box small {
+    color: #777;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.field-error {
+    margin-top: 5px;
+
+    color: #dc3545;
+
+    font-size: 12px;
+}
+
+.form-text {
+    color: #888;
+
+    font-size: 11px;
+}
+
+.offer-form-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 12px;
+}
+
+
+/* =========================================================
+   CKEDITOR
+========================================================= */
 
 .ck-editor__editable_inline {
-    min-height: 220px;
+    min-height: 180px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .offer-check-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    .offer-section-card {
+        padding: 16px;
+    }
+
+    .offer-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .offer-form-actions .btn {
+        width: 100%;
+    }
+
 }
 
 </style>
@@ -415,121 +1458,481 @@
 {% endblock %}
 
 
+
 {% block extra_js %}
 
-<!-- CKEditor 5 CDN -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    const ridesDropdown = document.getElementById("ridesDropdown");
-    const ridesToggle = document.getElementById("ridesDropdownToggle");
-    const ridesMenu = document.getElementById("ridesDropdownMenu");
-    const ridesSelectedText = document.getElementById("ridesSelectedText");
-
-    if (ridesDropdown) {
-
-        const checkboxes = ridesMenu.querySelectorAll("input[type='checkbox']");
-
-        function updateSelectedText() {
-
-            const checkedBoxes = ridesMenu.querySelectorAll("input[type='checkbox']:checked");
-
-            if (checkedBoxes.length === 0) {
-                ridesSelectedText.textContent = "Select rides";
-                return;
-            }
-
-            if (checkedBoxes.length === 1) {
-                const label = checkedBoxes[0].closest("label");
-                ridesSelectedText.textContent = label
-                    ? label.textContent.trim()
-                    : "1 ride selected";
-                return;
-            }
-
-            ridesSelectedText.textContent = checkedBoxes.length + " rides selected";
-        }
-
-        updateSelectedText();
-
-        checkboxes.forEach(function (checkbox) {
-            checkbox.addEventListener("change", updateSelectedText);
-        });
-
-        ridesToggle.addEventListener("click", function (e) {
-            e.stopPropagation();
-            ridesDropdown.classList.toggle("open");
-        });
-
-        document.addEventListener("click", function (e) {
-            if (!ridesDropdown.contains(e.target)) {
-                ridesDropdown.classList.remove("open");
-            }
-        });
-
-    }
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
 
-    // ===== STATUS TOGGLE TEXT SYNC =====
+        /* =================================================
+           RIDES DROPDOWN
+        ================================================= */
 
-    const activeInput = document.querySelector(".toggle-switch-input");
-    const statusText = document.querySelector(".status-toggle-text");
+        const ridesDropdown =
+            document.getElementById(
+                "ridesDropdown"
+            );
 
-    if (activeInput && statusText) {
+        const ridesToggle =
+            document.getElementById(
+                "ridesDropdownToggle"
+            );
 
-        function syncStatusText() {
-            statusText.textContent = activeInput.checked ? "Active" : "Inactive";
-        }
+        const ridesMenu =
+            document.getElementById(
+                "ridesDropdownMenu"
+            );
 
-        syncStatusText();
+        const ridesSelectedText =
+            document.getElementById(
+                "ridesSelectedText"
+            );
 
-        activeInput.addEventListener("change", syncStatusText);
 
-    }
+        if (
+            ridesDropdown
+            && ridesToggle
+            && ridesMenu
+        ) {
+
+            const checkboxes =
+                ridesMenu.querySelectorAll(
+                    "input[type='checkbox']"
+                );
 
 
-    // ===== CKEDITOR INIT ON DESCRIPTION FIELD =====
+            function updateSelectedText() {
 
-    const descriptionField = document.getElementById("{{ form.description.id_for_label }}");
+                const checkedBoxes =
+                    ridesMenu.querySelectorAll(
+                        "input[type='checkbox']:checked"
+                    );
 
-    if (descriptionField) {
 
-        ClassicEditor
-            .create(descriptionField, {
-                toolbar: [
-                    "heading", "|",
-                    "bold", "italic", "underline", "|",
-                    "bulletedList", "numberedList", "|",
-                    "link", "blockQuote", "|",
-                    "undo", "redo"
-                ]
-            })
-            .then(function (editor) {
+                if (
+                    checkedBoxes.length === 0
+                ) {
 
-                // keep the underlying textarea in sync on every change
-                editor.model.document.on("change:data", function () {
-                    descriptionField.value = editor.getData();
-                });
+                    ridesSelectedText.textContent =
+                        "All rides";
 
-                // final safety sync right before submit
-                const form = document.getElementById("offerForm");
-                if (form) {
-                    form.addEventListener("submit", function () {
-                        descriptionField.value = editor.getData();
-                    });
+                    return;
+
                 }
 
-            })
-            .catch(function (error) {
-                console.error("CKEditor init error:", error);
-            });
+
+                if (
+                    checkedBoxes.length === 1
+                ) {
+
+                    const label =
+                        checkedBoxes[0]
+                        .closest("label");
+
+
+                    ridesSelectedText.textContent =
+                        label
+                            ? label.textContent.trim()
+                            : "1 ride selected";
+
+                    return;
+
+                }
+
+
+                ridesSelectedText.textContent =
+                    checkedBoxes.length
+                    + " rides selected";
+
+            }
+
+
+            updateSelectedText();
+
+
+            checkboxes.forEach(
+                function (checkbox) {
+
+                    checkbox.addEventListener(
+                        "change",
+                        updateSelectedText
+                    );
+
+                }
+            );
+
+
+            ridesToggle.addEventListener(
+                "click",
+                function (event) {
+
+                    event.stopPropagation();
+
+                    ridesDropdown.classList.toggle(
+                        "open"
+                    );
+
+                }
+            );
+
+
+            document.addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        !ridesDropdown.contains(
+                            event.target
+                        )
+                    ) {
+
+                        ridesDropdown.classList.remove(
+                            "open"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        /* =================================================
+           STATUS TOGGLE
+        ================================================= */
+
+        const activeInput =
+            document.querySelector(
+                ".toggle-switch-input"
+            );
+
+        const statusText =
+            document.querySelector(
+                ".status-toggle-text"
+            );
+
+
+        if (
+            activeInput
+            && statusText
+        ) {
+
+            function syncStatusText() {
+
+                statusText.textContent =
+                    activeInput.checked
+                        ? "Active"
+                        : "Inactive";
+
+            }
+
+
+            syncStatusText();
+
+
+            activeInput.addEventListener(
+                "change",
+                syncStatusText
+            );
+
+        }
+
+
+
+        /* =================================================
+           OFFER TYPE CONDITIONAL FIELDS
+        ================================================= */
+
+        const offerType =
+            document.getElementById(
+                "id_offer_type"
+            );
+
+        const buyGetFields =
+            document.getElementById(
+                "buyGetFields"
+            );
+
+        const discountValueField =
+            document.getElementById(
+                "discountValueField"
+            );
+
+        const discountValueLabel =
+            document.getElementById(
+                "discountValueLabel"
+            );
+
+        const discountHelp =
+            document.getElementById(
+                "discountHelp"
+            );
+
+        const couponRequired =
+            document.getElementById(
+                "id_coupon_required"
+            );
+
+        const couponCodeField =
+            document.getElementById(
+                "couponCodeField"
+            );
+
+
+        function updateCouponField() {
+
+            if (
+                !couponCodeField
+                || !couponRequired
+            ) {
+                return;
+            }
+
+
+            const isCouponType =
+                offerType
+                && offerType.value === "coupon";
+
+
+            couponCodeField.style.display =
+                (
+                    couponRequired.checked
+                    || isCouponType
+                )
+                    ? "block"
+                    : "none";
+
+        }
+
+
+        function updateOfferFields() {
+
+            if (!offerType) {
+                return;
+            }
+
+
+            const type =
+                offerType.value;
+
+
+            /* BUY X GET Y */
+
+            if (buyGetFields) {
+
+                buyGetFields.style.display =
+                    type === "buy_x_get_y"
+                        ? "block"
+                        : "none";
+
+            }
+
+
+            /* DISCOUNT VALUE */
+
+            if (
+                discountValueField
+                && discountValueLabel
+                && discountHelp
+            ) {
+
+                if (
+                    type === "buy_x_get_y"
+                ) {
+
+                    discountValueField.style.display =
+                        "none";
+
+                }
+
+                else {
+
+                    discountValueField.style.display =
+                        "block";
+
+                }
+
+
+                if (
+                    [
+                        "percentage",
+                        "group",
+                        "first_booking",
+                        "weekday",
+                        "early_bird",
+                        "birthday"
+                    ].includes(type)
+                ) {
+
+                    discountValueLabel.textContent =
+                        "Discount Percentage";
+
+                    discountHelp.textContent =
+                        "Example: 20 means 20% OFF.";
+
+                }
+
+                else if (
+                    type === "fixed"
+                ) {
+
+                    discountValueLabel.textContent =
+                        "Discount Amount";
+
+                    discountHelp.textContent =
+                        "Example: 500 means ₹500 OFF.";
+
+                }
+
+                else if (
+                    type === "coupon"
+                ) {
+
+                    discountValueLabel.textContent =
+                        "Coupon Discount Value";
+
+                    discountHelp.textContent =
+                        "Enter the discount amount/value configured for this coupon.";
+
+                }
+
+            }
+
+
+            /* COUPON TYPE */
+
+            if (
+                type === "coupon"
+                && couponRequired
+            ) {
+
+                couponRequired.checked = true;
+
+            }
+
+
+            updateCouponField();
+
+        }
+
+
+        if (offerType) {
+
+            offerType.addEventListener(
+                "change",
+                updateOfferFields
+            );
+
+        }
+
+
+        if (couponRequired) {
+
+            couponRequired.addEventListener(
+                "change",
+                updateCouponField
+            );
+
+        }
+
+
+        updateOfferFields();
+
+
+
+        /* =================================================
+           CKEDITOR
+        ================================================= */
+
+        const descriptionField =
+            document.getElementById(
+                "{{ form.description.id_for_label }}"
+            );
+
+
+        if (descriptionField) {
+
+            ClassicEditor
+                .create(
+                    descriptionField,
+                    {
+                        toolbar: [
+                            "heading",
+                            "|",
+                            "bold",
+                            "italic",
+                            "link",
+                            "|",
+                            "bulletedList",
+                            "numberedList",
+                            "|",
+                            "blockQuote",
+                            "|",
+                            "undo",
+                            "redo"
+                        ]
+                    }
+                )
+                .then(
+                    function (editor) {
+
+                        editor.model.document
+                            .on(
+                                "change:data",
+                                function () {
+
+                                    descriptionField.value =
+                                        editor.getData();
+
+                                }
+                            );
+
+
+                        const form =
+                            document.getElementById(
+                                "offerForm"
+                            );
+
+
+                        if (form) {
+
+                            form.addEventListener(
+                                "submit",
+                                function () {
+
+                                    descriptionField.value =
+                                        editor.getData();
+
+                                }
+                            );
+
+                        }
+
+                    }
+                )
+                .catch(
+                    function (error) {
+
+                        console.error(
+                            "CKEditor init error:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
 
     }
-
-});
+);
 
 </script>
 

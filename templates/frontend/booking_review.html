@@ -2,803 +2,2392 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    Review Booking | Flying Fox Adventure
-  </title>
-
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  >
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-  >
-
-  <style>
-
-    :root {
-      --ff-red: #c31103;
-      --ff-red-dark: #8f0c02;
-      --ff-red-light: #fff0ee;
-      --ff-dark: #192736;
-      --ff-text: #687281;
-      --ff-border: #e3e6ea;
-      --ff-white: #ffffff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      color: var(--ff-text);
-      background:
-        radial-gradient(
-          circle at 5% 10%,
-          rgba(195, 17, 3, 0.05),
-          transparent 28%
-        ),
-        #ffffff;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    .ff-review-page {
-      min-height: 100vh;
-      padding: 65px 0 90px;
-    }
-
-    .ff-review-progress {
-      display: flex;
-      max-width: 680px;
-      margin: 0 auto 45px;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .ff-review-progress span {
-      display: inline-flex;
-      min-height: 42px;
-      padding: 9px 18px;
-      border-radius: 30px;
-      align-items: center;
-      gap: 8px;
-      color: #8a929d;
-      background: #f2f3f5;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .ff-review-progress .active {
-      color: #ffffff;
-      background: var(--ff-red);
-    }
-
-    .ff-review-card,
-    .ff-billing-card {
-      overflow: hidden;
-      height: 100%;
-      border: 1px solid var(--ff-border);
-      border-radius: 28px;
-      background: var(--ff-white);
-      box-shadow: 0 20px 55px rgba(25, 39, 54, 0.07);
-    }
-
-    .ff-card-body {
-      padding: 34px;
-    }
-
-    .ff-review-heading {
-      display: flex;
-      margin-bottom: 27px;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .ff-back-button {
-      display: inline-flex;
-      flex: 0 0 auto;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      background: var(--ff-red);
-    }
-
-    .ff-review-heading h1,
-    .ff-billing-heading h2 {
-      margin: 0;
-      color: var(--ff-dark);
-      font-weight: 800;
-    }
-
-    .ff-review-heading h1 {
-      font-size: 30px;
-    }
-
-    .ff-billing-heading {
-      margin-bottom: 26px;
-    }
-
-    .ff-billing-heading span {
-      color: var(--ff-red);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-    }
-
-    .ff-billing-heading h2 {
-      margin-top: 6px;
-      font-size: 26px;
-    }
-
-    .ff-overview-grid {
-      display: grid;
-      margin-bottom: 25px;
-      padding: 20px;
-      border-radius: 18px;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      background: #f7f7f8;
-    }
-
-    .ff-overview-item small,
-    .ff-overview-item strong {
-      display: block;
-    }
-
-    .ff-overview-item small {
-      margin-bottom: 5px;
-      color: #89919c;
-      font-size: 12px;
-    }
-
-    .ff-overview-item strong {
-      color: var(--ff-dark);
-      font-size: 16px;
-    }
-
-    .ff-ticket-summary {
-      padding: 24px;
-      border-radius: 20px;
-      background: #f7f7f8;
-    }
-
-    .ff-ticket-summary h3 {
-      margin: 0 0 20px;
-      color: var(--ff-dark);
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .ff-selected-ride {
-      display: flex;
-      margin-bottom: 20px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid #dfe3e7;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .ff-selected-ride strong,
-    .ff-selected-ride small {
-      display: block;
-    }
-
-    .ff-selected-ride strong {
-      color: var(--ff-dark);
-      font-size: 18px;
-    }
-
-    .ff-selected-ride small {
-      margin-top: 4px;
-      color: var(--ff-text);
-    }
-
-    .ff-selected-ride b {
-      color: var(--ff-red);
-      font-size: 18px;
-    }
-
-    .ff-participant-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .ff-participant-row {
-      display: flex;
-      padding: 14px 15px;
-      border: 1px solid #e1e4e8;
-      border-radius: 14px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      background: #ffffff;
-    }
-
-    .ff-person {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .ff-person-number {
-      display: inline-flex;
-      flex: 0 0 auto;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      background: var(--ff-red);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .ff-person strong,
-    .ff-person small {
-      display: block;
-    }
-
-    .ff-person strong {
-      color: var(--ff-dark);
-    }
-
-    .ff-person small {
-      margin-top: 3px;
-      font-size: 12px;
-    }
-
-    .ff-participant-price {
-      color: var(--ff-red);
-      font-weight: 800;
-    }
-
-    .ff-price-summary {
-      padding: 26px 34px;
-      border-top: 1px solid var(--ff-border);
-    }
-
-    .ff-price-row {
-      display: flex;
-      margin-bottom: 13px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .ff-price-row strong {
-      color: var(--ff-dark);
-    }
-
-    .ff-price-row.discount strong {
-      color: var(--ff-red);
-    }
-
-    .ff-grand-total {
-      display: flex;
-      margin-top: 19px;
-      padding-top: 18px;
-      border-top: 1px solid var(--ff-border);
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .ff-grand-total span,
-    .ff-grand-total strong {
-      color: var(--ff-dark);
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .ff-billing-form {
-      display: grid;
-      gap: 16px;
-    }
-
-    .ff-field label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--ff-dark);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .ff-field input {
-      width: 100%;
-      min-height: 61px;
-      padding: 13px 17px;
-      border: 1px solid var(--ff-border);
-      border-radius: 14px;
-      outline: none;
-      color: var(--ff-dark);
-      background: #ffffff;
-    }
-
-    .ff-field input:focus {
-      border-color: var(--ff-red);
-      box-shadow: 0 0 0 4px rgba(195, 17, 3, 0.08);
-    }
-
-    .ff-phone-row {
-      display: grid;
-      grid-template-columns: 115px 1fr;
-      gap: 12px;
-    }
-
-    .ff-country-code {
-      display: flex;
-      min-height: 61px;
-      border: 1px solid var(--ff-border);
-      border-radius: 14px;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: var(--ff-dark);
-      background: #ffffff;
-      font-weight: 700;
-    }
-
-    .ff-country-code span {
-      font-size: 23px;
-    }
-
-    .ff-check-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      color: var(--ff-dark);
-      font-size: 13px;
-    }
-
-    .ff-check-row input {
-      flex: 0 0 auto;
-      width: 20px;
-      height: 20px;
-      accent-color: var(--ff-red);
-    }
-
-    .ff-check-row a {
-      color: var(--ff-red);
-      font-weight: 700;
-    }
-
-    .ff-submit-area {
-      margin: 28px -34px -34px;
-      padding: 22px 34px;
-      border-top: 1px solid var(--ff-border);
-      background: #fafafa;
-    }
-
-    .ff-submit-button {
-      display: flex;
-      width: 100%;
-      min-height: 58px;
-      border: 0;
-      border-radius: 30px;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: #ffffff;
-      background: var(--ff-red);
-      cursor: pointer;
-      font-weight: 800;
-    }
-
-    .ff-submit-button:hover {
-      background: var(--ff-red-dark);
-    }
-
-    @media (max-width: 767px) {
-
-      .ff-review-page {
-        padding: 40px 0 70px;
-      }
-
-      .ff-card-body,
-      .ff-price-summary {
-        padding: 22px;
-      }
-
-      .ff-review-heading h1 {
-        font-size: 24px;
-      }
-
-      .ff-overview-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .ff-phone-row {
-        grid-template-columns: 1fr;
-      }
-
-      .ff-submit-area {
-        margin:
-          20px
-          -22px
-          -22px;
-        padding: 20px 22px;
-      }
-
-      .ff-selected-ride,
-      .ff-participant-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-
-  </style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Review Booking | Flying Fox Adventure
+    </title>
+
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <style>
+
+        /* =========================================================
+           VARIABLES
+        ========================================================= */
+
+        :root {
+
+            --ff-red: #c31103;
+            --ff-red-dark: #8f0c02;
+            --ff-red-light: #fff0ee;
+
+            --ff-dark: #192736;
+            --ff-text: #687281;
+            --ff-muted: #8a929d;
+
+            --ff-border: #e3e6ea;
+
+            --ff-white: #ffffff;
+            --ff-soft: #f7f7f8;
+
+            --ff-green: #16803a;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            color: var(--ff-text);
+
+            background:
+                radial-gradient(
+                    circle at 5% 10%,
+                    rgba(195, 17, 3, 0.05),
+                    transparent 28%
+                ),
+                #ffffff;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        a {
+            text-decoration: none;
+        }
+
+
+
+        /* =========================================================
+           PAGE
+        ========================================================= */
+
+        .ff-review-page {
+
+            min-height: 100vh;
+
+            padding:
+                65px
+                0
+                90px;
+        }
+
+
+
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
+
+        .ff-review-progress {
+
+            display: flex;
+
+            max-width: 760px;
+
+            margin:
+                0
+                auto
+                45px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .ff-review-progress span {
+
+            display: inline-flex;
+
+            min-height: 42px;
+
+            padding:
+                9px
+                18px;
+
+            border-radius: 30px;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #8a929d;
+
+            background: #f2f3f5;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        .ff-review-progress span.completed {
+
+            color: var(--ff-green);
+
+            background: #eef9f1;
+        }
+
+
+        .ff-review-progress span.active {
+
+            color: #ffffff;
+
+            background: var(--ff-red);
+        }
+
+
+
+        /* =========================================================
+           CARDS
+        ========================================================= */
+
+        .ff-review-card,
+        .ff-billing-card {
+
+            overflow: hidden;
+
+            height: 100%;
+
+            border:
+                1px
+                solid
+                var(--ff-border);
+
+            border-radius: 28px;
+
+            background: var(--ff-white);
+
+            box-shadow:
+                0
+                20px
+                55px
+                rgba(25, 39, 54, 0.07);
+        }
+
+
+        .ff-card-body {
+
+            padding: 34px;
+        }
+
+
+
+        /* =========================================================
+           REVIEW HEADING
+        ========================================================= */
+
+        .ff-review-heading {
+
+            display: flex;
+
+            margin-bottom: 27px;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+
+        .ff-back-button {
+
+            display: inline-flex;
+
+            flex:
+                0
+                0
+                auto;
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            align-items: center;
+            justify-content: center;
+
+            color: #ffffff;
+
+            background: var(--ff-red);
+
+            transition: 0.25s ease;
+        }
+
+
+        .ff-back-button:hover {
+
+            color: #ffffff;
+
+            background: var(--ff-red-dark);
+
+            transform:
+                translateX(-3px);
+        }
+
+
+        .ff-review-heading h1 {
+
+            margin: 0;
+
+            color: var(--ff-dark);
+
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+
+
+        /* =========================================================
+           VISIT OVERVIEW
+        ========================================================= */
+
+        .ff-overview-grid {
+
+            display: grid;
+
+            margin-bottom: 25px;
+
+            padding: 20px;
+
+            border-radius: 18px;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            background: var(--ff-soft);
+        }
+
+
+        .ff-overview-item {
+
+            min-width: 0;
+        }
+
+
+        .ff-overview-icon {
+
+            display: flex;
+
+            width: 36px;
+            height: 36px;
+
+            margin-bottom: 10px;
+
+            border-radius: 10px;
+
+            align-items: center;
+            justify-content: center;
+
+            color: var(--ff-red);
+
+            background: var(--ff-red-light);
+        }
+
+
+        .ff-overview-item small,
+        .ff-overview-item strong,
+        .ff-overview-item span {
+
+            display: block;
+        }
+
+
+        .ff-overview-item small {
+
+            margin-bottom: 5px;
+
+            color: #89919c;
+
+            font-size: 11px;
+        }
+
+
+        .ff-overview-item strong {
+
+            color: var(--ff-dark);
+
+            font-size: 15px;
+        }
+
+
+        .ff-overview-item span {
+
+            margin-top: 4px;
+
+            color: #89919c;
+
+            font-size: 10px;
+        }
+
+
+
+        /* =========================================================
+           BOOKING SUMMARY
+        ========================================================= */
+
+        .ff-ticket-summary {
+
+            padding: 24px;
+
+            border-radius: 20px;
+
+            background: var(--ff-soft);
+        }
+
+
+        .ff-ticket-summary h3 {
+
+            margin:
+                0
+                0
+                20px;
+
+            color: var(--ff-dark);
+
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+
+
+        /* =========================================================
+           SUMMARY ROW
+        ========================================================= */
+
+        .ff-review-product-row {
+
+            display: flex;
+
+            padding:
+                17px
+                0;
+
+            border-bottom:
+                1px
+                solid
+                #dfe3e7;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .ff-review-product-row:first-of-type {
+
+            padding-top: 0;
+        }
+
+
+        .ff-review-product-row:last-child {
+
+            border-bottom: 0;
+        }
+
+
+        .ff-review-product-row strong,
+        .ff-review-product-row small {
+
+            display: block;
+        }
+
+
+        .ff-review-product-row strong {
+
+            color: var(--ff-dark);
+
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+
+        .ff-review-product-row small {
+
+            margin-top: 5px;
+
+            color: var(--ff-text);
+
+            font-size: 11px;
+        }
+
+
+        .ff-review-product-row > b {
+
+            flex-shrink: 0;
+
+            color: var(--ff-red);
+
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+
+        .ff-review-product-row > span {
+
+            flex-shrink: 0;
+
+            color: var(--ff-dark);
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+
+        /* =========================================================
+           OFFER
+        ========================================================= */
+
+        .ff-review-offer-row {
+
+            display: flex;
+
+            margin-top: 18px;
+
+            padding: 17px;
+
+            border:
+                1px
+                dashed
+                rgba(195, 17, 3, 0.35);
+
+            border-radius: 15px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 18px;
+
+            background: var(--ff-red-light);
+        }
+
+
+        .ff-review-offer-row strong,
+        .ff-review-offer-row small {
+
+            display: block;
+        }
+
+
+        .ff-review-offer-label {
+
+            display: inline-flex;
+
+            margin-bottom: 8px;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: var(--ff-red);
+
+            font-size: 10px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.6px;
+        }
+
+
+        .ff-review-offer-row > div > strong {
+
+            color: var(--ff-dark);
+
+            font-size: 14px;
+        }
+
+
+        .ff-review-offer-row small {
+
+            margin-top: 4px;
+
+            color: var(--ff-text);
+
+            font-size: 10px;
+        }
+
+
+        .ff-review-saving {
+
+            flex-shrink: 0;
+
+            color: var(--ff-red) !important;
+
+            font-size: 16px !important;
+        }
+
+
+
+        /* =========================================================
+           PRICE SUMMARY
+        ========================================================= */
+
+        .ff-price-summary {
+
+            padding:
+                26px
+                34px;
+
+            border-top:
+                1px
+                solid
+                var(--ff-border);
+        }
+
+
+        .ff-price-row {
+
+            display: flex;
+
+            margin-bottom: 13px;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            font-size: 13px;
+        }
+
+
+        .ff-price-row strong {
+
+            flex-shrink: 0;
+
+            color: var(--ff-dark);
+        }
+
+
+        .ff-price-row span small {
+
+            display: block;
+
+            margin-top: 3px;
+
+            color: #8b939d;
+
+            font-size: 10px;
+        }
+
+
+        .ff-price-row.discount {
+
+            padding:
+                10px
+                12px;
+
+            border-radius: 10px;
+
+            background: var(--ff-red-light);
+        }
+
+
+        .ff-price-row.discount span,
+        .ff-price-row.discount strong {
+
+            color: var(--ff-red);
+        }
+
+
+
+        /* =========================================================
+           GRAND TOTAL
+        ========================================================= */
+
+        .ff-grand-total {
+
+            display: flex;
+
+            margin-top: 19px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px
+                solid
+                var(--ff-border);
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .ff-grand-total span {
+
+            color: var(--ff-dark);
+
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+
+        .ff-grand-total strong {
+
+            color: var(--ff-red);
+
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+
+
+        /* =========================================================
+           BILLING HEADING
+        ========================================================= */
+
+        .ff-billing-heading {
+
+            margin-bottom: 26px;
+        }
+
+
+        .ff-billing-heading > span {
+
+            color: var(--ff-red);
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 0.8px;
+
+            text-transform: uppercase;
+        }
+
+
+        .ff-billing-heading h2 {
+
+            margin:
+                6px
+                0
+                0;
+
+            color: var(--ff-dark);
+
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+
+        .ff-billing-heading p {
+
+            margin:
+                8px
+                0
+                0;
+
+            color: var(--ff-text);
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+
+        /* =========================================================
+           BILLING FORM
+        ========================================================= */
+
+        .ff-billing-form {
+
+            display: grid;
+
+            gap: 16px;
+        }
+
+
+        .ff-field label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: var(--ff-dark);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .ff-field input {
+
+            width: 100%;
+
+            min-height: 61px;
+
+            padding:
+                13px
+                17px;
+
+            border:
+                1px
+                solid
+                var(--ff-border);
+
+            border-radius: 14px;
+
+            outline: none;
+
+            color: var(--ff-dark);
+
+            background: #ffffff;
+
+            font-size: 14px;
+
+            transition: 0.2s ease;
+        }
+
+
+        .ff-field input:focus {
+
+            border-color: var(--ff-red);
+
+            box-shadow:
+                0
+                0
+                0
+                4px
+                rgba(195, 17, 3, 0.08);
+        }
+
+
+        .ff-field input[readonly] {
+
+            color: #4f5965;
+
+            background: #f7f7f8;
+
+            cursor: not-allowed;
+        }
+
+
+
+        /* =========================================================
+           PHONE
+        ========================================================= */
+
+        .ff-phone-row {
+
+            display: grid;
+
+            grid-template-columns:
+                115px
+                1fr;
+
+            gap: 12px;
+        }
+
+
+        .ff-country-code {
+
+            display: flex;
+
+            min-height: 61px;
+
+            border:
+                1px
+                solid
+                var(--ff-border);
+
+            border-radius: 14px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            color: var(--ff-dark);
+
+            background: #ffffff;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        .ff-country-code span {
+
+            font-size: 20px;
+        }
+
+
+        .ff-phone-verified {
+
+            display: flex;
+
+            margin-top: 7px;
+
+            align-items: center;
+
+            gap: 5px;
+
+            color: var(--ff-green);
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+
+
+        /* =========================================================
+           TERMS
+        ========================================================= */
+
+        .ff-check-row {
+
+            display: flex;
+
+            margin-top: 4px;
+
+            align-items: flex-start;
+
+            gap: 10px;
+
+            color: var(--ff-dark);
+
+            font-size: 12px;
+
+            cursor: pointer;
+        }
+
+
+        .ff-check-row input {
+
+            flex:
+                0
+                0
+                auto;
+
+            width: 20px;
+            height: 20px;
+
+            margin-top: 1px;
+
+            accent-color: var(--ff-red);
+        }
+
+
+        .ff-check-row a {
+
+            color: var(--ff-red);
+
+            font-weight: 700;
+        }
+
+
+
+        /* =========================================================
+           SECURITY BOX
+        ========================================================= */
+
+        .ff-secure-payment-note {
+
+            display: flex;
+
+            padding:
+                13px
+                14px;
+
+            border-radius: 12px;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: #687281;
+
+            background: #f7f7f8;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        .ff-secure-payment-note i {
+
+            flex-shrink: 0;
+
+            color: var(--ff-red);
+
+            font-size: 16px;
+        }
+
+
+
+        /* =========================================================
+           SUBMIT AREA
+        ========================================================= */
+
+        .ff-submit-area {
+
+            margin:
+                12px
+                -34px
+                -34px;
+
+            padding:
+                22px
+                34px;
+
+            border-top:
+                1px
+                solid
+                var(--ff-border);
+
+            background: #fafafa;
+        }
+
+
+        .ff-payment-total {
+
+            display: flex;
+
+            margin-bottom: 15px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+
+        .ff-payment-total span {
+
+            color: var(--ff-text);
+
+            font-size: 12px;
+        }
+
+
+        .ff-payment-total strong {
+
+            color: var(--ff-dark);
+
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+
+        .ff-submit-button {
+
+            display: flex;
+
+            width: 100%;
+
+            min-height: 58px;
+
+            border: 0;
+
+            border-radius: 30px;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            color: #ffffff;
+
+            background: var(--ff-red);
+
+            cursor: pointer;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            transition: 0.25s ease;
+        }
+
+
+        .ff-submit-button:hover {
+
+            background: var(--ff-red-dark);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .ff-submit-button:disabled {
+
+            opacity: 0.7;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 991px) {
+
+            .ff-review-card,
+            .ff-billing-card {
+
+                height: auto;
+            }
+
+        }
+
+
+        @media (max-width: 767px) {
+
+            .ff-review-page {
+
+                padding:
+                    35px
+                    0
+                    70px;
+            }
+
+
+            .ff-review-progress {
+
+                margin-bottom: 28px;
+
+                gap: 6px;
+            }
+
+
+            .ff-review-progress span {
+
+                padding:
+                    7px
+                    11px;
+
+                font-size: 10px;
+            }
+
+
+            .ff-card-body,
+            .ff-price-summary {
+
+                padding: 22px;
+            }
+
+
+            .ff-review-heading h1 {
+
+                font-size: 23px;
+            }
+
+
+            .ff-back-button {
+
+                width: 42px;
+                height: 42px;
+            }
+
+
+            .ff-overview-grid {
+
+                grid-template-columns: 1fr;
+
+                gap: 18px;
+            }
+
+
+            .ff-phone-row {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .ff-review-product-row,
+            .ff-review-offer-row {
+
+                align-items: flex-start;
+            }
+
+
+            .ff-submit-area {
+
+                margin:
+                    12px
+                    -22px
+                    -22px;
+
+                padding:
+                    20px
+                    22px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-  <main class="ff-review-page">
+
+<main class="ff-review-page">
 
     <div class="container">
 
-      <div class="ff-review-progress">
 
-        <span>
-          <i class="fas fa-check"></i>
-          Visit
-        </span>
+        <!-- =====================================================
+             BOOKING PROGRESS
+        ====================================================== -->
 
-        <span>
-          <i class="fas fa-check"></i>
-          Ride
-        </span>
+        <div class="ff-review-progress">
 
-        <span>
-          <i class="fas fa-check"></i>
-          Participants
-        </span>
+            <span class="completed">
 
-        <span class="active">
-          <i class="fas fa-credit-card"></i>
-          Billing
-        </span>
+                <i class="fas fa-check"></i>
 
-      </div>
+                Visit
 
-      <div class="row g-4">
+            </span>
 
-        <!-- Review column -->
 
-        <div class="col-lg-6">
+            <span class="completed">
 
-          <section class="ff-review-card">
+                <i class="fas fa-check"></i>
 
-            <div class="ff-card-body">
+                Ride
 
-              <div class="ff-review-heading">
+            </span>
 
-                <a
-                  href="{% url 'bookings' %}"
-                  class="ff-back-button"
-                  aria-label="Return to booking page"
-                >
-                  <i class="fas fa-arrow-left"></i>
-                </a>
 
-                <h1>
-                  Review Your Booking
-                </h1>
+            <span class="completed">
 
-              </div>
+                <i class="fas fa-check"></i>
 
-              <div class="ff-overview-grid">
+                Participants
 
-                <div class="ff-overview-item">
-                  <small>Date of Visit</small>
+            </span>
 
-                  <strong>
-                    {{ booking_data.booking_date }}
-                  </strong>
-                </div>
 
-                <div class="ff-overview-item">
-                  <small>Time Slot</small>
+            <span class="active">
 
-                  <strong>
-                    {{ booking_data.time_slot }}
-                  </strong>
-                </div>
+                <i class="fas fa-credit-card"></i>
 
-                <div class="ff-overview-item">
-                  <small>Participants</small>
+                Billing
 
-                  <strong>
-                    {{ booking_data.quantity }}
-                  </strong>
-                </div>
+            </span>
 
-              </div>
+        </div>
 
-              <div class="ff-ticket-summary">
 
-                <h3>
-                  Booking Summary
-                </h3>
 
-                <div class="ff-selected-ride">
+        <div class="row g-4 align-items-stretch">
 
-                  <div>
-                    <strong>
-                      {{ booking_data.ride_name }}
-                    </strong>
 
-                    <small>
-                      ₹{{ booking_data.price_per_person }}
-                      per participant
-                    </small>
-                  </div>
+            <!-- =================================================
+                 LEFT SIDE
+                 REVIEW BOOKING
+            ================================================== -->
 
-                  <b>
-                    ₹{{ booking_data.participant_subtotal }}
-                  </b>
+            <div class="col-lg-6">
 
-                </div>
+                <section class="ff-review-card">
 
-                <div class="ff-participant-list">
 
-                  {% for participant in participants %}
+                    <div class="ff-card-body">
 
-                    <div class="ff-participant-row">
 
-                      <div class="ff-person">
+                        <!-- HEADING -->
 
-                        <span class="ff-person-number">
-                          {{ forloop.counter|stringformat:"02d" }}
-                        </span>
+                        <div class="ff-review-heading">
 
-                        <div>
-                          <strong>
-                            {{ participant.full_name }}
-                          </strong>
+                            <a
+                                href="{% url 'bookings' %}"
+                                class="ff-back-button"
+                                aria-label="Return to booking page"
+                            >
 
-                          <small>
-                            Age {{ participant.age }}
-                            · {{ participant.weight }} kg
-                          </small>
+                                <i class="fas fa-arrow-left"></i>
+
+                            </a>
+
+
+                            <h1>
+                                Review Your Booking
+                            </h1>
+
                         </div>
 
-                      </div>
 
-                      <span class="ff-participant-price">
-                        ₹{{ booking_data.price_per_person }}
-                      </span>
+
+                        <!-- =====================================
+                             DATE / TIME / RIDERS
+                        ====================================== -->
+
+                        <div class="ff-overview-grid">
+
+
+                            <!-- DATE -->
+
+                            <div class="ff-overview-item">
+
+                                <div class="ff-overview-icon">
+
+                                    <i class="fas fa-calendar-days"></i>
+
+                                </div>
+
+                                <small>
+                                    Date of Visit
+                                </small>
+
+                                <strong>
+                                    {{ booking_data.booking_date }}
+                                </strong>
+
+                            </div>
+
+
+
+                            <!-- TIME -->
+
+                            <div class="ff-overview-item">
+
+                                <div class="ff-overview-icon">
+
+                                    <i class="fas fa-clock"></i>
+
+                                </div>
+
+                                <small>
+                                    Time Slot
+                                </small>
+
+                                <strong>
+                                    {{ booking_data.time_slot }}
+                                </strong>
+
+                            </div>
+
+
+
+                            <!-- RIDERS -->
+
+                            <div class="ff-overview-item">
+
+                                <div class="ff-overview-icon">
+
+                                    <i class="fas fa-users"></i>
+
+                                </div>
+
+                                <small>
+                                    Total Riders
+                                </small>
+
+                                <strong>
+                                    {{ booking_data.quantity }}
+                                </strong>
+
+                                <span>
+                                    Total participants for this booking
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             BOOKING SUMMARY
+                        ====================================== -->
+
+                        <div class="ff-ticket-summary">
+
+
+                            <h3>
+                                Booking Summary
+                            </h3>
+
+
+
+                            <!-- SELECTED RIDE -->
+
+                            <div class="ff-review-product-row">
+
+                                <div>
+
+                                    <strong>
+                                        {{ booking_data.ride_name }}
+                                    </strong>
+
+
+                                    <small>
+
+                                        ₹{{ booking_data.price_per_person }}
+
+                                        ×
+
+                                        {{ booking_data.quantity }}
+
+                                        rider{{ booking_data.quantity|pluralize }}
+
+                                    </small>
+
+                                </div>
+
+
+                                <b>
+
+                                    ₹{{ booking_data.participant_subtotal }}
+
+                                </b>
+
+                            </div>
+
+                            <!-- =================================
+                                 PHOTO ADDON
+                            ================================== -->
+
+                            {% if booking_data.photo_addon %}
+
+                                <div class="ff-review-product-row">
+
+                                    <div>
+
+                                        <strong>
+                                            Adventure Photos
+                                        </strong>
+
+                                        <small>
+                                            Professional photo add-on
+                                        </small>
+
+                                    </div>
+
+
+                                    <span>
+
+                                        Included
+
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- =================================
+                                 VIDEO ADDON
+                            ================================== -->
+
+                            {% if booking_data.video_addon %}
+
+                                <div class="ff-review-product-row">
+
+                                    <div>
+
+                                        <strong>
+                                            Adventure Video
+                                        </strong>
+
+                                        <small>
+                                            Adventure video add-on
+                                        </small>
+
+                                    </div>
+
+
+                                    <span>
+
+                                        Included
+
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- =================================
+                                 OFFER
+                            ================================== -->
+
+                            {% if booking_data.offer_id %}
+
+                                <div class="ff-review-offer-row">
+
+                                    <div>
+
+
+                                        <span class="ff-review-offer-label">
+
+                                            <i class="fas fa-tag"></i>
+
+                                            Offer Applied
+
+                                        </span>
+
+
+                                        <strong>
+
+                                            {{ booking_data.offer_title }}
+
+                                        </strong>
+
+
+                                        {% if booking_data.offer_label %}
+
+                                            <small>
+
+                                                {{ booking_data.offer_label }}
+
+                                            </small>
+
+                                        {% endif %}
+
+
+                                        {% if booking_data.coupon_code %}
+
+                                            <small>
+
+                                                Coupon:
+
+                                                <b>
+                                                    {{ booking_data.coupon_code }}
+                                                </b>
+
+                                            </small>
+
+                                        {% endif %}
+
+
+                                    </div>
+
+
+                                    <strong class="ff-review-saving">
+
+                                        − ₹{{ booking_data.discount_amount }}
+
+                                    </strong>
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
 
                     </div>
 
-                  {% endfor %}
 
-                </div>
 
-              </div>
+                    <!-- =========================================
+                         PRICE SUMMARY
+                    ========================================== -->
+
+                    <div class="ff-price-summary">
+
+
+                        <!-- RIDE TOTAL -->
+
+                        <div class="ff-price-row">
+
+                            <span>
+                                Ride Total
+                            </span>
+
+
+                            <strong>
+
+                                ₹{{ booking_data.participant_subtotal }}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- ADDONS -->
+
+                        <div class="ff-price-row">
+
+                            <span>
+                                Add-ons
+                            </span>
+
+
+                            <strong>
+
+                                ₹{{ booking_data.addon_total }}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- SUBTOTAL -->
+
+                        <div class="ff-price-row">
+
+                            <span>
+                                Subtotal
+                            </span>
+
+
+                            <strong>
+
+                                ₹{{ booking_data.subtotal }}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <!-- DISCOUNT -->
+
+                        {% if booking_data.offer_id %}
+
+                            <div class="ff-price-row discount">
+
+                                <span>
+
+                                    Offer Discount
+
+                                    <small>
+
+                                        {{ booking_data.offer_title }}
+
+                                    </small>
+
+                                </span>
+
+
+                                <strong>
+
+                                    − ₹{{ booking_data.discount_amount }}
+
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- GRAND TOTAL -->
+
+                        <div class="ff-grand-total">
+
+                            <span>
+                                Grand Total
+                            </span>
+
+
+                            <strong>
+
+                                ₹{{ booking_data.total_amount }}
+
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                </section>
 
             </div>
 
-            <div class="ff-price-summary">
 
-              <div class="ff-price-row">
-                <span>Ride subtotal</span>
 
-                <strong>
-                  ₹{{ booking_data.participant_subtotal }}
-                </strong>
-              </div>
+            <!-- =================================================
+                 RIGHT SIDE
+                 CUSTOMER / BILLING INFORMATION
+            ================================================== -->
 
-              <div class="ff-price-row">
-                <span>Add-ons</span>
+            <div class="col-lg-6">
 
-                <strong>
-                  ₹{{ booking_data.addon_total }}
-                </strong>
-              </div>
 
-              {% if booking_data.coupon_code %}
+                <section class="ff-billing-card">
 
-                <div class="ff-price-row discount">
-                  <span>
-                    Coupon ({{ booking_data.coupon_code }})
-                  </span>
 
-                  <strong>
-                    − ₹{{ booking_data.discount_amount }}
-                  </strong>
-                </div>
+                    <div class="ff-card-body">
 
-              {% endif %}
 
-              <div class="ff-grand-total">
-                <span>Grand Total</span>
+                        <!-- BILLING HEADING -->
 
-                <strong>
-                  ₹{{ booking_data.total_amount }}
-                </strong>
-              </div>
+                        <div class="ff-billing-heading">
+
+
+                            <span>
+                                Secure Checkout
+                            </span>
+
+
+                            <h2>
+                                Your Details
+                            </h2>
+
+
+                            <p>
+
+                                Confirm your information before
+                                continuing to secure payment.
+
+                            </p>
+
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             BILLING FORM
+                        ====================================== -->
+
+                        <form
+                            method="POST"
+                            action="{% url 'booking_confirm' %}"
+                            class="ff-billing-form"
+                            id="billingForm"
+                        >
+
+                            {% csrf_token %}
+
+
+
+                            <!-- =================================
+                                 FULL NAME
+                            ================================== -->
+
+                            <div class="ff-field">
+
+                                <label for="billingFullName">
+
+                                    Full Name *
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    id="billingFullName"
+                                    name="customer_name"
+                                    value="{{ profile.full_name|default:'' }}"
+                                    placeholder="Enter your full name"
+                                    maxlength="150"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- =================================
+                                 EMAIL
+                            ================================== -->
+
+                            <div class="ff-field">
+
+                                <label for="billingEmail">
+
+                                    Email Address *
+
+                                </label>
+
+
+                                <input
+                                    type="email"
+                                    id="billingEmail"
+                                    name="customer_email"
+                                    value="{{ profile.email|default:'' }}"
+                                    placeholder="Enter your email address"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- =================================
+                                 MOBILE NUMBER
+                            ================================== -->
+
+                            <div class="ff-field">
+
+                                <label for="billingPhone">
+
+                                    Mobile Number *
+
+                                </label>
+
+
+                                <div class="ff-phone-row">
+
+
+                                    <div class="ff-country-code">
+
+                                        <span>
+                                            🇮🇳
+                                        </span>
+
+                                        +91
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <input
+                                            type="tel"
+                                            id="billingPhone"
+                                            name="customer_phone"
+                                            value="{{ profile.phone|default:'' }}"
+                                            placeholder="Enter 10-digit mobile number"
+                                            pattern="[0-9]{10}"
+                                            maxlength="10"
+                                            autocomplete="tel"
+                                            required
+                                        >
+
+
+                                        {% if profile.phone %}
+
+                                            <div class="ff-phone-verified">
+
+                                                <i class="fas fa-circle-check"></i>
+
+                                                OTP Verified Number
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- =================================
+                                 PIN CODE
+                            ================================== -->
+
+                            <div class="ff-field">
+
+                                <label for="billingPincode">
+
+                                    PIN Code *
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    id="billingPincode"
+                                    name="customer_pincode"
+                                    value="{{ profile.pincode|default:'' }}"
+                                    placeholder="Enter 6-digit PIN code"
+                                    pattern="[0-9]{6}"
+                                    maxlength="6"
+                                    inputmode="numeric"
+                                    autocomplete="postal-code"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- =================================
+                                 TERMS
+                            ================================== -->
+
+                            <label class="ff-check-row">
+
+
+                                <input
+                                    type="checkbox"
+                                    name="terms_accepted"
+                                    value="1"
+                                    required
+                                >
+
+
+                                <span>
+
+                                    I agree to the
+
+                                    <a href="#">
+                                        Terms &amp; Conditions
+                                    </a>
+
+                                    and booking policies.
+
+                                </span>
+
+
+                            </label>
+
+
+
+                            <!-- =================================
+                                 SECURITY INFORMATION
+                            ================================== -->
+
+                            <div class="ff-secure-payment-note">
+
+
+                                <i class="fas fa-lock"></i>
+
+
+                                <span>
+
+                                    Your booking details will be
+                                    validated again before payment.
+                                    Your ticket will be generated
+                                    only after successful payment.
+
+                                </span>
+
+
+                            </div>
+
+
+
+                            <!-- =================================
+                                 PAYMENT AREA
+                            ================================== -->
+
+                            <div class="ff-submit-area">
+
+
+                                <div class="ff-payment-total">
+
+                                    <span>
+                                        Amount to Pay
+                                    </span>
+
+
+                                    <strong>
+
+                                        ₹{{ booking_data.total_amount }}
+
+                                    </strong>
+
+                                </div>
+
+
+
+                                <button
+                                    type="submit"
+                                    class="ff-submit-button"
+                                    id="paymentButton"
+                                >
+
+                                    Make Payment ₹{{ booking_data.total_amount }}
+
+                                    <i class="fas fa-lock"></i>
+
+                                </button>
+
+
+                            </div>
+
+
+                        </form>
+
+
+                    </div>
+
+
+                </section>
+
 
             </div>
 
-          </section>
 
         </div>
 
-        <!-- Billing column -->
-
-        <div class="col-lg-6">
-
-          <section class="ff-billing-card">
-
-            <div class="ff-card-body">
-
-              <div class="ff-billing-heading">
-
-                <span>
-                  Final Step
-                </span>
-
-                <h2>
-                  Add Your Billing Information
-                </h2>
-
-              </div>
-
-<form method="POST" action="{% url 'temporary_payment_success' %}" class="ff-billing-form" id="billingForm">
-    {% csrf_token %}
-
-    <div class="ff-field">
-        <label for="billingFullName">
-            Full Name *
-        </label>
-
-        <input
-            type="text"
-            id="billingFullName"
-            name="customer_name"
-            placeholder="Enter your full name"
-            required
-        >
-    </div>
-
-    <div class="ff-field">
-        <label for="billingEmail">
-            Email Address *
-        </label>
-
-        <input
-            type="email"
-            id="billingEmail"
-            name="customer_email"
-            placeholder="Enter your email address"
-            required
-        >
-    </div>
-
-    <div class="ff-field">
-        <label for="billingPhone">
-            Mobile Number *
-        </label>
-
-        <div class="ff-phone-row">
-            <div class="ff-country-code">
-                IN +91
-            </div>
-
-            <input
-                type="tel"
-                id="billingPhone"
-                name="customer_phone"
-                placeholder="Enter 10-digit mobile number"
-                pattern="[0-9]{10}"
-                maxlength="10"
-                required
-            >
-        </div>
-    </div>
-
-    <div class="ff-field">
-        <label for="billingPincode">
-            PIN Code *
-        </label>
-
-        <input
-            type="text"
-            id="billingPincode"
-            name="customer_pincode"
-            placeholder="Enter 6-digit PIN code"
-            pattern="[0-9]{6}"
-            maxlength="6"
-            required
-        >
-    </div>
-
-    <label class="ff-check-row">
-        <input
-            type="checkbox"
-            name="terms_accepted"
-            value="1"
-            required
-        >
-
-        <span>
-            I agree to the Terms &amp; Conditions
-        </span>
-    </label>
-
-    <div class="ff-submit-area">
-        <button
-            type="submit"
-            class="ff-submit-button"
-            id="paymentButton"
-        >
-            Continue to Secure Payment
-            <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
-</form>
-
-            </div>
-
-          </section>
-
-        </div>
-
-      </div>
 
     </div>
 
-  </main>
+
+</main>
 
 
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const billingForm = document.getElementById("billingForm");
-    const paymentButton = document.getElementById("paymentButton");
 
-    if (!billingForm || !paymentButton) {
-        return;
-    }
+<!-- =========================================================
+     RAZORPAY CHECKOUT
+========================================================= -->
 
-    billingForm.addEventListener("submit", function (event) {
-        if (!billingForm.checkValidity()) {
-            event.preventDefault();
-            billingForm.reportValidity();
-            return;
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const billingForm =
+            document.getElementById(
+                "billingForm"
+            );
+
+        const paymentButton =
+            document.getElementById(
+                "paymentButton"
+            );
+
+        const phoneInput =
+            document.getElementById(
+                "billingPhone"
+            );
+
+        const pincodeInput =
+            document.getElementById(
+                "billingPincode"
+            );
+
+
+        /* =====================================================
+           PHONE - NUMBERS ONLY
+        ====================================================== */
+
+        phoneInput?.addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+
+            }
+        );
+
+
+        /* =====================================================
+           PINCODE - NUMBERS ONLY
+        ====================================================== */
+
+        pincodeInput?.addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 6);
+
+            }
+        );
+
+
+        function restoreButton() {
+
+            if (!paymentButton) {
+                return;
+            }
+
+            paymentButton.disabled =
+                false;
+
+            paymentButton.innerHTML = `
+                Make Payment ₹{{ booking_data.total_amount }}
+                <i class="fas fa-lock"></i>
+            `;
+
         }
 
-        paymentButton.disabled = true;
-        paymentButton.innerHTML = `
-            <i class="fas fa-spinner fa-spin"></i>
-            Generating Your Ticket
-        `;
-    });
-});
+
+        function showPaymentError(
+            message
+        ) {
+
+            alert(
+                message
+                ||
+                "Unable to start payment. Please try again."
+            );
+
+            restoreButton();
+
+        }
+
+
+        /* =====================================================
+           BILLING FORM -> CREATE RAZORPAY ORDER -> OPEN MODAL
+        ====================================================== */
+
+        billingForm?.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                /* HTML VALIDATION */
+
+                if (
+                    !billingForm.checkValidity()
+                ) {
+
+                    billingForm.reportValidity();
+                    return;
+
+                }
+
+
+                /* PHONE */
+
+                if (
+                    !/^[0-9]{10}$/.test(
+                        phoneInput?.value || ""
+                    )
+                ) {
+
+                    alert(
+                        "Please enter a valid 10-digit mobile number."
+                    );
+
+                    phoneInput?.focus();
+                    return;
+
+                }
+
+
+                /* PINCODE */
+
+                if (
+                    !/^[0-9]{6}$/.test(
+                        pincodeInput?.value || ""
+                    )
+                ) {
+
+                    alert(
+                        "Please enter a valid 6-digit PIN code."
+                    );
+
+                    pincodeInput?.focus();
+                    return;
+
+                }
+
+
+                paymentButton.disabled =
+                    true;
+
+                paymentButton.innerHTML = `
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Preparing Secure Payment
+                `;
+
+
+                try {
+
+                    const formData =
+                        new FormData(
+                            billingForm
+                        );
+
+
+                    /* ---------------------------------------------
+                       CREATE BOOKING + RAZORPAY ORDER
+                    ---------------------------------------------- */
+
+                    const response =
+                        await fetch(
+                            billingForm.action,
+                            {
+                                method: "POST",
+                                body: formData,
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest",
+                                },
+                                credentials:
+                                    "same-origin",
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (
+                        !response.ok
+                        ||
+                        !data.success
+                    ) {
+
+                        showPaymentError(
+                            data.message
+                            ||
+                            "Unable to prepare payment."
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* ---------------------------------------------
+                       RAZORPAY CHECKOUT OPTIONS
+                    ---------------------------------------------- */
+
+                    const options = {
+
+                        key:
+                            data.key_id,
+
+                        amount:
+                            data.amount,
+
+                        currency:
+                            data.currency,
+
+                        name:
+                            "Flying Fox Adventure",
+
+                        description:
+                            data.description,
+
+                        order_id:
+                            data.order_id,
+
+                        prefill: {
+
+                            name:
+                                data.customer_name,
+
+                            email:
+                                data.customer_email,
+
+                            contact:
+                                data.customer_phone,
+
+                        },
+
+                        notes: {
+
+                            booking_id:
+                                data.booking_id,
+
+                        },
+
+                        theme: {
+
+                            color:
+                                "#c31103",
+
+                        },
+
+
+                        /* -----------------------------------------
+                           PAYMENT SUCCESS CALLBACK
+                        ------------------------------------------ */
+
+                        handler:
+                            async function (
+                                razorpayResponse
+                            ) {
+
+                                paymentButton.innerHTML = `
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    Verifying Payment
+                                `;
+
+
+                                const csrfToken =
+                                    billingForm.querySelector(
+                                        "[name=csrfmiddlewaretoken]"
+                                    ).value;
+
+
+                                const verifyResponse =
+                                    await fetch(
+                                        "{% url 'booking_payment_verify' %}",
+                                        {
+                                            method:
+                                                "POST",
+
+                                            headers: {
+                                                "Content-Type":
+                                                    "application/x-www-form-urlencoded",
+
+                                                "X-CSRFToken":
+                                                    csrfToken,
+
+                                                "X-Requested-With":
+                                                    "XMLHttpRequest",
+                                            },
+
+                                            credentials:
+                                                "same-origin",
+
+                                            body:
+                                                new URLSearchParams(
+                                                    {
+                                                        booking_id:
+                                                            data.booking_id,
+
+                                                        razorpay_payment_id:
+                                                            razorpayResponse.razorpay_payment_id,
+
+                                                        razorpay_order_id:
+                                                            razorpayResponse.razorpay_order_id,
+
+                                                        razorpay_signature:
+                                                            razorpayResponse.razorpay_signature,
+                                                    }
+                                                ),
+                                        }
+                                    );
+
+
+                                const verifyData =
+                                    await verifyResponse.json();
+
+
+                                if (
+                                    verifyResponse.ok
+                                    &&
+                                    verifyData.success
+                                ) {
+
+                                    window.location.href =
+                                        verifyData.redirect_url;
+
+                                    return;
+
+                                }
+
+
+                                showPaymentError(
+                                    verifyData.message
+                                    ||
+                                    "Payment verification failed. Please contact support if the amount was deducted."
+                                );
+
+                            },
+
+
+                        modal: {
+
+                            ondismiss:
+                                function () {
+
+                                    restoreButton();
+
+                                },
+
+                        },
+
+                    };
+
+
+                    const razorpayCheckout =
+                        new Razorpay(
+                            options
+                        );
+
+
+                    razorpayCheckout.on(
+                        "payment.failed",
+                        function (response) {
+
+                            const description =
+                                response?.error?.description
+                                ||
+                                "Payment failed. Please try again.";
+
+                            showPaymentError(
+                                description
+                            );
+
+                        }
+                    );
+
+
+                    razorpayCheckout.open();
+
+                } catch (error) {
+
+                    console.error(
+                        error
+                    );
+
+                    showPaymentError(
+                        "Unable to connect to the payment service. Please try again."
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
 </script>
 
 
-
 </body>
+
 </html>

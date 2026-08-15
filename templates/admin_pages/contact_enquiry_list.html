@@ -1,0 +1,574 @@
+{% extends "admin_pages/base.html" %}
+{% load static %}
+
+{% block title %}
+Contact Enquiries | Flying Fox Admin
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    .contact-admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .contact-admin-header h3 {
+        margin: 0;
+        font-size: 25px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .contact-admin-header p {
+        margin: 5px 0 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .contact-search {
+        display: flex;
+        gap: 8px;
+    }
+
+    .contact-search input {
+        width: 260px;
+        height: 42px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 0 14px;
+        outline: none;
+    }
+
+    .contact-search input:focus {
+        border-color: #dc1710;
+    }
+
+    .contact-search button {
+        height: 42px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 8px;
+        background: #dc1710;
+        color: white;
+        cursor: pointer;
+    }
+
+
+    /* TABLE */
+
+    .contact-table-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+
+    .contact-table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .contact-table thead th {
+        background: #f9fafb;
+        padding: 16px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .contact-table tbody td {
+        padding: 16px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .contact-name {
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .contact-email {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+
+    /* STATUS */
+
+    .status-new {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .status-read {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background: #dcfce7;
+        color: #166534;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+    /* BUTTONS */
+
+    .contact-actions {
+        display: flex;
+        justify-content: center;
+        gap: 7px;
+    }
+
+    .contact-view-btn,
+    .contact-delete-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        border: 0;
+        cursor: pointer;
+    }
+
+    .contact-view-btn {
+        background: #111827;
+        color: white;
+    }
+
+    .contact-view-btn:hover {
+        background: #dc1710;
+        color: white;
+    }
+
+    .contact-delete-btn {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .contact-delete-btn:hover {
+        background: #dc2626;
+        color: white;
+    }
+
+
+    /* MOBILE */
+
+    @media(max-width: 768px) {
+
+        .contact-search {
+            width: 100%;
+        }
+
+        .contact-search input {
+            width: 100%;
+        }
+
+        .contact-table-card {
+            overflow-x: auto;
+        }
+
+        .contact-table {
+            min-width: 850px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ==========================================
+     PAGE HEADER
+=========================================== -->
+
+<div class="contact-admin-header">
+
+    <div>
+
+        <h3>
+            Contact Enquiries
+        </h3>
+
+        <p>
+            View and manage enquiries submitted
+            from the Flying Fox contact page.
+        </p>
+
+    </div>
+
+
+    <form
+        method="GET"
+        class="contact-search"
+    >
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="Search enquiries..."
+        >
+
+        <button type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+
+    </form>
+
+</div>
+
+
+
+<!-- ==========================================
+     CONTACT TABLE
+=========================================== -->
+
+<div class="contact-table-card">
+
+    <table class="table contact-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Date</th>
+
+                <th>Customer</th>
+
+                <th>Subject</th>
+
+                <th>Message</th>
+
+                <th>Status</th>
+
+                <th class="text-center">
+                    Actions
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        {% for contact in contacts %}
+
+            <tr>
+
+                <!-- DATE -->
+
+                <td>
+
+                    {{ contact.created_at|date:"M d, Y" }}
+
+                    <div class="contact-email">
+                        {{ contact.created_at|date:"h:i A" }}
+                    </div>
+
+                </td>
+
+
+                <!-- CUSTOMER -->
+
+                <td>
+
+                    <div class="contact-name">
+                        {{ contact.name }}
+                    </div>
+
+                    <div class="contact-email">
+                        {{ contact.email }}
+                    </div>
+
+                </td>
+
+
+                <!-- SUBJECT -->
+
+                <td>
+
+                    <strong>
+                        {{ contact.subject }}
+                    </strong>
+
+                </td>
+
+
+                <!-- MESSAGE -->
+
+                <td>
+
+                    {{ contact.message|truncatewords:10 }}
+
+                </td>
+
+
+                <!-- STATUS -->
+
+                <td>
+
+                    {% if contact.is_read %}
+
+                        <span class="status-read">
+                            Read
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-new">
+                            New
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+
+                <!-- ACTIONS -->
+
+                <td>
+
+                    <div class="contact-actions">
+
+                        <a
+                            href="{% url 'contact_enquiry_detail' contact.id %}"
+                            class="contact-view-btn"
+                            title="View enquiry"
+                        >
+                            <i class="fas fa-eye"></i>
+                        </a>
+
+
+                        <button
+                            type="button"
+                            class="contact-delete-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteContact{{ contact.id }}"
+                        >
+                            <i class="fas fa-trash"></i>
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+
+            <!-- ==================================
+                 DELETE MODAL
+            =================================== -->
+
+            <div
+                class="modal fade"
+                id="deleteContact{{ contact.id }}"
+                tabindex="-1"
+            >
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">
+                                Delete Contact Enquiry
+                            </h5>
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                            ></button>
+
+                        </div>
+
+
+                        <div class="modal-body">
+
+                            <p>
+                                Are you sure you want to delete
+                                the enquiry from
+                                <strong>{{ contact.name }}</strong>?
+                            </p>
+
+                            <p class="text-danger mb-0">
+                                This action cannot be undone.
+                            </p>
+
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+
+
+                            <form
+                                method="POST"
+                                action="{% url 'contact_enquiry_delete' contact.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="text-center py-5"
+                >
+
+                    <i
+                        class="fas fa-envelope-open-text"
+                        style="
+                            font-size:35px;
+                            color:#ccc;
+                            margin-bottom:15px;
+                        "
+                    ></i>
+
+                    <p class="text-muted mb-0">
+                        No contact enquiries found.
+                    </p>
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+<!-- ==========================================
+     PAGINATION
+=========================================== -->
+
+{% if contacts.has_other_pages %}
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+        {% if contacts.has_previous %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ contacts.previous_page_number }}&search={{ search }}"
+                >
+                    &laquo;
+                </a>
+
+            </li>
+
+        {% endif %}
+
+
+        {% for i in contacts.paginator.page_range %}
+
+            {% if contacts.number == i %}
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+                        {{ i }}
+                    </span>
+
+                </li>
+
+            {% else %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ i }}&search={{ search }}"
+                    >
+                        {{ i }}
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if contacts.has_next %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ contacts.next_page_number }}&search={{ search }}"
+                >
+                    &raquo;
+                </a>
+
+            </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+{% endif %}
+
+
+{% endblock %}

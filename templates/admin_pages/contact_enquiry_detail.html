@@ -1,0 +1,263 @@
+{% extends "admin_pages/base.html" %}
+
+{% block title %}
+Contact Enquiry | Flying Fox Admin
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    .enquiry-detail-wrapper {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .enquiry-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .enquiry-back:hover {
+        color: #dc1710;
+    }
+
+    .enquiry-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+    .enquiry-card-header {
+        padding: 25px 30px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .enquiry-card-header h3 {
+        margin: 0 0 8px;
+        font-weight: 700;
+    }
+
+    .enquiry-date {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .enquiry-customer {
+        padding: 25px 30px;
+        background: #f9fafb;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .enquiry-field span {
+        display: block;
+        color: #6b7280;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .enquiry-field strong {
+        color: #111827;
+    }
+
+    .enquiry-message {
+        padding: 30px;
+    }
+
+    .enquiry-message h5 {
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .enquiry-message-content {
+        background: #f9fafb;
+        padding: 20px;
+        border-radius: 10px;
+        line-height: 1.8;
+        white-space: pre-line;
+    }
+
+    .enquiry-actions {
+        padding: 20px 30px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 10px;
+    }
+
+    .reply-btn {
+        background: #dc1710;
+        color: white;
+        border-radius: 8px;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .reply-btn:hover {
+        background: #b9110c;
+        color: white;
+    }
+
+    @media(max-width:768px) {
+
+        .enquiry-customer {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="enquiry-detail-wrapper">
+
+
+    <a
+        href="{% url 'contact_enquiry_list' %}"
+        class="enquiry-back"
+    >
+        <i class="fas fa-arrow-left"></i>
+        Back to Contact Enquiries
+    </a>
+
+
+    <div class="enquiry-card">
+
+
+        <!-- HEADER -->
+
+        <div class="enquiry-card-header">
+
+            <h3>
+                {{ contact.subject }}
+            </h3>
+
+            <div class="enquiry-date">
+
+                Received on
+                {{ contact.created_at|date:"F d, Y" }}
+
+                at
+
+                {{ contact.created_at|date:"h:i A" }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CUSTOMER -->
+
+        <div class="enquiry-customer">
+
+            <div class="enquiry-field">
+
+                <span>Customer Name</span>
+
+                <strong>
+                    {{ contact.name }}
+                </strong>
+
+            </div>
+
+
+            <div class="enquiry-field">
+
+                <span>Email Address</span>
+
+                <strong>
+                    {{ contact.email }}
+                </strong>
+
+            </div>
+
+
+            <div class="enquiry-field">
+
+                <span>Enquiry ID</span>
+
+                <strong>
+                    #{{ contact.id }}
+                </strong>
+
+            </div>
+
+{% comment %} 
+            <div class="enquiry-field">
+
+                <span>Email Status</span>
+
+                {% if contact.email_sent %}
+
+                    <strong class="text-success">
+                        Email Sent
+                    </strong>
+
+                {% else %}
+
+                    <strong class="text-danger">
+                        Email Not Sent
+                    </strong>
+
+                {% endif %}
+
+            </div> {% endcomment %}
+
+        </div>
+
+
+
+        <!-- MESSAGE -->
+
+        <div class="enquiry-message">
+
+            <h5>
+                Customer Message
+            </h5>
+
+            <div class="enquiry-message-content">{{ contact.message }}</div>
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="enquiry-actions">
+
+            <a
+                href="mailto:{{ contact.email }}?subject=Re: {{ contact.subject|urlencode }}"
+                class="reply-btn"
+            >
+
+                <i class="fas fa-reply"></i>
+
+                Reply via Email
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

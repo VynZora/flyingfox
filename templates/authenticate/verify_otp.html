@@ -1,0 +1,1430 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+
+{% block title %}
+Verify OTP - Flying Fox Adventure
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   OTP VERIFY PAGE
+========================================================= */
+
+.ff-otp-page {
+    position: relative;
+
+    min-height: 100vh;
+
+    padding:
+        180px
+        0
+        100px;
+
+    background:
+        #f7f7f7;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.ff-otp-card {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.08fr;
+
+    min-height: 650px;
+
+    overflow: hidden;
+
+    background:
+        #ffffff;
+
+    border-radius:
+        32px;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   LEFT IMAGE
+========================================================= */
+
+.ff-otp-image-side {
+    position: relative;
+
+    min-height: 650px;
+
+    overflow: hidden;
+}
+
+
+.ff-otp-image-side img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+}
+
+
+.ff-otp-image-side::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 50%,
+            rgba(0, 0, 0, 0.20)
+        );
+}
+
+
+/* =========================================================
+   RIGHT AREA
+========================================================= */
+
+.ff-otp-form-side {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        60px
+        70px;
+}
+
+
+.ff-otp-wrapper {
+    width: 100%;
+
+    max-width: 540px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.ff-otp-logo {
+    margin-bottom: 25px;
+}
+
+
+.ff-otp-logo img {
+    width: 105px;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.ff-otp-heading {
+    margin-bottom: 35px;
+}
+
+
+.ff-otp-heading span {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color:
+        #c31103;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.ff-otp-heading h2 {
+    margin-bottom:
+        10px;
+
+    color:
+        #1e1e1e;
+
+    font-size:
+        37px;
+
+    font-weight:
+        800;
+}
+
+
+.ff-otp-heading h2 strong {
+    color:
+        #c31103;
+}
+
+
+.ff-otp-heading p {
+    margin: 0;
+
+    color:
+        #666666;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.7;
+}
+
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+.ff-otp-phone {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top:
+        10px;
+
+    padding:
+        8px
+        15px;
+
+    color:
+        #222222;
+
+    background:
+        #fff4f3;
+
+    border-radius:
+        50px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+}
+
+
+.ff-otp-phone i {
+    color:
+        #c31103;
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.ff-otp-messages {
+    margin-bottom:
+        20px;
+}
+
+
+.ff-otp-alert {
+    padding:
+        11px
+        15px;
+
+    color:
+        #c31103;
+
+    background:
+        rgba(
+            195,
+            17,
+            3,
+            0.08
+        );
+
+    border-radius:
+        10px;
+
+    font-size:
+        13px;
+}
+
+
+/* =========================================================
+   OTP BOXES
+========================================================= */
+
+.ff-otp-boxes {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            6,
+            1fr
+        );
+
+    gap:
+        12px;
+
+    margin-bottom:
+        28px;
+}
+
+
+.ff-otp-input {
+    width: 100%;
+    height: 70px;
+
+    padding: 0;
+
+    border:
+        1px solid
+        #dddddd;
+
+    outline: none;
+
+    border-radius:
+        14px;
+
+    color:
+        #222222;
+
+    background:
+        #ffffff;
+
+    text-align:
+        center;
+
+    font-size:
+        24px;
+
+    font-weight:
+        700;
+
+    transition:
+        border-color
+        0.25s ease,
+        box-shadow
+        0.25s ease;
+}
+
+
+.ff-otp-input:focus {
+    border-color:
+        #c31103;
+
+    box-shadow:
+        0
+        0
+        0
+        4px
+        rgba(
+            195,
+            17,
+            3,
+            0.08
+        );
+}
+
+
+/* =========================================================
+   VERIFY BUTTON
+========================================================= */
+
+.ff-otp-submit {
+    width: 100%;
+    height: 60px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    padding:
+        10px
+        25px;
+
+    border: none;
+
+    border-radius:
+        50px;
+
+    color:
+        #ffffff;
+
+    background:
+        #c31103;
+
+    box-shadow:
+        0
+        13px
+        30px
+        rgba(
+            195,
+            17,
+            3,
+            0.22
+        );
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        transform
+        0.3s ease,
+        background
+        0.3s ease;
+}
+
+
+.ff-otp-submit:hover {
+    background:
+        #a30e02;
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   RESEND
+========================================================= */
+
+.ff-otp-resend {
+    margin-top:
+        30px;
+}
+
+
+.ff-otp-resend p {
+    margin-bottom:
+        7px;
+
+    color:
+        #888888;
+
+    font-size:
+        13px;
+}
+
+
+.ff-otp-resend a {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    color:
+        #222222;
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+}
+
+
+.ff-otp-resend a:hover {
+    color:
+        #c31103;
+}
+
+
+/* =========================================================
+   CHANGE NUMBER
+========================================================= */
+
+.ff-change-number {
+    margin-top:
+        18px;
+}
+
+
+.ff-change-number a {
+    color:
+        #c31103;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-otp-card {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .ff-otp-image-side {
+        min-height:
+            450px;
+    }
+
+
+    .ff-otp-form-side {
+        padding:
+            55px
+            40px;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .ff-otp-page {
+        padding:
+            140px
+            0
+            70px;
+    }
+
+
+    .ff-otp-image-side {
+        min-height:
+            350px;
+    }
+
+
+    .ff-otp-form-side {
+        padding:
+            45px
+            20px;
+    }
+
+
+    .ff-otp-heading h2 {
+        font-size:
+            29px;
+    }
+
+
+    .ff-otp-boxes {
+        gap:
+            7px;
+    }
+
+
+    .ff-otp-input {
+        height:
+            58px;
+
+        font-size:
+            20px;
+    }
+
+}
+
+
+@media (max-width: 420px) {
+
+    .ff-otp-boxes {
+        gap:
+            5px;
+    }
+
+
+    .ff-otp-input {
+        height:
+            52px;
+
+        border-radius:
+            10px;
+
+        font-size:
+            18px;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   SMALLER VERIFY OTP CARD
+========================================================= */
+
+.ff-otp-card {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.08fr;
+
+    /* OLD: 650px */
+    min-height: 500px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 20px 55px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   LEFT IMAGE
+========================================================= */
+
+.ff-otp-image-side {
+    position: relative;
+
+    /* OLD: 650px */
+    min-height: 500px;
+
+    overflow: hidden;
+}
+
+.ff-otp-image-side img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.ff-otp-form-side {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    /* OLD: 60px 70px */
+    padding: 30px 55px;
+}
+
+
+.ff-otp-wrapper {
+    width: 100%;
+
+    max-width: 520px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.ff-otp-logo {
+    /* OLD: 25px */
+    margin-bottom: 10px;
+}
+
+.ff-otp-logo img {
+    /* OLD: 105px */
+    width: 70px;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.ff-otp-heading {
+    /* OLD: 35px */
+    margin-bottom: 18px;
+}
+
+.ff-otp-heading span {
+    margin-bottom: 5px;
+
+    color: #c31103;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-otp-heading h2 {
+    margin-bottom: 6px;
+
+    color: #1e1e1e;
+
+    /* OLD: 37px */
+    font-size: 31px;
+
+    line-height: 1.15;
+
+    font-weight: 800;
+}
+
+
+.ff-otp-heading h2 strong {
+    color: #c31103;
+}
+
+
+.ff-otp-heading p {
+    margin: 0;
+
+    color: #666666;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   PHONE NUMBER
+========================================================= */
+
+.ff-otp-phone {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 7px;
+
+    padding: 6px 13px;
+
+    color: #222222;
+
+    background: #fff4f3;
+
+    border-radius: 50px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   OTP BOXES
+========================================================= */
+
+.ff-otp-boxes {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    /* OLD: 12px */
+    gap: 9px;
+
+    /* OLD: 28px */
+    margin-bottom: 18px;
+}
+
+
+.ff-otp-input {
+    width: 100%;
+
+    /* OLD: 70px */
+    height: 54px;
+
+    padding: 0;
+
+    border: 1px solid #dddddd;
+
+    outline: none;
+
+    border-radius: 12px;
+
+    color: #222222;
+
+    background: #ffffff;
+
+    text-align: center;
+
+    /* OLD: 24px */
+    font-size: 21px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.ff-otp-submit {
+    width: 100%;
+
+    /* OLD: 60px */
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 8px 22px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    box-shadow:
+        0 10px 25px
+        rgba(195, 17, 3, 0.20);
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   RESEND
+========================================================= */
+
+.ff-otp-resend {
+    /* OLD: 30px */
+    margin-top: 15px;
+}
+
+.ff-otp-resend p {
+    margin-bottom: 4px;
+
+    color: #888888;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   CHANGE NUMBER
+========================================================= */
+
+.ff-change-number {
+    /* OLD: 18px */
+    margin-top: 8px;
+}
+
+@media (max-width: 991px) {
+
+    .ff-otp-card {
+        grid-template-columns: 1fr;
+    }
+
+    .ff-otp-image-side {
+        min-height: 300px;
+    }
+
+    .ff-otp-form-side {
+        padding: 35px 35px;
+    }
+}
+
+
+@media (max-width: 767px) {
+
+    .ff-otp-page {
+        padding: 120px 0 50px;
+    }
+
+    .ff-otp-image-side {
+        min-height: 240px;
+    }
+
+    .ff-otp-form-side {
+        padding: 30px 18px;
+    }
+
+    .ff-otp-logo img {
+        width: 60px;
+    }
+
+    .ff-otp-heading h2 {
+        font-size: 27px;
+    }
+
+    .ff-otp-boxes {
+        gap: 6px;
+    }
+
+    .ff-otp-input {
+        height: 50px;
+        font-size: 19px;
+    }
+
+    .ff-otp-submit {
+        height: 48px;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+<section class="ff-otp-page">
+
+    <div class="container">
+
+
+        <!-- =====================================================
+             AUTH PROGRESS HEADER
+        ====================================================== -->
+
+        <div class="ff-auth-progress">
+            <div class="ff-auth-steps">
+
+
+                <!-- STEP 1 - COMPLETED -->
+
+                <div class="ff-auth-step completed">
+
+                    <div class="ff-auth-step-icon">
+
+                        <i class="fas fa-check"></i>
+
+                    </div>
+
+                    <span>
+                        Mobile Number
+                    </span>
+
+                </div>
+
+
+                <div class="ff-auth-step-line completed"></div>
+
+
+                <!-- STEP 2 - CURRENT -->
+
+                <div class="ff-auth-step active">
+
+                    <div class="ff-auth-step-icon">
+
+                        <i class="fas fa-shield-alt"></i>
+
+                    </div>
+
+                    <span>
+                        Verify OTP
+                    </span>
+
+                </div>
+
+
+                <div class="ff-auth-step-line"></div>
+
+
+                <!-- STEP 3 - NEXT -->
+
+                <div class="ff-auth-step">
+
+                    <div class="ff-auth-step-icon">
+
+                        <i class="fas fa-ticket-alt"></i>
+
+                    </div>
+
+                    <span>
+                        Ready to Book
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             OTP CARD
+        ====================================================== -->
+
+        <div class="ff-otp-card">
+
+
+            <!-- LEFT IMAGE -->
+
+            <div class="ff-otp-image-side">
+
+                <img
+                    src="{% static 'frontend/assets/img/about/img-3.jpg' %}"
+                    alt="Flying Fox Adventure"
+                >
+
+            </div>
+
+
+            <!-- RIGHT FORM -->
+
+            <div class="ff-otp-form-side">
+
+                <div class="ff-otp-wrapper">
+
+
+                    <!-- LOGO -->
+
+                    <div class="ff-otp-logo">
+
+                        <img
+                            src="{% static 'frontend/assets/img/logo/logo.png' %}"
+                            alt="Flying Fox Adventure"
+                        >
+
+                    </div>
+
+
+                    <!-- HEADING -->
+
+                    <div class="ff-otp-heading">
+
+                        <span>
+                            Mobile Verification
+                        </span>
+
+                        <h2>
+                            Let's Verify Your
+                            <strong>
+                                Phone Number
+                            </strong>
+                        </h2>
+
+                        <p>
+                            Please enter the 6-digit OTP
+                            that we have sent to
+                        </p>
+
+
+                        <div class="ff-otp-phone">
+
+                            <i class="fas fa-mobile-alt"></i>
+
+                            +91 {{ phone }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MESSAGES -->
+
+                    {% if messages %}
+
+                        <div class="ff-otp-messages">
+
+                            {% for message in messages %}
+
+                                <div class="ff-otp-alert">
+                                    {{ message }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- OTP FORM -->
+
+                    <form
+                        method="POST"
+                        action="{% url 'verify_login_otp' %}"
+                        id="ffOtpForm"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <div class="ff-otp-boxes">
+
+                            <input
+                                type="text"
+                                name="otp_1"
+                                class="ff-otp-input"
+                                maxlength="1"
+                                inputmode="numeric"
+                                autocomplete="one-time-code"
+                                required
+                            >
+
+                            <input
+                                type="text"
+                                name="otp_2"
+                                class="ff-otp-input"
+                                maxlength="1"
+                                inputmode="numeric"
+                                required
+                            >
+
+                            <input
+                                type="text"
+                                name="otp_3"
+                                class="ff-otp-input"
+                                maxlength="1"
+                                inputmode="numeric"
+                                required
+                            >
+
+                            <input
+                                type="text"
+                                name="otp_4"
+                                class="ff-otp-input"
+                                maxlength="1"
+                                inputmode="numeric"
+                                required
+                            >
+
+                            <input
+                                type="text"
+                                name="otp_5"
+                                class="ff-otp-input"
+                                maxlength="1"
+                                inputmode="numeric"
+                                required
+                            >
+
+                            <input
+                                type="text"
+                                name="otp_6"
+                                class="ff-otp-input"
+                                maxlength="1"
+                                inputmode="numeric"
+                                required
+                            >
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="ff-otp-submit"
+                        >
+
+                            <i class="fas fa-shield-check"></i>
+
+                            Verify OTP & Continue
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- RESEND -->
+
+                    <div class="ff-otp-resend">
+
+                        <p>
+                            Didn't receive your OTP?
+                        </p>
+
+                        <a href="{% url 'resend_login_otp' %}">
+
+                            <i class="fas fa-rotate-right"></i>
+
+                            Resend OTP
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- CHANGE NUMBER -->
+
+                    <div class="ff-change-number">
+
+                        <a href="{% url 'user_signin' %}">
+
+                            <i class="fas fa-arrow-left"></i>
+
+                            Change mobile number
+
+                        </a>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const otpInputs =
+            document.querySelectorAll(
+                ".ff-otp-input"
+            );
+
+
+        /* ==========================================
+           AUTO MOVE NEXT
+        ========================================== */
+
+        otpInputs.forEach(
+            function (
+                input,
+                index
+            ) {
+
+
+                input.addEventListener(
+                    "input",
+                    function () {
+
+
+                        /*
+                         * Only numbers
+                         */
+
+                        this.value =
+                            this.value.replace(
+                                /[^0-9]/g,
+                                ""
+                            );
+
+
+                        if (
+                            this.value
+                            &&
+                            index
+                            <
+                            otpInputs.length - 1
+                        ) {
+
+                            otpInputs[
+                                index + 1
+                            ].focus();
+
+                        }
+
+
+                    }
+                );
+
+
+                /* ==================================
+                   BACKSPACE
+                ================================== */
+
+                input.addEventListener(
+                    "keydown",
+                    function (event) {
+
+
+                        if (
+                            event.key === "Backspace"
+                            &&
+                            !this.value
+                            &&
+                            index > 0
+                        ) {
+
+                            otpInputs[
+                                index - 1
+                            ].focus();
+
+                        }
+
+
+                    }
+                );
+
+
+                /* ==================================
+                   PASTE OTP
+                ================================== */
+
+                input.addEventListener(
+                    "paste",
+                    function (event) {
+
+
+                        event.preventDefault();
+
+
+                        const pasted =
+                            (
+                                event.clipboardData
+                                ||
+                                window.clipboardData
+                            )
+                            .getData("text")
+                            .replace(
+                                /\D/g,
+                                ""
+                            )
+                            .slice(
+                                0,
+                                6
+                            );
+
+
+                        pasted
+                            .split("")
+                            .forEach(
+                                function (
+                                    number,
+                                    pasteIndex
+                                ) {
+
+                                    if (
+                                        otpInputs[
+                                            pasteIndex
+                                        ]
+                                    ) {
+
+                                        otpInputs[
+                                            pasteIndex
+                                        ].value =
+                                            number;
+
+                                    }
+
+                                }
+                            );
+
+
+                        if (
+                            pasted.length
+                        ) {
+
+                            const focusIndex =
+                                Math.min(
+                                    pasted.length,
+                                    otpInputs.length
+                                ) - 1;
+
+
+                            otpInputs[
+                                focusIndex
+                            ].focus();
+
+                        }
+
+
+                    }
+                );
+
+
+            }
+        );
+
+
+        /* Focus first box */
+
+        if (
+            otpInputs.length
+        ) {
+
+            otpInputs[
+                0
+            ].focus();
+
+        }
+
+
+    }
+);
+
+</script>
+
+{% endblock %}

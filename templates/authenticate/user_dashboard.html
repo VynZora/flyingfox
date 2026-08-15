@@ -1,0 +1,705 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<section class="ff-account-page">
+
+    <div class="container">
+
+
+        <!-- =============================================
+             PAGE HEADING
+        ============================================== -->
+
+        <div class="ff-account-heading">
+
+            <span>
+                <i class="fas fa-user-shield"></i>
+                Flying Fox Account
+            </span>
+
+            <h1>
+                My <strong>Account</strong>
+            </h1>
+
+            <p>
+                Manage your personal information,
+                bookings and Flying Fox adventures.
+            </p>
+
+        </div>
+
+
+
+        <div class="ff-account-layout">
+
+
+            <!-- =========================================
+                 LEFT SIDEBAR
+            ========================================== -->
+
+            <aside class="ff-account-sidebar">
+
+
+                <!-- PROFILE SUMMARY -->
+
+                <div class="ff-account-profile-card">
+
+                    <div class="ff-account-avatar">
+
+                        {% if profile.full_name %}
+
+                            {{ profile.full_name|first|upper }}
+
+                        {% else %}
+
+                            <i class="fas fa-user"></i>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="ff-account-profile-info">
+
+                        <h3>
+
+                            {% if profile.full_name %}
+
+                                {{ profile.full_name }}
+
+                            {% else %}
+
+                                Flying Fox Rider
+
+                            {% endif %}
+
+                        </h3>
+
+
+                        <p>
+
+                            <i class="fas fa-phone"></i>
+
+                            +91 {{ profile.phone }}
+
+                        </p>
+
+
+                        {% if profile.email %}
+
+                            <p>
+
+                                <i class="fas fa-envelope"></i>
+
+                                {{ profile.email }}
+
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MENU -->
+
+                <nav class="ff-account-menu">
+
+
+                    <a
+                        href="{% url 'user_dashboard' %}"
+                        class="active"
+                    >
+
+                        <span class="ff-account-menu-icon">
+
+                            <i class="fas fa-user"></i>
+
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                My Profile
+                            </strong>
+
+                            <small>
+                                Personal information
+                            </small>
+
+                        </div>
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
+
+
+
+                    <a href="#">
+
+                        <span class="ff-account-menu-icon">
+
+                            <i class="fas fa-ticket-alt"></i>
+
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                My Bookings
+                            </strong>
+
+                            <small>
+                                View your ride bookings
+                            </small>
+
+                        </div>
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
+
+
+
+                    <a href="#">
+
+                        <span class="ff-account-menu-icon">
+
+                            <i class="fas fa-qrcode"></i>
+
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                My Tickets
+                            </strong>
+
+                            <small>
+                                Access adventure tickets
+                            </small>
+
+                        </div>
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
+
+
+
+                    <a href="#">
+
+                        <span class="ff-account-menu-icon">
+
+                            <i class="fas fa-headset"></i>
+
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Help & Support
+                            </strong>
+
+                            <small>
+                                Get help from our team
+                            </small>
+
+                        </div>
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
+
+
+
+                    <a
+                        href="{% url 'user_logout' %}"
+                        class="ff-account-logout"
+                    >
+
+                        <span class="ff-account-menu-icon">
+
+                            <i class="fas fa-sign-out-alt"></i>
+
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Logout
+                            </strong>
+
+                            <small>
+                                Sign out of your account
+                            </small>
+
+                        </div>
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
+
+
+                </nav>
+
+
+                <!-- UPDATE OPTIONS -->
+
+                <div class="ff-account-stay-connected">
+
+                    <h4>
+                        Stay Connected
+                    </h4>
+
+                    <p>
+                        Receive important Flying Fox updates.
+                    </p>
+
+                    <div>
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp booking updates
+                    </div>
+
+                    <div>
+                        <i class="fas fa-envelope"></i>
+                        Adventure news & offers
+                    </div>
+
+                </div>
+
+
+            </aside>
+
+
+
+            <!-- =========================================
+                 RIGHT PROFILE AREA
+            ========================================== -->
+
+            <main class="ff-account-main">
+
+
+                <div class="ff-account-form-header">
+
+
+                    <div class="ff-account-big-avatar">
+
+                        {% if profile.full_name %}
+
+                            {{ profile.full_name|first|upper }}
+
+                        {% else %}
+
+                            <i class="fas fa-user"></i>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Personal Information
+                        </span>
+
+                        <h2>
+                            Complete Your Profile
+                        </h2>
+
+                        <p>
+                            Keep your details updated for a smoother
+                            booking experience.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =====================================
+                     PROFILE FORM
+                ====================================== -->
+        
+
+
+{% if messages %}
+
+    <div class="ff-account-messages">
+
+        {% for message in messages %}
+
+            <div class="
+                ff-account-alert
+                {% if message.tags %}
+                    {{ message.tags }}
+                {% endif %}
+            ">
+
+                {% if message.tags == "success" %}
+                    <i class="fas fa-circle-check"></i>
+                {% else %}
+                    <i class="fas fa-circle-exclamation"></i>
+                {% endif %}
+
+                <span>
+                    {{ message }}
+                </span>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+
+
+
+                <form
+                   method="POST"
+                   action="{% url 'user_dashboard' %}"
+                   class="ff-account-form"
+                   >
+
+                    {% csrf_token %}
+
+
+                    <div class="ff-account-form-grid">
+
+
+                        <!-- FULL NAME -->
+
+                        <div class="ff-account-field">
+
+                            <label>
+                                Full Name
+                            </label>
+
+                            <div class="ff-account-input">
+
+                                <i class="fas fa-user"></i>
+
+                                <input
+                                    type="text"
+                                    name="full_name"
+                                    value="{{ profile.full_name|default:'' }}"
+                                    placeholder="Enter your full name"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- EMAIL -->
+
+                        <div class="ff-account-field">
+
+                            <label>
+                                Email Address
+                            </label>
+
+                            <div class="ff-account-input">
+
+                                <i class="fas fa-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value="{{ profile.email|default:'' }}"
+                                    placeholder="Enter your email"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- GENDER -->
+
+<div class="ff-account-field">
+
+    <label>
+        Gender
+    </label>
+
+    <div class="ff-account-input">
+
+        <i class="fas fa-venus-mars"></i>
+
+        <select name="gender">
+
+            <option value="">
+                Select Gender
+            </option>
+
+            <option
+                value="male"
+                {% if profile.gender == "male" %}selected{% endif %}
+            >
+                Male
+            </option>
+
+            <option
+                value="female"
+                {% if profile.gender == "female" %}selected{% endif %}
+            >
+                Female
+            </option>
+
+            <option
+                value="other"
+                {% if profile.gender == "other" %}selected{% endif %}
+            >
+                Other
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+
+
+                        <!-- PHONE -->
+
+<div class="ff-account-field">
+
+    <label>
+        Mobile Number
+    </label>
+
+    <div class="ff-account-input ff-account-phone">
+
+        <span>
+            🇮🇳 +91
+        </span>
+
+        <input
+            type="text"
+            value="{{ profile.phone }}"
+            readonly
+        >
+
+        <i class="fas fa-check-circle"></i>
+
+    </div>
+
+    <small class="ff-account-verified-text">
+
+        <i class="fas fa-shield-alt"></i>
+
+        OTP Verified Number
+
+    </small>
+
+</div>
+
+
+
+                        <!-- DOB -->
+
+                        <div class="ff-account-field">
+
+                            <label>
+                                Date of Birth
+                            </label>
+
+                            <div class="ff-account-input">
+
+                                <i class="fas fa-calendar-alt"></i>
+
+                                <input
+                                    type="date"
+                                    name="date_of_birth"
+                                    value="{% if profile.date_of_birth %}{{ profile.date_of_birth|date:'Y-m-d' }}{% endif %}"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PIN CODE -->
+
+                        <div class="ff-account-field">
+
+                            <label>
+                                PIN Code
+                            </label>
+
+                            <div class="ff-account-input">
+
+                                <i class="fas fa-map-pin"></i>
+
+                                <input
+    type="text"
+    name="pincode"
+    value="{{ profile.pincode|default:'' }}"
+    placeholder="Enter 6-digit PIN code"
+    maxlength="6"
+    minlength="6"
+    inputmode="numeric"
+    pattern="[0-9]{6}"
+>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- ADDRESS -->
+
+                        <div class="ff-account-field">
+
+                            <label>
+                                Home Address
+                            </label>
+
+                            <div class="ff-account-input">
+
+                                <i class="fas fa-home"></i>
+
+                                <input
+                                    type="text"
+                                    name="address"
+                                    value="{{ profile.address|default:'' }}"
+                                    placeholder="Enter your address"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- REGION -->
+
+                        <div class="ff-account-field">
+
+                            <label>
+                                City / Region
+                            </label>
+
+                            <div class="ff-account-input">
+
+                                <i class="fas fa-map-marker-alt"></i>
+
+                                <input
+                                    type="text"
+                                    name="region"
+                                    value="{{ profile.region|default:'' }}"
+                                    placeholder="Enter city or region"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         PREFERENCES
+                    ====================================== -->
+
+                    <div class="ff-account-preferences">
+
+
+                        <label>
+
+                            <input
+                                type="checkbox"
+                                name="whatsapp_updates"
+                                {% if profile.whatsapp_updates %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span></span>
+
+                            Receive booking updates on WhatsApp
+
+                        </label>
+
+
+                        <label>
+
+                            <input
+                                type="checkbox"
+                                name="email_updates"
+                                {% if profile.email_updates %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span></span>
+
+                            Receive adventure news and offers by email
+
+                        </label>
+
+
+                    </div>
+
+
+
+                    <p class="ff-account-privacy">
+
+                        <i class="fas fa-shield-alt"></i>
+
+                        Your information is used only to manage your
+                        Flying Fox account and adventure bookings.
+
+                    </p>
+
+
+
+                    <button
+                        type="submit"
+                        class="ff-account-submit"
+                    >
+
+                        Save & Update Profile
+
+                        <span>
+
+                            <i class="fas fa-arrow-right"></i>
+
+                        </span>
+
+                    </button>
+
+
+                </form>
+
+
+            </main>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
