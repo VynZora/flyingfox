@@ -572,7 +572,7 @@
 
                                 </li>
 
-                                 <li>
+                                 {% comment %} <li>
 
                                     <a href="{% url 'terms_conditions' %}">
 
@@ -593,7 +593,7 @@
 
                                     </a>
 
-                                </li>
+                                </li> {% endcomment %}
 
 
                                 {% comment %} <li>
@@ -939,7 +939,7 @@
          COPYRIGHT
     ========================================================= -->
 
-    <div class="container">
+    {% comment %} <div class="container">
 
         <div class="copyright text-center">
 
@@ -966,7 +966,57 @@
 
         </div>
 
+    </div> {% endcomment %}
+
+<div class="container">
+
+    <div class="copyright">
+
+        <div class="ff-footer-bottom">
+
+            <!-- COPYRIGHT LEFT -->
+            <p class="copyright-text">
+
+                &copy; Copyright
+
+                <span id="date"></span>
+
+                <a href="{% url 'home' %}">
+                    Flying Fox Adventure
+                </a>
+
+                All Rights Reserved.
+
+                <span class="ff-footer-credit">
+                    Designed by
+                    <a href="#">
+                        Vynzora
+                    </a>
+                </span>
+
+            </p>
+
+
+            <!-- LEGAL LINKS RIGHT -->
+            <div class="ff-footer-legal">
+
+                <a href="{% url 'privacy_policy' %}">
+                    Privacy Policy
+                </a>
+
+                <span>|</span>
+
+                <a href="{% url 'terms_conditions' %}">
+                    Terms & Conditions
+                </a>
+
+            </div>
+
+        </div>
+
     </div>
+
+</div>   
 
 </footer>
 

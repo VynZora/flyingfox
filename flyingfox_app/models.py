@@ -1421,6 +1421,10 @@ class ChatSession(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True,
     )
+    context = models.JSONField(
+        default=dict,
+        blank=True,
+      )
 
     class Meta:
         ordering = ["-started_at"]

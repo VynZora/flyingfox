@@ -30490,3 +30490,63 @@ body:has(#offcanvasNavbar.showing) .header-2 {
     z-index: 1050 !important;
 }
 /*  */
+
+
+/* footer terms and condition css start */
+
+/* =========================================================
+   FOOTER BOTTOM
+========================================================= */
+
+.ff-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.ff-footer-bottom .copyright-text {
+    margin: 0;
+}
+
+.ff-footer-legal {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+.ff-footer-legal a {
+    color: #333;
+    font-size: 15px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.ff-footer-legal a:hover {
+    color: #c31103;
+}
+
+.ff-footer-legal span {
+    color: #bbb;
+}
+
+
+/* MOBILE */
+@media (max-width: 767px) {
+
+    .ff-footer-bottom {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .ff-footer-legal {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+}
+
+/* footer terms and condition css end  */
