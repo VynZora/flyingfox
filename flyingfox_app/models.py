@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from django.contrib.auth.models import User
 import uuid
+import secrets
 
 
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -620,7 +621,6 @@ class RidePrice(models.Model):
         )
 
 
-
 class Booking(models.Model):
 
     STATUS_CHOICES = [
@@ -636,166 +636,152 @@ class Booking(models.Model):
     booking_id = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
-        editable=False
+        editable=False,
     )
 
-    # ==========================================
+    # =====================================================
     # USER
-    # ==========================================
+    # =====================================================
 
     user = models.ForeignKey(
         UserProfile,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="bookings"
+        related_name="bookings",
     )
 
-    # ==========================================
+    # =====================================================
     # CUSTOMER DETAILS
-    # ==========================================
+    # =====================================================
 
     customer_name = models.CharField(
-        max_length=150
+        max_length=150,
     )
 
     customer_email = models.EmailField(
         blank=True,
-        default=""
+        default="",
     )
 
     customer_phone = models.CharField(
-        max_length=20
+        max_length=20,
     )
 
     customer_pincode = models.CharField(
         max_length=10,
         blank=True,
-        default=""
+        default="",
     )
 
-    # ==========================================
+    # =====================================================
     # RIDE
-    # ==========================================
+    # =====================================================
 
     ride = models.ForeignKey(
         Ride,
         on_delete=models.PROTECT,
-        related_name="bookings"
+        related_name="bookings",
     )
 
     ride_price = models.ForeignKey(
         RidePrice,
         on_delete=models.PROTECT,
-        related_name="bookings"
+        related_name="bookings",
     )
 
     booking_date = models.DateField()
 
     time_slot = models.CharField(
-        max_length=50
+        max_length=50,
     )
 
-    # ==========================================
+    # =====================================================
     # PARTICIPANTS
-    # ==========================================
+    # =====================================================
 
     quantity = models.PositiveIntegerField(
-        default=1
+        default=1,
     )
 
-    # ==========================================
+    # =====================================================
     # PRICE
-    # ==========================================
+    # =====================================================
 
     price_per_person = models.DecimalField(
         max_digits=10,
-        decimal_places=2
-    )
-
-    photo_addon = models.BooleanField(
-        default=False
-    )
-
-    video_addon = models.BooleanField(
-        default=False
-    )
-
-    addon_amount = models.DecimalField(
-        max_digits=10,
         decimal_places=2,
-        default=0
     )
 
-    # ==========================================
+    # =====================================================
     # OFFER
-    # ==========================================
+    # =====================================================
 
     offer = models.ForeignKey(
         "Offer",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="bookings"
+        related_name="bookings",
     )
 
     applied_coupon_code = models.CharField(
         max_length=50,
         blank=True,
-        default=""
+        default="",
     )
 
     discount_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        default=0
+        default=0,
     )
 
-    # ==========================================
+    # =====================================================
     # TOTALS
-    # ==========================================
+    # =====================================================
 
     subtotal = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
     )
 
     total_amount = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
     )
 
-    # ==========================================
+    # =====================================================
     # STATUS
-    # ==========================================
+    # =====================================================
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default="pending"
+        default="pending",
     )
 
     notifications_sent = models.BooleanField(
-        default=False
+        default=False,
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     updated_at = models.DateTimeField(
-        auto_now=True
+        auto_now=True,
     )
 
     class Meta:
         ordering = ["-created_at"]
 
     def __str__(self):
+
         return (
             f"{self.booking_id} - "
             f"{self.customer_name}"
         )
-
 
 
 # class Booking(models.Model):
@@ -1052,7 +1038,12 @@ class Payment(models.Model):
 
 
 
+
 class Ticket(models.Model):
+
+    # =====================================================
+    # INTERNAL UUID
+    # =====================================================
 
     ticket_id = models.UUIDField(
         default=uuid.uuid4,
@@ -1060,11 +1051,34 @@ class Ticket(models.Model):
         editable=False
     )
 
+
+    # =====================================================
+    # PUBLIC 6-DIGIT TICKET ID
+    # =====================================================
+
+    ticket_number = models.CharField(
+        max_length=6,
+        unique=True,
+        blank=True,
+        null=True,
+        db_index=True,
+    )
+
+
+    # =====================================================
+    # BOOKING
+    # =====================================================
+
     booking = models.OneToOneField(
         Booking,
         on_delete=models.CASCADE,
         related_name="ticket"
     )
+
+
+    # =====================================================
+    # SECURE QR TOKEN
+    # =====================================================
 
     qr_token = models.UUIDField(
         default=uuid.uuid4,
@@ -1072,11 +1086,13 @@ class Ticket(models.Model):
         editable=False
     )
 
+
     qr_image = models.ImageField(
         upload_to="tickets/qr/",
         blank=True,
         null=True
     )
+
 
     pdf_ticket = models.FileField(
         upload_to="tickets/pdf/",
@@ -1084,43 +1100,107 @@ class Ticket(models.Model):
         null=True
     )
 
+
     whatsapp_sent = models.BooleanField(
         default=False
     )
 
+
     sms_sent = models.BooleanField(
         default=False
     )
+
 
     sms_message_id = models.CharField(
         max_length=255,
         blank=True
     )
 
+
     sms_status = models.CharField(
         max_length=30,
         blank=True
     )
 
+
     email_sent = models.BooleanField(
         default=False
     )
 
+
     is_used = models.BooleanField(
         default=False
     )
+
 
     checked_in_at = models.DateTimeField(
         blank=True,
         null=True
     )
 
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+
+    # =====================================================
+    # AUTOMATIC 6-DIGIT TICKET NUMBER
+    # =====================================================
+
+    def save(
+        self,
+        *args,
+        **kwargs
+    ):
+
+        if not self.ticket_number:
+
+            while True:
+
+                number = str(
+                    secrets.randbelow(
+                        900000
+                    )
+                    +
+                    100000
+                )
+
+
+                if not Ticket.objects.filter(
+                    ticket_number=number
+                ).exists():
+
+                    self.ticket_number = number
+
+                    break
+
+
+        super().save(
+            *args,
+            **kwargs
+        )
+
+
     def __str__(self):
-        return str(self.ticket_id)
+
+        if self.ticket_number:
+
+            return self.ticket_number
+
+        return str(
+            self.ticket_id
+        )
+
+
+    class Meta:
+
+        permissions = [
+            (
+                "verify_ticket",
+                "Can scan and verify tickets",
+            ),
+        ]
 
 
 
@@ -2042,6 +2122,47 @@ class Offer(models.Model):
             return f"{self.title} - {self.ride.name}"
 
         return self.title
+    
+
+
+    def get_user_usage_count(
+         self, user_profile):
+
+        if not user_profile:
+           return 0
+
+        return (
+        Booking.objects
+        .filter(
+            user=user_profile,
+            offer=self,
+            status__in=[
+                "confirmed",
+                "checked_in",
+            ],
+        )
+        .count()
+    )
+
+
+    def can_user_use(
+       self,
+       user_profile):
+
+        if not user_profile:
+          return False
+
+        if not self.max_uses_per_user:
+            return True
+
+        usage_count = (
+            self.get_user_usage_count(
+            user_profile
+             )
+        )
+
+        return (
+        usage_count<self.max_uses_per_user)
 
 
     # =========================================================
@@ -2056,3 +2177,97 @@ class Offer(models.Model):
 
         verbose_name = "Offer"
         verbose_name_plural = "Offers"
+
+
+
+
+
+
+
+
+class ParticipantWeightRange(models.Model):
+
+    label = models.CharField(
+        max_length=100,
+        blank=True,
+        default=""
+    )
+
+    min_weight = models.PositiveIntegerField()
+
+    max_weight = models.PositiveIntegerField()
+
+    sort_order = models.PositiveIntegerField(
+        default=0
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    class Meta:
+        ordering = [
+            "sort_order",
+            "min_weight",
+        ]
+
+    def __str__(self):
+
+        if self.label:
+            return self.label
+
+        return (
+            f"{self.min_weight} - "
+            f"{self.max_weight} KG"
+        )
+
+
+class BookingWeightGroup(models.Model):
+
+    booking = models.ForeignKey(
+        Booking,
+        on_delete=models.CASCADE,
+        related_name="weight_groups"
+    )
+
+    weight_range = models.ForeignKey(
+        ParticipantWeightRange,
+        on_delete=models.PROTECT,
+        related_name="booking_weight_groups"
+    )
+
+    participant_count = models.PositiveIntegerField(
+        default=0
+    )
+
+    min_weight = models.PositiveIntegerField()
+
+    max_weight = models.PositiveIntegerField()
+
+    label = models.CharField(
+        max_length=100,
+        blank=True,
+        default=""
+    )
+
+    class Meta:
+
+        constraints = [
+
+            models.UniqueConstraint(
+                fields=[
+                    "booking",
+                    "weight_range",
+                ],
+                name="unique_booking_participant_weight_range"
+            )
+
+        ]
+
+    def __str__(self):
+
+        return (
+            f"{self.booking.booking_id} - "
+            f"{self.label or self.weight_range} - "
+            f"{self.participant_count} rider(s)"
+        )

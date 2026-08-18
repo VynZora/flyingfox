@@ -1,705 +1,849 @@
-{% extends "frontend/base.html" %}
-{% load static %}
-
-{% block content %}
+{% extends "authenticate/account_base.html" %}
 
 
-<section class="ff-account-page">
-
-    <div class="container">
-
-
-        <!-- =============================================
-             PAGE HEADING
-        ============================================== -->
-
-        <div class="ff-account-heading">
-
-            <span>
-                <i class="fas fa-user-shield"></i>
-                Flying Fox Account
-            </span>
-
-            <h1>
-                My <strong>Account</strong>
-            </h1>
-
-            <p>
-                Manage your personal information,
-                bookings and Flying Fox adventures.
-            </p>
-
-        </div>
+{% block title %}
+My Profile | Flying Fox
+{% endblock %}
 
 
-
-        <div class="ff-account-layout">
-
-
-            <!-- =========================================
-                 LEFT SIDEBAR
-            ========================================== -->
-
-            <aside class="ff-account-sidebar">
+{% block account_content %}
 
 
-                <!-- PROFILE SUMMARY -->
+<section class="ff-account-card">
 
-                <div class="ff-account-profile-card">
 
-                    <div class="ff-account-avatar">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-                        {% if profile.full_name %}
+    <div class="ff-account-content-header">
 
-                            {{ profile.full_name|first|upper }}
+        <span>
+            Personal Information
+        </span>
+
+        <h2>
+            Complete Your Profile
+        </h2>
+
+        <p>
+            Keep your details updated for a smoother
+            booking experience.
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         BODY
+    ====================================================== -->
+
+    <div class="ff-account-card-body">
+
+
+        {% if messages %}
+
+            <div class="ff-account-messages">
+
+                {% for message in messages %}
+
+                    <div class="
+                        ff-account-alert
+                        {{ message.tags }}
+                    ">
+
+                        {% if message.tags == "success" %}
+
+                            <i class="fas fa-circle-check"></i>
 
                         {% else %}
 
-                            <i class="fas fa-user"></i>
+                            <i class="fas fa-circle-exclamation"></i>
 
                         {% endif %}
 
-                    </div>
-
-
-                    <div class="ff-account-profile-info">
-
-                        <h3>
-
-                            {% if profile.full_name %}
-
-                                {{ profile.full_name }}
-
-                            {% else %}
-
-                                Flying Fox Rider
-
-                            {% endif %}
-
-                        </h3>
-
-
-                        <p>
-
-                            <i class="fas fa-phone"></i>
-
-                            +91 {{ profile.phone }}
-
-                        </p>
-
-
-                        {% if profile.email %}
-
-                            <p>
-
-                                <i class="fas fa-envelope"></i>
-
-                                {{ profile.email }}
-
-                            </p>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- MENU -->
-
-                <nav class="ff-account-menu">
-
-
-                    <a
-                        href="{% url 'user_dashboard' %}"
-                        class="active"
-                    >
-
-                        <span class="ff-account-menu-icon">
-
-                            <i class="fas fa-user"></i>
-
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                My Profile
-                            </strong>
-
-                            <small>
-                                Personal information
-                            </small>
-
-                        </div>
-
-                        <i class="fas fa-arrow-right"></i>
-
-                    </a>
-
-
-
-                    <a href="#">
-
-                        <span class="ff-account-menu-icon">
-
-                            <i class="fas fa-ticket-alt"></i>
-
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                My Bookings
-                            </strong>
-
-                            <small>
-                                View your ride bookings
-                            </small>
-
-                        </div>
-
-                        <i class="fas fa-arrow-right"></i>
-
-                    </a>
-
-
-
-                    <a href="#">
-
-                        <span class="ff-account-menu-icon">
-
-                            <i class="fas fa-qrcode"></i>
-
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                My Tickets
-                            </strong>
-
-                            <small>
-                                Access adventure tickets
-                            </small>
-
-                        </div>
-
-                        <i class="fas fa-arrow-right"></i>
-
-                    </a>
-
-
-
-                    <a href="#">
-
-                        <span class="ff-account-menu-icon">
-
-                            <i class="fas fa-headset"></i>
-
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Help & Support
-                            </strong>
-
-                            <small>
-                                Get help from our team
-                            </small>
-
-                        </div>
-
-                        <i class="fas fa-arrow-right"></i>
-
-                    </a>
-
-
-
-                    <a
-                        href="{% url 'user_logout' %}"
-                        class="ff-account-logout"
-                    >
-
-                        <span class="ff-account-menu-icon">
-
-                            <i class="fas fa-sign-out-alt"></i>
-
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Logout
-                            </strong>
-
-                            <small>
-                                Sign out of your account
-                            </small>
-
-                        </div>
-
-                        <i class="fas fa-arrow-right"></i>
-
-                    </a>
-
-
-                </nav>
-
-
-                <!-- UPDATE OPTIONS -->
-
-                <div class="ff-account-stay-connected">
-
-                    <h4>
-                        Stay Connected
-                    </h4>
-
-                    <p>
-                        Receive important Flying Fox updates.
-                    </p>
-
-                    <div>
-                        <i class="fab fa-whatsapp"></i>
-                        WhatsApp booking updates
-                    </div>
-
-                    <div>
-                        <i class="fas fa-envelope"></i>
-                        Adventure news & offers
-                    </div>
-
-                </div>
-
-
-            </aside>
-
-
-
-            <!-- =========================================
-                 RIGHT PROFILE AREA
-            ========================================== -->
-
-            <main class="ff-account-main">
-
-
-                <div class="ff-account-form-header">
-
-
-                    <div class="ff-account-big-avatar">
-
-                        {% if profile.full_name %}
-
-                            {{ profile.full_name|first|upper }}
-
-                        {% else %}
-
-                            <i class="fas fa-user"></i>
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <div>
 
                         <span>
-                            Personal Information
+                            {{ message }}
                         </span>
-
-                        <h2>
-                            Complete Your Profile
-                        </h2>
-
-                        <p>
-                            Keep your details updated for a smoother
-                            booking experience.
-                        </p>
 
                     </div>
 
-
-                </div>
-
-
-
-                <!-- =====================================
-                     PROFILE FORM
-                ====================================== -->
-        
-
-
-{% if messages %}
-
-    <div class="ff-account-messages">
-
-        {% for message in messages %}
-
-            <div class="
-                ff-account-alert
-                {% if message.tags %}
-                    {{ message.tags }}
-                {% endif %}
-            ">
-
-                {% if message.tags == "success" %}
-                    <i class="fas fa-circle-check"></i>
-                {% else %}
-                    <i class="fas fa-circle-exclamation"></i>
-                {% endif %}
-
-                <span>
-                    {{ message }}
-                </span>
+                {% endfor %}
 
             </div>
 
-        {% endfor %}
-
-    </div>
-
-{% endif %}
+        {% endif %}
 
 
 
-
-
-                <form
-                   method="POST"
-                   action="{% url 'user_dashboard' %}"
-                   class="ff-account-form"
-                   >
-
-                    {% csrf_token %}
-
-
-                    <div class="ff-account-form-grid">
-
-
-                        <!-- FULL NAME -->
-
-                        <div class="ff-account-field">
-
-                            <label>
-                                Full Name
-                            </label>
-
-                            <div class="ff-account-input">
-
-                                <i class="fas fa-user"></i>
-
-                                <input
-                                    type="text"
-                                    name="full_name"
-                                    value="{{ profile.full_name|default:'' }}"
-                                    placeholder="Enter your full name"
-                                >
-
-                            </div>
-
-                        </div>
-
-
-
-                        <!-- EMAIL -->
-
-                        <div class="ff-account-field">
-
-                            <label>
-                                Email Address
-                            </label>
-
-                            <div class="ff-account-input">
-
-                                <i class="fas fa-envelope"></i>
-
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value="{{ profile.email|default:'' }}"
-                                    placeholder="Enter your email"
-                                >
-
-                            </div>
-
-                        </div>
-
-
-
-                        <!-- GENDER -->
-
-<div class="ff-account-field">
-
-    <label>
-        Gender
-    </label>
-
-    <div class="ff-account-input">
-
-        <i class="fas fa-venus-mars"></i>
-
-        <select name="gender">
-
-            <option value="">
-                Select Gender
-            </option>
-
-            <option
-                value="male"
-                {% if profile.gender == "male" %}selected{% endif %}
-            >
-                Male
-            </option>
-
-            <option
-                value="female"
-                {% if profile.gender == "female" %}selected{% endif %}
-            >
-                Female
-            </option>
-
-            <option
-                value="other"
-                {% if profile.gender == "other" %}selected{% endif %}
-            >
-                Other
-            </option>
-
-        </select>
-
-    </div>
-
-</div>
-
-
-
-                        <!-- PHONE -->
-
-<div class="ff-account-field">
-
-    <label>
-        Mobile Number
-    </label>
-
-    <div class="ff-account-input ff-account-phone">
-
-        <span>
-            🇮🇳 +91
-        </span>
-
-        <input
-            type="text"
-            value="{{ profile.phone }}"
-            readonly
+        <form
+            method="POST"
+            action="{% url 'user_dashboard' %}"
+            class="ff-profile-form"
         >
 
-        <i class="fas fa-check-circle"></i>
+            {% csrf_token %}
 
-    </div>
 
-    <small class="ff-account-verified-text">
 
-        <i class="fas fa-shield-alt"></i>
+            <div class="ff-profile-grid">
 
-        OTP Verified Number
 
-    </small>
+                <!-- FULL NAME -->
 
-</div>
+                <div class="ff-profile-field">
 
+                    <label for="full_name">
+                        Full Name
+                    </label>
 
-
-                        <!-- DOB -->
-
-                        <div class="ff-account-field">
-
-                            <label>
-                                Date of Birth
-                            </label>
-
-                            <div class="ff-account-input">
-
-                                <i class="fas fa-calendar-alt"></i>
-
-                                <input
-                                    type="date"
-                                    name="date_of_birth"
-                                    value="{% if profile.date_of_birth %}{{ profile.date_of_birth|date:'Y-m-d' }}{% endif %}"
-                                >
-
-                            </div>
-
-                        </div>
-
-
-
-                        <!-- PIN CODE -->
-
-                        <div class="ff-account-field">
-
-                            <label>
-                                PIN Code
-                            </label>
-
-                            <div class="ff-account-input">
-
-                                <i class="fas fa-map-pin"></i>
-
-                                <input
-    type="text"
-    name="pincode"
-    value="{{ profile.pincode|default:'' }}"
-    placeholder="Enter 6-digit PIN code"
-    maxlength="6"
-    minlength="6"
-    inputmode="numeric"
-    pattern="[0-9]{6}"
->
-
-                            </div>
-
-                        </div>
-
-
-
-                        <!-- ADDRESS -->
-
-                        <div class="ff-account-field">
-
-                            <label>
-                                Home Address
-                            </label>
-
-                            <div class="ff-account-input">
-
-                                <i class="fas fa-home"></i>
-
-                                <input
-                                    type="text"
-                                    name="address"
-                                    value="{{ profile.address|default:'' }}"
-                                    placeholder="Enter your address"
-                                >
-
-                            </div>
-
-                        </div>
-
-
-
-                        <!-- REGION -->
-
-                        <div class="ff-account-field">
-
-                            <label>
-                                City / Region
-                            </label>
-
-                            <div class="ff-account-input">
-
-                                <i class="fas fa-map-marker-alt"></i>
-
-                                <input
-                                    type="text"
-                                    name="region"
-                                    value="{{ profile.region|default:'' }}"
-                                    placeholder="Enter city or region"
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <!-- =====================================
-                         PREFERENCES
-                    ====================================== -->
-
-                    <div class="ff-account-preferences">
-
-
-                        <label>
-
-                            <input
-                                type="checkbox"
-                                name="whatsapp_updates"
-                                {% if profile.whatsapp_updates %}
-                                    checked
-                                {% endif %}
-                            >
-
-                            <span></span>
-
-                            Receive booking updates on WhatsApp
-
-                        </label>
-
-
-                        <label>
-
-                            <input
-                                type="checkbox"
-                                name="email_updates"
-                                {% if profile.email_updates %}
-                                    checked
-                                {% endif %}
-                            >
-
-                            <span></span>
-
-                            Receive adventure news and offers by email
-
-                        </label>
-
-
-                    </div>
-
-
-
-                    <p class="ff-account-privacy">
-
-                        <i class="fas fa-shield-alt"></i>
-
-                        Your information is used only to manage your
-                        Flying Fox account and adventure bookings.
-
-                    </p>
-
-
-
-                    <button
-                        type="submit"
-                        class="ff-account-submit"
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        value="{{ profile.full_name|default:'' }}"
+                        placeholder="Enter your full name"
+                        required
                     >
 
-                        Save & Update Profile
-
-                        <span>
-
-                            <i class="fas fa-arrow-right"></i>
-
-                        </span>
-
-                    </button>
+                </div>
 
 
-                </form>
+
+                <!-- PHONE -->
+
+                <div class="ff-profile-field">
+
+                    <label>
+                        Mobile Number
+                    </label>
+
+                    <div class="ff-readonly-field">
+
+                        <i class="fas fa-phone"></i>
+
+                        {{ profile.phone }}
+
+                        {% if profile.phone_verified %}
+
+                            <span>
+
+                                <i class="fas fa-circle-check"></i>
+
+                                Verified
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
 
 
-            </main>
+
+                <!-- EMAIL -->
+
+                <div class="ff-profile-field">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{{ profile.email|default:'' }}"
+                        placeholder="Enter your email"
+                    >
+
+                </div>
 
 
-        </div>
+
+                <!-- GENDER -->
+
+                <div class="ff-profile-field">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select
+                        id="gender"
+                        name="gender"
+                    >
+
+                        <option value="">
+                            Select gender
+                        </option>
+
+                        <option
+                            value="male"
+                            {% if profile.gender == "male" %}selected{% endif %}
+                        >
+                            Male
+                        </option>
+
+                        <option
+                            value="female"
+                            {% if profile.gender == "female" %}selected{% endif %}
+                        >
+                            Female
+                        </option>
+
+                        <option
+                            value="other"
+                            {% if profile.gender == "other" %}selected{% endif %}
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- DOB -->
+
+                <div class="ff-profile-field">
+
+                    <label for="date_of_birth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date_of_birth"
+                        name="date_of_birth"
+                        value="{% if profile.date_of_birth %}{{ profile.date_of_birth|date:'Y-m-d' }}{% endif %}"
+                    >
+
+                </div>
+
+
+
+                <!-- PINCODE -->
+
+                <div class="ff-profile-field">
+
+                    <label for="pincode">
+                        PIN Code
+                    </label>
+
+                    <input
+                        type="text"
+                        id="pincode"
+                        name="pincode"
+                        value="{{ profile.pincode|default:'' }}"
+                        placeholder="6-digit PIN code"
+                        maxlength="6"
+                        inputmode="numeric"
+                    >
+
+                </div>
+
+
+
+                <!-- REGION -->
+
+                <div class="ff-profile-field">
+
+                    <label for="region">
+                        Region
+                    </label>
+
+                    <input
+                        type="text"
+                        id="region"
+                        name="region"
+                        value="{{ profile.region|default:'' }}"
+                        placeholder="City / District / Region"
+                    >
+
+                </div>
+
+
+
+                <!-- ADDRESS -->
+
+                <div class="
+                    ff-profile-field
+                    ff-profile-field-full
+                ">
+
+                    <label for="address">
+                        Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        name="address"
+                        rows="4"
+                        placeholder="Enter your address"
+                    >{{ profile.address|default:'' }}</textarea>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 COMMUNICATION
+            ================================================== -->
+
+            <div class="ff-preferences">
+
+                <div>
+
+                    <h3>
+                        Communication Preferences
+                    </h3>
+
+                    <p>
+                        Choose how you want to receive updates.
+                    </p>
+
+                </div>
+
+
+                <label class="ff-preference-option">
+
+                    <input
+                        type="checkbox"
+                        name="whatsapp_updates"
+                        {% if profile.whatsapp_updates %}checked{% endif %}
+                    >
+
+                    <span>
+
+                        <i class="fab fa-whatsapp"></i>
+
+                        WhatsApp Updates
+
+                    </span>
+
+                </label>
+
+
+                <label class="ff-preference-option">
+
+                    <input
+                        type="checkbox"
+                        name="email_updates"
+                        {% if profile.email_updates %}checked{% endif %}
+                    >
+
+                    <span>
+
+                        <i class="fas fa-envelope"></i>
+
+                        Email Updates
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+
+            <!-- SAVE -->
+
+            <div class="ff-profile-submit">
+
+                <button type="submit">
+
+                    <i class="fas fa-floppy-disk"></i>
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+
+        </form>
 
     </div>
 
 </section>
 
+
+{% endblock %}
+
+
+
+{% block account_extra_css %}
+
+<style>
+
+.ff-profile-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+.ff-profile-field {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.ff-profile-field-full {
+
+    grid-column:
+        1
+        /
+        -1;
+}
+
+
+.ff-profile-field label {
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-profile-field input,
+.ff-profile-field select,
+.ff-profile-field textarea {
+
+    width: 100%;
+
+    min-height: 52px;
+
+    padding:
+        12px
+        15px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius:
+        13px;
+
+    outline:
+        none;
+
+    color:
+        var(--ff-dark);
+
+    background:
+        #ffffff;
+
+    font-size:
+        13px;
+}
+
+
+.ff-profile-field textarea {
+
+    min-height:
+        105px;
+
+    resize:
+        vertical;
+}
+
+
+.ff-profile-field input:focus,
+.ff-profile-field select:focus,
+.ff-profile-field textarea:focus {
+
+    border-color:
+        var(--ff-red);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(
+            195,
+            17,
+            3,
+            .06
+        );
+}
+
+
+.ff-readonly-field {
+
+    display: flex;
+
+    min-height: 52px;
+
+    padding:
+        12px
+        15px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius:
+        13px;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    background:
+        #f7f8fa;
+
+    font-size:
+        13px;
+}
+
+
+.ff-readonly-field > span {
+
+    margin-left:
+        auto;
+
+    color:
+        #13813a;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+}
+
+
+.ff-preferences {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        auto
+        auto;
+
+    gap:
+        14px;
+
+    margin-top:
+        26px;
+
+    padding:
+        18px;
+
+    border-radius:
+        16px;
+
+    align-items:
+        center;
+
+    background:
+        #f8f9fa;
+}
+
+
+.ff-preferences h3 {
+
+    margin:
+        0
+        0
+        4px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-preferences p {
+
+    margin:
+        0;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        10px;
+}
+
+
+.ff-preference-option {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+}
+
+
+.ff-preference-option input {
+
+    accent-color:
+        var(--ff-red);
+}
+
+
+.ff-profile-submit {
+
+    display:
+        flex;
+
+    margin-top:
+        24px;
+
+    justify-content:
+        flex-end;
+}
+
+
+.ff-profile-submit button {
+
+    display:
+        inline-flex;
+
+    min-width:
+        180px;
+
+    min-height:
+        48px;
+
+    padding:
+        0
+        22px;
+
+    border:
+        0;
+
+    border-radius:
+        25px;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    color:
+        #ffffff;
+
+    background:
+        var(--ff-red);
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+}
+
+
+/* =====================================================
+   PROFILE MOBILE
+===================================================== */
+
+@media (max-width: 767px) {
+
+    .ff-profile-grid {
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+    }
+
+
+    .ff-profile-field-full {
+        grid-column: auto;
+    }
+
+
+    .ff-profile-field {
+        gap: 6px;
+    }
+
+
+    .ff-profile-field label {
+        font-size: 10px;
+    }
+
+
+    .ff-profile-field input,
+    .ff-profile-field select,
+    .ff-profile-field textarea {
+        width: 100%;
+
+        min-height: 50px;
+
+        padding:
+            11px
+            13px;
+
+        border-radius: 12px;
+
+        font-size: 12px;
+    }
+
+
+    .ff-profile-field textarea {
+        min-height: 95px;
+    }
+
+
+    /* PHONE */
+
+    .ff-readonly-field {
+        width: 100%;
+
+        min-height: 50px;
+
+        padding:
+            11px
+            13px;
+
+        gap: 8px;
+
+        font-size: 11px;
+    }
+
+
+    .ff-readonly-field > span {
+        font-size: 9px;
+
+        white-space: nowrap;
+    }
+
+
+    /* =============================================
+       PREFERENCES
+    ============================================== */
+
+    .ff-preferences {
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-top: 20px;
+
+        padding: 15px;
+
+        border-radius: 14px;
+    }
+
+
+    .ff-preferences h3 {
+        font-size: 13px;
+    }
+
+
+    .ff-preferences p {
+        font-size: 9px;
+    }
+
+
+    .ff-preference-option {
+        font-size: 10px;
+    }
+
+
+    /* =============================================
+       SAVE BUTTON
+    ============================================== */
+
+    .ff-profile-submit {
+        margin-top: 20px;
+
+        justify-content: stretch;
+    }
+
+
+    .ff-profile-submit button {
+        width: 100%;
+
+        min-height: 48px;
+
+        font-size: 11px;
+    }
+
+}
+
+
+@media (max-width: 390px) {
+
+    .ff-profile-grid {
+        gap: 12px;
+    }
+
+
+    .ff-profile-field input,
+    .ff-profile-field select,
+    .ff-profile-field textarea {
+        padding:
+            10px
+            12px;
+
+        font-size: 11px;
+    }
+
+
+    .ff-readonly-field {
+        padding:
+            10px
+            11px;
+
+        font-size: 10px;
+    }
+
+
+    .ff-readonly-field > span {
+        font-size: 8px;
+    }
+
+}
+
+</style>
 
 {% endblock %}

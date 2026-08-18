@@ -1,0 +1,435 @@
+{% extends "authenticate/account_base.html" %}
+
+
+{% block title %}
+Help & Support | Flying Fox
+{% endblock %}
+
+
+{% block account_content %}
+
+
+<section class="ff-account-card">
+
+
+    <div class="ff-account-content-header">
+
+        <span>
+            Need Assistance?
+        </span>
+
+        <h2>
+            Help & Support
+        </h2>
+
+        <p>
+            Contact our Flying Fox team for help with
+            bookings, tickets, payments or your visit.
+        </p>
+
+    </div>
+
+
+    <div class="ff-account-card-body">
+
+
+        <div class="ff-support-grid">
+
+
+            <!-- PHONE -->
+
+            <a
+                href="tel:+917907219198"
+                class="ff-support-card"
+            >
+
+                <span>
+
+                    <i class="fas fa-phone"></i>
+
+                </span>
+
+                <div>
+
+                    <small>
+                        Call Us
+                    </small>
+
+                    <strong>
+                        +91 7907219198
+                    </strong>
+
+                    <p>
+                        Speak directly with our support team.
+                    </p>
+
+                </div>
+
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+
+
+            <!-- EMAIL -->
+
+            <a
+                href="mailto:adventureflyingfox@gmail.com"
+                class="ff-support-card"
+            >
+
+                <span>
+
+                    <i class="fas fa-envelope"></i>
+
+                </span>
+
+                <div>
+
+                    <small>
+                        Email Us
+                    </small>
+
+                    <strong>
+                        adventureflyingfox@gmail.com
+                    </strong>
+
+                    <p>
+                        Send us your booking or ticket questions.
+                    </p>
+
+                </div>
+
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+
+
+            <!-- LOCATION -->
+
+            <div class="ff-support-card">
+
+                <span>
+
+                    <i class="fas fa-location-dot"></i>
+
+                </span>
+
+                <div>
+
+                    <small>
+                        Visit Us
+                    </small>
+
+                    <strong>
+                        Thekkumkanam, Kerala
+                    </strong>
+
+                    <p>
+                        Flying Fox Adventure location.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="ff-support-note">
+
+            <i class="fas fa-circle-info"></i>
+
+            <div>
+
+                <strong>
+                    Before contacting support
+                </strong>
+
+                <p>
+                    Keep your Booking ID or Ticket ID ready so
+                    our team can assist you faster.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block account_extra_css %}
+
+<style>
+
+.ff-support-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        15px;
+}
+
+
+.ff-support-card {
+
+    display:
+        flex;
+
+    min-height:
+        115px;
+
+    padding:
+        18px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius:
+        18px;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+
+    color:
+        var(--ff-dark);
+
+    background:
+        #ffffff;
+
+    transition:
+        .2s ease;
+}
+
+
+.ff-support-card:hover {
+
+    color:
+        var(--ff-dark);
+
+    border-color:
+        #eeb8b3;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(
+            25,
+            39,
+            54,
+            .07
+        );
+}
+
+
+.ff-support-card > span {
+
+    display:
+        flex;
+
+    width:
+        52px;
+
+    height:
+        52px;
+
+    flex:
+        0
+        0
+        52px;
+
+    border-radius:
+        15px;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--ff-red);
+
+    background:
+        var(--ff-red-soft);
+
+    font-size:
+        18px;
+}
+
+
+.ff-support-card > div {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+}
+
+
+.ff-support-card small {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        9px;
+}
+
+
+.ff-support-card strong {
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        13px;
+
+    font-weight:
+        900;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+.ff-support-card p {
+
+    margin:
+        5px
+        0
+        0;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
+}
+
+
+.ff-support-card > .fa-arrow-right {
+
+    color:
+        var(--ff-red);
+
+    font-size:
+        12px;
+}
+
+
+.ff-support-note {
+
+    display:
+        flex;
+
+    margin-top:
+        20px;
+
+    padding:
+        17px;
+
+    border-radius:
+        16px;
+
+    align-items:
+        flex-start;
+
+    gap:
+        12px;
+
+    color:
+        #6c5400;
+
+    background:
+        #fff8db;
+}
+
+
+.ff-support-note > i {
+
+    margin-top:
+        2px;
+
+    color:
+        #c89800;
+}
+
+
+.ff-support-note strong {
+
+    display:
+        block;
+
+    margin-bottom:
+        3px;
+
+    font-size:
+        12px;
+}
+
+
+.ff-support-note p {
+
+    margin:
+        0;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
+}
+
+
+@media (max-width: 750px) {
+
+    .ff-support-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+</style>
+
+{% endblock %}

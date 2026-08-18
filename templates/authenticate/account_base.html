@@ -1,0 +1,1457 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+
+{% block title %}
+My Account | Flying Fox
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* =====================================================
+   ROOT
+===================================================== */
+
+:root {
+
+    --ff-red: #cf1408;
+    --ff-red-dark: #a90d04;
+    --ff-red-soft: #fff0ee;
+
+    --ff-dark: #172738;
+
+    --ff-text: #6f7a86;
+
+    --ff-border: #e5e8ec;
+
+    --ff-bg: #f7f8fa;
+
+    --ff-white: #ffffff;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+.ff-account-page {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    padding:
+        150px
+        30px
+        80px;
+
+    color: var(--ff-dark);
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff9f8 0%,
+            #f7f8fa 45%,
+            #ffffff 100%
+        );
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+.ff-account-page a {
+    text-decoration: none;
+}
+
+
+
+/* =====================================================
+   ACCOUNT CONTAINER
+===================================================== */
+
+.ff-account-container {
+
+    width: 100%;
+
+    max-width: 1500px;
+
+    min-height:
+        calc(
+            100vh
+            -
+            230px
+        );
+
+    margin:
+        0
+        auto;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+
+/* =====================================================
+   TOP HEADING
+===================================================== */
+
+.ff-account-heading {
+
+    flex-shrink: 0;
+
+    margin-bottom: 22px;
+}
+
+
+.ff-account-heading > span {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--ff-red);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: .8px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-account-heading h1 {
+
+    margin:
+        6px
+        0
+        5px;
+
+    color: var(--ff-dark);
+
+    font-size: 37px;
+
+    font-weight: 900;
+
+    line-height: 1.15;
+}
+
+
+.ff-account-heading h1 strong {
+
+    color: var(--ff-red);
+}
+
+
+.ff-account-heading p {
+
+    margin: 0;
+
+    color: var(--ff-text);
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+
+/* =====================================================
+   MAIN ACCOUNT LAYOUT
+===================================================== */
+
+.ff-account-layout {
+
+    display: grid;
+
+    width: 100%;
+
+    grid-template-columns:
+        330px
+        minmax(0, 1fr);
+
+    gap: 28px;
+
+    align-items: start;
+}
+
+
+
+/* =====================================================
+   LEFT SIDEBAR
+===================================================== */
+
+.ff-account-sidebar {
+
+    align-self: start;
+
+    height: auto;
+
+    min-height: 0;
+
+    overflow: visible;
+
+    padding-right: 0;
+}
+
+
+
+/* =====================================================
+   RIGHT CONTENT
+===================================================== */
+
+.ff-account-main {
+
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 0;
+
+    overflow: visible;
+
+    padding:
+        0
+        8px
+        45px
+        0;
+}
+
+
+
+/* =====================================================
+   SIDEBAR PROFILE CARD
+===================================================== */
+
+.ff-account-profile-card {
+
+    display: flex;
+
+    min-height: 126px;
+
+    padding: 24px;
+
+    border-radius: 25px;
+
+    align-items: center;
+
+    gap: 17px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #db190d,
+            #bc1005
+        );
+
+    box-shadow:
+        0
+        14px
+        32px
+        rgba(
+            195,
+            17,
+            3,
+            .17
+        );
+}
+
+
+.ff-account-avatar {
+
+    display: flex;
+
+    width: 70px;
+
+    height: 70px;
+
+    flex:
+        0
+        0
+        70px;
+
+    border-radius: 50%;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: var(--ff-red);
+
+    background: #ffffff;
+
+    font-size: 27px;
+
+    font-weight: 900;
+}
+
+
+.ff-account-profile-info {
+
+    min-width: 0;
+}
+
+
+.ff-account-profile-info h3 {
+
+    margin:
+        0
+        0
+        8px;
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.ff-account-profile-info p {
+
+    display: flex;
+
+    margin:
+        4px
+        0;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .90
+        );
+
+    font-size: 12px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+
+/* =====================================================
+   ACCOUNT MENU
+===================================================== */
+
+.ff-account-menu {
+
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 16px;
+}
+
+
+.ff-account-menu a {
+
+    display: flex;
+
+    min-height: 76px;
+
+    padding:
+        13px
+        15px;
+
+    border:
+        1px
+        solid
+        #efc9c5;
+
+    border-radius: 20px;
+
+    align-items: center;
+
+    gap: 13px;
+
+    color: var(--ff-dark);
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .88
+        );
+
+    transition:
+        .22s
+        ease;
+}
+
+
+.ff-account-menu a:hover {
+
+    border-color:
+        var(--ff-red);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0
+        10px
+        24px
+        rgba(
+            195,
+            17,
+            3,
+            .08
+        );
+}
+
+
+.ff-account-menu a.active {
+
+    color: #ffffff;
+
+    border-color:
+        var(--ff-red);
+
+    background:
+        linear-gradient(
+            135deg,
+            #d8170b,
+            #b90e04
+        );
+}
+
+
+.ff-account-menu-icon {
+
+    display: flex;
+
+    width: 48px;
+
+    height: 48px;
+
+    flex:
+        0
+        0
+        48px;
+
+    border-radius: 50%;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #ffffff;
+
+    background:
+        var(--ff-red);
+
+    font-size: 16px;
+}
+
+
+.ff-account-menu a.active
+.ff-account-menu-icon {
+
+    color:
+        var(--ff-red);
+
+    background:
+        #ffffff;
+}
+
+
+.ff-account-menu a > div {
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.ff-account-menu strong {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: inherit;
+
+    font-size: 14px;
+
+    font-weight: 900;
+}
+
+
+.ff-account-menu small {
+
+    color: var(--ff-text);
+
+    font-size: 11px;
+}
+
+
+.ff-account-menu a.active small {
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .78
+        );
+}
+
+
+.ff-account-menu a > .fa-arrow-right {
+
+    color:
+        var(--ff-red);
+
+    font-size: 13px;
+}
+
+
+.ff-account-menu a.active
+> .fa-arrow-right {
+
+    color: #ffffff;
+}
+
+
+.ff-account-menu
+.ff-account-logout {
+
+    margin-top: 5px;
+
+    border-color:
+        #eadede;
+}
+
+
+
+/* =====================================================
+   STAY CONNECTED
+===================================================== */
+
+.ff-account-stay-connected {
+
+    margin-top: 16px;
+
+    padding: 19px;
+
+    border-radius: 20px;
+
+    background: #172738;
+
+    color: #ffffff;
+}
+
+
+.ff-account-stay-connected h4 {
+
+    margin:
+        0
+        0
+        5px;
+
+    font-size: 14px;
+
+    font-weight: 900;
+}
+
+
+.ff-account-stay-connected > p {
+
+    margin:
+        0
+        0
+        13px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .65
+        );
+
+    font-size: 10px;
+}
+
+
+.ff-account-stay-connected > div {
+
+    display: flex;
+
+    margin-top: 8px;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .88
+        );
+
+    font-size: 10px;
+}
+
+
+
+/* =====================================================
+   COMMON RIGHT CARD
+===================================================== */
+
+.ff-account-card {
+
+    width: 100%;
+
+    border:
+        1px
+        solid
+        var(--ff-border);
+
+    border-radius: 25px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0
+        16px
+        45px
+        rgba(
+            25,
+            39,
+            54,
+            .07
+        );
+}
+
+
+.ff-account-content-header {
+
+    padding:
+        28px
+        30px
+        22px;
+
+    border-bottom:
+        1px
+        solid
+        var(--ff-border);
+}
+
+
+.ff-account-content-header > span {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--ff-red);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: .5px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-account-content-header h2 {
+
+    margin:
+        0
+        0
+        5px;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        28px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-account-content-header p {
+
+    margin: 0;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.6;
+}
+
+
+.ff-account-card-body {
+
+    padding:
+        28px
+        30px
+        32px;
+}
+
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.ff-account-empty {
+
+    display: flex;
+
+    min-height: 340px;
+
+    padding: 35px;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.ff-account-empty > i {
+
+    display: flex;
+
+    width: 72px;
+
+    height: 72px;
+
+    margin-bottom: 17px;
+
+    border-radius: 22px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color:
+        var(--ff-red);
+
+    background:
+        var(--ff-red-soft);
+
+    font-size: 25px;
+}
+
+
+.ff-account-empty h3 {
+
+    margin:
+        0
+        0
+        7px;
+
+    font-size:
+        19px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-account-empty p {
+
+    max-width: 350px;
+
+    margin:
+        0
+        auto
+        17px;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        12px;
+
+    line-height:
+        1.6;
+}
+
+
+.ff-account-empty a {
+
+    display: inline-flex;
+
+    min-height: 44px;
+
+    padding:
+        0
+        20px;
+
+    border-radius: 24px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #ffffff;
+
+    background:
+        var(--ff-red);
+
+    font-size: 11px;
+
+    font-weight: 900;
+}
+
+
+
+/* =====================================================
+   MESSAGES
+===================================================== */
+
+.ff-account-messages {
+
+    display: grid;
+
+    gap: 8px;
+
+    margin-bottom: 17px;
+}
+
+
+.ff-account-alert {
+
+    display: flex;
+
+    padding:
+        12px
+        14px;
+
+    border-radius: 12px;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color:
+        #a80e04;
+
+    background:
+        #fff0ee;
+
+    font-size:
+        11px;
+
+    font-weight: 700;
+}
+
+
+.ff-account-alert.success {
+
+    color:
+        #127633;
+
+    background:
+        #edf9f1;
+}
+
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (
+    max-width: 991px
+) {
+
+    .ff-account-page {
+
+        min-height:
+            auto;
+
+        padding:
+            120px
+            16px
+            55px;
+    }
+
+
+    .ff-account-container {
+
+        width: 100%;
+
+        min-height: 0;
+
+        max-width: 100%;
+    }
+
+
+    .ff-account-heading {
+
+        margin-bottom: 18px;
+    }
+
+
+    .ff-account-heading h1 {
+
+        font-size: 30px;
+    }
+
+
+    .ff-account-layout {
+
+        display: block;
+
+        width: 100%;
+    }
+
+
+    .ff-account-sidebar {
+
+        width: 100%;
+
+        height: auto;
+
+        overflow: visible;
+
+        margin-bottom: 22px;
+
+        padding-right: 0;
+    }
+
+
+    .ff-account-main {
+
+        width: 100%;
+
+        height: auto;
+
+        overflow: visible;
+
+        padding: 0;
+    }
+
+}
+
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (
+    max-width: 767px
+) {
+
+    .ff-account-page {
+
+        padding:
+            105px
+            10px
+            45px;
+    }
+
+
+    /* =============================================
+       PAGE HEADING
+    ============================================== */
+
+    .ff-account-heading {
+
+        margin-bottom: 16px;
+    }
+
+
+    .ff-account-heading > span {
+
+        font-size: 9px;
+    }
+
+
+    .ff-account-heading h1 {
+
+        margin:
+            5px
+            0
+            4px;
+
+        font-size: 26px;
+    }
+
+
+    .ff-account-heading p {
+
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+
+    /* =============================================
+       PROFILE CARD
+    ============================================== */
+
+    .ff-account-profile-card {
+
+        min-height: 96px;
+
+        padding:
+            14px
+            16px;
+
+        border-radius: 20px;
+
+        gap: 12px;
+    }
+
+
+    .ff-account-avatar {
+
+        width: 54px;
+
+        height: 54px;
+
+        flex:
+            0
+            0
+            54px;
+
+        font-size: 21px;
+    }
+
+
+    .ff-account-profile-info h3 {
+
+        margin-bottom: 5px;
+
+        font-size: 16px;
+    }
+
+
+    .ff-account-profile-info p {
+
+        margin:
+            3px
+            0;
+
+        font-size: 10px;
+    }
+
+
+    /* =============================================
+       MOBILE MENU
+    ============================================== */
+
+    .ff-account-menu {
+
+        display: flex;
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        overflow-y: hidden;
+
+        gap: 7px;
+
+        margin-top: 12px;
+
+        padding:
+            0
+            0
+            7px;
+
+        scrollbar-width: none;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    .ff-account-menu::-webkit-scrollbar {
+
+        display: none;
+    }
+
+
+    .ff-account-menu a {
+
+        flex:
+            0
+            0
+            auto;
+
+        width: auto;
+
+        min-width: 145px;
+
+        min-height: 58px;
+
+        padding:
+            9px
+            12px;
+
+        border-radius: 15px;
+
+        gap: 9px;
+    }
+
+
+    .ff-account-menu-icon {
+
+        width: 38px;
+
+        height: 38px;
+
+        flex:
+            0
+            0
+            38px;
+
+        font-size: 13px;
+    }
+
+
+    .ff-account-menu a > div {
+
+        min-width: 0;
+    }
+
+
+    .ff-account-menu strong {
+
+        margin: 0;
+
+        font-size: 11px;
+
+        white-space: nowrap;
+    }
+
+
+    .ff-account-menu small {
+
+        display: none;
+    }
+
+
+    .ff-account-menu a
+    > .fa-arrow-right {
+
+        display: none;
+    }
+
+
+    .ff-account-stay-connected {
+
+        display: none;
+    }
+
+
+    /* =============================================
+       RIGHT CONTENT CARD
+    ============================================== */
+
+    .ff-account-card {
+
+        width: 100%;
+
+        border-radius: 20px;
+    }
+
+
+    .ff-account-content-header {
+
+        padding:
+            20px
+            18px
+            17px;
+    }
+
+
+    .ff-account-content-header > span {
+
+        margin-bottom: 6px;
+
+        font-size: 9px;
+    }
+
+
+    .ff-account-content-header h2 {
+
+        margin-bottom: 5px;
+
+        font-size: 22px;
+
+        line-height: 1.2;
+    }
+
+
+    .ff-account-content-header p {
+
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+
+
+    .ff-account-card-body {
+
+        padding:
+            18px;
+    }
+
+}
+
+
+
+/* =====================================================
+   SMALL MOBILE / IPHONE SE
+===================================================== */
+
+@media (
+    max-width: 390px
+) {
+
+    .ff-account-page {
+
+        padding:
+            100px
+            8px
+            40px;
+    }
+
+
+    .ff-account-heading h1 {
+
+        font-size: 24px;
+    }
+
+
+    .ff-account-profile-card {
+
+        padding:
+            13px
+            14px;
+    }
+
+
+    .ff-account-avatar {
+
+        width: 50px;
+
+        height: 50px;
+
+        flex-basis: 50px;
+
+        font-size: 19px;
+    }
+
+
+    .ff-account-menu a {
+
+        min-width: 140px;
+    }
+
+
+    .ff-account-content-header {
+
+        padding:
+            18px
+            16px
+            15px;
+    }
+
+
+    .ff-account-card-body {
+
+        padding:
+            16px;
+    }
+
+}
+
+</style>
+
+
+{% block account_extra_css %}
+{% endblock %}
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="ff-account-page">
+
+    <div class="ff-account-container">
+
+
+        <!-- =================================================
+             ACCOUNT PAGE HEADING
+        ================================================== -->
+
+        <div class="ff-account-heading">
+
+            <span>
+
+                <i class="fas fa-user-shield"></i>
+
+                Flying Fox Account
+
+            </span>
+
+
+            <h1>
+
+                My
+
+                <strong>
+                    Account
+                </strong>
+
+            </h1>
+
+
+            <p>
+
+                Manage your personal information,
+                bookings and Flying Fox adventures.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ACCOUNT BODY
+        ================================================== -->
+
+        <div class="ff-account-layout">
+
+
+            <!-- =================================================
+                 LEFT SIDEBAR
+            ================================================== -->
+
+            <aside class="ff-account-sidebar">
+
+                {% include "authenticate/account_sidebar.html" %}
+
+            </aside>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE
+            ================================================== -->
+
+            <main class="ff-account-main">
+
+
+                <!-- DJANGO MESSAGES -->
+
+                {% if messages %}
+
+                    <div class="ff-account-messages">
+
+                        {% for message in messages %}
+
+                            <div
+                                class="
+                                    ff-account-alert
+                                    {{ message.tags }}
+                                "
+                            >
+
+                                {% if message.tags == "success" %}
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                {% else %}
+
+                                    <i class="fas fa-circle-exclamation"></i>
+
+                                {% endif %}
+
+
+                                <span>
+                                    {{ message }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- CHILD PAGE CONTENT -->
+
+                {% block account_content %}
+                {% endblock %}
+
+
+            </main>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+{% block account_extra_js %}
+{% endblock %}
+
+{% endblock %}

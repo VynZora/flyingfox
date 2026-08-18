@@ -1,0 +1,2298 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% block title %}
+Privacy Policy | Flying Fox Adventure
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   FLYING FOX LEGAL PAGES
+========================================================= */
+
+.ff-legal-page {
+    position: relative;
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.ff-legal-hero {
+    position: relative;
+    min-height: 390px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 170px 20px 80px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25, 25, 25, 0.94),
+            rgba(195, 17, 3, 0.88)
+        );
+}
+
+
+/* decorative circles */
+
+.ff-legal-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 420px;
+    height: 420px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    top: -200px;
+    right: -100px;
+}
+
+
+.ff-legal-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    left: -80px;
+    bottom: -130px;
+}
+
+
+.ff-legal-hero-content {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+
+    max-width: 850px;
+
+    margin: auto;
+}
+
+
+.ff-legal-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 18px;
+
+    margin-bottom: 20px;
+
+    border-radius: 30px;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.ff-legal-tag i {
+    color: #ffffff;
+}
+
+
+.ff-legal-hero h1 {
+    color: #ffffff;
+
+    font-size: 52px;
+    line-height: 1.15;
+
+    font-weight: 800;
+
+    margin-bottom: 18px;
+}
+
+
+.ff-legal-breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    font-size: 15px;
+}
+
+
+.ff-legal-breadcrumb a {
+    color: #ffffff;
+    transition: 0.3s;
+}
+
+
+.ff-legal-breadcrumb a:hover {
+    opacity: 0.75;
+}
+
+
+.ff-legal-breadcrumb i {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   MAIN LEGAL SECTION
+========================================================= */
+
+.ff-legal-section {
+    padding: 100px 0 110px;
+}
+
+
+.ff-legal-wrapper {
+    position: relative;
+}
+
+
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
+
+.ff-legal-sidebar {
+    position: sticky;
+    top: 120px;
+
+    padding: 28px;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.06);
+}
+
+
+.ff-legal-sidebar-title {
+    font-size: 20px;
+    font-weight: 800;
+
+    margin-bottom: 20px;
+
+    color: #191919;
+}
+
+
+.ff-legal-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.ff-legal-sidebar ul li {
+    margin-bottom: 6px;
+}
+
+
+.ff-legal-sidebar ul li:last-child {
+    margin-bottom: 0;
+}
+
+
+.ff-legal-sidebar ul li a {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 13px;
+
+    border-radius: 10px;
+
+    color: #555555;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+
+.ff-legal-sidebar ul li a i {
+    font-size: 11px;
+    color: #c31103;
+}
+
+
+.ff-legal-sidebar ul li a:hover {
+    background: rgba(195, 17, 3, 0.07);
+    color: #c31103;
+
+    padding-left: 17px;
+}
+
+
+/* =========================================================
+   CONTENT AREA
+========================================================= */
+
+.ff-legal-content {
+    padding-left: 20px;
+}
+
+
+.ff-legal-intro {
+    padding: 30px;
+
+    margin-bottom: 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(195, 17, 3, 0.06),
+            rgba(195, 17, 3, 0.01)
+        );
+
+    border-left: 4px solid #c31103;
+
+    border-radius: 0 16px 16px 0;
+}
+
+
+.ff-legal-intro p {
+    margin-bottom: 10px;
+
+    color: #555555;
+
+    line-height: 1.8;
+}
+
+
+.ff-legal-intro p:last-child {
+    margin-bottom: 0;
+}
+
+
+.ff-legal-date {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 22px;
+
+    color: #777777;
+
+    font-size: 14px;
+}
+
+
+.ff-legal-date i {
+    color: #c31103;
+}
+
+
+/* individual legal item */
+
+.ff-legal-item {
+    position: relative;
+
+    padding: 32px;
+
+    margin-bottom: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 18px;
+
+    transition: all 0.3s ease;
+}
+
+
+.ff-legal-item:hover {
+    border-color: rgba(195, 17, 3, 0.2);
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.05);
+
+    transform: translateY(-2px);
+}
+
+
+.ff-legal-item-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+}
+
+
+.ff-legal-number {
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(195, 17, 3, 0.08);
+
+    color: #c31103;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+.ff-legal-item h2 {
+    margin: 0;
+
+    color: #191919;
+
+    font-size: 23px;
+    font-weight: 800;
+}
+
+
+.ff-legal-item p {
+    color: #616161;
+
+    font-size: 15px;
+    line-height: 1.85;
+
+    margin-bottom: 14px;
+}
+
+
+.ff-legal-item p:last-child {
+    margin-bottom: 0;
+}
+
+
+.ff-legal-item ul {
+    padding-left: 0;
+
+    margin: 15px 0 15px;
+
+    list-style: none;
+}
+
+
+.ff-legal-item ul li {
+    position: relative;
+
+    padding-left: 29px;
+
+    margin-bottom: 10px;
+
+    color: #616161;
+
+    line-height: 1.7;
+}
+
+
+.ff-legal-item ul li::before {
+    content: "\f00c";
+
+    font-family: "Font Awesome 6 Pro";
+
+    position: absolute;
+
+    left: 0;
+    top: 2px;
+
+    color: #c31103;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   CONTACT BOX
+========================================================= */
+
+.ff-legal-contact {
+    margin-top: 35px;
+
+    padding: 38px;
+
+    border-radius: 20px;
+
+    background: #191919;
+
+    color: #ffffff;
+}
+
+
+.ff-legal-contact h3 {
+    color: #ffffff;
+
+    font-size: 28px;
+    font-weight: 800;
+
+    margin-bottom: 12px;
+}
+
+
+.ff-legal-contact > p {
+    color: rgba(255, 255, 255, 0.7);
+
+    margin-bottom: 25px;
+}
+
+
+.ff-legal-contact-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 15px;
+}
+
+
+.ff-legal-contact-item {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px 16px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    color: #ffffff;
+}
+
+
+.ff-legal-contact-item i {
+    color: #ff3929;
+}
+
+
+.ff-legal-contact-item a {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-legal-hero {
+        min-height: 330px;
+
+        padding-top: 145px;
+    }
+
+    .ff-legal-hero h1 {
+        font-size: 42px;
+    }
+
+    .ff-legal-sidebar {
+        position: relative;
+        top: auto;
+
+        margin-bottom: 35px;
+    }
+
+    .ff-legal-content {
+        padding-left: 0;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .ff-legal-section {
+        padding: 70px 0 80px;
+    }
+
+    .ff-legal-hero {
+        min-height: 300px;
+
+        padding:
+            135px
+            15px
+            60px;
+    }
+
+    .ff-legal-hero h1 {
+        font-size: 34px;
+    }
+
+    .ff-legal-item {
+        padding: 23px 20px;
+    }
+
+    .ff-legal-item-heading {
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .ff-legal-number {
+        width: 42px;
+        height: 42px;
+
+        min-width: 42px;
+    }
+
+    .ff-legal-item h2 {
+        font-size: 20px;
+    }
+
+    .ff-legal-intro {
+        padding: 23px 20px;
+    }
+
+    .ff-legal-contact {
+        padding: 28px 22px;
+    }
+
+    .ff-legal-contact-list {
+        flex-direction: column;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .ff-legal-hero h1 {
+        font-size: 30px;
+    }
+
+    .ff-legal-sidebar {
+        padding: 22px 18px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+{% comment %} <section class="ff-legal-hero">
+
+    <div class="container">
+
+        <div class="ff-legal-hero-content">
+
+            <span class="ff-legal-tag">
+                <i class="far fa-shield-check"></i>
+                Privacy & Security
+            </span>
+
+            <h1>
+                Privacy Policy
+            </h1>
+
+            <div class="ff-legal-breadcrumb">
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+                <i class="far fa-angle-right"></i>
+
+                <span>
+                    Privacy Policy
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section> {% endcomment %}
+
+
+
+
+<div class="site-breadcrumb ff-about-math-hero">
+
+    <canvas id="ffMathPattern"></canvas>
+
+    <div class="container">
+
+        <div class="ff-about-hero-content">
+
+            <h3 class="breadcrumb-title">
+                Privacy Policy
+            </h3>
+
+            <ul class="breadcrumb-menu">
+
+                <li>
+                    <a href="{% url 'home' %}">
+                        Home
+                    </a>
+                </li>
+
+                <li class="active">
+                   Privacy Policy
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PRIVACY SECTION
+========================================================= -->
+
+<section class="ff-legal-section">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+
+            <!-- LEFT SIDEBAR -->
+
+            <div class="col-lg-3">
+
+                <aside class="ff-legal-sidebar">
+
+                    <h4 class="ff-legal-sidebar-title">
+                        On This Page
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="#information">
+                                <i class="far fa-angle-right"></i>
+                                Information We Collect
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#usage">
+                                <i class="far fa-angle-right"></i>
+                                How We Use Information
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#whatsapp">
+                                <i class="far fa-angle-right"></i>
+                                WhatsApp
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#payments">
+                                <i class="far fa-angle-right"></i>
+                                Payment Processing
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#cookies">
+                                <i class="far fa-angle-right"></i>
+                                Cookies
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#sharing">
+                                <i class="far fa-angle-right"></i>
+                                Information Sharing
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#security">
+                                <i class="far fa-angle-right"></i>
+                                Data Security
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#rights">
+                                <i class="far fa-angle-right"></i>
+                                Your Rights
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#privacy-contact">
+                                <i class="far fa-angle-right"></i>
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </aside>
+
+            </div>
+
+
+
+            <!-- RIGHT CONTENT -->
+
+            <div class="col-lg-9">
+
+                <div class="ff-legal-content">
+
+
+                    <div class="ff-legal-date">
+
+                        <i class="far fa-calendar-alt"></i>
+
+                        Last Updated:
+                        August 18, 2026
+
+                    </div>
+
+
+                    <div class="ff-legal-intro">
+
+                        <p>
+                            <strong>Flying Fox Adventure</strong> respects your
+                            privacy and is committed to handling personal
+                            information responsibly.
+                        </p>
+
+                        <p>
+                            This Privacy Policy explains what information we may
+                            collect when you use our website and booking
+                            services, why we use it and how it may be handled.
+                        </p>
+
+                    </div>
+
+
+                    <!-- 01 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="information"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                01
+                            </span>
+
+                            <h2>
+                                Information We Collect
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Depending on how you use our website, we may collect
+                            different types of personal and booking information.
+                        </p>
+
+
+                        <h5 class="mt-4">
+                            Account Information
+                        </h5>
+
+                        <ul>
+
+                            <li>Name</li>
+
+                            <li>Email address</li>
+
+                            <li>Phone number</li>
+
+                            <li>Login and account information</li>
+
+                        </ul>
+
+
+                        <h5 class="mt-4">
+                            Booking Information
+                        </h5>
+
+                        <ul>
+
+                            <li>Selected activity or ride</li>
+
+                            <li>Booking date and time</li>
+
+                            <li>Number of participants</li>
+
+                            <li>Participant details</li>
+
+                            <li>Booking status</li>
+
+                            <li>Coupon or promotional information</li>
+
+                            <li>Booking reference</li>
+
+                        </ul>
+
+
+                        <h5 class="mt-4">
+                            Participant Information
+                        </h5>
+
+                        <p>
+                            We may collect information necessary to determine
+                            booking eligibility and safely administer an
+                            activity, including participant names, age or other
+                            information required during booking.
+                        </p>
+
+
+                        <h5 class="mt-4">
+                            Payment Information
+                        </h5>
+
+                        <p>
+                            Depending on the payment service used, we may
+                            receive limited transaction information such as:
+                        </p>
+
+                        <ul>
+
+                            <li>Transaction or reference ID</li>
+
+                            <li>Payment status</li>
+
+                            <li>Amount paid</li>
+
+                            <li>Payment method information</li>
+
+                        </ul>
+
+
+                        <h5 class="mt-4">
+                            Communications
+                        </h5>
+
+                        <p>
+                            If you contact us through the website, email,
+                            telephone, WhatsApp or another communication
+                            channel, we may receive the information you provide
+                            in that communication.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 02 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="usage"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                02
+                            </span>
+
+                            <h2>
+                                How We Use Your Information
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Personal information may be used to:
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                Create and manage customer accounts
+                            </li>
+
+                            <li>
+                                Process ride bookings
+                            </li>
+
+                            <li>
+                                Confirm payments
+                            </li>
+
+                            <li>
+                                Generate booking confirmations
+                            </li>
+
+                            <li>
+                                Generate QR or digital tickets
+                            </li>
+
+                            <li>
+                                Verify bookings at the activity location
+                            </li>
+
+                            <li>
+                                Send booking updates
+                            </li>
+
+                            <li>
+                                Provide customer support
+                            </li>
+
+                            <li>
+                                Process cancellation or refund requests
+                            </li>
+
+                            <li>
+                                Maintain transaction and booking records
+                            </li>
+
+                            <li>
+                                Improve our website and services
+                            </li>
+
+                            <li>
+                                Detect fraud, misuse or security issues
+                            </li>
+
+                            <li>
+                                Comply with applicable legal requirements
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- 03 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="whatsapp"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                03
+                            </span>
+
+                            <h2>
+                                Booking Confirmations & WhatsApp
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Where customers provide a phone number and the
+                            service supports it, booking confirmations,
+                            tickets, QR codes, reminders or important booking
+                            updates may be communicated through WhatsApp or
+                            similar communication services.
+                        </p>
+
+                        <p>
+                            Third-party messaging services may process
+                            information according to their own privacy
+                            policies.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 04 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="payments"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                04
+                            </span>
+
+                            <h2>
+                                Payment Processing
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Online payments may be processed using third-party
+                            payment service providers.
+                        </p>
+
+                        <p>
+                            These payment providers may collect and process
+                            payment information according to their own privacy
+                            policies and security requirements.
+                        </p>
+
+                        <p>
+                            Customers should never send sensitive payment-card
+                            credentials through ordinary email, WhatsApp or
+                            contact forms.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 05 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="cookies"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                05
+                            </span>
+
+                            <h2>
+                                Cookies & Technical Information
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Our website may use cookies and similar
+                            technologies required for functionality,
+                            authentication, security, preferences and website
+                            analytics.
+                        </p>
+
+                        <p>
+                            Technical information may include:
+                        </p>
+
+                        <ul>
+
+                            <li>IP address</li>
+
+                            <li>Browser type</li>
+
+                            <li>Device information</li>
+
+                            <li>Website activity</li>
+
+                            <li>Session information</li>
+
+                            <li>Date and time of access</li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- 06 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="sharing"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                06
+                            </span>
+
+                            <h2>
+                                How We Share Information
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox Adventure does not sell personal
+                            information.
+                        </p>
+
+                        <p>
+                            Information may be shared with service providers
+                            where reasonably necessary for:
+                        </p>
+
+                        <ul>
+
+                            <li>Payment processing</li>
+
+                            <li>Website hosting</li>
+
+                            <li>Email delivery</li>
+
+                            <li>WhatsApp or messaging communication</li>
+
+                            <li>Analytics</li>
+
+                            <li>Technical support</li>
+
+                            <li>Booking administration</li>
+
+                        </ul>
+
+                        <p>
+                            Information may also be disclosed where required by
+                            applicable law or a lawful government or court
+                            request.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 07 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="security"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                07
+                            </span>
+
+                            <h2>
+                                Data Security
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            We use reasonable administrative and technical
+                            measures designed to protect personal information
+                            against unauthorized access, loss, misuse,
+                            alteration or disclosure.
+                        </p>
+
+                        <p>
+                            However, no website, database or internet
+                            transmission can be guaranteed to be completely
+                            secure.
+                        </p>
+
+                        <p>
+                            Customers should keep passwords, booking references
+                            and QR tickets secure.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 08 -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                08
+                            </span>
+
+                            <h2>
+                                Data Retention
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Personal information may be retained for as long as
+                            reasonably necessary to:
+                        </p>
+
+                        <ul>
+
+                            <li>Provide booked services</li>
+
+                            <li>Maintain accounting records</li>
+
+                            <li>Maintain transaction records</li>
+
+                            <li>Handle customer enquiries</li>
+
+                            <li>Resolve disputes</li>
+
+                            <li>Prevent fraud or misuse</li>
+
+                            <li>Meet applicable legal requirements</li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- 09 -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                09
+                            </span>
+
+                            <h2>
+                                Children's Information
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Bookings involving minors should be completed or
+                            authorized by a parent or legal guardian where
+                            required.
+                        </p>
+
+                        <p>
+                            We do not intentionally collect unnecessary
+                            personal information from children.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 10 -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="rights"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                10
+                            </span>
+
+                            <h2>
+                                Your Privacy Rights
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Subject to applicable law, you may be able to
+                            request:
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                Information regarding personal data we hold
+                            </li>
+
+                            <li>
+                                Correction of inaccurate information
+                            </li>
+
+                            <li>
+                                Deletion of certain personal information
+                            </li>
+
+                            <li>
+                                Withdrawal of consent where processing relies
+                                on consent
+                            </li>
+
+                            <li>
+                                Assistance with privacy-related concerns
+                            </li>
+
+                        </ul>
+
+                        <p>
+                            Certain records may need to be retained for legal,
+                            accounting, fraud-prevention or legitimate business
+                            purposes.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 11 -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                11
+                            </span>
+
+                            <h2>
+                                Third-Party Links
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Our website may contain links to third-party
+                            websites or services.
+                        </p>
+
+                        <p>
+                            Flying Fox Adventure is not responsible for the
+                            privacy practices of independent third-party
+                            websites.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- 12 -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                12
+                            </span>
+
+                            <h2>
+                                Changes to This Privacy Policy
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            We may update this Privacy Policy when our website,
+                            booking process, technology or legal requirements
+                            change.
+                        </p>
+
+                        <p>
+                            The latest version will be published on this page
+                            with an updated revision date.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- CONTACT -->
+
+                    <div
+                        class="ff-legal-contact"
+                        id="privacy-contact"
+                    >
+
+                        <h3>
+                            Privacy Questions?
+                        </h3>
+
+                        <p>
+                            Contact us if you have questions about your
+                            personal information, correction requests,
+                            deletion requests or this Privacy Policy.
+                        </p>
+
+                        <div class="ff-legal-contact-list">
+
+
+                            <div class="ff-legal-contact-item">
+
+                                <i class="far fa-phone"></i>
+
+                                <a href="tel:+917907219198">
+                                    +91 7907219198
+                                </a>
+
+                            </div>
+
+
+                            <div class="ff-legal-contact-item">
+
+                                <i class="far fa-envelope"></i>
+
+                                <a href="mailto:adventureflyingfox@gmail.com">
+                                    adventureflyingfox@gmail.com
+                                </a>
+
+                            </div>
+
+
+                            <div class="ff-legal-contact-item">
+
+                                <i class="far fa-location-dot"></i>
+
+                                <span>
+                                    Thekkumkanam, Kerala
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+{% block extra_js%}
+  {% comment %} hero pattern js start {% endcomment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("ffMathPattern");
+
+    if (!canvas) {
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+
+    /* =========================================================
+       SETTINGS
+       Change these values to control the whole pattern
+    ========================================================= */
+
+    const SETTINGS = {
+
+        // Overall pattern scale
+        patternScale: 1.55,
+
+        // White line visibility
+        circleOpacity: 0.18,
+        diamondOpacity: 0.15,
+        rectangleOpacity: 0.12,
+        radialOpacity: 0.14,
+        diagonalOpacity: 0.11,
+        fanOpacity: 0.11,
+        crossOpacity: 0.10,
+
+        // Thickness
+        circleWidth: 0.95,
+        diamondWidth: 0.90,
+        rectangleWidth: 0.85,
+        radialWidth: 0.80,
+        diagonalWidth: 0.75,
+        fanWidth: 0.75,
+        crossWidth: 0.70
+    };
+
+
+    /* =========================================================
+       RESIZE CANVAS
+    ========================================================= */
+
+    function resizeCanvas() {
+
+        const parent = canvas.parentElement;
+
+        width = parent.clientWidth;
+        height = parent.clientHeight;
+
+        dpr = Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+
+        ctx.setTransform(
+            dpr,
+            0,
+            0,
+            dpr,
+            0,
+            0
+        );
+
+        drawPattern();
+    }
+
+
+    /* =========================================================
+       BASIC LINE
+    ========================================================= */
+
+    function drawLine(
+        x1,
+        y1,
+        x2,
+        y2,
+        opacity = 0.12,
+        lineWidth = 0.8
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+
+        ctx.strokeStyle =
+            `rgba(255,255,255,${opacity})`;
+
+        ctx.lineWidth = lineWidth;
+
+        ctx.stroke();
+    }
+
+
+    /* =========================================================
+       CONCENTRIC CIRCLES
+    ========================================================= */
+
+    function drawConcentricCircles(
+        cx,
+        cy,
+        maxRadius,
+        count,
+        opacity = SETTINGS.circleOpacity
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const radius =
+                (maxRadius / count) * i;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                cx,
+                cy,
+                radius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.strokeStyle =
+                `rgba(255,255,255,${opacity})`;
+
+            ctx.lineWidth =
+                SETTINGS.circleWidth;
+
+            ctx.stroke();
+        }
+    }
+
+
+    /* =========================================================
+       DIAMOND / ROTATED SQUARE RINGS
+    ========================================================= */
+
+    function drawDiamondRings(
+        cx,
+        cy,
+        maxSize,
+        count
+    ) {
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= count; i++) {
+
+            const size =
+                (maxSize / count) * i;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.diamondOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.diamondWidth;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       RECTANGULAR RINGS
+    ========================================================= */
+
+    function drawRectangularRings(
+        cx,
+        cy,
+        maxWidth,
+        maxHeight,
+        count
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const ratio =
+                i / count;
+
+            const currentWidth =
+                maxWidth * ratio;
+
+            const currentHeight =
+                maxHeight * ratio;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.rectangleOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.rectangleWidth;
+
+            ctx.strokeRect(
+                cx - currentWidth / 2,
+                cy - currentHeight / 2,
+                currentWidth,
+                currentHeight
+            );
+        }
+    }
+
+
+    /* =========================================================
+       RADIAL SPOKES
+    ========================================================= */
+
+    function drawRadialSystem(
+        cx,
+        cy,
+        radius,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const angle =
+                (Math.PI * 2 / count) * i;
+
+            const startRadius =
+                radius * 0.14;
+
+            const startX =
+                cx +
+                Math.cos(angle) *
+                startRadius;
+
+            const startY =
+                cy +
+                Math.sin(angle) *
+                startRadius;
+
+            const endX =
+                cx +
+                Math.cos(angle) *
+                radius;
+
+            const endY =
+                cy +
+                Math.sin(angle) *
+                radius;
+
+            drawLine(
+                startX,
+                startY,
+                endX,
+                endY,
+                SETTINGS.radialOpacity,
+                SETTINGS.radialWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       ORDERED DIAGONAL GRID
+    ========================================================= */
+
+    function drawDiagonalLines() {
+
+        /*
+         * Larger spacing gives us the clean
+         * geometric structure instead of noise.
+         */
+
+        const spacing = 105;
+
+        const extra =
+            Math.max(width, height) * 1.5;
+
+
+        /* -----------------------------------------
+           LEFT TOP -> RIGHT BOTTOM
+        ----------------------------------------- */
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                -height * 0.30,
+
+                x + height * 1.75,
+                height * 1.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+
+
+        /* -----------------------------------------
+           LEFT BOTTOM -> RIGHT TOP
+        ----------------------------------------- */
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                height * 1.30,
+
+                x + height * 1.75,
+                -height * 0.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       FAN LINES
+    ========================================================= */
+
+    function drawFan(
+        originX,
+        originY,
+        targetX,
+        targetY,
+        spread,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const offset =
+                (
+                    i -
+                    (count - 1) / 2
+                ) * spread;
+
+            drawLine(
+                originX,
+                originY + offset,
+
+                targetX,
+                targetY - offset,
+
+                SETTINGS.fanOpacity,
+                SETTINGS.fanWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       CENTER CROSSING MESH
+    ========================================================= */
+
+    function drawCenterCrossLines(
+        cx,
+        cy
+    ) {
+
+        const spacing = 52;
+
+        const count = 12;
+
+        for (
+            let i = -count;
+            i <= count;
+            i++
+        ) {
+
+            const offset =
+                i * spacing;
+
+
+            /* LEFT -> RIGHT */
+
+            drawLine(
+                -width * 0.10,
+                cy + offset,
+
+                width * 1.10,
+                cy - offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+
+
+            /* OPPOSITE */
+
+            drawLine(
+                -width * 0.10,
+                cy - offset,
+
+                width * 1.10,
+                cy + offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       SIDE CIRCULAR SYSTEMS
+    ========================================================= */
+
+    function drawSideCircles() {
+
+        const sideRadius =
+            Math.max(
+                height * 0.48,
+                width * 0.10
+            );
+
+
+        /* LEFT TOP */
+
+        drawConcentricCircles(
+            width * 0.02,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        /* RIGHT TOP */
+
+        drawConcentricCircles(
+            width * 0.98,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        /* LEFT BOTTOM */
+
+        drawConcentricCircles(
+            width * 0.08,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+
+
+        /* RIGHT BOTTOM */
+
+        drawConcentricCircles(
+            width * 0.92,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+    }
+
+
+    /* =========================================================
+       LARGE OUTER DIAMONDS
+    ========================================================= */
+
+    function drawOuterDiamonds(
+        cx,
+        cy
+    ) {
+
+        const maxSize =
+            Math.max(
+                width * 1.15,
+                height * 2.3
+            );
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= 16; i++) {
+
+            const ratio =
+                i / 16;
+
+            const size =
+                maxSize * ratio;
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.075)";
+
+            ctx.lineWidth = 0.75;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       HORIZONTAL GEOMETRY
+    ========================================================= */
+
+    function drawHorizontalGeometry(
+        cx,
+        cy
+    ) {
+
+        const lineCount = 11;
+
+        const spacing = 42;
+
+        for (
+            let i = -lineCount;
+            i <= lineCount;
+            i++
+        ) {
+
+            const y =
+                cy + i * spacing;
+
+            drawLine(
+                0,
+                y,
+                width,
+                y,
+                0.055,
+                0.6
+            );
+        }
+    }
+
+
+    /* =========================================================
+       MAIN PATTERN
+    ========================================================= */
+
+    function drawPattern() {
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        /* -----------------------------------------------------
+           CENTER POSITION
+        ----------------------------------------------------- */
+
+        const cx =
+            width / 2;
+
+        const cy =
+            height * 0.58;
+
+
+        /*
+         * IMPORTANT:
+         *
+         * This is much larger than your old calculation.
+         *
+         * Old:
+         * Math.min(width * 0.31, height * 0.58)
+         *
+         * New:
+         * Hero height controls the base size and then
+         * patternScale enlarges the whole structure.
+         */
+
+        const mainRadius =
+            Math.max(
+                height * 0.62,
+                width * 0.22
+            ) * SETTINGS.patternScale;
+
+
+        /* =====================================================
+           LAYER 1
+           Large background diagonals
+        ===================================================== */
+
+        drawDiagonalLines();
+
+
+        /* =====================================================
+           LAYER 2
+           Large outer diamond geometry
+        ===================================================== */
+
+        drawOuterDiamonds(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 3
+           Side circle systems
+        ===================================================== */
+
+        drawSideCircles();
+
+
+        /* =====================================================
+           LAYER 4
+           Large left/right fan
+        ===================================================== */
+
+        drawFan(
+            -width * 0.05,
+            height * 0.20,
+
+            width * 1.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        drawFan(
+            width * 1.05,
+            height * 0.20,
+
+            -width * 0.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        /* =====================================================
+           LAYER 5
+           Horizontal geometry
+        ===================================================== */
+
+        drawHorizontalGeometry(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 6
+           Center crossing mesh
+        ===================================================== */
+
+        drawCenterCrossLines(
+            cx,
+            cy
+        );
+
+
+        /* =====================================================
+           LAYER 7
+           HUGE MAIN CIRCULAR SYSTEM
+        ===================================================== */
+
+        drawConcentricCircles(
+            cx,
+            cy,
+            mainRadius,
+            34,
+            SETTINGS.circleOpacity
+        );
+
+
+        /* =====================================================
+           LAYER 8
+           LARGE DIAMOND SYSTEM
+        ===================================================== */
+
+        drawDiamondRings(
+            cx,
+            cy,
+            mainRadius * 2.15,
+            28
+        );
+
+
+        /* =====================================================
+           LAYER 9
+           RECTANGLE SYSTEM
+        ===================================================== */
+
+        drawRectangularRings(
+            cx,
+            cy,
+
+            mainRadius * 2.65,
+            mainRadius * 1.50,
+
+            16
+        );
+
+
+        /* =====================================================
+           LAYER 10
+           RADIAL SPOKES
+        ===================================================== */
+
+        drawRadialSystem(
+            cx,
+            cy,
+            mainRadius * 1.08,
+            64
+        );
+    }
+
+
+    /* =========================================================
+       INITIALIZE
+    ========================================================= */
+
+    resizeCanvas();
+
+
+    /* =========================================================
+       RESPONSIVE RESIZE
+    ========================================================= */
+
+    let resizeTimer;
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            clearTimeout(
+                resizeTimer
+            );
+
+            resizeTimer =
+                setTimeout(
+                    resizeCanvas,
+                    120
+                );
+        }
+    );
+
+});
+</script>
+{% comment %} hero pattern js end {% endcomment %}
+{% endblock %}

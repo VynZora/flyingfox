@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        QR Ticket Scanner | Flying Fox
+    </title>
+
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- QR SCANNER LIBRARY -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+
+    <style>
+
+        :root {
+
+            --ff-red: #c31103;
+            --ff-red-dark: #8f0c02;
+            --ff-dark: #192736;
+            --ff-text: #687281;
+            --ff-border: #e3e6ea;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            padding:
+                30px
+                15px;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: var(--ff-text);
+
+            background: #f5f6f8;
+        }
+
+
+        .ff-scanner-wrapper {
+
+            width: 100%;
+
+            max-width: 720px;
+
+            margin: auto;
+        }
+
+
+        .ff-scanner-top {
+
+            display: flex;
+
+            margin-bottom: 18px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+
+        .ff-scanner-top h1 {
+
+            margin: 0;
+
+            color: var(--ff-dark);
+
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+
+        .ff-scanner-top small {
+
+            display: block;
+
+            margin-top: 4px;
+
+            font-size: 11px;
+        }
+
+
+        .ff-logout {
+
+            display: inline-flex;
+
+            min-height: 42px;
+
+            padding:
+                8px
+                15px;
+
+            border-radius: 22px;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--ff-red);
+
+            background: #ffffff;
+
+            border:
+                1px solid
+                #ead0cd;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            text-decoration: none;
+        }
+
+
+        .ff-scanner-card {
+
+            padding: 25px;
+
+            border:
+                1px solid
+                var(--ff-border);
+
+            border-radius: 26px;
+
+            background: #ffffff;
+
+            box-shadow:
+                0
+                20px
+                60px
+                rgba(25,39,54,.08);
+        }
+
+
+        .ff-scanner-heading {
+
+            margin-bottom: 20px;
+
+            text-align: center;
+        }
+
+
+        .ff-scanner-heading span {
+
+            display: inline-flex;
+
+            width: 64px;
+            height: 64px;
+
+            margin-bottom: 13px;
+
+            border-radius: 50%;
+
+            align-items: center;
+            justify-content: center;
+
+            color: #ffffff;
+
+            background: var(--ff-red);
+
+            font-size: 25px;
+        }
+
+
+        .ff-scanner-heading h2 {
+
+            margin:
+                0
+                0
+                5px;
+
+            color: var(--ff-dark);
+
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+
+        .ff-scanner-heading p {
+
+            margin: 0;
+
+            font-size: 12px;
+        }
+
+
+        #qr-reader {
+
+            overflow: hidden;
+
+            width: 100%;
+
+            border:
+                1px solid
+                #dfe3e8 !important;
+
+            border-radius: 22px;
+        }
+
+
+        .ff-status {
+
+            display: none;
+
+            margin-top: 16px;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+
+        .ff-status.show {
+            display: block;
+        }
+
+
+        .ff-status.success {
+
+            color: #137a3c;
+
+            background: #eaf8ef;
+        }
+
+
+        .ff-status.error {
+
+            color: #a22017;
+
+            background: #fff0ee;
+        }
+
+
+        .ff-manual {
+
+            margin-top: 26px;
+
+            padding-top: 23px;
+
+            border-top:
+                1px solid
+                var(--ff-border);
+        }
+
+
+        .ff-manual h3 {
+
+            margin:
+                0
+                0
+                5px;
+
+            color: var(--ff-dark);
+
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+
+        .ff-manual p {
+
+            margin:
+                0
+                0
+                12px;
+
+            font-size: 11px;
+        }
+
+
+        .ff-manual-row {
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        .ff-manual-row input {
+
+            flex: 1;
+
+            min-width: 0;
+
+            height: 50px;
+
+            padding:
+                0
+                14px;
+
+            border:
+                1px solid
+                var(--ff-border);
+
+            border-radius: 13px;
+
+            outline: none;
+
+            font-size: 12px;
+        }
+
+
+        .ff-manual-row button {
+
+            min-width: 115px;
+
+            border: 0;
+
+            border-radius: 25px;
+
+            color: #ffffff;
+
+            background: var(--ff-red);
+
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+
+        @media (max-width: 575px) {
+
+            .ff-scanner-top {
+
+                align-items: flex-start;
+            }
+
+
+            .ff-scanner-card {
+
+                padding: 18px;
+            }
+
+
+            .ff-manual-row {
+
+                flex-direction: column;
+            }
+
+
+            .ff-manual-row button {
+
+                min-height: 48px;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        .ff-scanner-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.ff-dashboard-btn {
+
+    display: inline-flex;
+
+    min-height: 42px;
+
+    padding:
+        8px
+        15px;
+
+    border-radius: 22px;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #ffffff;
+
+    background: var(--ff-dark);
+
+    border:
+        1px solid
+        var(--ff-dark);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+
+.ff-dashboard-btn:hover {
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+}
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="ff-scanner-wrapper">
+
+
+    <div class="ff-scanner-top">
+
+        <div>
+
+            <h1>
+                Ticket Scanner
+            </h1>
+
+            <small>
+                Signed in as {{ request.user.username }}
+            </small>
+
+        </div>
+
+
+        <div class="ff-scanner-actions">
+
+    <a
+        href="{% url 'ticket_staff_dashboard' %}"
+        class="ff-dashboard-btn"
+    >
+
+        <i class="fas fa-house"></i>
+
+        Dashboard
+
+    </a>
+
+
+    <a
+        href="{% url 'ticket_staff_logout' %}"
+        class="ff-logout"
+    >
+
+        <i class="fas fa-arrow-right-from-bracket"></i>
+
+        Logout
+
+    </a>
+
+</div>
+
+    </div>
+
+
+
+    <div class="ff-scanner-card">
+
+
+        <div class="ff-scanner-heading">
+
+            <span>
+                <i class="fas fa-qrcode"></i>
+            </span>
+
+            <h2>
+                Scan Ticket QR
+            </h2>
+
+            <p>
+                Point the camera at the QR code
+                on the customer's ticket.
+            </p>
+
+        </div>
+
+
+
+        <div id="qr-reader"></div>
+
+
+        <div
+            class="ff-status"
+            id="scannerStatus"
+        ></div>
+
+
+
+       <div class="ff-manual">
+
+    <h3>
+        Verify Using Ticket ID
+    </h3>
+
+    <p>
+        Enter the 6-digit Ticket ID shown
+        on the customer's ticket.
+    </p>
+
+
+    <form
+        method="POST"
+        action="{% url 'verify_ticket_number' %}"
+    >
+
+        {% csrf_token %}
+
+
+        <div class="ff-manual-row">
+
+            <input
+                type="text"
+                name="ticket_number"
+                id="manualTicketNumber"
+                placeholder="Example: 483721"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                autocomplete="off"
+                required
+            >
+
+
+            <button
+                type="submit"
+            >
+
+                <i class="fas fa-magnifying-glass"></i>
+
+                Verify
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const statusBox =
+            document.getElementById(
+                "scannerStatus"
+            );
+
+
+        let alreadyRedirecting =
+            false;
+
+
+
+        /* =====================================================
+           STATUS MESSAGE
+        ====================================================== */
+
+        function showStatus(
+            message,
+            type
+        ) {
+
+            statusBox.textContent =
+                message;
+
+
+            statusBox.className =
+                "ff-status show " +
+                type;
+
+        }
+
+
+
+        /* =====================================================
+           OPEN SCANNED VALUE
+        ====================================================== */
+
+        function openTicketValue(
+            value
+        ) {
+
+            if (
+                alreadyRedirecting
+            ) {
+
+                return;
+            }
+
+
+            value =
+                String(
+                    value || ""
+                ).trim();
+
+
+            if (!value) {
+
+                showStatus(
+                    "No QR value was found.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /* =============================================
+               FULL VERIFY URL
+            ============================================== */
+
+            try {
+
+                const scannedUrl =
+                    new URL(
+                        value,
+                        window.location.origin
+                    );
+
+
+                const marker =
+                    "/ticket/verify/";
+
+
+                const markerIndex =
+                    scannedUrl.pathname.indexOf(
+                        marker
+                    );
+
+
+                if (
+                    markerIndex !== -1
+                ) {
+
+                    alreadyRedirecting =
+                        true;
+
+
+                    showStatus(
+                        "Ticket detected. Opening verification...",
+                        "success"
+                    );
+
+
+                    window.location.href =
+                        scannedUrl.pathname +
+                        scannedUrl.search;
+
+
+                    return;
+                }
+
+            }
+            catch (
+                error
+            ) {
+
+                // Value may simply be the UUID token.
+            }
+
+
+
+            /* =============================================
+               RAW UUID TOKEN
+            ============================================== */
+
+            const uuidPattern =
+                /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+
+            if (
+                uuidPattern.test(
+                    value
+                )
+            ) {
+
+                alreadyRedirecting =
+                    true;
+
+
+                showStatus(
+                    "Ticket token detected. Opening verification...",
+                    "success"
+                );
+
+
+                window.location.href =
+                    "/ticket/verify/"
+                    +
+                    encodeURIComponent(
+                        value
+                    )
+                    +
+                    "/";
+
+
+                return;
+            }
+
+
+            showStatus(
+                "This QR code is not a valid Flying Fox ticket.",
+                "error"
+            );
+
+        }
+
+
+
+        /* =====================================================
+           CAMERA QR SCANNER
+        ====================================================== */
+
+        function onScanSuccess(
+            decodedText
+        ) {
+
+            openTicketValue(
+                decodedText
+            );
+
+        }
+
+
+        function onScanFailure(
+            error
+        ) {
+
+            // Don't show continuous camera scan errors.
+        }
+
+
+
+        if (
+            typeof Html5QrcodeScanner
+            !==
+            "undefined"
+        ) {
+
+            const scanner =
+                new Html5QrcodeScanner(
+                    "qr-reader",
+                    {
+                        fps: 10,
+
+                        qrbox: {
+                            width: 250,
+                            height: 250
+                        },
+
+                        rememberLastUsedCamera:
+                            true,
+
+                        supportedScanTypes: [
+                            Html5QrcodeScanType
+                                .SCAN_TYPE_CAMERA
+                        ],
+                    },
+
+                    false
+                );
+
+
+            scanner.render(
+                onScanSuccess,
+                onScanFailure
+            );
+
+        }
+        else {
+
+            showStatus(
+                (
+                    "QR scanner library could not load. "
+                    + "Use manual verification."
+                ),
+                "error"
+            );
+
+        }
+
+    }
+);
+
+
+
+
+
+
+const ticketNumberInput =
+    document.getElementById(
+        "manualTicketNumber"
+    );
+
+
+if (ticketNumberInput) {
+
+    ticketNumberInput.addEventListener(
+        "input",
+        function () {
+
+            this.value =
+                this.value
+                    .replace(
+                        /\D/g,
+                        ""
+                    )
+                    .slice(
+                        0,
+                        6
+                    );
+
+        }
+    );
+
+}
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+
+</html>

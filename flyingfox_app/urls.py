@@ -330,18 +330,39 @@ path(
     name="resend_login_otp"
 ),
 
-
 path(
-    "my-account/",
+    "account/",
     views.user_dashboard,
-    name="user_dashboard"
+    name="user_dashboard",
 ),
 
 path(
-    "logout/",
-    views.user_logout,
-    name="user_logout"
+    "account/bookings/",
+    views.user_bookings,
+    name="user_bookings",
 ),
+
+path(
+    "account/tickets/",
+    views.user_tickets,
+    name="user_tickets",
+),
+
+path(
+    "account/support/",
+    views.user_support,
+    name="user_support",
+),
+
+path(
+    "account/logout/",
+    views.user_logout,
+    name="user_logout",
+),
+
+
+
+
 
 
  path('', views.home, name='home'),
@@ -373,24 +394,8 @@ path(
     name="booking_payment_verify",
 ),
 
-path(
-    "booking/payment/success/<uuid:booking_id>/",
-    views.booking_payment_success,
-    name="booking_payment_success",
-),
 
-   # Temporary fake payment success
-    path(
-        "booking/temporary-payment-success/",
-        views.temporary_payment_success,
-        name="temporary_payment_success",
-    ),
-
-    path(
-        "booking/success/<uuid:booking_id>/",
-        views.booking_success,
-        name="booking_success",
-    ),
+  
 
     path(
         "ticket/download/<uuid:ticket_id>/",
@@ -403,6 +408,12 @@ path(
         views.verify_ticket,
         name="verify_ticket",
     ),
+
+    path(
+    "booking/success/<uuid:booking_id>/",
+    views.booking_success,
+    name="booking_success",
+),
 
 
 
@@ -670,6 +681,110 @@ path("dashboard/offers/create/", views.offer_create, name="offer_create"),
 path("dashboard/offers/<slug:slug>/", views.offer_detail, name="offer_detail"),
 path("dashboard/offers/<slug:slug>/edit/", views.offer_update, name="offer_update"),
 path("dashboard/offers/<slug:slug>/delete/", views.offer_delete, name="offer_delete"),
+
+
+
+
+# participent crud ulr 
+
+path(
+    "dashboard/participant-weight-ranges/",
+    views.participant_weight_range_list,
+    name="participant_weight_range_list"
+),
+
+path(
+    "dashboard/participant-weight-ranges/add/",
+    views.participant_weight_range_create,
+    name="participant_weight_range_create"
+),
+
+path(
+    "dashboard/participant-weight-ranges/<int:pk>/edit/",
+    views.participant_weight_range_update,
+    name="participant_weight_range_update"
+),
+
+path(
+    "dashboard/participant-weight-ranges/<int:pk>/delete/",
+    views.participant_weight_range_delete,
+    name="participant_weight_range_delete"
+),
+
+
+
+# ticketverifying staff 
+
+# =========================================================
+# TICKET VERIFICATION STAFF
+# =========================================================
+# =========================================================
+# STAFF TICKET PORTAL
+# =========================================================
+
+path(
+    "staff/tickets/login/",
+    views.ticket_staff_login,
+    name="ticket_staff_login",
+),
+
+path(
+    "staff/tickets/logout/",
+    views.ticket_staff_logout,
+    name="ticket_staff_logout",
+),
+
+path(
+    "staff/tickets/dashboard/",
+    views.ticket_staff_dashboard,
+    name="ticket_staff_dashboard",
+),
+
+path(
+    "staff/tickets/scanner/",
+    views.ticket_scanner,
+    name="ticket_scanner",
+),
+
+path(
+    "staff/tickets/verified/",
+    views.verified_ticket_list,
+    name="verified_ticket_list",
+),
+
+path(
+    "staff/tickets/verify-number/",
+    views.verify_ticket_number,
+    name="verify_ticket_number",
+),
+
+path(
+    "ticket/verify/<uuid:qr_token>/",
+    views.verify_ticket,
+    name="verify_ticket",
+),
+
+path(
+    "staff/tickets/<uuid:ticket_id>/check-in/",
+    views.ticket_check_in,
+    name="ticket_check_in",
+),
+
+
+
+
+path(
+    "terms-and-conditions/",
+    views.terms_conditions,
+    name="terms_conditions",
+),
+
+path(
+    "privacy-policy/",
+    views.privacy_policy,
+    name="privacy_policy",
+),
+
 
 
 ]

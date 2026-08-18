@@ -1,0 +1,417 @@
+{% extends "authenticate/account_base.html" %}
+
+
+{% block title %}
+My Tickets | Flying Fox
+{% endblock %}
+
+
+{% block account_content %}
+
+
+<section class="ff-account-card">
+
+
+    <div class="ff-account-content-header">
+
+        <span>
+            Adventure Tickets
+        </span>
+
+        <h2>
+            My Tickets
+        </h2>
+
+        <p>
+            Access your confirmed Flying Fox tickets,
+            QR codes and ticket downloads.
+        </p>
+
+    </div>
+
+
+    <div class="ff-account-card-body">
+
+
+        {% if tickets %}
+
+
+            <div class="ff-tickets-grid">
+
+
+                {% for ticket in tickets %}
+
+
+                    <article class="ff-user-ticket-card">
+
+
+                        <div class="ff-user-ticket-icon">
+
+                            <i class="fas fa-qrcode"></i>
+
+                        </div>
+
+
+                        <div class="ff-user-ticket-info">
+
+
+                            <small>
+                                Ticket ID
+                            </small>
+
+
+                            <h3>
+                                {{ ticket.ticket_number }}
+                            </h3>
+
+
+                            <p>
+                                {{ ticket.booking.ride.name }}
+                            </p>
+
+
+                            <div>
+
+                                <span>
+
+                                    <i class="fas fa-calendar"></i>
+
+                                    {{ ticket.booking.booking_date|date:"d M Y" }}
+
+                                </span>
+
+
+                                <span>
+
+                                    <i class="fas fa-clock"></i>
+
+                                    {{ ticket.booking.time_slot }}
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="ff-user-ticket-actions">
+
+
+                            <a
+                                href="{% url 'download_ticket' ticket.ticket_id %}"
+                            >
+
+                                <i class="fas fa-download"></i>
+
+                                Download PDF
+
+                            </a>
+
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="ff-account-empty">
+
+                <i class="fas fa-qrcode"></i>
+
+                <h3>
+                    No Tickets Available
+                </h3>
+
+                <p>
+                    Your confirmed Flying Fox tickets
+                    will appear here after successful payment.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block account_extra_css %}
+
+<style>
+
+.ff-tickets-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        16px;
+}
+
+
+.ff-user-ticket-card {
+
+    position:
+        relative;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        65px
+        minmax(0, 1fr);
+
+    gap:
+        15px;
+
+    padding:
+        20px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius:
+        20px;
+
+    background:
+        #ffffff;
+}
+
+
+.ff-user-ticket-card::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        100px;
+
+    height:
+        100px;
+
+    top:
+        -45px;
+
+    right:
+        -45px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--ff-red-soft);
+}
+
+
+.ff-user-ticket-icon {
+
+    display:
+        flex;
+
+    width:
+        65px;
+
+    height:
+        65px;
+
+    border-radius:
+        19px;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--ff-red);
+
+    background:
+        var(--ff-red-soft);
+
+    font-size:
+        22px;
+}
+
+
+.ff-user-ticket-info {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+.ff-user-ticket-info small {
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        9px;
+}
+
+
+.ff-user-ticket-info h3 {
+
+    margin:
+        3px
+        0
+        5px;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        20px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-user-ticket-info p {
+
+    margin:
+        0
+        0
+        10px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+}
+
+
+.ff-user-ticket-info > div {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        10px;
+}
+
+
+.ff-user-ticket-info span {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        9px;
+}
+
+
+.ff-user-ticket-actions {
+
+    grid-column:
+        1
+        /
+        -1;
+
+    display:
+        flex;
+
+    margin-top:
+        5px;
+
+    justify-content:
+        flex-end;
+}
+
+
+.ff-user-ticket-actions a {
+
+    display:
+        inline-flex;
+
+    min-height:
+        39px;
+
+    padding:
+        0
+        16px;
+
+    border-radius:
+        22px;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    color:
+        #ffffff;
+
+    background:
+        var(--ff-red);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+}
+
+
+@media (max-width: 900px) {
+
+    .ff-tickets-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+</style>
+
+{% endblock %}

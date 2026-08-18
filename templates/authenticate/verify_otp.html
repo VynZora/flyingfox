@@ -1,961 +1,1084 @@
-{% extends "frontend/base.html" %}
 {% load static %}
 
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-Verify OTP - Flying Fox Adventure
-{% endblock %}
+<head>
 
+    <meta charset="UTF-8">
 
-{% block extra_css %}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<style>
+    <title>
+        Verify OTP - Flying Fox Adventure
+    </title>
 
-/* =========================================================
-   OTP VERIFY PAGE
-========================================================= */
 
-.ff-otp-page {
-    position: relative;
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
 
-    min-height: 100vh;
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/bootstrap.min.css' %}"
+    >
 
-    padding:
-        180px
-        0
-        100px;
 
-    background:
-        #f7f7f7;
-}
+    <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
 
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}"
+    >
 
-/* =========================================================
-   CARD
-========================================================= */
 
-.ff-otp-card {
-    display: grid;
+    <!-- =====================================================
+         YOUR MAIN FRONTEND CSS
+         We keep this only for shared icons/fonts/helpers.
+         No navbar/footer HTML is loaded.
+    ====================================================== -->
 
-    grid-template-columns:
-        1fr
-        1.08fr;
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/style.css' %}"
+    >
 
-    min-height: 650px;
 
-    overflow: hidden;
+    <style>
 
-    background:
-        #ffffff;
+        /* =========================================================
+           ROOT
+        ========================================================= */
 
-    border-radius:
-        32px;
+        :root {
+            --ff-red: #c31103;
+            --ff-red-dark: #a30e02;
+            --ff-red-soft: #fff1ef;
 
-    box-shadow:
-        0 25px 70px
-        rgba(0, 0, 0, 0.08);
-}
+            --ff-dark: #172738;
+            --ff-text: #66717d;
 
+            --ff-border: #e4e7eb;
 
-/* =========================================================
-   LEFT IMAGE
-========================================================= */
+            --ff-white: #ffffff;
+            --ff-bg: #f7f7f7;
+        }
 
-.ff-otp-image-side {
-    position: relative;
 
-    min-height: 650px;
+        * {
+            box-sizing: border-box;
+        }
 
-    overflow: hidden;
-}
 
+        html,
+        body {
+            width: 100%;
 
-.ff-otp-image-side img {
-    display: block;
+            min-height: 100%;
 
-    width: 100%;
-    height: 100%;
+            margin: 0;
 
-    object-fit: cover;
+            padding: 0;
+        }
 
-    object-position: center;
-}
 
+        body {
+            color: var(--ff-dark);
 
-.ff-otp-image-side::after {
-    content: "";
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff9f8 0%,
+                    #f7f7f7 50%,
+                    #ffffff 100%
+                );
 
-    position: absolute;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
 
-    inset: 0;
+            overflow-x: hidden;
+        }
 
-    background:
-        linear-gradient(
-            180deg,
-            transparent 50%,
-            rgba(0, 0, 0, 0.20)
-        );
-}
 
+        a {
+            text-decoration: none;
+        }
 
-/* =========================================================
-   RIGHT AREA
-========================================================= */
 
-.ff-otp-form-side {
-    display: flex;
+        /* =========================================================
+           OTP PAGE
+        ========================================================= */
 
-    align-items: center;
+        .ff-otp-page {
+            width: 100%;
 
-    justify-content: center;
+            min-height: 100vh;
 
-    padding:
-        60px
-        70px;
-}
+            display: flex;
 
+            align-items: center;
 
-.ff-otp-wrapper {
-    width: 100%;
+            padding:
+                32px
+                15px;
+        }
 
-    max-width: 540px;
 
-    text-align: center;
-}
+        .ff-otp-container {
+            width: 100%;
 
+            max-width: 1280px;
 
-/* =========================================================
-   LOGO
-========================================================= */
+            margin:
+                0
+                auto;
+        }
 
-.ff-otp-logo {
-    margin-bottom: 25px;
-}
 
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
 
-.ff-otp-logo img {
-    width: 105px;
-}
+        .ff-auth-progress {
+            width: 100%;
 
+            max-width: 700px;
 
-/* =========================================================
-   HEADING
-========================================================= */
+            margin:
+                0
+                auto
+                28px;
+        }
 
-.ff-otp-heading {
-    margin-bottom: 35px;
-}
 
+        .ff-auth-steps {
+            display: flex;
 
-.ff-otp-heading span {
-    display: block;
+            width: 100%;
 
-    margin-bottom: 8px;
+            align-items: flex-start;
 
-    color:
-        #c31103;
+            justify-content: center;
+        }
 
-    font-size:
-        12px;
 
-    font-weight:
-        800;
+        .ff-auth-step {
+            display: flex;
 
-    letter-spacing:
-        1px;
+            min-width: 120px;
 
-    text-transform:
-        uppercase;
-}
+            flex-direction: column;
 
+            align-items: center;
 
-.ff-otp-heading h2 {
-    margin-bottom:
-        10px;
+            text-align: center;
+        }
 
-    color:
-        #1e1e1e;
 
-    font-size:
-        37px;
+        .ff-auth-step-icon {
+            display: flex;
 
-    font-weight:
-        800;
-}
+            width: 46px;
+            height: 46px;
 
+            border:
+                2px solid
+                #dfe3e6;
 
-.ff-otp-heading h2 strong {
-    color:
-        #c31103;
-}
+            border-radius: 50%;
 
+            align-items: center;
 
-.ff-otp-heading p {
-    margin: 0;
+            justify-content: center;
 
-    color:
-        #666666;
+            color: #9b9b9b;
 
-    font-size:
-        14px;
+            background: #ffffff;
 
-    line-height:
-        1.7;
-}
+            font-size: 14px;
+        }
 
 
-/* =========================================================
-   PHONE
-========================================================= */
+        .ff-auth-step span {
+            display: block;
 
-.ff-otp-phone {
-    display: inline-flex;
+            margin-top: 8px;
 
-    align-items: center;
+            color: #666d75;
 
-    gap: 10px;
+            font-size: 12px;
 
-    margin-top:
-        10px;
+            font-weight: 700;
+        }
 
-    padding:
-        8px
-        15px;
 
-    color:
-        #222222;
+        .ff-auth-step.active
+        .ff-auth-step-icon {
+            color: #ffffff;
 
-    background:
-        #fff4f3;
+            border-color: var(--ff-red);
 
-    border-radius:
-        50px;
+            background: var(--ff-red);
 
-    font-size:
-        14px;
+            box-shadow:
+                0 8px 20px
+                rgba(195, 17, 3, .18);
+        }
 
-    font-weight:
-        700;
-}
 
+        .ff-auth-step.active span {
+            color: var(--ff-red);
+        }
 
-.ff-otp-phone i {
-    color:
-        #c31103;
-}
 
+        .ff-auth-step.completed
+        .ff-auth-step-icon {
+            color: #ffffff;
 
-/* =========================================================
-   MESSAGES
-========================================================= */
+            border-color: #198754;
 
-.ff-otp-messages {
-    margin-bottom:
-        20px;
-}
+            background: #198754;
+        }
 
 
-.ff-otp-alert {
-    padding:
-        11px
-        15px;
+        .ff-auth-step.completed span {
+            color: #198754;
+        }
 
-    color:
-        #c31103;
 
-    background:
-        rgba(
-            195,
-            17,
-            3,
-            0.08
-        );
+        .ff-auth-step-line {
+            width: 150px;
 
-    border-radius:
-        10px;
+            height: 2px;
 
-    font-size:
-        13px;
-}
+            margin-top: 22px;
 
+            background: #e1e3e5;
+        }
 
-/* =========================================================
-   OTP BOXES
-========================================================= */
 
-.ff-otp-boxes {
-    display: grid;
+        .ff-auth-step-line.completed {
+            background: #198754;
+        }
 
-    grid-template-columns:
-        repeat(
-            6,
-            1fr
-        );
 
-    gap:
-        12px;
+        /* =========================================================
+           OTP CARD
+        ========================================================= */
 
-    margin-bottom:
-        28px;
-}
+        .ff-otp-card {
+            display: grid;
 
+            width: 100%;
 
-.ff-otp-input {
-    width: 100%;
-    height: 70px;
+            grid-template-columns:
+                1fr
+                1.08fr;
 
-    padding: 0;
+            min-height: 500px;
 
-    border:
-        1px solid
-        #dddddd;
+            overflow: hidden;
 
-    outline: none;
+            border-radius: 28px;
 
-    border-radius:
-        14px;
+            background: #ffffff;
 
-    color:
-        #222222;
+            box-shadow:
+                0 20px 55px
+                rgba(0, 0, 0, .08);
+        }
 
-    background:
-        #ffffff;
 
-    text-align:
-        center;
+        /* =========================================================
+           LEFT IMAGE
+        ========================================================= */
 
-    font-size:
-        24px;
+        .ff-otp-image-side {
+            position: relative;
 
-    font-weight:
-        700;
+            min-height: 500px;
 
-    transition:
-        border-color
-        0.25s ease,
-        box-shadow
-        0.25s ease;
-}
+            overflow: hidden;
+        }
 
 
-.ff-otp-input:focus {
-    border-color:
-        #c31103;
+        .ff-otp-image-side img {
+            display: block;
 
-    box-shadow:
-        0
-        0
-        0
-        4px
-        rgba(
-            195,
-            17,
-            3,
-            0.08
-        );
-}
+            width: 100%;
+            height: 100%;
 
+            object-fit: cover;
 
-/* =========================================================
-   VERIFY BUTTON
-========================================================= */
+            object-position: center;
+        }
 
-.ff-otp-submit {
-    width: 100%;
-    height: 60px;
 
-    display: flex;
+        .ff-otp-image-side::after {
+            content: "";
 
-    align-items: center;
+            position: absolute;
 
-    justify-content: center;
+            inset: 0;
 
-    gap: 10px;
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(0, 0, 0, 0) 40%,
+                    rgba(0, 0, 0, .20) 100%
+                );
 
-    padding:
-        10px
-        25px;
+            pointer-events: none;
+        }
 
-    border: none;
 
-    border-radius:
-        50px;
+        /* =========================================================
+           RIGHT SIDE
+        ========================================================= */
 
-    color:
-        #ffffff;
+        .ff-otp-form-side {
+            display: flex;
 
-    background:
-        #c31103;
+            padding:
+                30px
+                55px;
 
-    box-shadow:
-        0
-        13px
-        30px
-        rgba(
-            195,
-            17,
-            3,
-            0.22
-        );
+            align-items: center;
 
-    font-size:
-        15px;
+            justify-content: center;
+        }
 
-    font-weight:
-        800;
 
-    cursor:
-        pointer;
+        .ff-otp-wrapper {
+            width: 100%;
 
-    transition:
-        transform
-        0.3s ease,
-        background
-        0.3s ease;
-}
+            max-width: 520px;
 
+            text-align: center;
+        }
 
-.ff-otp-submit:hover {
-    background:
-        #a30e02;
 
-    transform:
-        translateY(-2px);
-}
+        /* =========================================================
+           LOGO
+        ========================================================= */
 
+        .ff-otp-logo {
+            margin-bottom: 10px;
+        }
 
-/* =========================================================
-   RESEND
-========================================================= */
 
-.ff-otp-resend {
-    margin-top:
-        30px;
-}
+        .ff-otp-logo img {
+            width: 70px;
 
+            height: auto;
+        }
 
-.ff-otp-resend p {
-    margin-bottom:
-        7px;
 
-    color:
-        #888888;
+        /* =========================================================
+           HEADING
+        ========================================================= */
 
-    font-size:
-        13px;
-}
+        .ff-otp-heading {
+            margin-bottom: 18px;
+        }
 
 
-.ff-otp-resend a {
-    display:
-        inline-flex;
+        .ff-otp-heading > span {
+            display: block;
 
-    align-items:
-        center;
+            margin-bottom: 5px;
 
-    gap:
-        7px;
+            color: var(--ff-red);
 
-    color:
-        #222222;
+            font-size: 11px;
 
-    font-size:
-        14px;
+            font-weight: 800;
 
-    font-weight:
-        800;
-}
+            letter-spacing: 1px;
 
+            text-transform: uppercase;
+        }
 
-.ff-otp-resend a:hover {
-    color:
-        #c31103;
-}
 
+        .ff-otp-heading h2 {
+            margin:
+                0
+                0
+                6px;
 
-/* =========================================================
-   CHANGE NUMBER
-========================================================= */
+            color: #1e1e1e;
 
-.ff-change-number {
-    margin-top:
-        18px;
-}
+            font-size: 31px;
 
+            font-weight: 800;
 
-.ff-change-number a {
-    color:
-        #c31103;
+            line-height: 1.15;
+        }
 
-    font-size:
-        12px;
 
-    font-weight:
-        700;
-}
+        .ff-otp-heading h2 strong {
+            color: var(--ff-red);
+        }
 
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+        .ff-otp-heading p {
+            margin: 0;
 
-@media (max-width: 991px) {
+            color: #666666;
 
-    .ff-otp-card {
-        grid-template-columns:
-            1fr;
-    }
+            font-size: 13px;
 
+            line-height: 1.5;
+        }
 
-    .ff-otp-image-side {
-        min-height:
-            450px;
-    }
 
+        /* =========================================================
+           PHONE
+        ========================================================= */
 
-    .ff-otp-form-side {
-        padding:
-            55px
-            40px;
-    }
+        .ff-otp-phone {
+            display: inline-flex;
 
-}
+            margin-top: 8px;
 
+            padding:
+                7px
+                14px;
 
-@media (max-width: 767px) {
+            border-radius: 50px;
 
-    .ff-otp-page {
-        padding:
-            140px
-            0
-            70px;
-    }
+            align-items: center;
 
+            gap: 8px;
 
-    .ff-otp-image-side {
-        min-height:
-            350px;
-    }
+            color: #222222;
 
+            background: #fff4f3;
 
-    .ff-otp-form-side {
-        padding:
-            45px
-            20px;
-    }
+            font-size: 13px;
 
+            font-weight: 700;
+        }
 
-    .ff-otp-heading h2 {
-        font-size:
-            29px;
-    }
 
+        .ff-otp-phone i {
+            color: var(--ff-red);
+        }
 
-    .ff-otp-boxes {
-        gap:
-            7px;
-    }
 
+        /* =========================================================
+           MESSAGES
+        ========================================================= */
 
-    .ff-otp-input {
-        height:
-            58px;
+        .ff-otp-messages {
+            display: grid;
 
-        font-size:
-            20px;
-    }
+            gap: 8px;
 
-}
+            margin-bottom: 16px;
+        }
 
 
-@media (max-width: 420px) {
+        .ff-otp-alert {
+            display: flex;
 
-    .ff-otp-boxes {
-        gap:
-            5px;
-    }
+            padding:
+                11px
+                14px;
 
+            border-radius: 10px;
 
-    .ff-otp-input {
-        height:
-            52px;
+            align-items: center;
 
-        border-radius:
-            10px;
+            gap: 8px;
 
-        font-size:
-            18px;
-    }
+            color: var(--ff-red);
 
-}
+            background:
+                rgba(195, 17, 3, .08);
 
+            font-size: 12px;
 
+            line-height: 1.45;
 
+            text-align: left;
+        }
 
 
+        .ff-otp-alert.success {
+            color: #157635;
 
+            background: #edf8f0;
+        }
 
 
+        /* =========================================================
+           OTP BOXES
+        ========================================================= */
 
+        .ff-otp-boxes {
+            display: grid;
 
+            grid-template-columns:
+                repeat(
+                    6,
+                    minmax(0, 1fr)
+                );
 
+            gap: 9px;
 
+            margin-bottom: 18px;
+        }
 
 
-/* =========================================================
-   SMALLER VERIFY OTP CARD
-========================================================= */
+        .ff-otp-input {
+            width: 100%;
 
-.ff-otp-card {
-    display: grid;
+            height: 54px;
 
-    grid-template-columns:
-        1fr
-        1.08fr;
+            padding: 0;
 
-    /* OLD: 650px */
-    min-height: 500px;
+            border:
+                1px solid
+                #dddddd;
 
-    overflow: hidden;
+            border-radius: 12px;
 
-    background: #ffffff;
+            outline: none;
 
-    border-radius: 28px;
+            color: #222222;
 
-    box-shadow:
-        0 20px 55px
-        rgba(0, 0, 0, 0.08);
-}
+            background: #ffffff;
 
+            text-align: center;
 
-/* =========================================================
-   LEFT IMAGE
-========================================================= */
+            font-size: 21px;
 
-.ff-otp-image-side {
-    position: relative;
+            font-weight: 700;
 
-    /* OLD: 650px */
-    min-height: 500px;
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+        }
 
-    overflow: hidden;
-}
 
-.ff-otp-image-side img {
-    display: block;
+        .ff-otp-input:focus {
+            border-color: var(--ff-red);
 
-    width: 100%;
-    height: 100%;
+            background: #fffafa;
 
-    object-fit: cover;
-    object-position: center;
-}
+            box-shadow:
+                0 0 0 4px
+                rgba(195, 17, 3, .08);
+        }
 
 
-/* =========================================================
-   RIGHT SIDE
-========================================================= */
+        .ff-otp-input:not(:placeholder-shown) {
+            border-color:
+                rgba(195, 17, 3, .35);
+        }
 
-.ff-otp-form-side {
-    display: flex;
 
-    align-items: center;
-    justify-content: center;
+        /* =========================================================
+           VERIFY BUTTON
+        ========================================================= */
 
-    /* OLD: 60px 70px */
-    padding: 30px 55px;
-}
+        .ff-otp-submit {
+            display: flex;
 
+            width: 100%;
+            height: 50px;
 
-.ff-otp-wrapper {
-    width: 100%;
+            padding:
+                8px
+                22px;
 
-    max-width: 520px;
+            border: none;
 
-    text-align: center;
-}
+            border-radius: 50px;
 
+            align-items: center;
 
-/* =========================================================
-   LOGO
-========================================================= */
+            justify-content: center;
 
-.ff-otp-logo {
-    /* OLD: 25px */
-    margin-bottom: 10px;
-}
+            gap: 9px;
 
-.ff-otp-logo img {
-    /* OLD: 105px */
-    width: 70px;
-}
+            color: #ffffff;
 
+            background: var(--ff-red);
 
-/* =========================================================
-   HEADING
-========================================================= */
+            box-shadow:
+                0 10px 25px
+                rgba(195, 17, 3, .20);
 
-.ff-otp-heading {
-    /* OLD: 35px */
-    margin-bottom: 18px;
-}
+            font-size: 13px;
 
-.ff-otp-heading span {
-    margin-bottom: 5px;
+            font-weight: 800;
 
-    color: #c31103;
+            cursor: pointer;
 
-    font-size: 11px;
+            transition:
+                transform .2s ease,
+                background .2s ease;
+        }
 
-    font-weight: 800;
 
-    letter-spacing: 1px;
+        .ff-otp-submit:hover {
+            background: var(--ff-red-dark);
 
-    text-transform: uppercase;
-}
+            transform: translateY(-2px);
+        }
 
 
-.ff-otp-heading h2 {
-    margin-bottom: 6px;
+        .ff-otp-submit:disabled {
+            opacity: .7;
 
-    color: #1e1e1e;
+            cursor: not-allowed;
 
-    /* OLD: 37px */
-    font-size: 31px;
+            transform: none;
+        }
 
-    line-height: 1.15;
 
-    font-weight: 800;
-}
+        /* =========================================================
+           RESEND
+        ========================================================= */
 
+        .ff-otp-resend {
+            margin-top: 15px;
+        }
 
-.ff-otp-heading h2 strong {
-    color: #c31103;
-}
 
+        .ff-otp-resend p {
+            margin:
+                0
+                0
+                4px;
 
-.ff-otp-heading p {
-    margin: 0;
+            color: #888888;
 
-    color: #666666;
+            font-size: 11px;
+        }
 
-    font-size: 13px;
 
-    line-height: 1.5;
-}
+        .ff-otp-resend a {
+            display: inline-flex;
 
+            align-items: center;
 
-/* =========================================================
-   PHONE NUMBER
-========================================================= */
+            gap: 6px;
 
-.ff-otp-phone {
-    display: inline-flex;
+            color: #222222;
 
-    align-items: center;
+            font-size: 12px;
 
-    gap: 8px;
+            font-weight: 800;
+        }
 
-    margin-top: 7px;
 
-    padding: 6px 13px;
+        .ff-otp-resend a:hover {
+            color: var(--ff-red);
+        }
 
-    color: #222222;
 
-    background: #fff4f3;
+        /* =========================================================
+           CHANGE NUMBER
+        ========================================================= */
 
-    border-radius: 50px;
+        .ff-change-number {
+            margin-top: 9px;
+        }
 
-    font-size: 13px;
 
-    font-weight: 700;
-}
+        .ff-change-number a {
+            display: inline-flex;
 
+            align-items: center;
 
-/* =========================================================
-   OTP BOXES
-========================================================= */
+            gap: 6px;
 
-.ff-otp-boxes {
-    display: grid;
+            color: var(--ff-red);
 
-    grid-template-columns:
-        repeat(6, 1fr);
+            font-size: 11px;
 
-    /* OLD: 12px */
-    gap: 9px;
+            font-weight: 700;
+        }
 
-    /* OLD: 28px */
-    margin-bottom: 18px;
-}
 
+        /* =========================================================
+           SECURITY INFO
+        ========================================================= */
 
-.ff-otp-input {
-    width: 100%;
+        .ff-otp-security {
+            display: flex;
 
-    /* OLD: 70px */
-    height: 54px;
+            margin-top: 18px;
 
-    padding: 0;
+            padding:
+                12px
+                14px;
 
-    border: 1px solid #dddddd;
+            border:
+                1px solid
+                #eceff2;
 
-    outline: none;
+            border-radius: 14px;
 
-    border-radius: 12px;
+            align-items: center;
 
-    color: #222222;
+            gap: 10px;
 
-    background: #ffffff;
+            background: #fafafa;
 
-    text-align: center;
+            text-align: left;
+        }
 
-    /* OLD: 24px */
-    font-size: 21px;
 
-    font-weight: 700;
-}
+        .ff-otp-security-icon {
+            display: flex;
 
+            width: 38px;
+            height: 38px;
 
-/* =========================================================
-   BUTTON
-========================================================= */
+            flex:
+                0
+                0
+                38px;
 
-.ff-otp-submit {
-    width: 100%;
+            border-radius: 50%;
 
-    /* OLD: 60px */
-    height: 50px;
+            align-items: center;
 
-    display: flex;
+            justify-content: center;
 
-    align-items: center;
-    justify-content: center;
+            color: var(--ff-red);
 
-    gap: 9px;
+            background: var(--ff-red-soft);
 
-    padding: 8px 22px;
+            font-size: 13px;
+        }
 
-    border: none;
 
-    border-radius: 50px;
+        .ff-otp-security strong {
+            display: block;
 
-    color: #ffffff;
+            margin-bottom: 2px;
 
-    background: #c31103;
+            color: var(--ff-dark);
 
-    box-shadow:
-        0 10px 25px
-        rgba(195, 17, 3, 0.20);
+            font-size: 11px;
+        }
 
-    font-size: 14px;
 
-    font-weight: 800;
+        .ff-otp-security p {
+            margin: 0;
 
-    cursor: pointer;
-}
+            color: var(--ff-text);
 
+            font-size: 9px;
 
-/* =========================================================
-   RESEND
-========================================================= */
+            line-height: 1.45;
+        }
 
-.ff-otp-resend {
-    /* OLD: 30px */
-    margin-top: 15px;
-}
 
-.ff-otp-resend p {
-    margin-bottom: 4px;
+        /* =========================================================
+           TABLET
+        ========================================================= */
 
-    color: #888888;
+        @media (max-width: 991px) {
 
-    font-size: 12px;
-}
+            .ff-otp-page {
+                padding:
+                    22px
+                    15px
+                    40px;
+            }
 
 
-/* =========================================================
-   CHANGE NUMBER
-========================================================= */
+            .ff-otp-card {
+                grid-template-columns: 1fr;
+            }
 
-.ff-change-number {
-    /* OLD: 18px */
-    margin-top: 8px;
-}
 
-@media (max-width: 991px) {
+            .ff-otp-image-side {
+                min-height: 300px;
+            }
 
-    .ff-otp-card {
-        grid-template-columns: 1fr;
-    }
 
-    .ff-otp-image-side {
-        min-height: 300px;
-    }
+            .ff-otp-form-side {
+                padding:
+                    35px;
+            }
 
-    .ff-otp-form-side {
-        padding: 35px 35px;
-    }
-}
+        }
 
 
-@media (max-width: 767px) {
+        /* =========================================================
+           MOBILE
+        ========================================================= */
 
-    .ff-otp-page {
-        padding: 120px 0 50px;
-    }
+        @media (max-width: 767px) {
 
-    .ff-otp-image-side {
-        min-height: 240px;
-    }
+            .ff-otp-page {
+                min-height: 100vh;
 
-    .ff-otp-form-side {
-        padding: 30px 18px;
-    }
+                padding:
+                    15px
+                    10px
+                    28px;
 
-    .ff-otp-logo img {
-        width: 60px;
-    }
+                align-items: flex-start;
+            }
 
-    .ff-otp-heading h2 {
-        font-size: 27px;
-    }
 
-    .ff-otp-boxes {
-        gap: 6px;
-    }
+            .ff-otp-container {
+                max-width: 100%;
+            }
 
-    .ff-otp-input {
-        height: 50px;
-        font-size: 19px;
-    }
 
-    .ff-otp-submit {
-        height: 48px;
-    }
-}
+            /* PROGRESS */
 
-</style>
+            .ff-auth-progress {
+                margin-bottom: 17px;
+            }
 
-{% endblock %}
 
+            .ff-auth-step {
+                min-width: 72px;
+            }
 
 
-{% block content %}
+            .ff-auth-step-icon {
+                width: 36px;
+                height: 36px;
+
+                font-size: 11px;
+            }
+
+
+            .ff-auth-step span {
+                margin-top: 5px;
+
+                font-size: 9px;
+
+                white-space: nowrap;
+            }
+
+
+            .ff-auth-step-line {
+                width: 42px;
+
+                margin-top: 17px;
+            }
+
+
+            /* CARD */
+
+            .ff-otp-card {
+                display: block;
+
+                min-height: 0;
+
+                border-radius: 22px;
+            }
+
+
+            /*
+             * Hide large adventure image on mobile.
+             * This gives the OTP form the whole screen.
+             */
+
+            .ff-otp-image-side {
+                display: none;
+            }
+
+
+            .ff-otp-form-side {
+                width: 100%;
+
+                padding:
+                    25px
+                    18px
+                    24px;
+            }
+
+
+            .ff-otp-wrapper {
+                width: 100%;
+
+                max-width: 100%;
+            }
+
+
+            /* LOGO */
+
+            .ff-otp-logo {
+                margin-bottom: 8px;
+            }
+
+
+            .ff-otp-logo img {
+                width: 58px;
+            }
+
+
+            /* HEADING */
+
+            .ff-otp-heading {
+                margin-bottom: 17px;
+            }
+
+
+            .ff-otp-heading > span {
+                font-size: 9px;
+            }
+
+
+            .ff-otp-heading h2 {
+                font-size: 25px;
+
+                line-height: 1.15;
+            }
+
+
+            .ff-otp-heading p {
+                font-size: 11px;
+
+                line-height: 1.5;
+            }
+
+
+            .ff-otp-phone {
+                margin-top: 7px;
+
+                padding:
+                    6px
+                    11px;
+
+                font-size: 11px;
+            }
+
+
+            /* OTP */
+
+            .ff-otp-boxes {
+                grid-template-columns:
+                    repeat(
+                        6,
+                        minmax(0, 1fr)
+                    );
+
+                gap: 6px;
+            }
+
+
+            .ff-otp-input {
+                height: 50px;
+
+                border-radius: 10px;
+
+                font-size: 18px;
+            }
+
+
+            .ff-otp-submit {
+                height: 48px;
+
+                font-size: 12px;
+            }
+
+
+            .ff-otp-security {
+                padding:
+                    11px;
+            }
+
+        }
+
+
+        /* =========================================================
+           VERY SMALL MOBILE
+        ========================================================= */
+
+        @media (max-width: 390px) {
+
+            .ff-otp-page {
+                padding:
+                    10px
+                    8px
+                    25px;
+            }
+
+
+            .ff-auth-step {
+                min-width: 65px;
+            }
+
+
+            .ff-auth-step-line {
+                width: 30px;
+            }
+
+
+            .ff-otp-form-side {
+                padding:
+                    22px
+                    14px;
+            }
+
+
+            .ff-otp-heading h2 {
+                font-size: 23px;
+            }
+
+
+            .ff-otp-boxes {
+                gap: 5px;
+            }
+
+
+            .ff-otp-input {
+                height: 46px;
+
+                font-size: 17px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     OTP PAGE
+========================================================= -->
+
 <section class="ff-otp-page">
 
-    <div class="container">
+    <div class="ff-otp-container">
 
 
         <!-- =====================================================
-             AUTH PROGRESS HEADER
+             AUTH PROGRESS
         ====================================================== -->
 
         <div class="ff-auth-progress">
+
             <div class="ff-auth-steps">
 
 
-                <!-- STEP 1 - COMPLETED -->
+                <!-- STEP 1 -->
 
                 <div class="ff-auth-step completed">
 
@@ -972,10 +1095,14 @@ Verify OTP - Flying Fox Adventure
                 </div>
 
 
-                <div class="ff-auth-step-line completed"></div>
+                <div class="
+                    ff-auth-step-line
+                    completed
+                "></div>
 
 
-                <!-- STEP 2 - CURRENT -->
+
+                <!-- STEP 2 -->
 
                 <div class="ff-auth-step active">
 
@@ -995,7 +1122,8 @@ Verify OTP - Flying Fox Adventure
                 <div class="ff-auth-step-line"></div>
 
 
-                <!-- STEP 3 - NEXT -->
+
+                <!-- STEP 3 -->
 
                 <div class="ff-auth-step">
 
@@ -1011,9 +1139,11 @@ Verify OTP - Flying Fox Adventure
 
                 </div>
 
+
             </div>
 
         </div>
+
 
 
         <!-- =====================================================
@@ -1023,7 +1153,9 @@ Verify OTP - Flying Fox Adventure
         <div class="ff-otp-card">
 
 
-            <!-- LEFT IMAGE -->
+            <!-- =================================================
+                 LEFT IMAGE
+            ================================================== -->
 
             <div class="ff-otp-image-side">
 
@@ -1035,7 +1167,10 @@ Verify OTP - Flying Fox Adventure
             </div>
 
 
-            <!-- RIGHT FORM -->
+
+            <!-- =================================================
+                 RIGHT FORM SIDE
+            ================================================== -->
 
             <div class="ff-otp-form-side">
 
@@ -1054,7 +1189,10 @@ Verify OTP - Flying Fox Adventure
                     </div>
 
 
-                    <!-- HEADING -->
+
+                    <!-- =================================================
+                         HEADING
+                    ================================================== -->
 
                     <div class="ff-otp-heading">
 
@@ -1062,31 +1200,54 @@ Verify OTP - Flying Fox Adventure
                             Mobile Verification
                         </span>
 
+
                         <h2>
+
                             Let's Verify Your
+
                             <strong>
                                 Phone Number
                             </strong>
+
                         </h2>
 
+
                         <p>
+
                             Please enter the 6-digit OTP
                             that we have sent to
+
                         </p>
 
+
+                        <!--
+                            IMPORTANT:
+
+                            phone ALREADY contains full international
+                            number such as:
+
+                            +918086220292
+                            +971501234567
+
+                            So DON'T put +91 before it.
+                        -->
 
                         <div class="ff-otp-phone">
 
                             <i class="fas fa-mobile-alt"></i>
 
-                            +91 {{ phone }}
+                            {{ phone }}
 
                         </div>
+
 
                     </div>
 
 
-                    <!-- MESSAGES -->
+
+                    <!-- =================================================
+                         DJANGO MESSAGES
+                    ================================================== -->
 
                     {% if messages %}
 
@@ -1094,8 +1255,27 @@ Verify OTP - Flying Fox Adventure
 
                             {% for message in messages %}
 
-                                <div class="ff-otp-alert">
-                                    {{ message }}
+                                <div
+                                    class="
+                                        ff-otp-alert
+                                        {{ message.tags }}
+                                    "
+                                >
+
+                                    {% if message.tags == "success" %}
+
+                                        <i class="fas fa-circle-check"></i>
+
+                                    {% else %}
+
+                                        <i class="fas fa-circle-exclamation"></i>
+
+                                    {% endif %}
+
+                                    <span>
+                                        {{ message }}
+                                    </span>
+
                                 </div>
 
                             {% endfor %}
@@ -1105,7 +1285,10 @@ Verify OTP - Flying Fox Adventure
                     {% endif %}
 
 
-                    <!-- OTP FORM -->
+
+                    <!-- =================================================
+                         OTP FORM
+                    ================================================== -->
 
                     <form
                         method="POST"
@@ -1118,6 +1301,7 @@ Verify OTP - Flying Fox Adventure
 
                         <div class="ff-otp-boxes">
 
+
                             <input
                                 type="text"
                                 name="otp_1"
@@ -1125,8 +1309,10 @@ Verify OTP - Flying Fox Adventure
                                 maxlength="1"
                                 inputmode="numeric"
                                 autocomplete="one-time-code"
+                                aria-label="OTP digit 1"
                                 required
                             >
+
 
                             <input
                                 type="text"
@@ -1134,8 +1320,10 @@ Verify OTP - Flying Fox Adventure
                                 class="ff-otp-input"
                                 maxlength="1"
                                 inputmode="numeric"
+                                aria-label="OTP digit 2"
                                 required
                             >
+
 
                             <input
                                 type="text"
@@ -1143,8 +1331,10 @@ Verify OTP - Flying Fox Adventure
                                 class="ff-otp-input"
                                 maxlength="1"
                                 inputmode="numeric"
+                                aria-label="OTP digit 3"
                                 required
                             >
+
 
                             <input
                                 type="text"
@@ -1152,8 +1342,10 @@ Verify OTP - Flying Fox Adventure
                                 class="ff-otp-input"
                                 maxlength="1"
                                 inputmode="numeric"
+                                aria-label="OTP digit 4"
                                 required
                             >
+
 
                             <input
                                 type="text"
@@ -1161,8 +1353,10 @@ Verify OTP - Flying Fox Adventure
                                 class="ff-otp-input"
                                 maxlength="1"
                                 inputmode="numeric"
+                                aria-label="OTP digit 5"
                                 required
                             >
+
 
                             <input
                                 type="text"
@@ -1170,27 +1364,39 @@ Verify OTP - Flying Fox Adventure
                                 class="ff-otp-input"
                                 maxlength="1"
                                 inputmode="numeric"
+                                aria-label="OTP digit 6"
                                 required
                             >
+
 
                         </div>
 
 
+
+                        <!-- VERIFY BUTTON -->
+
                         <button
                             type="submit"
                             class="ff-otp-submit"
+                            id="ffOtpSubmit"
                         >
 
-                            <i class="fas fa-shield-check"></i>
+                            <i class="fas fa-shield-alt"></i>
 
-                            Verify OTP & Continue
+                            <span>
+                                Verify OTP & Continue
+                            </span>
 
                         </button>
+
 
                     </form>
 
 
-                    <!-- RESEND -->
+
+                    <!-- =================================================
+                         RESEND OTP
+                    ================================================== -->
 
                     <div class="ff-otp-resend">
 
@@ -1198,7 +1404,10 @@ Verify OTP - Flying Fox Adventure
                             Didn't receive your OTP?
                         </p>
 
-                        <a href="{% url 'resend_login_otp' %}">
+
+                        <a
+                            href="{% url 'resend_login_otp' %}"
+                        >
 
                             <i class="fas fa-rotate-right"></i>
 
@@ -1209,11 +1418,16 @@ Verify OTP - Flying Fox Adventure
                     </div>
 
 
-                    <!-- CHANGE NUMBER -->
+
+                    <!-- =================================================
+                         CHANGE NUMBER
+                    ================================================== -->
 
                     <div class="ff-change-number">
 
-                        <a href="{% url 'user_signin' %}">
+                        <a
+                            href="{% url 'user_signin' %}"
+                        >
 
                             <i class="fas fa-arrow-left"></i>
 
@@ -1224,23 +1438,54 @@ Verify OTP - Flying Fox Adventure
                     </div>
 
 
+
+                    <!-- =================================================
+                         SECURITY
+                    ================================================== -->
+
+                    <div class="ff-otp-security">
+
+                        <div class="ff-otp-security-icon">
+
+                            <i class="fas fa-shield-alt"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                Secure OTP Verification
+                            </strong>
+
+                            <p>
+                                Never share your OTP with anyone.
+                                Flying Fox staff will never ask
+                                for your OTP.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
                 </div>
 
             </div>
 
+
         </div>
+
 
     </div>
 
 </section>
 
-{% endblock %}
 
 
-
-
-
-{% block extra_js %}
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
 
 <script>
 
@@ -1255,9 +1500,22 @@ document.addEventListener(
             );
 
 
-        /* ==========================================
-           AUTO MOVE NEXT
-        ========================================== */
+        const otpForm =
+            document.getElementById(
+                "ffOtpForm"
+            );
+
+
+        const submitButton =
+            document.getElementById(
+                "ffOtpSubmit"
+            );
+
+
+
+        /* =====================================================
+           EACH OTP INPUT
+        ====================================================== */
 
         otpInputs.forEach(
             function (
@@ -1266,20 +1524,25 @@ document.addEventListener(
             ) {
 
 
+                /* =============================================
+                   ONLY NUMBER + AUTO NEXT
+                ============================================== */
+
                 input.addEventListener(
                     "input",
                     function () {
 
 
-                        /*
-                         * Only numbers
-                         */
-
                         this.value =
-                            this.value.replace(
-                                /[^0-9]/g,
-                                ""
-                            );
+                            this.value
+                                .replace(
+                                    /[^0-9]/g,
+                                    ""
+                                )
+                                .slice(
+                                    0,
+                                    1
+                                );
 
 
                         if (
@@ -1301,9 +1564,10 @@ document.addEventListener(
                 );
 
 
-                /* ==================================
-                   BACKSPACE
-                ================================== */
+
+                /* =============================================
+                   BACKSPACE PREVIOUS
+                ============================================== */
 
                 input.addEventListener(
                     "keydown",
@@ -1325,13 +1589,46 @@ document.addEventListener(
                         }
 
 
+                        /* LEFT ARROW */
+
+                        if (
+                            event.key === "ArrowLeft"
+                            &&
+                            index > 0
+                        ) {
+
+                            otpInputs[
+                                index - 1
+                            ].focus();
+
+                        }
+
+
+                        /* RIGHT ARROW */
+
+                        if (
+                            event.key === "ArrowRight"
+                            &&
+                            index
+                            <
+                            otpInputs.length - 1
+                        ) {
+
+                            otpInputs[
+                                index + 1
+                            ].focus();
+
+                        }
+
+
                     }
                 );
 
 
-                /* ==================================
-                   PASTE OTP
-                ================================== */
+
+                /* =============================================
+                   PASTE COMPLETE OTP
+                ============================================== */
 
                 input.addEventListener(
                     "paste",
@@ -1347,7 +1644,9 @@ document.addEventListener(
                                 ||
                                 window.clipboardData
                             )
-                            .getData("text")
+                            .getData(
+                                "text"
+                            )
                             .replace(
                                 /\D/g,
                                 ""
@@ -1383,15 +1682,15 @@ document.addEventListener(
                             );
 
 
-                        if (
-                            pasted.length
-                        ) {
+                        if (pasted.length) {
 
                             const focusIndex =
                                 Math.min(
                                     pasted.length,
                                     otpInputs.length
-                                ) - 1;
+                                )
+                                -
+                                1;
 
 
                             otpInputs[
@@ -1409,7 +1708,89 @@ document.addEventListener(
         );
 
 
-        /* Focus first box */
+
+        /* =====================================================
+           FORM SUBMIT
+        ====================================================== */
+
+        otpForm?.addEventListener(
+            "submit",
+            function (event) {
+
+
+                let completeOtp = "";
+
+
+                otpInputs.forEach(
+                    function (input) {
+
+                        completeOtp +=
+                            input.value;
+
+                    }
+                );
+
+
+                if (
+                    completeOtp.length !== 6
+                    ||
+                    !/^\d{6}$/.test(
+                        completeOtp
+                    )
+                ) {
+
+                    event.preventDefault();
+
+
+                    const firstEmpty =
+                        Array.from(
+                            otpInputs
+                        )
+                        .find(
+                            function (input) {
+                                return !input.value;
+                            }
+                        );
+
+
+                    if (firstEmpty) {
+                        firstEmpty.focus();
+                    }
+
+
+                    return;
+
+                }
+
+
+                /* LOADING BUTTON */
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        true;
+
+
+                    submitButton.innerHTML =
+                        `
+                            <i class="fas fa-spinner fa-spin"></i>
+
+                            <span>
+                                Verifying...
+                            </span>
+                        `;
+
+                }
+
+
+            }
+        );
+
+
+
+        /* =====================================================
+           FOCUS FIRST OTP
+        ====================================================== */
 
         if (
             otpInputs.length
@@ -1427,4 +1808,7 @@ document.addEventListener(
 
 </script>
 
-{% endblock %}
+
+</body>
+
+</html>

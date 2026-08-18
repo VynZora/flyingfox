@@ -6,6 +6,218 @@ Booking Details | FlyingFox Admin
 {% endblock %}
 
 
+ {% block extra_css %}
+ <style>
+
+.booking-detail-page {
+
+    max-width: 1200px;
+
+}
+
+
+.detail-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.detail-header h4 {
+
+    margin: 0 0 4px;
+
+}
+
+
+.detail-actions {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+.detail-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+}
+
+
+.detail-card {
+
+    padding: 20px;
+
+    background: #fff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+}
+
+
+.detail-card h5 {
+
+    margin-bottom: 18px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    color: #1f2937;
+
+}
+
+
+.info-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid #f3f4f6;
+
+    font-size: 12px;
+
+}
+
+
+.info-row span {
+
+    color: #6b7280;
+
+}
+
+
+.info-row strong {
+
+    color: #1f2937;
+
+    text-align: right;
+
+}
+
+
+.total-row {
+
+    color: #f97316;
+
+    font-size: 15px;
+
+}
+
+
+.total-row strong {
+
+    color: #f97316;
+
+}
+
+
+.ticket-qr {
+
+    width: 180px;
+
+    height: 180px;
+
+    object-fit: contain;
+
+    border: 1px solid #e5e7eb;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+}
+
+
+@media(max-width:767px) {
+
+    .detail-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .detail-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+}
+
+
+
+
+.participant-total-box {
+
+    display: flex;
+
+    max-width: 320px;
+
+    margin-top: 15px;
+
+    padding: 14px 18px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    border-radius: 10px;
+
+    background: #fff0ee;
+
+    color: #192736;
+}
+
+
+.participant-total-box span {
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.participant-total-box strong {
+
+    color: #c31103;
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+ </style>
+ 
+ {% endblock %}
+
+
 {% block content %}
 
 <div class="booking-detail-page">
@@ -181,7 +393,7 @@ Booking Details | FlyingFox Admin
 
     <!-- PARTICIPANTS -->
 
-    <div class="detail-card mt-4">
+    {% comment %} <div class="detail-card mt-4">
 
         <h5>
             Participants
@@ -250,74 +462,279 @@ Booking Details | FlyingFox Admin
 
         </div>
 
+    </div> {% endcomment %}
+
+
+
+    <!-- =====================================================
+     PARTICIPANT WEIGHT DETAILS
+====================================================== -->
+
+<div class="detail-card mt-4">
+
+    <h5>
+        Participant Weight Details
+    </h5>
+
+
+    <div class="custom-table-container">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Weight Range
+                    </th>
+
+                    <th>
+                        Minimum Weight
+                    </th>
+
+                    <th>
+                        Maximum Weight
+                    </th>
+
+                    <th>
+                        Riders
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for group in booking.weight_groups.all %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+
+                                {% if group.label %}
+
+                                    {{ group.label }}
+
+                                {% else %}
+
+                                    {{ group.min_weight }}
+                                    -
+                                    {{ group.max_weight }}
+                                    KG
+
+                                {% endif %}
+
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            {{ group.min_weight }} KG
+                        </td>
+
+
+                        <td>
+                            {{ group.max_weight }} KG
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ group.participant_count }}
+
+                                Rider{{ group.participant_count|pluralize }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="text-center py-4 text-muted"
+                        >
+
+                            No participant weight information
+                            is stored for this booking.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
     </div>
+
+
+
+    <div class="participant-total-box">
+
+        <span>
+            Total Riders
+        </span>
+
+        <strong>
+            {{ booking.quantity }}
+        </strong>
+
+    </div>
+
+</div>
 
 
 
     <!-- PRICE -->
 
-    <div class="detail-grid mt-4">
+     <div class="detail-grid mt-4">
 
 
         <div class="detail-card">
 
-            <h5>
-                Price
-            </h5>
+    <h5>
+        Price Summary
+    </h5>
 
 
-            <div class="info-row">
+    <div class="info-row">
 
-                <span>
-                    Price / Person
-                </span>
+        <span>
+            Price / Rider
+        </span>
 
-                <strong>
-                    ₹{{ booking.price_per_person }}
-                </strong>
+        <strong>
+            ₹{{ booking.price_per_person }}
+        </strong>
 
-            </div>
-
-
-            <div class="info-row">
-
-                <span>
-                    Quantity
-                </span>
-
-                <strong>
-                    {{ booking.quantity }}
-                </strong>
-
-            </div>
+    </div>
 
 
-            <div class="info-row">
+    <div class="info-row">
 
-                <span>
-                    Subtotal
-                </span>
+        <span>
+            Total Riders
+        </span>
 
-                <strong>
-                    ₹{{ booking.subtotal }}
-                </strong>
+        <strong>
+            {{ booking.quantity }}
+        </strong>
 
-            </div>
+    </div>
 
 
-            <div class="info-row total-row">
+    <div class="info-row">
 
-                <span>
-                    Total
-                </span>
+        <span>
+            Subtotal
+        </span>
 
-                <strong>
-                    ₹{{ booking.total_amount }}
-                </strong>
+        <strong>
+            ₹{{ booking.subtotal }}
+        </strong>
 
-            </div>
+    </div>
+
+
+    {% if booking.offer %}
+
+        <div class="info-row">
+
+            <span>
+                Offer
+            </span>
+
+            <strong>
+                {{ booking.offer.title }}
+            </strong>
 
         </div>
+
+
+        {% if booking.applied_coupon_code %}
+
+            <div class="info-row">
+
+                <span>
+                    Coupon Code
+                </span>
+
+                <strong>
+                    {{ booking.applied_coupon_code }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="info-row">
+
+            <span>
+                Discount
+            </span>
+
+            <strong class="text-success">
+                - ₹{{ booking.discount_amount }}
+            </strong>
+
+        </div>
+
+    {% else %}
+
+        <div class="info-row">
+
+            <span>
+                Offer
+            </span>
+
+            <strong>
+                No Offer
+            </strong>
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="info-row total-row">
+
+        <span>
+            Total Paid
+        </span>
+
+        <strong>
+            ₹{{ booking.total_amount }}
+        </strong>
+
+    </div>
+
+</div>
 
 
 
@@ -379,6 +796,10 @@ Booking Details | FlyingFox Admin
 
 
 
+
+
+
+
     <!-- PAYMENT + TICKET -->
 
     <div class="detail-grid mt-4">
@@ -388,72 +809,147 @@ Booking Details | FlyingFox Admin
 
         <div class="detail-card">
 
-            <h5>
-                Payment
-            </h5>
+    <h5>
+        Payment
+    </h5>
 
 
-            {% if payment %}
+    {% if payment %}
 
+        <div class="info-row">
 
-            <div class="info-row">
+            <span>
+                Status
+            </span>
 
-                <span>Status</span>
+            <strong>
 
-                <strong>
+                {% if payment.status == "paid" %}
+
+                    <span class="badge bg-success">
+                        Paid
+                    </span>
+
+                {% elif payment.status == "failed" %}
+
+                    <span class="badge bg-danger">
+                        Failed
+                    </span>
+
+                {% elif payment.status == "authorized" %}
+
+                    <span class="badge bg-warning">
+                        Authorized
+                    </span>
+
+                {% else %}
+
                     {{ payment.get_status_display }}
-                </strong>
 
-            </div>
+                {% endif %}
 
-
-            <div class="info-row">
-
-                <span>Gateway</span>
-
-                <strong>
-                    {{ payment.gateway }}
-                </strong>
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span>Amount</span>
-
-                <strong>
-                    ₹{{ payment.amount }}
-                </strong>
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span>Payment ID</span>
-
-                <strong>
-                    {{ payment.gateway_payment_id|default:"-" }}
-                </strong>
-
-            </div>
-
-
-            {% else %}
-
-
-            <p class="text-muted">
-
-                Payment has not been created yet.
-
-            </p>
-
-
-            {% endif %}
-
+            </strong>
 
         </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Gateway
+            </span>
+
+            <strong>
+                {{ payment.gateway|upper }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Amount
+            </span>
+
+            <strong>
+                ₹{{ payment.amount }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Razorpay Order ID
+            </span>
+
+            <strong>
+                {{ payment.gateway_order_id|default:"-" }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Razorpay Payment ID
+            </span>
+
+            <strong>
+                {{ payment.gateway_payment_id|default:"-" }}
+            </strong>
+
+        </div>
+
+
+        {% if payment.paid_at %}
+
+            <div class="info-row">
+
+                <span>
+                    Paid At
+                </span>
+
+                <strong>
+                    {{ payment.paid_at|date:"d M Y h:i A" }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+
+        {% if payment.failure_reason %}
+
+            <div class="info-row">
+
+                <span>
+                    Failure Reason
+                </span>
+
+                <strong class="text-danger">
+                    {{ payment.failure_reason }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+
+    {% else %}
+
+        <p class="text-muted mb-0">
+
+            Payment has not been created yet.
+
+        </p>
+
+    {% endif %}
+
+</div>
 
 
 
@@ -461,263 +957,175 @@ Booking Details | FlyingFox Admin
 
         <div class="detail-card">
 
-            <h5>
-                Ticket / QR
-            </h5>
+    <h5>
+        Ticket / QR
+    </h5>
 
 
-            {% if ticket %}
+    {% if ticket %}
 
 
-                {% if ticket.qr_image %}
+        {% if ticket.qr_image %}
+
+            <div class="text-center">
 
                 <img
                     src="{{ ticket.qr_image.url }}"
                     class="ticket-qr"
-                    alt="Booking QR"
+                    alt="Ticket QR"
                 >
 
-                {% endif %}
+            </div>
+
+        {% endif %}
 
 
-                <div class="info-row mt-3">
+        <div class="info-row mt-3">
 
-                    <span>Ticket ID</span>
+            <span>
+                Ticket ID
+            </span>
 
-                    <strong>
-                        {{ ticket.ticket_id }}
-                    </strong>
-
-                </div>
-
-
-                <div class="info-row">
-
-                    <span>Check In</span>
-
-                    <strong>
-
-                        {% if ticket.is_used %}
-
-                            Checked In
-
-                        {% else %}
-
-                            Not Checked In
-
-                        {% endif %}
-
-                    </strong>
-
-                </div>
-
-
-                {% if ticket.pdf_ticket %}
-
-                <a
-                    href="{{ ticket.pdf_ticket.url }}"
-                    class="btn btn-primary mt-3"
-                    target="_blank"
-                >
-
-                    Download Ticket
-
-                </a>
-
-                {% endif %}
-
-
-            {% else %}
-
-
-            <p class="text-muted">
-
-                Ticket has not been generated yet.
-
-            </p>
-
-
-            {% endif %}
-
+            <strong>
+                {{ ticket.ticket_id }}
+            </strong>
 
         </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Ticket Status
+            </span>
+
+            <strong>
+
+                {% if ticket.is_used %}
+
+                    <span class="badge bg-success">
+                        Checked In
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-warning text-dark">
+                        Not Checked In
+                    </span>
+
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        {% if ticket.checked_in_at %}
+
+            <div class="info-row">
+
+                <span>
+                    Checked In At
+                </span>
+
+                <strong>
+                    {{ ticket.checked_in_at|date:"d M Y h:i A" }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="info-row">
+
+            <span>
+                Email
+            </span>
+
+            <strong>
+
+                {% if ticket.email_sent %}
+                    Sent
+                {% else %}
+                    Not Sent
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                SMS
+            </span>
+
+            <strong>
+
+                {% if ticket.sms_sent %}
+                    Sent
+                {% else %}
+                    Not Sent
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                WhatsApp
+            </span>
+
+            <strong>
+
+                {% if ticket.whatsapp_sent %}
+                    Sent
+                {% else %}
+                    Not Sent
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        {% if ticket.pdf_ticket %}
+
+            <a
+                href="{% url 'download_ticket' ticket.ticket_id %}"
+                class="btn btn-primary mt-3"
+            >
+
+                <i class="fas fa-download"></i>
+
+                Download Ticket
+
+            </a>
+
+        {% endif %}
+
+
+    {% else %}
+
+        <p class="text-muted mb-0">
+
+            Ticket has not been generated yet.
+
+        </p>
+
+    {% endif %}
+
+</div>
 
 
     </div>
 
 
 </div>
-
-{% endblock %}
-
-
-{% block extra_css %}
-
-<style>
-
-.booking-detail-page {
-
-    max-width: 1200px;
-
-}
-
-
-.detail-header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 20px;
-
-    margin-bottom: 25px;
-
-}
-
-
-.detail-header h4 {
-
-    margin: 0 0 4px;
-
-}
-
-
-.detail-actions {
-
-    display: flex;
-
-    gap: 8px;
-
-}
-
-
-.detail-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 18px;
-
-}
-
-
-.detail-card {
-
-    padding: 20px;
-
-    background: #fff;
-
-    border:
-        1px solid #e5e7eb;
-
-    border-radius: 10px;
-
-}
-
-
-.detail-card h5 {
-
-    margin-bottom: 18px;
-
-    font-size: 15px;
-
-    font-weight: 700;
-
-    color: #1f2937;
-
-}
-
-
-.info-row {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    padding: 9px 0;
-
-    border-bottom:
-        1px solid #f3f4f6;
-
-    font-size: 12px;
-
-}
-
-
-.info-row span {
-
-    color: #6b7280;
-
-}
-
-
-.info-row strong {
-
-    color: #1f2937;
-
-    text-align: right;
-
-}
-
-
-.total-row {
-
-    color: #f97316;
-
-    font-size: 15px;
-
-}
-
-
-.total-row strong {
-
-    color: #f97316;
-
-}
-
-
-.ticket-qr {
-
-    width: 180px;
-
-    height: 180px;
-
-    object-fit: contain;
-
-    border: 1px solid #e5e7eb;
-
-    padding: 8px;
-
-    border-radius: 8px;
-
-}
-
-
-@media(max-width:767px) {
-
-    .detail-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .detail-header {
-
-        flex-direction: column;
-
-        align-items: flex-start;
-
-    }
-
-}
-
-</style>
 
 {% endblock %}

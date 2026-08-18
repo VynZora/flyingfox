@@ -1,99 +1,1062 @@
-{% extends "frontend/base.html" %}
 {% load static %}
 
-{% block title %}Login - Flying Fox Adventure{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block extra_css %}
-<link
-    rel="stylesheet"
-    href="{% static 'frontend/assets/css/user-login.css' %}"
->
-{% endblock %}
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Login - Flying Fox Adventure
+    </title>
 
 
-{% block content %}
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/bootstrap.min.css' %}"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}"
+    >
+
+
+    <!-- =====================================================
+         LOGIN PAGE CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/user-login.css' %}"
+    >
+
+
+      <!-- css -->
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/animate.min.css'%}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/magnific-popup.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/owl.carousel.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/slimselect.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/flatpickr.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}" />
+
+
+    <!-- =====================================================
+         PAGE ONLY CSS
+    ====================================================== -->
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            min-height: 100%;
+        }
+
+
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff7f5 0%,
+                    #f8f9fa 50%,
+                    #ffffff 100%
+                );
+
+            color: #102235;
+        }
+
+
+        /* =====================================================
+           PAGE
+        ====================================================== */
+
+        .ff-login-page {
+            width: 100%;
+            min-height: 100vh;
+
+            padding:
+                35px
+                15px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .ff-login-page > .container {
+            width: 100%;
+            max-width: 1250px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 991px) {
+
+            .ff-login-page {
+                padding:
+                    25px
+                    15px;
+            }
+
+        }
+
+
+        @media (max-width: 575px) {
+
+            .ff-login-page {
+                padding:
+                    15px
+                    10px
+                    25px;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+        /* =========================================================
+   COUNTRY PHONE SELECTOR
+========================================================= */
+
+.ff-login-phone-row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+
+.ff-country-selector {
+    flex: 0 0 125px;
+    position: relative;
+}
+
+
+.ff-country-select {
+    width: 100%;
+    height: 100%;
+    min-height: 54px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    padding:
+        0
+        12px;
+
+    background: #fff;
+
+    color: #1f2937;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    outline: none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.ff-country-select:focus {
+    border-color: #f97316;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(249, 115, 22, .12);
+}
+
+
+.ff-login-input-wrap {
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 575px) {
+
+    .ff-login-phone-row {
+        gap: 7px;
+    }
+
+
+    .ff-country-selector {
+        flex-basis: 110px;
+    }
+
+
+    .ff-country-select {
+        padding:
+            0
+            8px;
+
+        font-size: 14px;
+    }
+
+}
+
+
+
+
+
+
+
+/* =========================================================
+   COUNTRY SELECTOR
+========================================================= */
+
+.ff-country-selector {
+    flex: 0 0 155px;
+
+    height: 60px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    transition: all .2s ease;
+}
+
+
+.ff-country-selector:focus-within {
+    border-color: #d7190f;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(215, 25, 15, .10);
+}
+
+
+/* FLAG */
+
+.ff-selected-country-flag {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    font-family:
+        "Segoe UI Emoji",
+        "Apple Color Emoji",
+        "Noto Color Emoji",
+        sans-serif;
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+/* SELECT */
+
+.ff-country-select {
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    padding:
+        0
+        12px
+        0
+        48px;
+
+    color: #102235;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 575px) {
+
+    .ff-country-selector {
+        flex-basis: 135px;
+        height: 56px;
+    }
+
+
+    .ff-selected-country-flag {
+        left: 10px;
+        font-size: 19px;
+    }
+
+
+    .ff-country-select {
+        padding-left: 39px;
+
+        font-size: 12px;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+{% comment %}  {% endcomment %}
+.ff-country-selector {
+    flex: 0 0 125px;
+
+    height: 60px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    overflow: visible;
+}
+
+
+.ff-selected-country-flag {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 5;
+
+    display: block;
+
+    font-family:
+        "Segoe UI Emoji",
+        "Apple Color Emoji",
+        "Noto Color Emoji",
+        sans-serif;
+
+    font-size: 21px;
+
+    line-height: 1;
+
+    pointer-events: none;
+}
+
+
+.ff-country-select {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    border-radius: 14px;
+
+    padding:
+        0
+        12px
+        0
+        48px;
+
+    color: #102235;
+
+    background: transparent;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    appearance: auto;
+}
+{% comment %}  {% endcomment %}
+
+
+
+
+
+
+
+{% comment %} mobile responsive start {% endcomment %}
+
+/* =========================================================
+   SIGNIN PAGE - MOBILE RESPONSIVE FIX
+========================================================= */
+
+@media (max-width: 767px) {
+
+    html,
+    body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+
+    .ff-login-page {
+        min-height: 100vh;
+
+        padding:
+            12px
+            10px
+            24px;
+
+        align-items: flex-start;
+    }
+
+
+    .ff-login-page > .container {
+        width: 100%;
+        max-width: 100%;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+
+    /* =====================================================
+       PROGRESS
+    ====================================================== */
+
+    .ff-auth-progress {
+        width: 100%;
+
+        margin:
+            0
+            0
+            16px;
+    }
+
+
+    .ff-auth-steps {
+        width: 100%;
+
+        padding:
+            0
+            4px;
+    }
+
+
+    .ff-auth-step {
+        min-width: 70px;
+    }
+
+
+    .ff-auth-step-icon {
+        width: 36px;
+        height: 36px;
+
+        font-size: 12px;
+    }
+
+
+    .ff-auth-step span {
+        margin-top: 6px;
+
+        font-size: 9px;
+
+        white-space: nowrap;
+    }
+
+
+    .ff-auth-step-line {
+        min-width: 20px;
+
+        margin:
+            0
+            6px;
+    }
+
+
+    /* =====================================================
+       MAIN LOGIN CARD
+    ====================================================== */
+
+    .ff-login-card {
+        display: block;
+
+        width: 100%;
+
+        min-height: 0;
+
+        overflow: hidden;
+
+        border-radius: 24px;
+
+        background: #ffffff;
+
+        box-shadow:
+            0 15px 40px
+            rgba(20, 30, 40, .08);
+    }
+
+
+    /* Hide image panel on mobile */
+    .ff-login-image-side {
+        display: none;
+    }
+
+
+    /* =====================================================
+       RIGHT FORM
+    ====================================================== */
+
+    .ff-login-form-side {
+        width: 100%;
+
+        min-width: 0;
+
+        padding:
+            26px
+            18px
+            24px;
+    }
+
+
+    .ff-login-form-wrapper {
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0;
+
+        padding: 0;
+    }
+
+
+    /* =====================================================
+       LOGO
+    ====================================================== */
+
+    .ff-login-logo {
+        margin-bottom: 14px;
+    }
+
+
+    .ff-login-logo img {
+        width: 55px;
+        height: auto;
+    }
+
+
+    /* =====================================================
+       HEADING
+    ====================================================== */
+
+    .ff-login-form-heading {
+        margin-bottom: 20px;
+
+        text-align: center;
+    }
+
+
+    .ff-login-form-heading > span {
+        font-size: 10px;
+    }
+
+
+    .ff-login-form-heading h2 {
+        margin:
+            7px
+            0
+            9px;
+
+        font-size: 27px;
+
+        line-height: 1.12;
+    }
+
+
+    .ff-login-form-heading p {
+        max-width: 100%;
+
+        margin:
+            0
+            auto;
+
+        font-size: 12px;
+
+        line-height: 1.55;
+    }
+
+
+    /* =====================================================
+       DJANGO MESSAGE
+    ====================================================== */
+
+    .ff-login-messages {
+        margin-bottom: 14px;
+    }
+
+
+    .ff-login-alert {
+        width: 100%;
+
+        padding:
+            12px
+            13px;
+
+        font-size: 11px;
+
+        line-height: 1.45;
+    }
+
+
+    /* =====================================================
+       PHONE ROW
+    ====================================================== */
+
+    .ff-login-phone-row {
+        display: grid;
+
+        width: 100%;
+
+        grid-template-columns:
+            118px
+            minmax(0, 1fr);
+
+        gap: 8px;
+
+        align-items: stretch;
+    }
+
+
+    /* Country selector */
+
+    .ff-country-selector {
+        width: 100%;
+
+        min-width: 0;
+
+        height: 56px;
+
+        flex: none;
+    }
+
+
+    .ff-selected-country-flag {
+        left: 10px;
+
+        font-size: 18px;
+    }
+
+
+    .ff-country-select {
+        width: 100%;
+
+        height: 56px;
+
+        padding:
+            0
+            25px
+            0
+            39px;
+
+        font-size: 12px;
+
+        font-weight: 800;
+    }
+
+
+    /* Phone field */
+
+    .ff-login-input-wrap {
+        width: 100%;
+
+        min-width: 0;
+
+        height: 56px;
+    }
+
+
+    .ff-login-input-wrap > i {
+        left: 14px;
+
+        font-size: 13px;
+    }
+
+
+    .ff-login-input {
+        width: 100%;
+
+        height: 56px;
+
+        padding:
+            0
+            12px
+            0
+            38px;
+
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+       ERROR
+    ====================================================== */
+
+    .ff-login-error {
+        width: 100%;
+
+        margin-top: 8px;
+
+        padding:
+            10px
+            12px;
+
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       WHATSAPP
+    ====================================================== */
+
+    .ff-login-whatsapp {
+        width: 100%;
+
+        margin:
+            15px
+            0;
+
+        align-items: flex-start;
+
+        gap: 9px;
+    }
+
+
+    .ff-login-whatsapp-text {
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+
+    /* =====================================================
+       GET OTP
+    ====================================================== */
+
+    .ff-login-submit {
+        width: 100%;
+
+        height: 52px;
+
+        min-height: 52px;
+
+        border-radius: 28px;
+
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+       DIVIDER
+    ====================================================== */
+
+    .ff-login-divider {
+        margin:
+            20px
+            0;
+    }
+
+
+    .ff-login-divider p {
+        margin: 0 8px;
+
+        font-size: 9px;
+
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+       SECURITY
+    ====================================================== */
+
+    .ff-login-security {
+        width: 100%;
+
+        padding:
+            13px;
+
+        gap: 10px;
+
+        align-items: flex-start;
+    }
+
+
+    .ff-login-security-icon {
+        width: 38px;
+        height: 38px;
+
+        flex:
+            0
+            0
+            38px;
+    }
+
+
+    .ff-login-security h4 {
+        margin:
+            0
+            0
+            4px;
+
+        font-size: 12px;
+    }
+
+
+    .ff-login-security p {
+        margin: 0;
+
+        font-size: 10px;
+
+        line-height: 1.45;
+    }
+
+
+    /* =====================================================
+       REGISTER TEXT
+    ====================================================== */
+
+    .ff-login-register {
+        margin-top: 16px;
+    }
+
+
+    .ff-login-register p {
+        margin: 0;
+
+        font-size: 10px;
+
+        line-height: 1.5;
+
+        text-align: center;
+    }
+
+}
+
+
+
+
+
+
+
+@media (max-width: 390px) {
+
+    .ff-login-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+
+    .ff-login-form-side {
+        padding:
+            22px
+            14px;
+    }
+
+
+    .ff-login-form-heading h2 {
+        font-size: 24px;
+    }
+
+
+    .ff-login-phone-row {
+        grid-template-columns:
+            108px
+            minmax(0, 1fr);
+
+        gap: 7px;
+    }
+
+
+    .ff-country-select {
+        font-size: 11px;
+
+        padding-left: 36px;
+    }
+
+
+    .ff-selected-country-flag {
+        left: 9px;
+
+        font-size: 17px;
+    }
+
+
+    .ff-login-input {
+        font-size: 12px;
+    }
+
+}
+{% comment %} mobile responsive end  {% endcomment %}
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LOGIN PAGE
+========================================================= -->
 
 <section class="ff-login-page">
 
     <div class="container">
 
+
         <!-- =====================================================
-             PAGE TITLE
+             PROGRESS HEADER
         ====================================================== -->
 
-        <div class="ff-login-page-heading">
-        </div>
+        <div class="ff-auth-progress">
+
+            <div class="ff-auth-steps">
+
+
+                <!-- STEP 1 -->
+
+                <div class="ff-auth-step active">
+
+                    <div class="ff-auth-step-icon">
+
+                        <i class="fas fa-mobile-alt"></i>
+
+                    </div>
+
+                    <span>
+                        Mobile Number
+                    </span>
+
+                </div>
 
 
 
+                <div class="ff-auth-step-line"></div>
 
 
-        <!-- =====================================================
-     LOGIN PROGRESS HEADER
-====================================================== -->
 
-<div class="ff-auth-progress">
+                <!-- STEP 2 -->
 
-     <div class="ff-auth-steps">
+                <div class="ff-auth-step">
 
-        <!-- STEP 1 -->
+                    <div class="ff-auth-step-icon">
 
-        <div class="ff-auth-step active">
+                        <i class="fas fa-shield-alt"></i>
 
-            <div class="ff-auth-step-icon">
-                <i class="fas fa-mobile-alt"></i>
+                    </div>
+
+                    <span>
+                        Verify OTP
+                    </span>
+
+                </div>
+
+
+
+                <div class="ff-auth-step-line"></div>
+
+
+
+                <!-- STEP 3 -->
+
+                <div class="ff-auth-step">
+
+                    <div class="ff-auth-step-icon">
+
+                        <i class="fas fa-ticket-alt"></i>
+
+                    </div>
+
+                    <span>
+                        Ready to Book
+                    </span>
+
+                </div>
+
+
             </div>
 
-            <span>
-                Mobile Number
-            </span>
-
         </div>
-
-
-        <div class="ff-auth-step-line"></div>
-
-
-        <!-- STEP 2 -->
-
-        <div class="ff-auth-step">
-
-            <div class="ff-auth-step-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-
-            <span>
-                Verify OTP
-            </span>
-
-        </div>
-
-
-        <div class="ff-auth-step-line"></div>
-
-
-        <!-- STEP 3 -->
-
-        <div class="ff-auth-step">
-
-            <div class="ff-auth-step-icon">
-                <i class="fas fa-ticket-alt"></i>
-            </div>
-
-            <span>
-                Ready to Book
-            </span>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-
-
 
 
 
@@ -105,10 +1068,11 @@
 
 
             <!-- =================================================
-                 LEFT SIDE IMAGE
+                 LEFT IMAGE SIDE
             ================================================== -->
 
             <div class="ff-login-image-side">
+
 
                 <img
                     src="{% static 'frontend/assets/img/home/img-3.jpg' %}"
@@ -117,42 +1081,58 @@
                 >
 
 
-                <!-- Dark gradient -->
+                <!-- IMAGE OVERLAY -->
 
                 <div class="ff-login-image-overlay"></div>
 
 
-                <!-- Image text -->
+
+                <!-- IMAGE CONTENT -->
 
                 <div class="ff-login-image-content">
+
 
                     <span class="ff-login-small-title">
                         Flying Fox Adventure
                     </span>
 
+
                     <h2>
+
                         Adventure Is Just
-                        <span>A Login Away</span>
+
+                        <span>
+                            A Login Away
+                        </span>
+
                     </h2>
 
+
                     <p>
-                        Sign in to manage your bookings, access your
-                        tickets and prepare for your next adventure
-                        in Munnar.
+
+                        Sign in to manage your bookings,
+                        access your tickets and prepare
+                        for your next adventure in Munnar.
+
                     </p>
 
 
+
+                    <!-- FEATURES -->
+
                     <div class="ff-login-image-features">
+
 
                         <div class="ff-login-feature">
 
-                            <i class="fas fa-ticket"></i>
+                            <i class="fas fa-ticket-alt"></i>
 
                             <span>
                                 Access Your Tickets
                             </span>
 
                         </div>
+
 
 
                         <div class="ff-login-feature">
@@ -166,6 +1146,7 @@
                         </div>
 
 
+
                         <div class="ff-login-feature">
 
                             <i class="fas fa-shield-alt"></i>
@@ -176,7 +1157,9 @@
 
                         </div>
 
+
                     </div>
+
 
                 </div>
 
@@ -185,7 +1168,7 @@
 
 
             <!-- =================================================
-                 RIGHT SIDE LOGIN FORM
+                 RIGHT FORM SIDE
             ================================================== -->
 
             <div class="ff-login-form-side">
@@ -194,7 +1177,9 @@
                 <div class="ff-login-form-wrapper">
 
 
-                    <!-- Logo -->
+                    <!-- =================================================
+                         LOGO
+                    ================================================== -->
 
                     <div class="ff-login-logo">
 
@@ -206,29 +1191,46 @@
                     </div>
 
 
-                    <!-- Heading -->
+
+                    <!-- =================================================
+                         HEADING
+                    ================================================== -->
 
                     <div class="ff-login-form-heading">
+
 
                         <span>
                             Welcome To Flying Fox
                         </span>
 
+
                         <h2>
+
                             Thrill Is Just A
-                            <strong>Login Away!</strong>
+
+                            <strong>
+                                Login Away!
+                            </strong>
+
                         </h2>
 
+
                         <p>
-                            Enter your mobile number to access your account,
+
+                            Enter your mobile number
+                            to access your account,
                             bookings and Flying Fox tickets.
+
                         </p>
+
 
                     </div>
 
 
 
-                    <!-- Django messages -->
+                    <!-- =================================================
+                         DJANGO MESSAGES
+                    ================================================== -->
 
                     {% if messages %}
 
@@ -237,10 +1239,33 @@
                             {% for message in messages %}
 
                                 <div
-                                    class="ff-login-alert
-                                    {% if message.tags %}{{ message.tags }}{% endif %}"
+                                    class="
+                                        ff-login-alert
+                                        {% if message.tags %}
+                                            {{ message.tags }}
+                                        {% endif %}
+                                    "
                                 >
-                                    {{ message }}
+
+                                    {% if message.tags == "success" %}
+
+                                        <i class="fas fa-check-circle"></i>
+
+                                    {% elif message.tags == "error" %}
+
+                                        <i class="fas fa-exclamation-circle"></i>
+
+                                    {% else %}
+
+                                        <i class="fas fa-info-circle"></i>
+
+                                    {% endif %}
+
+
+                                    <span>
+                                        {{ message }}
+                                    </span>
+
                                 </div>
 
                             {% endfor %}
@@ -259,67 +1284,133 @@
                         method="POST"
                         action="{% url 'user_signin' %}"
                         class="ff-login-form"
+                        id="userSigninForm"
+                        novalidate
                     >
 
                         {% csrf_token %}
 
 
-                        <!-- Phone -->
 
-                        <div class="ff-login-phone-row">
+                        <!-- =================================================
+                             PHONE
+                        ================================================== -->
 
-
-                            <!-- Country code -->
-
-                            <div class="ff-login-country-code">
-
-                                <span class="ff-india-flag">
-                                    🇮🇳
-                                </span>
-
-                                <span>
-                                    +91
-                                </span>
-
-                            </div>
+<div class="ff-login-phone-row">
 
 
-                            <!-- Mobile -->
+    <!-- =============================================
+         COUNTRY SELECT
+    ============================================== -->
 
-                            <div class="ff-login-input-wrap">
+    <div class="ff-country-selector">
 
-                                <i class="far fa-mobile"></i>
 
-<input
-    type="tel"
-    name="phone"
-    id="phone"
-    class="ff-login-input"
-    placeholder="Mobile Number"
-    value="{{ phone|default:'' }}"
-    maxlength="10"
-    minlength="10"
-    inputmode="numeric"
-    autocomplete="tel"
-    pattern="[0-9]{10}"
-    required
+        <!-- SELECTED FLAG -->
+
+        <span
+            class="ff-selected-country-flag"
+            id="selectedCountryFlag"
+        >
+            🇮🇳
+        </span>
+
+
+        <!-- COUNTRY DROPDOWN -->
+
+        <select
+            name="country"
+            id="country"
+            class="ff-country-select"
+            required
+        >
+
+            {% for code, country in countries.items %}
+
+              <option
+    value="{{ code }}"
+    data-flag="{{ country.flag }}"
+    data-dial="{{ country.dial_code }}"
+    data-min="{{ country.min_length }}"
+    data-max="{{ country.max_length }}"
+    data-placeholder="{{ country.placeholder }}"
+    {% if selected_country == code %}
+        selected
+    {% endif %}
+>
+    {{ country.dial_code }}
+</option>
+
+            {% endfor %}
+
+        </select>
+
+
+    </div>
+
+
+
+    <!-- =============================================
+         MOBILE NUMBER INPUT
+    ============================================== -->
+
+    <div class="ff-login-input-wrap">
+
+        <i class="fas fa-mobile-alt"></i>
+
+
+        <input
+            type="tel"
+            name="phone"
+            id="phone"
+            class="ff-login-input"
+            placeholder="Mobile Number"
+            value="{{ phone|default:'' }}"
+            inputmode="numeric"
+            autocomplete="tel-national"
+            required
+        >
+
+    </div>
+
+
+</div>
+
+
+
+                        <!-- =================================================
+                             JAVASCRIPT VALIDATION ERROR
+                        ================================================== -->
+
+<div
+    class="ff-login-error"
+    id="phoneClientError"
+    style="display:none;"
 >
 
-                            </div>
+    <i class="fas fa-exclamation-circle"></i>
 
-                        </div>
+    <span id="phoneClientErrorText">
+        Please enter a valid mobile number.
+    </span>
+
+</div>
 
 
 
-                        <!-- Error -->
+                        <!-- =================================================
+                             DJANGO ERROR
+                        ================================================== -->
 
                         {% if error %}
 
                             <div class="ff-login-error">
 
-                                <i class="far fa-circle-exclamation"></i>
+                                <i class="fas fa-exclamation-circle"></i>
 
-                                {{ error }}
+                                <span>
+                                    {{ error }}
+                                </span>
 
                             </div>
 
@@ -327,9 +1418,12 @@
 
 
 
-                        <!-- WhatsApp -->
+                        <!-- =================================================
+                             WHATSAPP
+                        ================================================== -->
 
                         <label class="ff-login-whatsapp">
+
 
                             <input
                                 type="checkbox"
@@ -337,28 +1431,37 @@
                                 checked
                             >
 
+
                             <span class="ff-login-checkbox"></span>
+
 
                             <span class="ff-login-whatsapp-text">
 
                                 Receive booking updates on
 
                                 <strong>
+
                                     <i class="fab fa-whatsapp"></i>
+
                                     WhatsApp
+
                                 </strong>
 
                             </span>
+
 
                         </label>
 
 
 
-                        <!-- Submit -->
+                        <!-- =================================================
+                             SUBMIT
+                        ================================================== -->
 
                         <button
                             type="submit"
                             class="ff-login-submit"
+                            id="signinSubmitBtn"
                         >
 
                             <span>
@@ -393,42 +1496,56 @@
 
 
                     <!-- =================================================
-                         INFO
+                         SECURITY INFO
                     ================================================== -->
 
                     <div class="ff-login-security">
 
+
                         <div class="ff-login-security-icon">
 
-                            <i class="fas fa-shield-check"></i>
+                            <i class="fas fa-shield-alt"></i>
 
                         </div>
 
+
                         <div>
+
 
                             <h4>
                                 Your information is secure
                             </h4>
 
+
                             <p>
-                                We only use your mobile number for account
-                                verification and booking communication.
+
+                                We only use your mobile number
+                                for account verification and
+                                booking communication.
+
                             </p>
 
+
                         </div>
+
 
                     </div>
 
 
 
-                    <!-- Registration -->
+                    <!-- =================================================
+                         REGISTER INFORMATION
+                    ================================================== -->
 
                     <div class="ff-login-register">
 
                         <p>
+
                             New to Flying Fox?
-                            You can create your account using your
-                            mobile number.
+
+                            You can create your account
+                            using your mobile number.
+
                         </p>
 
                     </div>
@@ -445,42 +1562,313 @@
 
 </section>
 
-{% endblock %}
 
 
-
-{% block extra_js %}
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    const phoneInput =
-        document.getElementById("phone");
+
+        const form =
+            document.getElementById(
+                "userSigninForm"
+            );
 
 
-    if (phoneInput) {
+        const countrySelect =
+            document.getElementById(
+                "country"
+            );
+
+            const selectedCountryFlag =
+    document.getElementById(
+        "selectedCountryFlag"
+    );
+
+
+        const phoneInput =
+            document.getElementById(
+                "phone"
+            );
+
+
+        const clientError =
+            document.getElementById(
+                "phoneClientError"
+            );
+
+
+        const clientErrorText =
+            document.getElementById(
+                "phoneClientErrorText"
+            );
+
+
+        const submitButton =
+            document.getElementById(
+                "signinSubmitBtn"
+            );
+
+
+
+        /* =====================================================
+           GET SELECTED COUNTRY
+        ====================================================== */
+
+        function getCountryData() {
+
+    const option =
+        countrySelect.options[
+            countrySelect.selectedIndex
+        ];
+
+
+    return {
+
+        flag:
+            option.dataset.flag,
+
+        dial:
+            option.dataset.dial,
+
+        min:
+            parseInt(
+                option.dataset.min
+            ),
+
+        max:
+            parseInt(
+                option.dataset.max
+            ),
+
+        placeholder:
+            option.dataset.placeholder
+
+    };
+
+}
+
+
+
+        /* =====================================================
+           UPDATE PHONE INPUT
+        ====================================================== */
+
+        function updatePhoneInput() {
+
+    const country =
+        getCountryData();
+
+
+    /* UPDATE FLAG */
+
+    if (selectedCountryFlag) {
+
+        selectedCountryFlag.textContent =
+            country.flag;
+
+    }
+
+
+    /* UPDATE INPUT LENGTH */
+
+    phoneInput.maxLength =
+        country.max + 1;
+
+
+    /* UPDATE PLACEHOLDER */
+
+    phoneInput.placeholder =
+        country.placeholder;
+
+
+    /* HIDE ERROR */
+
+    if (clientError) {
+
+        clientError.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+        /* =====================================================
+           COUNTRY CHANGE
+        ====================================================== */
+
+        countrySelect.addEventListener(
+            "change",
+            function () {
+
+                phoneInput.value = "";
+
+                updatePhoneInput();
+
+                phoneInput.focus();
+
+            }
+        );
+
+
+
+        /* =====================================================
+           PHONE INPUT
+        ====================================================== */
 
         phoneInput.addEventListener(
             "input",
             function () {
 
+
+                const country =
+                    getCountryData();
+
+
+                let value =
+                    this.value.replace(
+                        /\D/g,
+                        ""
+                    );
+
+
                 /*
-                 * Allow only numbers
+                 * Allow one extra digit because
+                 * some users type local leading 0.
                  */
 
+                value =
+                    value.slice(
+                        0,
+                        country.max + 1
+                    );
+
+
                 this.value =
-                    this.value
-                        .replace(/\D/g, "")
-                        .slice(0, 10);
+                    value;
+
+
+                if (clientError) {
+
+                    clientError.style.display =
+                        "none";
+
+                }
 
             }
         );
 
-    }
 
-});
+
+        /* =====================================================
+           FORM VALIDATION
+        ====================================================== */
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+
+                const country =
+                    getCountryData();
+
+
+                let phone =
+                    phoneInput.value
+                        .replace(
+                            /\D/g,
+                            ""
+                        );
+
+
+                /*
+                 * Remove local leading zero.
+                 *
+                 * Example:
+                 *
+                 * UK:
+                 * 07911123456
+                 *
+                 * becomes:
+                 * 7911123456
+                 */
+
+                phone =
+                    phone.replace(
+                        /^0+/,
+                        ""
+                    );
+
+
+                if (
+                    phone.length <
+                        country.min
+                    ||
+                    phone.length >
+                        country.max
+                ) {
+
+                    event.preventDefault();
+
+
+                    clientErrorText.textContent =
+                        "Please enter a valid mobile number for the selected country.";
+
+
+                    clientError.style.display =
+                        "flex";
+
+
+                    phoneInput.focus();
+
+                    return;
+
+                }
+
+
+                /* =============================================
+                   LOADING
+                ============================================== */
+
+                submitButton.disabled =
+                    true;
+
+
+                submitButton.innerHTML =
+                    `
+                        <span>
+                            Sending OTP...
+                        </span>
+
+                        <i class="fas fa-spinner fa-spin"></i>
+                    `;
+
+            }
+        );
+
+
+
+        /* =====================================================
+           INITIALIZE
+        ====================================================== */
+
+        updatePhoneInput();
+
+
+    }
+);
 
 </script>
 
-{% endblock %}
+
+</body>
+
+</html>

@@ -1,36 +1,55 @@
 {% extends "admin_pages/base.html" %}
 
+
 {% block title %}
 Transactions | FlyingFox Admin
 {% endblock %}
+
 
 {% block content %}
 
 <div class="dashboard__form__wraper">
 
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
+
     <div class="create__course__title mb-4">
 
         <div>
-            <h4>Transactions</h4>
+
+            <h4>
+                Transactions
+            </h4>
 
             <p class="text-muted mb-0">
-                View customer payment transactions.
+                View Razorpay payment transactions and booking payments.
             </p>
+
         </div>
 
     </div>
 
 
-    <!-- FILTERS -->
-    <form method="GET" class="transaction-filter mb-4">
+
+    <!-- =================================================
+         FILTER
+    ================================================== -->
+
+    <form
+        method="GET"
+        class="transaction-filter mb-4"
+    >
 
         <input
             type="text"
             name="search"
             value="{{ search }}"
             class="form-control"
-            placeholder="Search customer, payment ID, order ID..."
+            placeholder="Search customer, booking, ride, payment ID..."
         >
+
 
         <select
             name="status"
@@ -41,18 +60,22 @@ Transactions | FlyingFox Admin
                 All Status
             </option>
 
+
             {% for value, label in status_choices %}
 
-            <option
-                value="{{ value }}"
-                {% if selected_status == value %}selected{% endif %}
-            >
-                {{ label }}
-            </option>
+                <option
+                    value="{{ value }}"
+                    {% if selected_status == value %}
+                        selected
+                    {% endif %}
+                >
+                    {{ label }}
+                </option>
 
             {% endfor %}
 
         </select>
+
 
         <button
             type="submit"
@@ -60,6 +83,7 @@ Transactions | FlyingFox Admin
         >
             Filter
         </button>
+
 
         <a
             href="{% url 'transaction_list' %}"
@@ -71,28 +95,53 @@ Transactions | FlyingFox Admin
     </form>
 
 
-    <!-- TABLE -->
+
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
     <div class="custom-table-container">
 
-        <table class="table table-striped table-hover align-middle">
+        <table
+            class="
+                table
+                table-striped
+                table-hover
+                align-middle
+            "
+        >
 
             <thead>
 
                 <tr>
 
-                    <th>Customer</th>
+                    <th>
+                        Customer
+                    </th>
 
-                    <th>Booking</th>
+                    <th>
+                        Booking
+                    </th>
 
-                    <th>Gateway</th>
+                    <th>
+                        Payment ID
+                    </th>
 
-                    <th>Payment ID</th>
+                    <th>
+                        Amount
+                    </th>
 
-                    <th>Amount</th>
+                    <th>
+                        Status
+                    </th>
 
-                    <th>Status</th>
+                    <th>
+                        Paid At
+                    </th>
 
-                    <th>Created</th>
+                    <th>
+                        Created
+                    </th>
 
                     <th class="text-center">
                         Action
@@ -102,125 +151,243 @@ Transactions | FlyingFox Admin
 
             </thead>
 
+
             <tbody>
 
                 {% for payment in payments %}
 
-                <tr>
-
-                    <td>
-                        <strong>
-                            {{ payment.booking.user.full_name }}
-                        </strong>
-
-                        <div class="small text-muted">
-                            {{ payment.booking.user.phone }}
-                        </div>
-                    </td>
+                    <tr>
 
 
-                    <td>
+                        <!-- CUSTOMER -->
 
-                        {{ payment.booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+                        <td>
 
-                        <div class="small text-muted">
-                            {{ payment.booking.ride.name }}
-                        </div>
-
-                    </td>
+                            <strong>
+                                {{ payment.booking.customer_name }}
+                            </strong>
 
 
-                    <td>
-                        {{ payment.gateway|title }}
-                    </td>
+                            <div class="small text-muted">
+                                {{ payment.booking.customer_phone }}
+                            </div>
 
 
-                    <td>
+                            {% if payment.booking.customer_email %}
 
-                        {% if payment.gateway_payment_id %}
+                                <div class="small text-muted">
+                                    {{ payment.booking.customer_email }}
+                                </div>
 
-                            {{ payment.gateway_payment_id }}
+                            {% endif %}
 
-                        {% else %}
-
-                            -
-
-                        {% endif %}
-
-                    </td>
+                        </td>
 
 
-                    <td>
 
-                        <strong class="transaction-amount">
-                            ₹{{ payment.amount }}
-                        </strong>
+                        <!-- BOOKING -->
 
-                    </td>
+                        <td>
 
+                            <strong>
 
-                    <td>
+                                {{ payment.booking.booking_id|stringformat:"s"|slice:":8"|upper }}
 
-                        {% if payment.status == "paid" %}
-
-                        <span class="badge bg-success">
-                            Paid
-                        </span>
-
-                        {% elif payment.status == "failed" %}
-
-                        <span class="badge bg-danger">
-                            Failed
-                        </span>
-
-                        {% elif payment.status == "refunded" %}
-
-                        <span class="badge bg-secondary">
-                            Refunded
-                        </span>
-
-                        {% else %}
-
-                        <span class="badge bg-warning">
-                            Created
-                        </span>
-
-                        {% endif %}
-
-                    </td>
+                            </strong>
 
 
-                    <td>
-                        {{ payment.created_at|date:"d M Y h:i A" }}
-                    </td>
+                            <div class="small text-muted">
+                                {{ payment.booking.ride.name }}
+                            </div>
 
 
-                    <td class="text-center">
+                            <div class="small text-muted">
 
-                        <a
-                            href="{% url 'transaction_detail' payment.id %}"
-                            class="btn btn-sm btn-primary"
-                        >
-                            View
-                        </a>
+                                {{ payment.booking.booking_date|date:"d M Y" }}
 
-                    </td>
+                                ·
 
-                </tr>
+                                {{ payment.booking.quantity }}
+
+                                rider{{ payment.booking.quantity|pluralize }}
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- PAYMENT ID -->
+
+                        <td>
+
+                            {% if payment.gateway_payment_id %}
+
+                                <span class="payment-id-text">
+
+                                    {{ payment.gateway_payment_id }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    -
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if payment.gateway_order_id %}
+
+                                <div class="small text-muted">
+
+                                    Order:
+                                    {{ payment.gateway_order_id|slice:":18" }}
+
+                                    {% if payment.gateway_order_id|length > 18 %}
+                                        ...
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- AMOUNT -->
+
+                        <td>
+
+                            <strong class="transaction-amount">
+
+                                ₹{{ payment.amount }}
+
+                            </strong>
+
+                        </td>
+
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            {% if payment.status == "paid" %}
+
+                                <span class="badge bg-success">
+                                    Paid
+                                </span>
+
+
+                            {% elif payment.status == "failed" %}
+
+                                <span class="badge bg-danger">
+                                    Failed
+                                </span>
+
+
+                            {% elif payment.status == "refunded" %}
+
+                                <span class="badge bg-secondary">
+                                    Refunded
+                                </span>
+
+
+                            {% elif payment.status == "authorized" %}
+
+                                <span class="badge bg-info text-dark">
+                                    Authorized
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Created
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- PAID AT -->
+
+                        <td>
+
+                            {% if payment.paid_at %}
+
+                                {{ payment.paid_at|date:"d M Y" }}
+
+                                <div class="small text-muted">
+                                    {{ payment.paid_at|date:"h:i A" }}
+                                </div>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    -
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- CREATED -->
+
+                        <td>
+
+                            {{ payment.created_at|date:"d M Y" }}
+
+                            <div class="small text-muted">
+                                {{ payment.created_at|date:"h:i A" }}
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- ACTION -->
+
+                        <td class="text-center">
+
+                            <a
+                                href="{% url 'transaction_detail' payment.id %}"
+                                class="btn btn-sm btn-primary"
+                            >
+
+                                <i class="fas fa-eye"></i>
+
+                                View
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
 
 
                 {% empty %}
 
-                <tr>
+                    <tr>
 
-                    <td
-                        colspan="8"
-                        class="text-center py-5"
-                    >
-                        No transactions found.
-                    </td>
+                        <td
+                            colspan="8"
+                            class="text-center py-5"
+                        >
 
-                </tr>
+                            No transactions found.
+
+                        </td>
+
+                    </tr>
 
                 {% endfor %}
 
@@ -231,69 +398,86 @@ Transactions | FlyingFox Admin
     </div>
 
 
-    <!-- PAGINATION -->
+
+    <!-- =================================================
+         PAGINATION
+    ================================================== -->
+
     {% if payments.has_other_pages %}
 
-    <nav class="mt-4">
+        <nav class="mt-4">
 
-        <ul class="pagination justify-content-center">
-
-            {% if payments.has_previous %}
-
-            <li class="page-item">
-
-                <a
-                    class="page-link"
-                    href="?page={{ payments.previous_page_number }}&search={{ search }}&status={{ selected_status }}"
-                >
-                    &laquo;
-                </a>
-
-            </li>
-
-            {% endif %}
+            <ul class="pagination justify-content-center">
 
 
-            {% for number in payments.paginator.page_range %}
+                {% if payments.has_previous %}
 
-            <li class="page-item {% if payments.number == number %}active{% endif %}">
+                    <li class="page-item">
 
-                <a
-                    class="page-link"
-                    href="?page={{ number }}&search={{ search }}&status={{ selected_status }}"
-                >
-                    {{ number }}
-                </a>
+                        <a
+                            class="page-link"
+                            href="?page={{ payments.previous_page_number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        >
+                            &laquo;
+                        </a>
 
-            </li>
+                    </li>
 
-            {% endfor %}
+                {% endif %}
 
 
-            {% if payments.has_next %}
 
-            <li class="page-item">
+                {% for number in payments.paginator.page_range %}
 
-                <a
-                    class="page-link"
-                    href="?page={{ payments.next_page_number }}&search={{ search }}&status={{ selected_status }}"
-                >
-                    &raquo;
-                </a>
+                    <li
+                        class="
+                            page-item
+                            {% if payments.number == number %}
+                                active
+                            {% endif %}
+                        "
+                    >
 
-            </li>
+                        <a
+                            class="page-link"
+                            href="?page={{ number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        >
+                            {{ number }}
+                        </a>
 
-            {% endif %}
+                    </li>
 
-        </ul>
+                {% endfor %}
 
-    </nav>
+
+
+                {% if payments.has_next %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ payments.next_page_number }}&search={{ search|urlencode }}&status={{ selected_status|urlencode }}"
+                        >
+                            &raquo;
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+
+            </ul>
+
+        </nav>
 
     {% endif %}
+
 
 </div>
 
 {% endblock %}
+
 
 
 {% block extra_css %}
@@ -301,33 +485,87 @@ Transactions | FlyingFox Admin
 <style>
 
 .transaction-filter {
+
     display: grid;
+
+    max-width: 900px;
+
     grid-template-columns:
-        minmax(250px, 1fr)
+        minmax(280px, 1fr)
         180px
         auto
         auto;
+
     gap: 10px;
-    max-width: 850px;
 }
+
 
 .transaction-amount {
-    color: #f97316;
+
+    color: #c31103;
+
+    font-size: 15px;
+
+    font-weight: 900;
 }
 
-@media(max-width:767px) {
+
+.payment-id-text {
+
+    display: inline-block;
+
+    max-width: 170px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    vertical-align: middle;
+
+    color: #1f2937;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.custom-table-container {
+
+    overflow-x: auto;
+}
+
+
+.table th {
+
+    white-space: nowrap;
+}
+
+
+.table td {
+
+    vertical-align: middle;
+}
+
+
+@media (
+    max-width: 767px
+) {
 
     .transaction-filter {
-        grid-template-columns: 1fr;
+
+        grid-template-columns:
+            1fr;
     }
 
-    .custom-table-container {
-        overflow-x: auto;
-    }
 
     .table {
-        min-width: 1000px;
+
+        min-width: 1100px;
     }
+
 }
 
 </style>

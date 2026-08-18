@@ -1,0 +1,273 @@
+<!-- =========================================================
+     USER SUMMARY
+========================================================= -->
+
+<div class="ff-account-profile-card">
+
+
+    <div class="ff-account-avatar">
+
+        {% if profile.full_name %}
+
+            {{ profile.full_name|first|upper }}
+
+        {% else %}
+
+            <i class="fas fa-user"></i>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="ff-account-profile-info">
+
+        <h3>
+
+            {% if profile.full_name %}
+
+                {{ profile.full_name }}
+
+            {% else %}
+
+                Flying Fox Rider
+
+            {% endif %}
+
+        </h3>
+
+
+        <p>
+
+            <i class="fas fa-phone"></i>
+
+            {{ profile.phone }}
+
+        </p>
+
+
+        {% if profile.email %}
+
+            <p>
+
+                <i class="fas fa-envelope"></i>
+
+                {{ profile.email }}
+
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     MENU
+========================================================= -->
+
+<nav class="ff-account-menu">
+
+
+    <!-- PROFILE -->
+
+    <a
+        href="{% url 'user_dashboard' %}"
+        class="{% if active_page == 'profile' %}active{% endif %}"
+    >
+
+        <span class="ff-account-menu-icon">
+
+            <i class="fas fa-user"></i>
+
+        </span>
+
+
+        <div>
+
+            <strong>
+                My Profile
+            </strong>
+
+            <small>
+                Personal information
+            </small>
+
+        </div>
+
+
+        <i class="fas fa-arrow-right"></i>
+
+    </a>
+
+
+
+    <!-- BOOKINGS -->
+
+    <a
+        href="{% url 'user_bookings' %}"
+        class="{% if active_page == 'bookings' %}active{% endif %}"
+    >
+
+        <span class="ff-account-menu-icon">
+
+            <i class="fas fa-ticket-alt"></i>
+
+        </span>
+
+
+        <div>
+
+            <strong>
+                My Bookings
+            </strong>
+
+            <small>
+                View your ride bookings
+            </small>
+
+        </div>
+
+
+        <i class="fas fa-arrow-right"></i>
+
+    </a>
+
+
+
+    <!-- TICKETS -->
+
+    <a
+        href="{% url 'user_tickets' %}"
+        class="{% if active_page == 'tickets' %}active{% endif %}"
+    >
+
+        <span class="ff-account-menu-icon">
+
+            <i class="fas fa-qrcode"></i>
+
+        </span>
+
+
+        <div>
+
+            <strong>
+                My Tickets
+            </strong>
+
+            <small>
+                Access adventure tickets
+            </small>
+
+        </div>
+
+
+        <i class="fas fa-arrow-right"></i>
+
+    </a>
+
+
+
+    <!-- SUPPORT -->
+
+    <a
+        href="{% url 'user_support' %}"
+        class="{% if active_page == 'support' %}active{% endif %}"
+    >
+
+        <span class="ff-account-menu-icon">
+
+            <i class="fas fa-headset"></i>
+
+        </span>
+
+
+        <div>
+
+            <strong>
+                Help & Support
+            </strong>
+
+            <small>
+                Get help from our team
+            </small>
+
+        </div>
+
+
+        <i class="fas fa-arrow-right"></i>
+
+    </a>
+
+
+
+    <!-- LOGOUT -->
+
+    <a
+        href="{% url 'user_logout' %}"
+        class="ff-account-logout"
+    >
+
+        <span class="ff-account-menu-icon">
+
+            <i class="fas fa-right-from-bracket"></i>
+
+        </span>
+
+
+        <div>
+
+            <strong>
+                Logout
+            </strong>
+
+            <small>
+                Sign out of your account
+            </small>
+
+        </div>
+
+
+        <i class="fas fa-arrow-right"></i>
+
+    </a>
+
+</nav>
+
+
+
+<!-- =========================================================
+     CONNECTED
+========================================================= -->
+
+<div class="ff-account-stay-connected">
+
+    <h4>
+        Stay Connected
+    </h4>
+
+    <p>
+        Receive important Flying Fox updates.
+    </p>
+
+
+    <div>
+
+        <i class="fab fa-whatsapp"></i>
+
+        WhatsApp booking updates
+
+    </div>
+
+
+    <div>
+
+        <i class="fas fa-envelope"></i>
+
+        Adventure news & offers
+
+    </div>
+
+</div>

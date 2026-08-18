@@ -31,6 +31,13 @@
     >
 
 
+    <!-- International Telephone Input -->
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.2/build/css/intlTelInput.css"
+>
+
+
     <style>
 
         /* =========================================================
@@ -53,6 +60,7 @@
             --ff-soft: #f7f7f8;
 
             --ff-green: #16803a;
+            --ff-green-light: #eef9f1;
         }
 
 
@@ -157,7 +165,7 @@
 
             color: var(--ff-green);
 
-            background: #eef9f1;
+            background: var(--ff-green-light);
         }
 
 
@@ -199,7 +207,6 @@
 
 
         .ff-card-body {
-
             padding: 34px;
         }
 
@@ -293,7 +300,6 @@
 
 
         .ff-overview-item {
-
             min-width: 0;
         }
 
@@ -321,7 +327,6 @@
         .ff-overview-item small,
         .ff-overview-item strong,
         .ff-overview-item span {
-
             display: block;
         }
 
@@ -385,7 +390,7 @@
 
 
         /* =========================================================
-           SUMMARY ROW
+           RIDE ROW
         ========================================================= */
 
         .ff-review-product-row {
@@ -402,28 +407,14 @@
                 #dfe3e7;
 
             align-items: center;
-
             justify-content: space-between;
 
             gap: 20px;
         }
 
 
-        .ff-review-product-row:first-of-type {
-
-            padding-top: 0;
-        }
-
-
-        .ff-review-product-row:last-child {
-
-            border-bottom: 0;
-        }
-
-
         .ff-review-product-row strong,
         .ff-review-product-row small {
-
             display: block;
         }
 
@@ -458,14 +449,160 @@
         }
 
 
-        .ff-review-product-row > span {
 
-            flex-shrink: 0;
+        /* =========================================================
+           PARTICIPANT WEIGHT DETAILS
+        ========================================================= */
+
+        .ff-weight-review-section {
+
+            margin-top: 20px;
+
+            padding: 18px;
+
+            border:
+                1px
+                solid
+                #e3e6ea;
+
+            border-radius: 16px;
+
+            background: #ffffff;
+        }
+
+
+        .ff-weight-review-heading {
+
+            display: flex;
+
+            margin-bottom: 15px;
+
+            align-items: center;
+
+            gap: 11px;
+        }
+
+
+        .ff-weight-review-heading > span {
+
+            display: flex;
+
+            width: 40px;
+            height: 40px;
+
+            flex:
+                0
+                0
+                40px;
+
+            border-radius: 11px;
+
+            align-items: center;
+            justify-content: center;
+
+            color: var(--ff-red);
+
+            background: var(--ff-red-light);
+        }
+
+
+        .ff-weight-review-heading strong,
+        .ff-weight-review-heading small {
+            display: block;
+        }
+
+
+        .ff-weight-review-heading strong {
 
             color: var(--ff-dark);
 
             font-size: 13px;
+            font-weight: 900;
+        }
+
+
+        .ff-weight-review-heading small {
+
+            margin-top: 2px;
+
+            color: var(--ff-muted);
+
+            font-size: 9px;
+        }
+
+
+        .ff-weight-review-list {
+
+            overflow: hidden;
+
+            border:
+                1px
+                solid
+                #eceef1;
+
+            border-radius: 12px;
+        }
+
+
+        .ff-weight-review-row,
+        .ff-weight-review-total {
+
+            display: flex;
+
+            min-height: 45px;
+
+            padding:
+                10px
+                14px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            border-bottom:
+                1px
+                solid
+                #eceef1;
+        }
+
+
+        .ff-weight-review-row span {
+
+            color: #626d78;
+
+            font-size: 11px;
             font-weight: 700;
+        }
+
+
+        .ff-weight-review-row strong {
+
+            color: var(--ff-dark);
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+
+        .ff-weight-review-total {
+
+            border-bottom: 0;
+
+            color: var(--ff-dark);
+
+            background: #f7f8fa;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+
+        .ff-weight-review-total strong {
+
+            color: var(--ff-red);
+
+            font-size: 13px;
         }
 
 
@@ -500,7 +637,6 @@
 
         .ff-review-offer-row strong,
         .ff-review-offer-row small {
-
             display: block;
         }
 
@@ -579,7 +715,6 @@
             margin-bottom: 13px;
 
             align-items: center;
-
             justify-content: space-between;
 
             gap: 20px;
@@ -622,7 +757,6 @@
 
         .ff-price-row.discount span,
         .ff-price-row.discount strong {
-
             color: var(--ff-red);
         }
 
@@ -676,7 +810,6 @@
         ========================================================= */
 
         .ff-billing-heading {
-
             margin-bottom: 26px;
         }
 
@@ -800,55 +933,6 @@
             cursor: not-allowed;
         }
 
-
-
-        /* =========================================================
-           PHONE
-        ========================================================= */
-
-        .ff-phone-row {
-
-            display: grid;
-
-            grid-template-columns:
-                115px
-                1fr;
-
-            gap: 12px;
-        }
-
-
-        .ff-country-code {
-
-            display: flex;
-
-            min-height: 61px;
-
-            border:
-                1px
-                solid
-                var(--ff-border);
-
-            border-radius: 14px;
-
-            align-items: center;
-            justify-content: center;
-
-            gap: 7px;
-
-            color: var(--ff-dark);
-
-            background: #ffffff;
-
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-
-        .ff-country-code span {
-
-            font-size: 20px;
-        }
 
 
         .ff-phone-verified {
@@ -1067,7 +1151,6 @@
 
             .ff-review-card,
             .ff-billing-card {
-
                 height: auto;
             }
 
@@ -1105,13 +1188,11 @@
 
             .ff-card-body,
             .ff-price-summary {
-
                 padding: 22px;
             }
 
 
             .ff-review-heading h1 {
-
                 font-size: 23px;
             }
 
@@ -1131,16 +1212,15 @@
             }
 
 
-            .ff-phone-row {
-
-                grid-template-columns: 1fr;
-            }
-
-
             .ff-review-product-row,
             .ff-review-offer-row {
 
                 align-items: flex-start;
+            }
+
+
+            .ff-weight-review-section {
+                padding: 14px;
             }
 
 
@@ -1158,7 +1238,709 @@
 
         }
 
-    </style>
+
+
+        {% comment %} payment success modal start {% endcomment %}
+          /* =========================================================
+   PAYMENT SUCCESS MODAL
+========================================================= */
+
+.ff-success-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 99999;
+}
+
+
+.ff-success-modal.active {
+    display: flex;
+}
+
+
+.ff-success-modal-backdrop {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.72
+        );
+
+    backdrop-filter:
+        blur(5px);
+}
+
+
+.ff-success-modal-dialog {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: 520px;
+
+    padding:
+        42px
+        35px;
+
+    border-radius: 28px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    box-shadow:
+        0
+        30px
+        100px
+        rgba(
+            0,
+            0,
+            0,
+            0.22
+        );
+}
+
+
+.ff-success-icon {
+
+    display: flex;
+
+    width: 82px;
+    height: 82px;
+
+    margin:
+        0
+        auto
+        22px;
+
+    border-radius: 50%;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background: #16a34a;
+
+    font-size: 34px;
+
+    box-shadow:
+        0
+        15px
+        35px
+        rgba(
+            22,
+            163,
+            74,
+            0.24
+        );
+}
+
+
+.ff-success-modal-dialog h2 {
+
+    margin:
+        0
+        0
+        10px;
+
+    color: #192736;
+
+    font-size: 29px;
+
+    font-weight: 900;
+}
+
+
+.ff-success-modal-dialog p {
+
+    margin:
+        0
+        auto
+        24px;
+
+    max-width: 390px;
+
+    color: #687281;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+.ff-success-ticket-box {
+
+    margin-bottom: 25px;
+
+    padding:
+        17px
+        20px;
+
+    border:
+        1px solid
+        #eceef1;
+
+    border-radius: 14px;
+
+    background: #f7f8fa;
+}
+
+
+.ff-success-ticket-box span,
+.ff-success-ticket-box strong {
+
+    display: block;
+}
+
+
+.ff-success-ticket-box span {
+
+    margin-bottom: 5px;
+
+    color: #8a929d;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+}
+
+
+.ff-success-ticket-box strong {
+
+    color: #192736;
+
+    font-size: 14px;
+
+    word-break: break-all;
+}
+
+
+.ff-success-actions {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 12px;
+}
+
+
+.ff-success-actions a {
+
+    display: flex;
+
+    min-height: 52px;
+
+    padding:
+        12px
+        16px;
+
+    border-radius: 26px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+
+.ff-success-download {
+
+    color: #ffffff;
+
+    background: #c31103;
+}
+
+
+.ff-success-download:hover {
+
+    color: #ffffff;
+
+    background: #8f0c02;
+}
+
+
+.ff-success-account {
+
+    color: #192736;
+
+    border:
+        1px solid
+        #dfe3e7;
+
+    background: #ffffff;
+}
+
+
+.ff-success-account:hover {
+
+    color: #c31103;
+
+    border-color: #c31103;
+}
+
+
+.ff-success-note {
+
+    display: block;
+
+    margin-top: 18px;
+
+    color: #8a929d;
+
+    font-size: 10px;
+}
+
+
+@media (
+    max-width: 575px
+) {
+
+    .ff-success-modal-dialog {
+
+        padding:
+            32px
+            22px;
+    }
+
+
+    .ff-success-actions {
+
+        grid-template-columns:
+            1fr;
+    }
+
+}
+       {% comment %} payment success modal end  {% endcomment %}
+
+
+
+
+
+
+       {% comment %} international flag css start {% endcomment %}
+
+       /* =========================================================
+   INTERNATIONAL PHONE INPUT
+========================================================= */
+
+.ff-international-phone {
+    width: 100%;
+}
+
+.ff-international-phone .iti {
+    width: 100%;
+}
+
+
+/* Main input */
+.ff-international-phone .iti input {
+    width: 100%;
+
+    min-height: 61px;
+
+    padding-top: 13px;
+    padding-bottom: 13px;
+
+    border: 1px solid var(--ff-border);
+    border-radius: 14px;
+
+    outline: none;
+
+    color: var(--ff-dark);
+    background: #ffffff;
+
+    font-size: 14px;
+
+    transition: 0.2s ease;
+}
+
+
+/* Focus */
+.ff-international-phone .iti input:focus {
+    border-color: var(--ff-red);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(195, 17, 3, 0.08);
+}
+
+
+/* Country selector */
+.ff-international-phone .iti__selected-country {
+    padding-left: 16px;
+    padding-right: 12px;
+}
+
+
+/* Dropdown */
+.iti__dropdown-content {
+    border: 1px solid var(--ff-border) !important;
+    border-radius: 14px !important;
+
+    box-shadow:
+        0 15px 40px
+        rgba(25, 39, 54, 0.15) !important;
+}
+
+
+/* Search field */
+.iti__search-input {
+    padding: 11px 13px !important;
+
+    border: 1px solid var(--ff-border) !important;
+    border-radius: 9px !important;
+
+    outline: none;
+}
+
+
+/* Validation error */
+.ff-phone-error {
+    display: none;
+
+    margin-top: 7px;
+
+    color: var(--ff-red);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.ff-phone-error.show {
+    display: block;
+}
+
+       {% comment %} international flag css end  {% endcomment %}
+
+       {% comment %} error message modalstrat {% endcomment %}
+       /* =========================================================
+   BOOKING ERROR MODAL
+========================================================= */
+
+.ff-error-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 999999;
+}
+
+
+.ff-error-modal.active {
+    display: flex;
+}
+
+
+/* BACKDROP */
+
+.ff-error-modal-backdrop {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.72
+        );
+
+    backdrop-filter:
+        blur(6px);
+}
+
+
+/* DIALOG */
+
+.ff-error-modal-dialog {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: 460px;
+
+    padding:
+        38px
+        34px;
+
+    border-radius: 26px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    box-shadow:
+        0
+        30px
+        100px
+        rgba(
+            0,
+            0,
+            0,
+            0.24
+        );
+
+    animation:
+        ffErrorModalIn
+        0.25s
+        ease;
+}
+
+
+/* ICON */
+
+.ff-error-modal-icon {
+
+    display: flex;
+
+    width: 76px;
+    height: 76px;
+
+    margin:
+        0
+        auto
+        20px;
+
+    border-radius: 50%;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #c31103
+        );
+
+    font-size: 31px;
+
+    box-shadow:
+        0
+        14px
+        34px
+        rgba(
+            195,
+            17,
+            3,
+            0.25
+        );
+}
+
+
+/* TITLE */
+
+.ff-error-modal-dialog h2 {
+
+    margin:
+        0
+        0
+        10px;
+
+    color: #192736;
+
+    font-size: 27px;
+
+    font-weight: 900;
+}
+
+
+/* MESSAGE */
+
+.ff-error-modal-dialog p {
+
+    margin:
+        0
+        auto
+        24px;
+
+    max-width: 370px;
+
+    color: #687281;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* BUTTON */
+
+.ff-error-modal-button {
+
+    display: flex;
+
+    width: 100%;
+
+    min-height: 54px;
+
+    border: 0;
+
+    border-radius: 28px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    transition:
+        0.25s
+        ease;
+}
+
+
+.ff-error-modal-button:hover {
+
+    background: #8f0c02;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* NOTE */
+
+.ff-error-modal-note {
+
+    display: block;
+
+    margin-top: 15px;
+
+    color: #8a929d;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* ANIMATION */
+
+@keyframes ffErrorModalIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px)
+            scale(0.96);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (
+    max-width: 575px
+) {
+
+    .ff-error-modal {
+
+        padding: 16px;
+    }
+
+
+    .ff-error-modal-dialog {
+
+        padding:
+            30px
+            20px;
+
+        border-radius: 22px;
+    }
+
+
+    .ff-error-modal-icon {
+
+        width: 66px;
+        height: 66px;
+
+        font-size: 27px;
+    }
+
+
+    .ff-error-modal-dialog h2 {
+
+        font-size: 22px;
+    }
+
+
+    .ff-error-modal-dialog p {
+
+        font-size: 12px;
+    }
+
+}
+       {% comment %} error message modal end  {% endcomment %}
+
+      </style>
 
 </head>
 
@@ -1221,7 +2003,6 @@
 
             <!-- =================================================
                  LEFT SIDE
-                 REVIEW BOOKING
             ================================================== -->
 
             <div class="col-lg-6">
@@ -1232,7 +2013,9 @@
                     <div class="ff-card-body">
 
 
-                        <!-- HEADING -->
+                        <!-- =====================================
+                             HEADING
+                        ====================================== -->
 
                         <div class="ff-review-heading">
 
@@ -1348,7 +2131,9 @@
 
 
 
-                            <!-- SELECTED RIDE -->
+                            <!-- =================================
+                                 SELECTED RIDE
+                            ================================== -->
 
                             <div class="ff-review-product-row">
 
@@ -1375,72 +2160,92 @@
 
 
                                 <b>
-
                                     ₹{{ booking_data.participant_subtotal }}
-
                                 </b>
 
                             </div>
 
+
+
                             <!-- =================================
-                                 PHOTO ADDON
+                                 PARTICIPANT WEIGHT DETAILS
                             ================================== -->
 
-                            {% if booking_data.photo_addon %}
+                            {% if booking_data.weight_groups %}
 
-                                <div class="ff-review-product-row">
+                                <div class="ff-weight-review-section">
 
-                                    <div>
 
-                                        <strong>
-                                            Adventure Photos
-                                        </strong>
+                                    <div class="ff-weight-review-heading">
 
-                                        <small>
-                                            Professional photo add-on
-                                        </small>
+                                        <span>
+
+                                            <i class="fas fa-weight-scale"></i>
+
+                                        </span>
+
+
+                                        <div>
+
+                                            <strong>
+                                                Participant Weight Details
+                                            </strong>
+
+                                            <small>
+                                                Selected rider weight groups
+                                            </small>
+
+                                        </div>
 
                                     </div>
 
 
-                                    <span>
 
-                                        Included
-
-                                    </span>
-
-                                </div>
-
-                            {% endif %}
+                                    <div class="ff-weight-review-list">
 
 
+                                        {% for group in booking_data.weight_groups %}
 
-                            <!-- =================================
-                                 VIDEO ADDON
-                            ================================== -->
+                                            <div class="ff-weight-review-row">
 
-                            {% if booking_data.video_addon %}
+                                                <span>
+                                                    {{ group.label }}
+                                                </span>
 
-                                <div class="ff-review-product-row">
 
-                                    <div>
+                                                <strong>
 
-                                        <strong>
-                                            Adventure Video
-                                        </strong>
+                                                    {{ group.participant_count }}
 
-                                        <small>
-                                            Adventure video add-on
-                                        </small>
+                                                    Rider{{ group.participant_count|pluralize }}
+
+                                                </strong>
+
+                                            </div>
+
+                                        {% endfor %}
+
+
+
+                                        <div class="ff-weight-review-total">
+
+                                            <span>
+                                                Total Riders
+                                            </span>
+
+                                            <strong>
+
+                                                {{ booking_data.quantity }}
+
+                                                Rider{{ booking_data.quantity|pluralize }}
+
+                                            </strong>
+
+                                        </div>
+
 
                                     </div>
 
-
-                                    <span>
-
-                                        Included
-
-                                    </span>
 
                                 </div>
 
@@ -1548,25 +2353,6 @@
 
 
 
-                        <!-- ADDONS -->
-
-                        <div class="ff-price-row">
-
-                            <span>
-                                Add-ons
-                            </span>
-
-
-                            <strong>
-
-                                ₹{{ booking_data.addon_total }}
-
-                            </strong>
-
-                        </div>
-
-
-
                         <!-- SUBTOTAL -->
 
                         <div class="ff-price-row">
@@ -1586,7 +2372,7 @@
 
 
 
-                        <!-- DISCOUNT -->
+                        <!-- OFFER DISCOUNT -->
 
                         {% if booking_data.offer_id %}
 
@@ -1658,7 +2444,9 @@
                     <div class="ff-card-body">
 
 
-                        <!-- BILLING HEADING -->
+                        <!-- =====================================
+                             BILLING HEADING
+                        ====================================== -->
 
                         <div class="ff-billing-heading">
 
@@ -1759,62 +2547,53 @@
                                  MOBILE NUMBER
                             ================================== -->
 
-                            <div class="ff-field">
+ <!-- =================================
+     MOBILE NUMBER
+================================== -->
 
-                                <label for="billingPhone">
+<div class="ff-field ff-phone-field">
 
-                                    Mobile Number *
+    <label for="billingPhone">
+        Mobile Number *
+    </label>
 
-                                </label>
+    <div class="ff-international-phone">
 
+        <input
+            type="tel"
+            id="billingPhone"
+            name="customer_phone_display"
+            value=""
+            placeholder="Enter mobile number"
+            autocomplete="tel"
+            required
+        >
 
-                                <div class="ff-phone-row">
+        <!-- Actual international number sent to Django -->
+        <input
+            type="hidden"
+            id="billingPhoneFull"
+            name="customer_phone"
+        >
 
+    </div>
 
-                                    <div class="ff-country-code">
+    <div
+        class="ff-phone-error"
+        id="billingPhoneError"
+    ></div>
 
-                                        <span>
-                                            🇮🇳
-                                        </span>
+    {% if profile.phone %}
+        <div class="ff-phone-verified">
 
-                                        +91
+            <i class="fas fa-circle-check"></i>
 
-                                    </div>
+            OTP Verified Number
 
+        </div>
+    {% endif %}
 
-                                    <div>
-
-                                        <input
-                                            type="tel"
-                                            id="billingPhone"
-                                            name="customer_phone"
-                                            value="{{ profile.phone|default:'' }}"
-                                            placeholder="Enter 10-digit mobile number"
-                                            pattern="[0-9]{10}"
-                                            maxlength="10"
-                                            autocomplete="tel"
-                                            required
-                                        >
-
-
-                                        {% if profile.phone %}
-
-                                            <div class="ff-phone-verified">
-
-                                                <i class="fas fa-circle-check"></i>
-
-                                                OTP Verified Number
-
-                                            </div>
-
-                                        {% endif %}
-
-                                    </div>
-
-
-                                </div>
-
-                            </div>
+</div>
 
 
 
@@ -1972,6 +2751,11 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+<script
+    src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.2/build/js/intlTelInput.min.js">
+</script>
+
+
 
 <!-- =========================================================
      JAVASCRIPT
@@ -1981,22 +2765,58 @@
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function () {   
+
+
+
+
+        const bookingErrorModal =
+    document.getElementById(
+        "bookingErrorModal"
+    );
+
+
+const bookingErrorMessage =
+    document.getElementById(
+        "bookingErrorMessage"
+    );
+
+
+const bookingErrorTitle =
+    document.getElementById(
+        "bookingErrorTitle"
+    );
+
+
+const bookingErrorButton =
+    document.getElementById(
+        "bookingErrorButton"
+    );
+
+
+const bookingErrorBackdrop =
+    document.getElementById(
+        "bookingErrorBackdrop"
+    );
+
 
         const billingForm =
             document.getElementById(
                 "billingForm"
             );
 
+
         const paymentButton =
             document.getElementById(
                 "paymentButton"
             );
 
+
         const phoneInput =
             document.getElementById(
                 "billingPhone"
             );
+
 
         const pincodeInput =
             document.getElementById(
@@ -2004,21 +2824,74 @@ document.addEventListener(
             );
 
 
-        /* =====================================================
-           PHONE - NUMBERS ONLY
-        ====================================================== */
 
-        phoneInput?.addEventListener(
-            "input",
+       
+
+        const phoneFullInput =
+    document.getElementById(
+        "billingPhoneFull"
+    );
+
+const phoneError =
+    document.getElementById(
+        "billingPhoneError"
+    );
+
+
+
+
+
+let phoneIti = null;
+
+
+if (phoneInput) {
+
+    phoneIti = window.intlTelInput(
+        phoneInput,
+        {
+            initialCountry: "in",
+
+            separateDialCode: true,
+
+            countrySearch: true,
+
+            preferredCountries: [
+                "in",
+                "ae",
+                "gb",
+                "us",
+                "sa",
+                "qa"
+            ],
+
+            loadUtils: () =>
+                import(
+                    "https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.2/build/js/utils.js"
+                )
+        }
+    );
+
+
+    const savedPhone =
+        "{{ profile.phone|default:''|escapejs }}";
+
+
+    if (savedPhone) {
+
+        phoneIti.promise.then(
             function () {
 
-                this.value =
-                    this.value
-                        .replace(/\D/g, "")
-                        .slice(0, 10);
+                phoneIti.setNumber(
+                    savedPhone
+                );
 
             }
         );
+
+    }
+
+}
+
 
 
         /* =====================================================
@@ -2038,14 +2911,21 @@ document.addEventListener(
         );
 
 
+
+        /* =====================================================
+           RESTORE PAYMENT BUTTON
+        ====================================================== */
+
         function restoreButton() {
 
             if (!paymentButton) {
                 return;
             }
 
+
             paymentButton.disabled =
                 false;
+
 
             paymentButton.innerHTML = `
                 Make Payment ₹{{ booking_data.total_amount }}
@@ -2055,63 +2935,382 @@ document.addEventListener(
         }
 
 
-        function showPaymentError(
-            message
-        ) {
 
-            alert(
-                message
-                ||
-                "Unable to start payment. Please try again."
-            );
-
-            restoreButton();
-
-        }
 
 
         /* =====================================================
-           BILLING FORM -> CREATE RAZORPAY ORDER -> OPEN MODAL
+   ERROR MODAL
+===================================================== */
+
+function openBookingErrorModal(
+    message,
+    title = "Unable To Continue"
+) {
+
+    if (!bookingErrorModal) {
+
+        console.error(
+            "Booking error modal not found."
+        );
+
+        return;
+    }
+
+
+    if (bookingErrorTitle) {
+
+        bookingErrorTitle.textContent =
+            title;
+    }
+
+
+    if (bookingErrorMessage) {
+
+        bookingErrorMessage.textContent =
+            message
+            ||
+            "Something went wrong. Please try again.";
+    }
+
+
+    bookingErrorModal.classList.add(
+        "active"
+    );
+
+
+    bookingErrorModal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+
+
+function closeBookingErrorModal() {
+
+    if (!bookingErrorModal) {
+        return;
+    }
+
+
+    bookingErrorModal.classList.remove(
+        "active"
+    );
+
+
+    bookingErrorModal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    document.body.style.overflow =
+        "";
+}
+
+bookingErrorButton?.addEventListener(
+    "click",
+    closeBookingErrorModal
+);
+
+
+bookingErrorBackdrop?.addEventListener(
+    "click",
+    closeBookingErrorModal
+);
+
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape"
+            &&
+            bookingErrorModal?.classList.contains(
+                "active"
+            )
+        ) {
+
+            closeBookingErrorModal();
+
+        }
+
+    }
+);
+
+
+
+
+        /* =====================================================
+           PAYMENT ERROR
+        ====================================================== */
+
+       function showPaymentError(
+    message
+) {
+
+    let title =
+        "Unable To Continue";
+
+
+    const errorMessage =
+        message
+        ||
+        "Unable to start payment. Please try again.";
+
+
+
+    /* =================================================
+       CUSTOM TITLE FOR ALREADY USED OFFER
+    ================================================= */
+
+    if (
+        errorMessage
+            .toLowerCase()
+            .includes(
+                "already used"
+            )
+    ) {
+
+        title =
+            "Offer Already Used";
+
+    }
+
+
+
+    /* =================================================
+       FIRST BOOKING OFFER
+    ================================================= */
+
+    else if (
+        errorMessage
+            .toLowerCase()
+            .includes(
+                "first successful booking"
+            )
+    ) {
+
+        title =
+            "Offer Not Eligible";
+
+    }
+
+
+
+    /* =================================================
+       OFFER EXPIRED / INVALID DATE
+    ================================================= */
+
+    else if (
+        errorMessage
+            .toLowerCase()
+            .includes(
+                "selected visit date"
+            )
+        ||
+        errorMessage
+            .toLowerCase()
+            .includes(
+                "no longer available"
+            )
+    ) {
+
+        title =
+            "Offer Not Available";
+
+    }
+
+
+
+    /* =================================================
+       COUPON
+    ================================================= */
+
+    else if (
+        errorMessage
+            .toLowerCase()
+            .includes(
+                "coupon"
+            )
+    ) {
+
+        title =
+            "Coupon Problem";
+
+    }
+
+
+
+    openBookingErrorModal(
+        errorMessage,
+        title
+    );
+
+
+    restoreButton();
+
+}
+
+
+
+        /* =====================================================
+           BILLING FORM
+           CREATE RAZORPAY ORDER
         ====================================================== */
 
         billingForm?.addEventListener(
             "submit",
             async function (event) {
 
+
                 event.preventDefault();
 
 
-                /* HTML VALIDATION */
+
+                /* =============================================
+                   HTML VALIDATION
+                ============================================== */
 
                 if (
                     !billingForm.checkValidity()
                 ) {
 
                     billingForm.reportValidity();
+
                     return;
 
                 }
 
 
-                /* PHONE */
+/* =============================================
+   INTERNATIONAL PHONE VALIDATION
+============================================= */
 
-                if (
-                    !/^[0-9]{10}$/.test(
-                        phoneInput?.value || ""
-                    )
-                ) {
+/* =============================================
+   WAIT FOR PHONE LIBRARY
+============================================= */
 
-                    alert(
-                        "Please enter a valid 10-digit mobile number."
-                    );
+if (!phoneIti) {
 
-                    phoneInput?.focus();
-                    return;
+    if (phoneError) {
 
-                }
+        phoneError.textContent =
+            "Phone validation could not be loaded.";
+
+        phoneError.classList.add(
+            "show"
+        );
+    }
+
+    return;
+}
 
 
-                /* PINCODE */
+try {
+
+    await phoneIti.promise;
+
+}
+catch (error) {
+
+    console.error(
+        "Phone utils loading failed:",
+        error
+    );
+
+    if (phoneError) {
+
+        phoneError.textContent =
+            "Phone validation could not be loaded. Please refresh the page.";
+
+        phoneError.classList.add(
+            "show"
+        );
+    }
+
+    return;
+}
+
+
+/* =============================================
+   PHONE VALIDATION
+============================================= */
+
+if (!phoneIti.isValidNumber()) {
+
+    if (phoneError) {
+
+        phoneError.textContent =
+            "Please enter a valid mobile number.";
+
+        phoneError.classList.add(
+            "show"
+        );
+    }
+
+    phoneInput?.focus();
+
+    return;
+}
+
+
+/* =============================================
+   COMPLETE INTERNATIONAL NUMBER
+============================================= */
+
+const fullPhoneNumber =
+    phoneIti.getNumber();
+
+
+if (phoneFullInput) {
+
+    phoneFullInput.value =
+        fullPhoneNumber;
+}
+
+
+/* REMOVE ERROR */
+
+if (phoneError) {
+
+    phoneError.textContent = "";
+
+    phoneError.classList.remove(
+        "show"
+    );
+}
+
+if (phoneFullInput) {
+
+    phoneFullInput.value =
+        fullPhoneNumber;
+}
+
+
+/* =============================================
+   REMOVE PREVIOUS ERROR
+============================================= */
+
+if (phoneError) {
+
+    phoneError.textContent = "";
+
+    phoneError.classList.remove(
+        "show"
+    );
+}
+
+
+
+                /* =============================================
+                   PINCODE VALIDATION
+                ============================================== */
 
                 if (
                     !/^[0-9]{6}$/.test(
@@ -2123,14 +3322,22 @@ document.addEventListener(
                         "Please enter a valid 6-digit PIN code."
                     );
 
+
                     pincodeInput?.focus();
+
                     return;
 
                 }
 
 
+
+                /* =============================================
+                   DISABLE BUTTON
+                ============================================== */
+
                 paymentButton.disabled =
                     true;
+
 
                 paymentButton.innerHTML = `
                     <i class="fas fa-spinner fa-spin"></i>
@@ -2138,7 +3345,9 @@ document.addEventListener(
                 `;
 
 
+
                 try {
+
 
                     const formData =
                         new FormData(
@@ -2146,28 +3355,66 @@ document.addEventListener(
                         );
 
 
-                    /* ---------------------------------------------
+
+                    /* =========================================
                        CREATE BOOKING + RAZORPAY ORDER
-                    ---------------------------------------------- */
+                    ========================================== */
 
                     const response =
                         await fetch(
                             billingForm.action,
                             {
-                                method: "POST",
-                                body: formData,
+
+                                method:
+                                    "POST",
+
+                                body:
+                                    formData,
+
                                 headers: {
+
                                     "X-Requested-With":
                                         "XMLHttpRequest",
+
                                 },
+
                                 credentials:
                                     "same-origin",
+
                             }
                         );
 
 
+
+                    /* =========================================
+                       MAKE SURE RESPONSE IS JSON
+                    ========================================== */
+
+                    const contentType =
+                        response.headers.get(
+                            "content-type"
+                        )
+                        ||
+                        "";
+
+
+                    if (
+                        !contentType.includes(
+                            "application/json"
+                        )
+                    ) {
+
+                        throw new Error(
+                            "Server returned a non-JSON response."
+                        );
+
+                    }
+
+
+
                     const data =
                         await response.json();
+
 
 
                     if (
@@ -2182,76 +3429,117 @@ document.addEventListener(
                             "Unable to prepare payment."
                         );
 
+
                         return;
 
                     }
 
 
-                    /* ---------------------------------------------
+
+                    /* =========================================
                        RAZORPAY CHECKOUT OPTIONS
-                    ---------------------------------------------- */
+                    ========================================== */
 
                     const options = {
+
 
                         key:
                             data.key_id,
 
+
                         amount:
                             data.amount,
+
 
                         currency:
                             data.currency,
 
+
                         name:
                             "Flying Fox Adventure",
+
 
                         description:
                             data.description,
 
+
                         order_id:
                             data.order_id,
 
+
+
+                        /* =====================================
+                           CUSTOMER DETAILS
+                        ====================================== */
+
                         prefill: {
+
 
                             name:
                                 data.customer_name,
 
+
                             email:
                                 data.customer_email,
+
 
                             contact:
                                 data.customer_phone,
 
+
                         },
 
+
+
+                        /* =====================================
+                           NOTES
+                        ====================================== */
+
                         notes: {
+
 
                             booking_id:
                                 data.booking_id,
 
+
                         },
 
+
+
+                        /* =====================================
+                           THEME
+                        ====================================== */
+
                         theme: {
+
 
                             color:
                                 "#c31103",
 
+
                         },
 
 
-                        /* -----------------------------------------
-                           PAYMENT SUCCESS CALLBACK
-                        ------------------------------------------ */
+
+                        /* =====================================
+                           SUCCESS CALLBACK
+                        ====================================== */
 
                         handler:
                             async function (
                                 razorpayResponse
                             ) {
 
+
+                                paymentButton.disabled =
+                                    true;
+
+
                                 paymentButton.innerHTML = `
                                     <i class="fas fa-spinner fa-spin"></i>
                                     Verifying Payment
                                 `;
+
 
 
                                 const csrfToken =
@@ -2260,75 +3548,139 @@ document.addEventListener(
                                     ).value;
 
 
-                                const verifyResponse =
-                                    await fetch(
-                                        "{% url 'booking_payment_verify' %}",
-                                        {
-                                            method:
-                                                "POST",
 
-                                            headers: {
-                                                "Content-Type":
-                                                    "application/x-www-form-urlencoded",
+                                try {
 
-                                                "X-CSRFToken":
-                                                    csrfToken,
 
-                                                "X-Requested-With":
-                                                    "XMLHttpRequest",
-                                            },
+                                    const verifyResponse =
+                                        await fetch(
+                                            "{% url 'booking_payment_verify' %}",
+                                            {
 
-                                            credentials:
-                                                "same-origin",
+                                                method:
+                                                    "POST",
 
-                                            body:
-                                                new URLSearchParams(
-                                                    {
-                                                        booking_id:
-                                                            data.booking_id,
 
-                                                        razorpay_payment_id:
-                                                            razorpayResponse.razorpay_payment_id,
+                                                headers: {
 
-                                                        razorpay_order_id:
-                                                            razorpayResponse.razorpay_order_id,
+                                                    "Content-Type":
+                                                        "application/x-www-form-urlencoded",
 
-                                                        razorpay_signature:
-                                                            razorpayResponse.razorpay_signature,
-                                                    }
-                                                ),
-                                        }
+                                                    "X-CSRFToken":
+                                                        csrfToken,
+
+                                                    "X-Requested-With":
+                                                        "XMLHttpRequest",
+
+                                                },
+
+
+                                                credentials:
+                                                    "same-origin",
+
+
+                                                body:
+                                                    new URLSearchParams(
+                                                        {
+
+                                                            booking_id:
+                                                                data.booking_id,
+
+                                                            razorpay_payment_id:
+                                                                razorpayResponse.razorpay_payment_id,
+
+                                                            razorpay_order_id:
+                                                                razorpayResponse.razorpay_order_id,
+
+                                                            razorpay_signature:
+                                                                razorpayResponse.razorpay_signature,
+
+                                                        }
+                                                    ),
+
+                                            }
+                                        );
+
+
+
+                                    const verifyContentType =
+                                        verifyResponse.headers.get(
+                                            "content-type"
+                                        )
+                                        ||
+                                        "";
+
+
+                                    if (
+                                        !verifyContentType.includes(
+                                            "application/json"
+                                        )
+                                    ) {
+
+                                        throw new Error(
+                                            "Invalid payment verification response."
+                                        );
+
+                                    }
+
+
+
+                                    const verifyData =
+                                        await verifyResponse.json();
+
+
+
+                                    if (
+                                        verifyResponse.ok
+                                        &&
+                                        verifyData.success
+                                    ) {
+
+                                          window.location.href =
+                                             verifyData.redirect_url;
+
+                                        return;
+
+                                    }
+
+
+
+                                    showPaymentError(
+                                        verifyData.message
+                                        ||
+                                        "Payment verification failed. Please contact support if the amount was deducted."
                                     );
 
 
-                                const verifyData =
-                                    await verifyResponse.json();
-
-
-                                if (
-                                    verifyResponse.ok
-                                    &&
-                                    verifyData.success
+                                }
+                                catch (
+                                    verificationError
                                 ) {
 
-                                    window.location.href =
-                                        verifyData.redirect_url;
 
-                                    return;
+                                    console.error(
+                                        verificationError
+                                    );
+
+
+                                    showPaymentError(
+                                        "Unable to verify the payment. If money was deducted, please contact support."
+                                    );
+
 
                                 }
 
 
-                                showPaymentError(
-                                    verifyData.message
-                                    ||
-                                    "Payment verification failed. Please contact support if the amount was deducted."
-                                );
-
                             },
 
 
+
+                        /* =====================================
+                           MODAL CLOSED
+                        ====================================== */
+
                         modal: {
+
 
                             ondismiss:
                                 function () {
@@ -2337,9 +3689,30 @@ document.addEventListener(
 
                                 },
 
+
                         },
 
+
                     };
+
+
+
+                    /* =========================================
+                       OPEN RAZORPAY
+                    ========================================== */
+
+                    if (
+                        typeof Razorpay
+                        ===
+                        "undefined"
+                    ) {
+
+                        throw new Error(
+                            "Razorpay Checkout could not be loaded."
+                        );
+
+                    }
+
 
 
                     const razorpayCheckout =
@@ -2348,45 +3721,236 @@ document.addEventListener(
                         );
 
 
+
+                    /* =========================================
+                       PAYMENT FAILURE
+                    ========================================== */
+
                     razorpayCheckout.on(
                         "payment.failed",
                         function (response) {
+
 
                             const description =
                                 response?.error?.description
                                 ||
                                 "Payment failed. Please try again.";
 
+
                             showPaymentError(
                                 description
                             );
+
 
                         }
                     );
 
 
+
                     razorpayCheckout.open();
 
-                } catch (error) {
+
+                }
+                catch (
+                    error
+                ) {
+
 
                     console.error(
                         error
                     );
 
+
                     showPaymentError(
                         "Unable to connect to the payment service. Please try again."
                     );
 
+
                 }
+
 
             }
         );
+
 
     }
 );
 
 </script>
 
+
+<!-- =========================================================
+     BOOKING SUCCESS MODAL
+========================================================= -->
+
+<div
+    class="ff-success-modal"
+    id="bookingSuccessModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="ff-success-modal-backdrop"
+    ></div>
+
+
+    <div
+        class="ff-success-modal-dialog"
+    >
+
+        <div
+            class="ff-success-icon"
+        >
+            <i class="fas fa-check"></i>
+        </div>
+
+
+        <h2>
+            Payment Successful!
+        </h2>
+
+
+        <p>
+            Your Flying Fox Adventure booking
+            has been confirmed successfully.
+        </p>
+
+
+        <div
+            class="ff-success-ticket-box"
+        >
+
+            <span>
+                Ticket ID
+            </span>
+
+            <strong
+                id="successTicketId"
+            >
+                -
+            </strong>
+
+        </div>
+
+
+        <div
+            class="ff-success-actions"
+        >
+
+            <a
+                href="#"
+                id="downloadTicketButton"
+                class="ff-success-download"
+            >
+
+                <i class="fas fa-download"></i>
+
+                Download Ticket
+
+            </a>
+
+
+            <a
+                href="#"
+                id="successAccountButton"
+                class="ff-success-account"
+            >
+
+                <i class="fas fa-user"></i>
+
+                Go To My Account
+
+            </a>
+
+        </div>
+
+
+        <small
+            class="ff-success-note"
+        >
+            Your ticket has also been sent
+            to your registered email.
+        </small>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     BOOKING / PAYMENT ERROR MODAL
+========================================================= -->
+
+<div
+    class="ff-error-modal"
+    id="bookingErrorModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="ff-error-modal-backdrop"
+        id="bookingErrorBackdrop"
+    ></div>
+
+
+    <div
+        class="ff-error-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bookingErrorTitle"
+    >
+
+        <!-- ICON -->
+
+        <div class="ff-error-modal-icon">
+
+            <i class="fas fa-circle-exclamation"></i>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <h2 id="bookingErrorTitle">
+            Offer Not Available
+        </h2>
+
+
+        <!-- MESSAGE -->
+
+        <p id="bookingErrorMessage">
+
+            This offer cannot be applied to your booking.
+
+        </p>
+
+
+        <!-- ACTION -->
+
+        <button
+            type="button"
+            class="ff-error-modal-button"
+            id="bookingErrorButton"
+        >
+
+            <span>
+                I Understand
+            </span>
+
+            <i class="fas fa-arrow-right"></i>
+
+        </button>
+
+
+        <small class="ff-error-modal-note">
+
+            You can return to the booking page and choose another available offer.
+
+        </small>
+
+    </div>
+
+</div>
 
 </body>
 

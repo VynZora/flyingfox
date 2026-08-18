@@ -1,9 +1,12 @@
 {% extends "admin_pages/base.html" %}
+
 {% load static %}
 
+
 {% block title %}
-Users List | FlyingFox Admin
+Users | FlyingFox Admin
 {% endblock %}
+
 
 
 {% block content %}
@@ -11,20 +14,21 @@ Users List | FlyingFox Admin
 <div class="dashboard__form__wraper">
 
 
-    <!-- =========================
+    <!-- =================================================
          HEADER
-    ========================== -->
+    ================================================== -->
 
     <div class="create__course__title mb-4">
 
         <div>
 
             <h4>
-                Users List
+                Users
             </h4>
 
             <p class="text-muted mb-0">
-                View and manage registered FlyingFox users.
+                View registered customers and
+                account verification information.
             </p>
 
         </div>
@@ -32,58 +36,85 @@ Users List | FlyingFox Admin
     </div>
 
 
-    <!-- =========================
-         SEARCH
-    ========================== -->
 
-    <div class="user-toolbar mb-4">
+    <!-- =================================================
+         FILTER
+    ================================================== -->
 
-        <form
-            method="GET"
-            class="user-search-form"
+    <form
+        method="GET"
+        class="user-filter mb-4"
+    >
+
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            class="form-control"
+            placeholder="Search name, phone, email, region..."
         >
 
-            <div class="search-box">
 
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ search }}"
-                    class="form-control"
-                    placeholder="Search name, email or phone..."
-                >
+        <select
+            name="verification"
+            class="form-select"
+        >
 
-                <button
-                    type="submit"
-                    class="search-btn"
-                >
-
-                    <i class="fas fa-search"></i>
-
-                </button>
-
-            </div>
+            <option value="">
+                All Verification
+            </option>
 
 
-            {% if search %}
-
-            <a
-                href="{% url 'user_list' %}"
-                class="btn btn-light"
+            <option
+                value="verified"
+                {% if selected_verification == "verified" %}
+                    selected
+                {% endif %}
             >
-                Clear
-            </a>
-
-            {% endif %}
-
-        </form>
-
-    </div>
+                Verified
+            </option>
 
 
-    <!-- =========================
+            <option
+                value="unverified"
+                {% if selected_verification == "unverified" %}
+                    selected
+                {% endif %}
+            >
+                Not Verified
+            </option>
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="fas fa-filter"></i>
+
+            Filter
+
+        </button>
+
+
+        <a
+            href="{% url 'user_list' %}"
+            class="btn btn-secondary"
+        >
+            Clear
+        </a>
+
+
+    </form>
+
+
+
+    <!-- =================================================
          TABLE
-    ========================== -->
+    ================================================== -->
 
     <div class="custom-table-container">
 
@@ -96,7 +127,7 @@ Users List | FlyingFox Admin
             "
         >
 
-            <thead class="table-light">
+            <thead>
 
                 <tr>
 
@@ -105,11 +136,23 @@ Users List | FlyingFox Admin
                     </th>
 
                     <th>
-                        Email
+                        Contact
                     </th>
 
                     <th>
-                        Phone
+                        Location
+                    </th>
+
+                    <th>
+                        Bookings
+                    </th>
+
+                    <th>
+                        Verification
+                    </th>
+
+                    <th>
+                        Updates
                     </th>
 
                     <th>
@@ -130,284 +173,517 @@ Users List | FlyingFox Admin
 
                 {% for user in users %}
 
-
-                <tr>
-
-
-                    <!-- USER -->
-
-                    <td>
-
-                        <div class="user-info-cell">
-
-                            <div class="user-avatar-list">
-
-                                {{ user.full_name|first|upper }}
-
-                            </div>
+                    <tr>
 
 
-                            <div>
+                        <!-- =====================================
+                             USER
+                        ====================================== -->
 
-                                <strong class="user-full-name">
+                        <td>
 
-                                    {{ user.full_name }}
+                            <div class="user-info-cell">
 
-                                </strong>
 
-                                <div class="user-id">
+                                <div class="user-avatar-list">
 
-                                    User ID: #{{ user.id }}
+                                    {% if user.full_name %}
+
+                                        {{ user.full_name|first|upper }}
+
+                                    {% else %}
+
+                                        <i class="fas fa-user"></i>
+
+                                    {% endif %}
 
                                 </div>
 
-                            </div>
 
-                        </div>
+                                <div>
 
-                    </td>
+                                    <strong class="user-full-name">
 
-
-                    <!-- EMAIL -->
-
-                    <td>
-
-                        <a
-                            href="mailto:{{ user.email }}"
-                            class="user-email-link"
-                        >
-
-                            {{ user.email }}
-
-                        </a>
-
-                    </td>
-
-
-                    <!-- PHONE -->
-
-                    <td>
-
-                        <a
-                            href="tel:{{ user.phone }}"
-                            class="user-phone-link"
-                        >
-
-                            {{ user.phone }}
-
-                        </a>
-
-                    </td>
-
-
-                    <!-- CREATED -->
-
-                    <td>
-
-                        <div>
-
-                            {{ user.created_at|date:"d M Y" }}
-
-                        </div>
-
-                        <small class="text-muted">
-
-                            {{ user.created_at|time:"h:i A" }}
-
-                        </small>
-
-                    </td>
-
-
-                    <!-- ACTIONS -->
-
-                    <td class="text-center">
-
-                        <button
-                            type="button"
-                            class="btn btn-sm btn-danger"
-                            data-bs-toggle="modal"
-                            data-bs-target="#deleteUserModal{{ user.id }}"
-                        >
-
-                            <i class="fas fa-trash"></i>
-
-                            Delete
-
-                        </button>
-
-                    </td>
-
-                </tr>
-
-
-
-                <!-- =========================
-                     DELETE MODAL
-                ========================== -->
-
-                <div
-                    class="modal fade"
-                    id="deleteUserModal{{ user.id }}"
-                    tabindex="-1"
-                    aria-labelledby="deleteUserModalLabel{{ user.id }}"
-                    aria-hidden="true"
-                >
-
-                    <div class="modal-dialog modal-dialog-centered">
-
-                        <div class="modal-content">
-
-
-                            <form
-                                method="POST"
-                                action="{% url 'user_delete' user.id %}"
-                            >
-
-                                {% csrf_token %}
-
-
-                                <div class="modal-header">
-
-                                    <h5
-                                        class="modal-title"
-                                        id="deleteUserModalLabel{{ user.id }}"
-                                    >
-                                        Delete User
-                                    </h5>
-
-
-                                    <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    ></button>
-
-                                </div>
-
-
-                                <div class="modal-body">
-
-
-                                    <p>
-
-                                        Are you sure you want to delete
-
-                                        <strong>
+                                        {% if user.full_name %}
 
                                             {{ user.full_name }}
 
-                                        </strong>?
+                                        {% else %}
 
-                                    </p>
+                                            <span class="text-muted">
+                                                Name not added
+                                            </span>
+
+                                        {% endif %}
+
+                                    </strong>
 
 
-                                    <div
-                                        class="
-                                            alert
-                                            alert-warning
-                                            mb-0
-                                        "
-                                    >
+                                    <div class="user-id">
 
-                                        <i
-                                            class="
-                                                fas
-                                                fa-exclamation-triangle
-                                                me-1
-                                            "
-                                        ></i>
-
-                                        This action cannot be undone.
+                                        User ID:
+                                        #{{ user.id }}
 
                                     </div>
 
 
-                                </div>
+                                    {% if user.gender %}
 
+                                        <div class="user-gender">
 
-                                <div class="modal-footer">
+                                            {{ user.get_gender_display }}
 
+                                        </div>
 
-                                    <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-                                        Cancel
-                                    </button>
-
-
-                                    <button
-                                        type="submit"
-                                        class="btn btn-danger"
-                                    >
-
-                                        <i class="fas fa-trash me-1"></i>
-
-                                        Yes, Delete
-
-                                    </button>
-
+                                    {% endif %}
 
                                 </div>
 
 
-                            </form>
+                            </div>
 
+                        </td>
+
+
+
+                        <!-- =====================================
+                             CONTACT
+                        ====================================== -->
+
+                        <td>
+
+                            <a
+                                href="tel:{{ user.phone }}"
+                                class="contact-link"
+                            >
+
+                                <i class="fas fa-phone"></i>
+
+                                {{ user.phone }}
+
+                            </a>
+
+
+                            {% if user.email %}
+
+                                <a
+                                    href="mailto:{{ user.email }}"
+                                    class="contact-link email"
+                                >
+
+                                    <i class="fas fa-envelope"></i>
+
+                                    {{ user.email }}
+
+                                </a>
+
+                            {% else %}
+
+                                <div class="small text-muted mt-1">
+
+                                    Email not added
+
+                                </div>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- =====================================
+                             LOCATION
+                        ====================================== -->
+
+                        <td>
+
+                            {% if user.region %}
+
+                                <strong class="location-text">
+
+                                    {{ user.region }}
+
+                                </strong>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    -
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if user.pincode %}
+
+                                <div class="small text-muted">
+
+                                    PIN:
+                                    {{ user.pincode }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- =====================================
+                             BOOKINGS
+                        ====================================== -->
+
+                        <td>
+
+                            <span class="booking-count">
+
+                                {{ user.booking_count }}
+
+                            </span>
+
+                            <small>
+
+                                Booking{{ user.booking_count|pluralize }}
+
+                            </small>
+
+                        </td>
+
+
+
+                        <!-- =====================================
+                             VERIFICATION
+                        ====================================== -->
+
+                        <td>
+
+                            {% if user.phone_verified %}
+
+                                <span class="status-badge verified">
+
+                                    <i class="fas fa-circle-check"></i>
+
+                                    Verified
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge unverified">
+
+                                    <i class="fas fa-circle-xmark"></i>
+
+                                    Not Verified
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- =====================================
+                             NOTIFICATIONS
+                        ====================================== -->
+
+                        <td>
+
+                            <div class="update-list">
+
+
+                                <span
+                                    class="
+                                        update-chip
+                                        {% if user.whatsapp_updates %}
+                                            enabled
+                                        {% endif %}
+                                    "
+                                >
+
+                                    <i class="fab fa-whatsapp"></i>
+
+                                    WhatsApp
+
+                                </span>
+
+
+                                <span
+                                    class="
+                                        update-chip
+                                        {% if user.email_updates %}
+                                            enabled
+                                        {% endif %}
+                                    "
+                                >
+
+                                    <i class="fas fa-envelope"></i>
+
+                                    Email
+
+                                </span>
+
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- =====================================
+                             REGISTERED
+                        ====================================== -->
+
+                        <td>
+
+                            <strong class="registered-date">
+
+                                {{ user.created_at|date:"d M Y" }}
+
+                            </strong>
+
+
+                            <div class="small text-muted">
+
+                                {{ user.created_at|date:"h:i A" }}
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- =====================================
+                             ACTION
+                        ====================================== -->
+
+                        <td class="text-center">
+
+                            <button
+                                type="button"
+                                class="
+                                    btn
+                                    btn-sm
+                                    btn-danger
+                                "
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteUserModal{{ user.id }}"
+                            >
+
+                                <i class="fas fa-trash"></i>
+
+                            </button>
+
+                        </td>
+
+
+                    </tr>
+
+
+
+                    <!-- =========================================
+                         DELETE MODAL
+                    ========================================== -->
+
+                    <div
+                        class="modal fade"
+                        id="deleteUserModal{{ user.id }}"
+                        tabindex="-1"
+                        aria-hidden="true"
+                    >
+
+                        <div
+                            class="
+                                modal-dialog
+                                modal-dialog-centered
+                            "
+                        >
+
+                            <div class="modal-content">
+
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'user_delete' user.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+
+                                    <div class="modal-header">
+
+                                        <h5 class="modal-title">
+                                            Delete User
+                                        </h5>
+
+
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                        ></button>
+
+                                    </div>
+
+
+
+                                    <div class="modal-body">
+
+                                        <p>
+
+                                            Are you sure you want
+                                            to delete
+
+                                            <strong>
+
+                                                {% if user.full_name %}
+
+                                                    {{ user.full_name }}
+
+                                                {% else %}
+
+                                                    {{ user.phone }}
+
+                                                {% endif %}
+
+                                            </strong>?
+
+                                        </p>
+
+
+                                        {% if user.booking_count %}
+
+                                            <div
+                                                class="
+                                                    alert
+                                                    alert-warning
+                                                "
+                                            >
+
+                                                <i class="fas fa-triangle-exclamation"></i>
+
+                                                This user has
+
+                                                <strong>
+                                                    {{ user.booking_count }}
+                                                </strong>
+
+                                                booking{{ user.booking_count|pluralize }}.
+
+                                                Their booking history
+                                                will remain, but the
+                                                user profile link will
+                                                be removed.
+
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        <div
+                                            class="
+                                                alert
+                                                alert-danger
+                                                mb-0
+                                            "
+                                        >
+
+                                            This user profile
+                                            deletion cannot be undone.
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="modal-footer">
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                        >
+                                            Cancel
+                                        </button>
+
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger"
+                                        >
+
+                                            <i class="fas fa-trash"></i>
+
+                                            Delete User
+
+                                        </button>
+
+                                    </div>
+
+
+                                </form>
+
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
-
 
                 {% empty %}
 
 
-                <tr>
+                    <tr>
 
-                    <td
-                        colspan="5"
-                        class="text-center py-5"
-                    >
+                        <td
+                            colspan="8"
+                            class="text-center py-5"
+                        >
 
-                        <div class="empty-users">
+                            <div class="empty-users">
 
-                            <i class="fas fa-users"></i>
+                                <i class="fas fa-users"></i>
 
-                            <h5>
-                                No Users Found
-                            </h5>
 
-                            {% if search %}
+                                <h5>
+                                    No Users Found
+                                </h5>
 
-                                <p>
-                                    No users match your search.
-                                </p>
 
-                                <a
-                                    href="{% url 'user_list' %}"
-                                    class="btn btn-primary btn-sm"
-                                >
-                                    Clear Search
-                                </a>
+                                {% if search or selected_verification %}
 
-                            {% else %}
+                                    <p>
+                                        No users match the selected filters.
+                                    </p>
 
-                                <p>
-                                    No users have registered yet.
-                                </p>
 
-                            {% endif %}
+                                    <a
+                                        href="{% url 'user_list' %}"
+                                        class="
+                                            btn
+                                            btn-primary
+                                            btn-sm
+                                        "
+                                    >
+                                        Clear Filters
+                                    </a>
 
-                        </div>
+                                {% else %}
 
-                    </td>
+                                    <p>
+                                        No registered users yet.
+                                    </p>
 
-                </tr>
+                                {% endif %}
+
+
+                            </div>
+
+                        </td>
+
+                    </tr>
 
 
                 {% endfor %}
@@ -421,112 +697,84 @@ Users List | FlyingFox Admin
 
 
 
-    <!-- =========================
+    <!-- =================================================
          PAGINATION
-    ========================== -->
+    ================================================== -->
 
     {% if users.has_other_pages %}
 
+        <nav class="mt-4">
 
-    <nav
-        class="mt-4"
-        aria-label="Users pagination"
-    >
-
-        <ul
-            class="
-                pagination
-                justify-content-center
-            "
-        >
+            <ul
+                class="
+                    pagination
+                    justify-content-center
+                "
+            >
 
 
-            {% if users.has_previous %}
-
-            <li class="page-item">
-
-                <a
-                    class="page-link"
-                    href="?page={{ users.previous_page_number }}{% if search %}&search={{ search }}{% endif %}"
-                >
-
-                    &laquo;
-
-                </a>
-
-            </li>
-
-            {% endif %}
-
-
-
-            {% for i in users.paginator.page_range %}
-
-
-                {% if users.number == i %}
-
-                    <li
-                        class="
-                            page-item
-                            active
-                        "
-                    >
-
-                        <span class="page-link">
-
-                            {{ i }}
-
-                        </span>
-
-                    </li>
-
-
-                {% else %}
-
+                {% if users.has_previous %}
 
                     <li class="page-item">
 
                         <a
                             class="page-link"
-                            href="?page={{ i }}{% if search %}&search={{ search }}{% endif %}"
+                            href="?page={{ users.previous_page_number }}&search={{ search|urlencode }}&verification={{ selected_verification|urlencode }}"
+                        >
+                            &laquo;
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+
+
+                {% for number in users.paginator.page_range %}
+
+                    <li
+                        class="
+                            page-item
+                            {% if users.number == number %}
+                                active
+                            {% endif %}
+                        "
+                    >
+
+                        <a
+                            class="page-link"
+                            href="?page={{ number }}&search={{ search|urlencode }}&verification={{ selected_verification|urlencode }}"
                         >
 
-                            {{ i }}
+                            {{ number }}
 
                         </a>
 
                     </li>
 
+                {% endfor %}
+
+
+
+                {% if users.has_next %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ users.next_page_number }}&search={{ search|urlencode }}&verification={{ selected_verification|urlencode }}"
+                        >
+                            &raquo;
+                        </a>
+
+                    </li>
 
                 {% endif %}
 
 
-            {% endfor %}
+            </ul>
 
-
-
-            {% if users.has_next %}
-
-            <li class="page-item">
-
-                <a
-                    class="page-link"
-                    href="?page={{ users.next_page_number }}{% if search %}&search={{ search }}{% endif %}"
-                >
-
-                    &raquo;
-
-                </a>
-
-            </li>
-
-            {% endif %}
-
-
-        </ul>
-
-    </nav>
-
+        </nav>
 
     {% endif %}
 
@@ -541,79 +789,36 @@ Users List | FlyingFox Admin
 
 <style>
 
-/* =========================================
-   TOOLBAR
-========================================= */
+/* =========================================================
+   FILTER
+========================================================= */
 
-.user-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+.user-filter {
+
+    display: grid;
+
+    max-width: 900px;
+
+    grid-template-columns:
+        minmax(280px, 1fr)
+        190px
+        auto
+        auto;
+
+    gap: 10px;
 }
 
 
-.user-search-form {
-    display: flex;
-    align-items: center;
 
-    gap: 8px;
-
-    width: 100%;
-    max-width: 470px;
-}
-
-
-.search-box {
-    position: relative;
-
-    flex: 1;
-}
-
-
-.search-box input {
-    padding-right: 45px;
-
-    min-height: 42px;
-}
-
-
-.search-btn {
-    position: absolute;
-
-    right: 5px;
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    width: 34px;
-    height: 34px;
-
-    border: none;
-
-    border-radius: 6px;
-
-    background: #f97316;
-
-    color: #fff;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-}
-
-
-.search-btn:hover {
-    background: #ea580c;
-}
-
-
-/* =========================================
-   USER CELL
-========================================= */
+/* =========================================================
+   USER
+========================================================= */
 
 .user-info-cell {
+
     display: flex;
+
+    min-width: 190px;
 
     align-items: center;
 
@@ -622,114 +827,325 @@ Users List | FlyingFox Admin
 
 
 .user-avatar-list {
-    width: 38px;
-    height: 38px;
+
+    display: flex;
+
+    width: 42px;
+    height: 42px;
 
     flex-shrink: 0;
 
-    border-radius: 50%;
+    border:
+        1px solid
+        #f3c7c3;
 
-    display: flex;
+    border-radius: 50%;
 
     align-items: center;
     justify-content: center;
 
-    background: #fff7ed;
+    color: #c31103;
 
-    color: #f97316;
+    background: #fff0ee;
 
     font-size: 14px;
-    font-weight: 700;
 
-    border: 1px solid #fed7aa;
+    font-weight: 800;
 }
 
 
 .user-full-name {
+
+    display: block;
+
     color: #1f2937;
 
     font-size: 13px;
+
+    font-weight: 800;
 }
 
 
 .user-id {
+
     margin-top: 2px;
 
     color: #9ca3af;
 
-    font-size: 10px;
+    font-size: 9px;
 }
 
 
-.user-email-link,
-.user-phone-link {
-    color: #4b5563;
+.user-gender {
+
+    margin-top: 2px;
+
+    color: #6b7280;
+
+    font-size: 9px;
+}
+
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact-link {
+
+    display: block;
+
+    color: #374151;
 
     text-decoration: none;
+
+    font-size: 11px;
 }
 
 
-.user-email-link:hover,
-.user-phone-link:hover {
-    color: #f97316;
+.contact-link + .contact-link {
+
+    margin-top: 5px;
 }
 
 
-/* =========================================
+.contact-link i {
+
+    width: 16px;
+
+    color: #c31103;
+}
+
+
+.contact-link:hover {
+
+    color: #c31103;
+}
+
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+.location-text {
+
+    color: #1f2937;
+
+    font-size: 12px;
+}
+
+
+
+/* =========================================================
+   BOOKING COUNT
+========================================================= */
+
+.booking-count {
+
+    display: block;
+
+    color: #c31103;
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+
+.booking-count + small {
+
+    color: #8b929b;
+
+    font-size: 9px;
+}
+
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-badge {
+
+    display: inline-flex;
+
+    min-width: 100px;
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 20px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.status-badge.verified {
+
+    color: #15723a;
+
+    background: #eaf8ef;
+}
+
+
+.status-badge.unverified {
+
+    color: #9e1c14;
+
+    background: #fff0ee;
+}
+
+
+
+/* =========================================================
+   UPDATE PREFERENCES
+========================================================= */
+
+.update-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 5px;
+}
+
+
+.update-chip {
+
+    display: inline-flex;
+
+    padding:
+        4px
+        8px;
+
+    border-radius: 15px;
+
+    align-items: center;
+
+    gap: 5px;
+
+    color: #9ca3af;
+
+    background: #f3f4f6;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.update-chip.enabled {
+
+    color: #14733a;
+
+    background: #eaf8ef;
+}
+
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+.registered-date {
+
+    white-space: nowrap;
+
+    color: #374151;
+
+    font-size: 11px;
+}
+
+
+
+/* =========================================================
    EMPTY
-========================================= */
+========================================================= */
 
 .empty-users {
-    padding: 25px 10px;
+
+    padding:
+        28px
+        10px;
 }
 
 
 .empty-users > i {
+
     margin-bottom: 12px;
 
-    color: #f97316;
+    color: #c31103;
 
     font-size: 38px;
 }
 
 
 .empty-users h5 {
+
     margin-bottom: 5px;
 
-    font-weight: 700;
+    color: #1f2937;
+
+    font-weight: 800;
 }
 
 
 .empty-users p {
+
     color: #9ca3af;
 
     font-size: 12px;
 }
 
 
-/* =========================================
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.custom-table-container {
+
+    overflow-x: auto;
+}
+
+
+.table {
+
+    min-width: 1150px;
+}
+
+
+.table th {
+
+    white-space: nowrap;
+}
+
+
+
+/* =========================================================
    MOBILE
-========================================= */
+========================================================= */
 
-@media (max-width: 767px) {
+@media (
+    max-width: 767px
+) {
 
-    .user-toolbar {
-        justify-content: flex-start;
-    }
+    .user-filter {
 
-
-    .user-search-form {
-        max-width: 100%;
-    }
-
-
-    .custom-table-container {
-        overflow-x: auto;
-    }
-
-
-    .table {
-        min-width: 800px;
+        grid-template-columns:
+            1fr;
     }
 
 }

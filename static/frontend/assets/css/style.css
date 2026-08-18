@@ -30381,3 +30381,112 @@ strong i {
 
 }
 /* bug fix css end  */
+
+
+
+
+
+/* side bar css start */
+/* =========================================================
+   FLYING FOX - OFFCANVAS SIDEBAR STACKING FIX
+========================================================= */
+
+/*
+Bootstrap sidebar and backdrop must always be above navbar.
+*/
+
+#sidebarPopup.offcanvas {
+    z-index: 1000001 !important;
+}
+
+.offcanvas-backdrop {
+    z-index: 1000000 !important;
+}
+
+
+/*
+Keep the sidebar completely independent
+from navbar stacking.
+*/
+
+.sidebar-popup {
+    position: fixed !important;
+
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    height: 100vh !important;
+
+    z-index: 1000001 !important;
+}
+
+/* side bar css end */
+
+
+/* preloading issue start */
+
+/* =========================================================
+   FINAL PRELOADER LAYER FIX
+========================================================= */
+
+.preloader {
+    position: fixed !important;
+
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+
+    z-index: 2147483647 !important;
+}
+/* preloading issue end  */
+
+
+
+
+
+
+
+
+/*  */
+/* =========================================================
+   FIX MOBILE NAV OFFCANVAS Z-INDEX
+========================================================= */
+
+/*
+ * The Bootstrap mobile offcanvas is inside .header-2.
+ * .h-abs normally has z-index: 3, which causes Bootstrap's
+ * backdrop to appear above the menu.
+ *
+ * Raise the HEADER stacking context only while the
+ * mobile offcanvas is open.
+ */
+
+body:has(#offcanvasNavbar.show) .header-2,
+body:has(#offcanvasNavbar.showing) .header-2 {
+    z-index: 1060 !important;
+}
+
+
+/* Mobile navigation drawer */
+
+#offcanvasNavbar {
+    z-index: 1065 !important;
+    background: #ffffff;
+}
+
+
+/* Bootstrap overlay stays behind the drawer */
+
+.offcanvas-backdrop {
+    z-index: 1050 !important;
+}
+/*  */

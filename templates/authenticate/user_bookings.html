@@ -1,0 +1,510 @@
+{% extends "authenticate/account_base.html" %}
+
+
+{% block title %}
+My Bookings | Flying Fox
+{% endblock %}
+
+
+{% block account_content %}
+
+
+<section class="ff-account-card">
+
+
+    <div class="ff-account-content-header">
+
+        <span>
+            My Adventures
+        </span>
+
+        <h2>
+            My Bookings
+        </h2>
+
+        <p>
+            View your upcoming and previous Flying Fox bookings.
+        </p>
+
+    </div>
+
+
+    <div class="ff-account-card-body">
+
+
+        {% if bookings %}
+
+
+            <div class="ff-bookings-list">
+
+
+                {% for booking in bookings %}
+
+
+                    <article class="ff-user-booking-card">
+
+
+                        <div class="ff-user-booking-top">
+
+
+                            <div>
+
+                                <small>
+                                    Booking ID
+                                </small>
+
+                                <strong>
+                                    #{{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+                                </strong>
+
+                            </div>
+
+
+                            <span class="
+                                ff-user-booking-status
+                                {{ booking.status }}
+                            ">
+
+                                {{ booking.get_status_display }}
+
+                            </span>
+
+
+                        </div>
+
+
+
+                        <div class="ff-user-booking-info">
+
+
+                            <div>
+
+                                <span>
+                                    Ride
+                                </span>
+
+                                <strong>
+                                    {{ booking.ride.name }}
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Visit Date
+                                </span>
+
+                                <strong>
+                                    {{ booking.booking_date|date:"d M Y" }}
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Time Slot
+                                </span>
+
+                                <strong>
+                                    {{ booking.time_slot }}
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Riders
+                                </span>
+
+                                <strong>
+                                    {{ booking.quantity }}
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Total
+                                </span>
+
+                                <strong class="ff-booking-price">
+                                    ₹{{ booking.total_amount }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="ff-user-booking-actions">
+
+
+                            {% if booking.ticket %}
+
+                                <a
+                                    href="{% url 'download_ticket' booking.ticket.ticket_id %}"
+                                >
+
+                                    <i class="fas fa-download"></i>
+
+                                    Download Ticket
+
+                                </a>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="ff-account-empty">
+
+                <i class="fas fa-ticket-alt"></i>
+
+                <h3>
+                    No Bookings Yet
+                </h3>
+
+                <p>
+                    Once you book your Flying Fox adventure,
+                    your booking information will appear here.
+                </p>
+
+                <a href="{% url 'bookings' %}">
+                    Book Your Adventure
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block account_extra_css %}
+
+<style>
+
+.ff-bookings-list {
+
+    display:
+        grid;
+
+    gap:
+        16px;
+}
+
+
+.ff-user-booking-card {
+
+    padding:
+        20px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius:
+        18px;
+
+    background:
+        #ffffff;
+
+    transition:
+        .2s ease;
+}
+
+
+.ff-user-booking-card:hover {
+
+    border-color:
+        #efbbb6;
+
+    box-shadow:
+        0 12px 28px
+        rgba(
+            25,
+            39,
+            54,
+            .07
+        );
+}
+
+
+.ff-user-booking-top {
+
+    display:
+        flex;
+
+    padding-bottom:
+        15px;
+
+    border-bottom:
+        1px solid
+        #eef0f2;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+}
+
+
+.ff-user-booking-top small {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        9px;
+}
+
+
+.ff-user-booking-top strong {
+
+    font-size:
+        14px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-user-booking-status {
+
+    display:
+        inline-flex;
+
+    min-height:
+        28px;
+
+    padding:
+        0
+        11px;
+
+    border-radius:
+        18px;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        #8a6700;
+
+    background:
+        #fff5cc;
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-user-booking-status.confirmed,
+.ff-user-booking-status.checked_in {
+
+    color:
+        #107532;
+
+    background:
+        #eaf8ee;
+}
+
+
+.ff-user-booking-status.cancelled,
+.ff-user-booking-status.payment_failed {
+
+    color:
+        #b0180e;
+
+    background:
+        #ffedeb;
+}
+
+
+.ff-user-booking-info {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        15px;
+
+    padding:
+        18px
+        0;
+}
+
+
+.ff-user-booking-info span {
+
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        9px;
+}
+
+
+.ff-user-booking-info strong {
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-user-booking-info
+.ff-booking-price {
+
+    color:
+        var(--ff-red);
+
+    font-size:
+        14px;
+}
+
+
+.ff-user-booking-actions {
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+}
+
+
+.ff-user-booking-actions a {
+
+    display:
+        inline-flex;
+
+    min-height:
+        38px;
+
+    padding:
+        0
+        15px;
+
+    border-radius:
+        20px;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        #ffffff;
+
+    background:
+        var(--ff-red);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+}
+
+
+@media (max-width: 800px) {
+
+    .ff-user-booking-info {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .ff-user-booking-info {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .ff-user-booking-actions a {
+
+        width:
+            100%;
+
+        justify-content:
+            center;
+    }
+
+}
+
+</style>
+
+{% endblock %}

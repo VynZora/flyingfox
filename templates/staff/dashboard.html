@@ -1,0 +1,2168 @@
+{% extends "staff/staff_base.html" %}
+
+
+{% block title %}
+Staff Dashboard | Flying Fox
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="dashboard-header">
+
+
+    <div>
+
+        <h1>
+            Dashboard
+        </h1>
+
+        <p>
+            Welcome back,
+            {{ request.user.username }}!
+        </p>
+
+    </div>
+
+
+
+    <div class="dashboard-actions">
+
+
+        <a
+            href="{% url 'ticket_scanner' %}"
+            class="verify-ticket-btn"
+        >
+
+            <i class="fas fa-qrcode"></i>
+
+            Verify Ticket
+
+        </a>
+
+
+
+        <form method="GET">
+
+            <div class="dashboard-date">
+
+                <i class="fas fa-calendar"></i>
+
+                <input
+                    type="date"
+                    name="date"
+                    value="{{ selected_date|date:'Y-m-d' }}"
+                >
+
+                <button type="submit">
+
+                    View
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     STATS
+====================================================== -->
+
+<div class="staff-stats">
+
+
+    <div class="staff-stat-card">
+
+        <div class="stat-icon blue">
+
+            <i class="fas fa-calendar-day"></i>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                {{ today_booking_count }}
+            </strong>
+
+            <span>
+                Today's Bookings
+            </span>
+
+            <small>
+                {{ today|date:"d M Y" }}
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="staff-stat-card">
+
+        <div class="stat-icon green">
+
+            <i class="fas fa-circle-check"></i>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                {{ verified_today_count }}
+            </strong>
+
+            <span>
+                Verified Tickets
+            </span>
+
+            <small>
+                Today
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="staff-stat-card">
+
+        <div class="stat-icon orange">
+
+            <i class="fas fa-clock"></i>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                {{ pending_today_count }}
+            </strong>
+
+            <span>
+                Pending Check-in
+            </span>
+
+            <small>
+                Today
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="staff-stat-card">
+
+        <div class="stat-icon purple">
+
+            <i class="fas fa-users"></i>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                {{ total_participants }}
+            </strong>
+
+            <span>
+                Total Participants
+            </span>
+
+            <small>
+                Today
+            </small>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<div class="dashboard-grid">
+
+
+    <!-- =================================================
+         LEFT CONTENT
+    ================================================== -->
+
+    <div>
+
+
+        <!-- =============================================
+             TODAY
+        ============================================== -->
+
+        <section
+            class="staff-table-card"
+            id="todayBookings"
+        >
+
+
+            <div class="card-heading">
+
+                <div>
+
+                    <h2>
+                        Today's Bookings
+                    </h2>
+
+                    <p>
+                        Confirmed rides scheduled for today.
+                    </p>
+
+                </div>
+
+
+                <span class="count-pill">
+
+                    {{ today_booking_count }}
+
+                    booking{{ today_booking_count|pluralize }}
+
+                </span>
+
+            </div>
+
+
+
+            <div class="staff-table-scroll">
+
+                <table class="staff-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Booking
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Ride
+                            </th>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Riders
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for booking in today_bookings %}
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+
+                                        {{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong class="customer-name">
+
+                                        {{ booking.customer_name }}
+
+                                    </strong>
+
+                                    <small>
+
+                                        {{ booking.customer_phone }}
+
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+                                    {{ booking.ride.name }}
+                                </td>
+
+
+                                <td>
+                                    {{ booking.time_slot }}
+                                </td>
+
+
+                                <td>
+                                    {{ booking.quantity }}
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        ₹{{ booking.total_amount }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if booking.status == "checked_in" %}
+
+                                        <span class="table-status checked">
+
+                                            Checked In
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="table-status confirmed">
+
+                                            Confirmed
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="empty-row"
+                                >
+
+                                    No confirmed bookings for today.
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =============================================
+             SELECTED DATE
+        ============================================== -->
+
+        <section
+            class="staff-table-card mt-4"
+            id="dateBookings"
+        >
+
+
+            <div class="card-heading">
+
+                <div>
+
+                    <h2>
+                        Bookings for
+                        {{ selected_date|date:"d M Y" }}
+                    </h2>
+
+                    <p>
+                        Select another date from the top of the dashboard.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="staff-table-scroll">
+
+                <table class="staff-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Booking
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Ride
+                            </th>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Riders
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for booking in selected_date_bookings %}
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+
+                                        {{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+                                    {{ booking.customer_name }}
+                                </td>
+
+
+                                <td>
+                                    {{ booking.ride.name }}
+                                </td>
+
+
+                                <td>
+                                    {{ booking.time_slot }}
+                                </td>
+
+
+                                <td>
+                                    {{ booking.quantity }}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="table-status confirmed">
+
+                                        {{ booking.get_status_display }}
+
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="empty-row"
+                                >
+
+                                    No bookings for
+                                    {{ selected_date|date:"d M Y" }}.
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         RIGHT SIDE
+    ================================================== -->
+
+    <aside>
+
+
+        <!-- =============================================
+             VERIFY CARD
+        ============================================== -->
+
+        <div class="quick-verify-card">
+
+
+            <div class="quick-title">
+
+                <i class="fas fa-qrcode"></i>
+
+                <div>
+
+                    <h3>
+                        Verify Ticket
+                    </h3>
+
+                    <p>
+                        Scan QR or enter Ticket ID.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="quick-scan-icon">
+
+                <i class="fas fa-expand"></i>
+
+            </div>
+
+
+            <a
+                href="{% url 'ticket_scanner' %}"
+                class="open-scanner-btn"
+            >
+
+                <i class="fas fa-camera"></i>
+
+                Open QR Scanner
+
+            </a>
+
+
+
+            <div class="quick-divider">
+
+                <span>
+                    OR
+                </span>
+
+            </div>
+
+
+
+            <form
+                method="POST"
+                action="{% url 'verify_ticket_number' %}"
+            >
+
+                {% csrf_token %}
+
+
+                <label>
+                    Enter Ticket ID
+                </label>
+
+
+                <input
+                    type="text"
+                    name="ticket_number"
+                    maxlength="6"
+                    inputmode="numeric"
+                    pattern="[0-9]{6}"
+                    placeholder="Example: 483721"
+                    required
+                >
+
+
+                <button type="submit">
+
+                    <i class="fas fa-check"></i>
+
+                    Verify Ticket
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <!-- =============================================
+             RECENT VERIFIED
+        ============================================== -->
+
+        <div class="recent-card">
+
+
+            <div class="recent-heading">
+
+                <h3>
+                    Recently Verified
+                </h3>
+
+
+                <a
+                    href="{% url 'verified_ticket_list' %}"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+
+            {% for ticket in recent_verified %}
+
+                <div class="recent-ticket">
+
+
+                    <div class="recent-check">
+
+                        <i class="fas fa-check"></i>
+
+                    </div>
+
+
+                    <div class="recent-info">
+
+                        <strong>
+
+                            {{ ticket.ticket_number }}
+
+                        </strong>
+
+                        <span>
+
+                            {{ ticket.booking.customer_name }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="recent-time">
+
+                        {{ ticket.checked_in_at|date:"h:i A" }}
+
+                    </div>
+
+
+                </div>
+
+
+            {% empty %}
+
+                <div class="recent-empty">
+
+                    No tickets verified today.
+
+                </div>
+
+            {% endfor %}
+
+
+
+            <a
+                href="{% url 'verified_ticket_list' %}"
+                class="view-verified-btn"
+            >
+
+                View All Verified Tickets
+
+            </a>
+
+
+        </div>
+
+
+    </aside>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.dashboard-header {
+
+    display: flex;
+
+    margin-bottom: 24px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.dashboard-header h1 {
+
+    margin: 0;
+
+    color: var(--ff-dark);
+
+    font-size: 26px;
+
+    font-weight: 900;
+}
+
+
+.dashboard-header p {
+
+    margin:
+        5px
+        0
+        0;
+
+    font-size: 12px;
+}
+
+
+.dashboard-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.verify-ticket-btn {
+
+    display: inline-flex;
+
+    height: 48px;
+
+    padding:
+        0
+        18px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.verify-ticket-btn:hover {
+
+    color: #ffffff;
+
+    background: var(--ff-red-dark);
+}
+
+
+.dashboard-date {
+
+    display: flex;
+
+    min-height: 48px;
+
+    padding-left: 14px;
+
+    align-items: center;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 10px;
+
+    background: #ffffff;
+}
+
+
+.dashboard-date i {
+
+    color: var(--ff-red);
+}
+
+
+.dashboard-date input {
+
+    width: 145px;
+
+    height: 46px;
+
+    padding:
+        0
+        10px;
+
+    border: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    font-size: 11px;
+}
+
+
+.dashboard-date button {
+
+    height: 36px;
+
+    margin-right: 5px;
+
+    padding:
+        0
+        13px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    background: var(--ff-dark);
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.staff-stats {
+
+    display: grid;
+
+    margin-bottom: 24px;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 15px;
+}
+
+
+.staff-stat-card {
+
+    display: flex;
+
+    min-height: 116px;
+
+    padding: 20px;
+
+    align-items: center;
+
+    gap: 16px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0
+        8px
+        25px
+        rgba(
+            23,
+            39,
+            56,
+            .04
+        );
+}
+
+
+.stat-icon {
+
+    display: flex;
+
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    font-size: 20px;
+}
+
+
+.stat-icon.blue {
+
+    color: #2868db;
+
+    background: #eaf1ff;
+}
+
+
+.stat-icon.green {
+
+    color: #228f4c;
+
+    background: #eaf8ef;
+}
+
+
+.stat-icon.orange {
+
+    color: #d68b10;
+
+    background: #fff3d7;
+}
+
+
+.stat-icon.purple {
+
+    color: #8158db;
+
+    background: #f1ebff;
+}
+
+
+.staff-stat-card strong {
+
+    display: block;
+
+    color: var(--ff-dark);
+
+    font-size: 23px;
+
+    font-weight: 900;
+}
+
+
+.staff-stat-card span {
+
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--ff-dark);
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.staff-stat-card small {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #9aa1a9;
+
+    font-size: 9px;
+}
+
+
+
+/* =========================================================
+   DASHBOARD GRID
+========================================================= */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1fr
+        )
+        330px;
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.staff-table-card {
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+
+.card-heading {
+
+    display: flex;
+
+    padding:
+        18px
+        20px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    border-bottom:
+        1px solid
+        var(--ff-border);
+}
+
+
+.card-heading h2 {
+
+    margin: 0;
+
+    color: var(--ff-dark);
+
+    font-size: 15px;
+
+    font-weight: 900;
+}
+
+
+.card-heading p {
+
+    margin:
+        4px
+        0
+        0;
+
+    font-size: 10px;
+}
+
+
+.count-pill {
+
+    padding:
+        6px
+        10px;
+
+    border-radius: 20px;
+
+    color: var(--ff-red);
+
+    background: #fff0ee;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+.staff-table-scroll {
+
+    overflow-x: auto;
+}
+
+
+.staff-table {
+
+    width: 100%;
+
+    min-width: 760px;
+
+    border-collapse: collapse;
+}
+
+
+.staff-table th {
+
+    padding:
+        12px
+        16px;
+
+    color: #7b8490;
+
+    background: #fafbfc;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    text-align: left;
+
+    white-space: nowrap;
+}
+
+
+.staff-table td {
+
+    padding:
+        14px
+        16px;
+
+    border-top:
+        1px solid
+        #f0f2f4;
+
+    color: #4c5662;
+
+    font-size: 10px;
+
+    vertical-align: middle;
+}
+
+
+.customer-name {
+
+    display: block;
+
+    color: var(--ff-dark);
+}
+
+
+.staff-table td small {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #98a0a9;
+
+    font-size: 8px;
+}
+
+
+.table-status {
+
+    display: inline-flex;
+
+    padding:
+        5px
+        9px;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+.table-status.confirmed {
+
+    color: #248649;
+
+    background: #eaf8ef;
+}
+
+
+.table-status.checked {
+
+    color: #ffffff;
+
+    background: #248649;
+}
+
+
+.empty-row {
+
+    padding: 35px !important;
+
+    text-align: center;
+
+    color: #9ba2aa !important;
+}
+
+
+
+/* =========================================================
+   QUICK VERIFY
+========================================================= */
+
+.quick-verify-card,
+.recent-card {
+
+    margin-bottom: 20px;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+
+.quick-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.quick-title > i {
+
+    display: flex;
+
+    width: 38px;
+    height: 38px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    color: var(--ff-red);
+
+    background: #fff0ee;
+}
+
+
+.quick-title h3,
+.recent-heading h3 {
+
+    margin: 0;
+
+    color: var(--ff-dark);
+
+    font-size: 14px;
+
+    font-weight: 900;
+}
+
+
+.quick-title p {
+
+    margin:
+        3px
+        0
+        0;
+
+    font-size: 9px;
+}
+
+
+.quick-scan-icon {
+
+    display: flex;
+
+    height: 120px;
+
+    margin:
+        18px
+        0
+        12px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: var(--ff-red);
+
+    background: #f8f9fb;
+
+    font-size: 28px;
+}
+
+
+.open-scanner-btn {
+
+    display: flex;
+
+    min-height: 43px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border-radius: 9px;
+
+    color: #ffffff;
+
+    background: var(--ff-dark);
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.open-scanner-btn:hover {
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+}
+
+
+.quick-divider {
+
+    position: relative;
+
+    margin:
+        18px
+        0;
+
+    text-align: center;
+}
+
+
+.quick-divider::before {
+
+    position: absolute;
+
+    top: 50%;
+    left: 0;
+
+    width: 100%;
+    height: 1px;
+
+    content: "";
+
+    background: var(--ff-border);
+}
+
+
+.quick-divider span {
+
+    position: relative;
+
+    padding:
+        0
+        10px;
+
+    background: #ffffff;
+
+    font-size: 8px;
+}
+
+
+.quick-verify-card label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--ff-dark);
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+.quick-verify-card input {
+
+    width: 100%;
+
+    height: 44px;
+
+    padding:
+        0
+        12px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 11px;
+}
+
+
+.quick-verify-card form button {
+
+    width: 100%;
+
+    height: 43px;
+
+    margin-top: 10px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+
+/* =========================================================
+   RECENT VERIFIED
+========================================================= */
+
+.recent-heading {
+
+    display: flex;
+
+    margin-bottom: 12px;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.recent-heading a {
+
+    color: var(--ff-red);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+
+.recent-ticket {
+
+    display: flex;
+
+    min-height: 58px;
+
+    padding:
+        10px
+        0;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border-bottom:
+        1px solid
+        #f0f2f4;
+}
+
+
+.recent-check {
+
+    display: flex;
+
+    width: 24px;
+    height: 24px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: #47b864;
+
+    font-size: 9px;
+}
+
+
+.recent-info {
+
+    flex: 1;
+}
+
+
+.recent-info strong {
+
+    display: block;
+
+    color: var(--ff-dark);
+
+    font-size: 10px;
+}
+
+
+.recent-info span {
+
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 8px;
+}
+
+
+.recent-time {
+
+    color: #76808b;
+
+    font-size: 8px;
+}
+
+
+.recent-empty {
+
+    padding:
+        25px
+        5px;
+
+    text-align: center;
+
+    font-size: 10px;
+}
+
+
+.view-verified-btn {
+
+    display: block;
+
+    margin-top: 14px;
+
+    padding: 9px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 8px;
+
+    color: var(--ff-red);
+
+    text-align: center;
+
+    text-decoration: none;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (
+    max-width: 1200px
+) {
+
+    .staff-stats {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+
+    .dashboard-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .dashboard-grid aside {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+        gap: 20px;
+    }
+
+}
+
+
+@media (
+    max-width: 767px
+) {
+
+    .dashboard-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .dashboard-actions {
+
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .verify-ticket-btn {
+
+        width: 100%;
+    }
+
+
+    .dashboard-date {
+
+        width: 100%;
+    }
+
+
+    .dashboard-date input {
+
+        flex: 1;
+
+        width: auto;
+    }
+
+
+    .staff-stats {
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+        gap: 10px;
+    }
+
+
+    .staff-stat-card {
+
+        min-height: 105px;
+
+        padding: 14px;
+
+        gap: 10px;
+    }
+
+
+    .stat-icon {
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 16px;
+    }
+
+
+    .staff-stat-card strong {
+
+        font-size: 19px;
+    }
+
+
+    .dashboard-grid aside {
+
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (
+    max-width: 480px
+) {
+
+    .staff-stats {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .staff-stat-card {
+
+        min-height: 90px;
+    }
+
+}
+
+
+
+
+
+/* =========================================================
+   MOBILE RESPONSIVE FIX
+========================================================= */
+
+/* Prevent grid children from forcing page wider */
+.dashboard-grid,
+.dashboard-grid > div,
+.dashboard-grid > aside,
+.staff-table-card,
+.quick-verify-card,
+.recent-card {
+    min-width: 0;
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   TABLE SCROLL FIX
+========================================================= */
+
+.staff-table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* Keep desktop table structure */
+.staff-table {
+    width: 100%;
+}
+
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    /* -----------------------------------------
+       PAGE HEADER
+    ------------------------------------------ */
+
+    .dashboard-header {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+
+    .dashboard-header > div:first-child {
+        width: 100%;
+    }
+
+
+    .dashboard-header h1 {
+        font-size: 22px;
+    }
+
+
+    /* -----------------------------------------
+       HEADER ACTIONS
+    ------------------------------------------ */
+
+    .dashboard-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+
+    .dashboard-actions form {
+        width: 100%;
+    }
+
+
+    .verify-ticket-btn {
+        width: 100%;
+        height: 46px;
+    }
+
+
+    .dashboard-date {
+        width: 100%;
+        padding-left: 12px;
+    }
+
+
+    .dashboard-date input {
+        flex: 1;
+        width: 1px;
+        min-width: 0;
+    }
+
+
+    .dashboard-date button {
+        flex-shrink: 0;
+    }
+
+
+    /* -----------------------------------------
+       DASHBOARD GRID
+    ------------------------------------------ */
+
+    .dashboard-grid {
+        display: block;
+        width: 100%;
+    }
+
+
+    .dashboard-grid > div,
+    .dashboard-grid > aside {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+    .dashboard-grid aside {
+        display: block;
+        margin-top: 20px;
+    }
+
+
+    /* -----------------------------------------
+       TABLE CARDS
+    ------------------------------------------ */
+
+    .staff-table-card {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+
+    .card-heading {
+        padding: 16px;
+        align-items: flex-start;
+    }
+
+
+    .card-heading h2 {
+        font-size: 14px;
+    }
+
+
+    .card-heading p {
+        line-height: 1.5;
+    }
+
+
+    .count-pill {
+        flex-shrink: 0;
+    }
+
+
+    /* Table itself can remain wide.
+       ONLY this container scrolls. */
+
+    .staff-table-scroll {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    .staff-table {
+        width: 700px;
+        min-width: 700px;
+    }
+
+
+    /* -----------------------------------------
+       VERIFY CARD
+    ------------------------------------------ */
+
+    .quick-verify-card {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 18px;
+        padding: 18px;
+        overflow: hidden;
+    }
+
+
+    .quick-title {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+    .quick-title > div {
+        min-width: 0;
+    }
+
+
+    .quick-scan-icon {
+        width: 100%;
+        height: 105px;
+    }
+
+
+    .open-scanner-btn {
+        width: 100%;
+    }
+
+
+    .quick-verify-card form {
+        width: 100%;
+    }
+
+
+    .quick-verify-card input {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+    }
+
+
+    .quick-verify-card form button {
+        width: 100%;
+        max-width: 100%;
+    }
+
+
+    /* -----------------------------------------
+       RECENT VERIFIED
+    ------------------------------------------ */
+
+    .recent-card {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 18px;
+        padding: 18px;
+        overflow: hidden;
+    }
+
+
+    .recent-ticket {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+    .recent-info {
+        min-width: 0;
+    }
+
+
+    .recent-info strong,
+    .recent-info span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    .recent-time {
+        flex-shrink: 0;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES — iPhone SE etc.
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .dashboard-header {
+        margin-bottom: 18px;
+    }
+
+
+    /* -----------------------------------------
+       STATS
+    ------------------------------------------ */
+
+    .staff-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+
+    .staff-stat-card {
+        width: 100%;
+        min-height: 86px;
+        padding: 14px;
+    }
+
+
+    /* -----------------------------------------
+       TABLE CARD HEADINGS
+    ------------------------------------------ */
+
+    .card-heading {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+
+    .count-pill {
+        align-self: flex-start;
+    }
+
+
+    /* -----------------------------------------
+       TABLE
+    ------------------------------------------ */
+
+    .staff-table {
+        width: 650px;
+        min-width: 650px;
+    }
+
+
+    .staff-table th {
+        padding:
+            11px
+            13px;
+    }
+
+
+    .staff-table td {
+        padding:
+            13px
+            13px;
+    }
+
+
+    /* -----------------------------------------
+       VERIFY
+    ------------------------------------------ */
+
+    .quick-verify-card,
+    .recent-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+
+    .quick-scan-icon {
+        height: 95px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

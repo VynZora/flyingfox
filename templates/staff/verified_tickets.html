@@ -1,0 +1,627 @@
+{% extends "staff/staff_base.html" %}
+
+
+{% block title %}
+Verified Tickets | Flying Fox
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="verified-header">
+
+
+    <div>
+
+        <h1>
+            Verified Tickets
+        </h1>
+
+        <p>
+            View tickets that have already been checked in.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'ticket_scanner' %}"
+        class="verify-btn"
+    >
+
+        <i class="fas fa-qrcode"></i>
+
+        Verify Ticket
+
+    </a>
+
+
+</div>
+
+
+
+<form
+    method="GET"
+    class="verified-filter"
+>
+
+
+    <input
+        type="text"
+        name="search"
+        value="{{ search }}"
+        placeholder="Search Ticket ID, customer, phone, ride..."
+    >
+
+
+    <input
+        type="date"
+        name="date"
+        value="{% if selected_date %}{{ selected_date|date:'Y-m-d' }}{% endif %}"
+    >
+
+
+    <button type="submit">
+
+        <i class="fas fa-filter"></i>
+
+        Filter
+
+    </button>
+
+
+    <a
+        href="{% url 'verified_ticket_list' %}"
+    >
+        Clear
+    </a>
+
+
+</form>
+
+
+
+<div class="verified-card">
+
+
+    <div class="verified-table-scroll">
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Ticket ID
+                    </th>
+
+                    <th>
+                        Customer
+                    </th>
+
+                    <th>
+                        Ride
+                    </th>
+
+                    <th>
+                        Visit Date
+                    </th>
+
+                    <th>
+                        Riders
+                    </th>
+
+                    <th>
+                        Checked In At
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for ticket in tickets %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong class="ticket-no">
+
+                                {{ ticket.ticket_number }}
+
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+
+                                {{ ticket.booking.customer_name }}
+
+                            </strong>
+
+                            <small>
+
+                                {{ ticket.booking.customer_phone }}
+
+                            </small>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ticket.booking.ride.name }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ticket.booking.booking_date|date:"d M Y" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ticket.booking.quantity }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ticket.checked_in_at|date:"d M Y" }}
+
+                            <small>
+
+                                {{ ticket.checked_in_at|date:"h:i A" }}
+
+                            </small>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="verified-badge">
+
+                                <i class="fas fa-check"></i>
+
+                                Verified
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty"
+                        >
+                            No verified tickets found.
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+
+{% if tickets.has_other_pages %}
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+
+            {% if tickets.has_previous %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ tickets.previous_page_number }}&search={{ search|urlencode }}{% if selected_date %}&date={{ selected_date|date:'Y-m-d' }}{% endif %}"
+                    >
+                        &laquo;
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+
+
+            {% for number in tickets.paginator.page_range %}
+
+                <li
+                    class="
+                        page-item
+                        {% if tickets.number == number %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <a
+                        class="page-link"
+                        href="?page={{ number }}&search={{ search|urlencode }}{% if selected_date %}&date={{ selected_date|date:'Y-m-d' }}{% endif %}"
+                    >
+
+                        {{ number }}
+
+                    </a>
+
+                </li>
+
+            {% endfor %}
+
+
+
+            {% if tickets.has_next %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ tickets.next_page_number }}&search={{ search|urlencode }}{% if selected_date %}&date={{ selected_date|date:'Y-m-d' }}{% endif %}"
+                    >
+                        &raquo;
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+
+        </ul>
+
+    </nav>
+
+{% endif %}
+
+
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+.verified-header {
+
+    display: flex;
+
+    margin-bottom: 22px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.verified-header h1 {
+
+    margin: 0;
+
+    color: var(--ff-dark);
+
+    font-size: 25px;
+
+    font-weight: 900;
+}
+
+
+.verified-header p {
+
+    margin:
+        5px
+        0
+        0;
+
+    font-size: 11px;
+}
+
+
+.verify-btn {
+
+    display: inline-flex;
+
+    min-height: 45px;
+
+    padding:
+        0
+        17px;
+
+    align-items: center;
+
+    gap: 7px;
+
+    border-radius: 9px;
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.verified-filter {
+
+    display: grid;
+
+    max-width: 850px;
+
+    margin-bottom: 20px;
+
+    grid-template-columns:
+        minmax(
+            260px,
+            1fr
+        )
+        170px
+        auto
+        auto;
+
+    gap: 10px;
+}
+
+
+.verified-filter input {
+
+    height: 44px;
+
+    padding:
+        0
+        12px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 10px;
+
+    background: #ffffff;
+}
+
+
+.verified-filter button,
+.verified-filter a {
+
+    display: flex;
+
+    min-height: 44px;
+
+    padding:
+        0
+        15px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.verified-filter button {
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+}
+
+
+.verified-filter a {
+
+    color: var(--ff-dark);
+
+    background: #e9edf1;
+}
+
+
+.verified-card {
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+
+.verified-table-scroll {
+
+    overflow-x: auto;
+}
+
+
+.verified-card table {
+
+    width: 100%;
+
+    min-width: 850px;
+
+    border-collapse: collapse;
+}
+
+
+.verified-card th {
+
+    padding:
+        13px
+        16px;
+
+    background: #fafbfc;
+
+    color: #727c88;
+
+    font-size: 9px;
+
+    text-align: left;
+}
+
+
+.verified-card td {
+
+    padding:
+        15px
+        16px;
+
+    border-top:
+        1px solid
+        #eff1f3;
+
+    color: #4d5660;
+
+    font-size: 10px;
+}
+
+
+.verified-card td strong {
+
+    color: var(--ff-dark);
+}
+
+
+.verified-card td small {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #929aa3;
+
+    font-size: 8px;
+}
+
+
+.ticket-no {
+
+    color: var(--ff-red) !important;
+
+    font-size: 12px;
+}
+
+
+.verified-badge {
+
+    display: inline-flex;
+
+    padding:
+        5px
+        9px;
+
+    align-items: center;
+
+    gap: 5px;
+
+    border-radius: 20px;
+
+    color: #218548;
+
+    background: #eaf8ef;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+.empty {
+
+    padding: 40px !important;
+
+    text-align: center;
+}
+
+
+@media (
+    max-width: 767px
+) {
+
+    .verified-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .verify-btn {
+
+        width: 100%;
+
+        justify-content: center;
+    }
+
+
+    .verified-filter {
+
+        grid-template-columns:
+            1fr;
+
+        max-width: none;
+    }
+
+}
+
+</style>
+
+{% endblock %}
