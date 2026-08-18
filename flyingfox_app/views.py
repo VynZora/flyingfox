@@ -10895,11 +10895,12 @@ def coming_soon(request):
     return render(request, "frontend/coming-soon.html")
 
 
-def page_404(request):
-    return render(request, "frontend/404.html")
-
-
-
+def page_404(request, exception=None):
+    return render(
+        request,
+        "frontend/404.html",
+        status=404
+    )
 
 
 

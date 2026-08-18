@@ -1271,13 +1271,13 @@
 
     <ul class="submenu">
 
-        <li>
+        {% comment %} <li>
             <a
                 href="{% url 'chatbot_rule_list' %}"
                 class="{% if request.resolver_match.url_name == 'chatbot_rule_list' %}active{% endif %}">
                 Chatbot Rules
             </a>
-        </li>
+        </li> {% endcomment %}
 
        <li>
     <a

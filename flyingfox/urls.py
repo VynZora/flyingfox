@@ -27,5 +27,7 @@ urlpatterns = [
     path("", include("flyingfox_app.urls")),
 ]
 
+handler404 = "flyingfox_app.views.page_404"
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

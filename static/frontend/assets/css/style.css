@@ -30550,3 +30550,51 @@ body:has(#offcanvasNavbar.showing) .header-2 {
 }
 
 /* footer terms and condition css end  */
+
+
+
+/* ==========================================
+   NAVBAR LOGO SIZE
+========================================== */
+
+.main-navigation .navbar .navbar-brand img {
+    width: 160px !important;
+    height: auto !important;
+}
+
+.main-navigation .navbar.fixed-top .navbar-brand img {
+    width: 160px !important;
+    height: auto !important;
+}
+
+
+
+
+/* =========================================================
+   FOOTER LOGO SIZE
+========================================================= */
+
+.footer-logo {
+    display: inline-block;
+}
+
+.footer-logo img {
+    width: 190px !important;
+    max-width: none !important;
+    height: auto !important;
+    object-fit: contain;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+    .footer-logo img {
+        width: 170px !important;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .footer-logo img {
+        width: 150px !important;
+    }
+}
