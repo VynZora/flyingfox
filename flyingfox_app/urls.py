@@ -230,17 +230,11 @@ path(
     name="booking_detail"
 ),
 
-path(
-    "dashboard/bookings/<int:pk>/edit/",
-    views.booking_update,
-    name="booking_update"
-),
-
-path(
-    "dashboard/bookings/<int:pk>/status/",
-    views.booking_status_update,
-    name="booking_status_update"
-),
+# path(
+#     "dashboard/bookings/<int:pk>/edit/",
+#     views.booking_update,
+#     name="booking_update"
+# ),
 
 path(
     "dashboard/bookings/<int:pk>/delete/",
@@ -341,6 +335,14 @@ path(
     views.user_bookings,
     name="user_bookings",
 ),
+
+
+path(
+    "account/bookings/<uuid:booking_id>/refund/",
+    views.booking_refund_request,
+    name="booking_refund_request",
+),
+
 
 path(
     "account/tickets/",
@@ -687,29 +689,29 @@ path("dashboard/offers/<slug:slug>/delete/", views.offer_delete, name="offer_del
 
 # participent crud ulr 
 
-path(
-    "dashboard/participant-weight-ranges/",
-    views.participant_weight_range_list,
-    name="participant_weight_range_list"
-),
+# path(
+#     "dashboard/participant-weight-ranges/",
+#     views.participant_weight_range_list,
+#     name="participant_weight_range_list"
+# ),
 
-path(
-    "dashboard/participant-weight-ranges/add/",
-    views.participant_weight_range_create,
-    name="participant_weight_range_create"
-),
+# path(
+#     "dashboard/participant-weight-ranges/add/",
+#     views.participant_weight_range_create,
+#     name="participant_weight_range_create"
+# ),
 
-path(
-    "dashboard/participant-weight-ranges/<int:pk>/edit/",
-    views.participant_weight_range_update,
-    name="participant_weight_range_update"
-),
+# path(
+#     "dashboard/participant-weight-ranges/<int:pk>/edit/",
+#     views.participant_weight_range_update,
+#     name="participant_weight_range_update"
+# ),
 
-path(
-    "dashboard/participant-weight-ranges/<int:pk>/delete/",
-    views.participant_weight_range_delete,
-    name="participant_weight_range_delete"
-),
+# path(
+#     "dashboard/participant-weight-ranges/<int:pk>/delete/",
+#     views.participant_weight_range_delete,
+#     name="participant_weight_range_delete"
+# ),
 
 
 
@@ -783,6 +785,45 @@ path(
     "privacy-policy/",
     views.privacy_policy,
     name="privacy_policy",
+),
+
+
+
+
+
+# =========================================================
+# REFUND MANAGEMENT
+# =========================================================
+
+path(
+    "dashboard/refunds/",
+    views.refund_list,
+    name="refund_list",
+),
+
+path(
+    "dashboard/refunds/<uuid:refund_id>/",
+    views.refund_detail,
+    name="refund_detail",
+),
+
+path(
+    "dashboard/refunds/<uuid:refund_id>/approve/",
+    views.refund_approve,
+    name="refund_approve",
+),
+
+path(
+    "dashboard/refunds/<uuid:refund_id>/reject/",
+    views.refund_reject,
+    name="refund_reject",
+),
+
+
+path(
+    "razorpay/refund/webhook/",
+    views.razorpay_refund_webhook,
+    name="razorpay_refund_webhook",
 ),
 
 

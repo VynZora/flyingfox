@@ -740,56 +740,63 @@ Booking Details | FlyingFox Admin
 
         <!-- STATUS -->
 
-        <div class="detail-card">
+       <!-- =====================================================
+     BOOKING STATUS - DISPLAY ONLY
+====================================================== -->
 
-            <h5>
-                Booking Status
-            </h5>
+<div class="detail-card">
 
+    <h5>
+        Booking Status
+    </h5>
 
-            <form
-                method="POST"
-                action="{% url 'booking_status_update' booking.id %}"
-            >
+    <div class="info-row">
+        <span>Status</span>
 
-                {% csrf_token %}
+        <strong>
 
+            {% if booking.status == "confirmed" %}
 
-                <select
-                    name="status"
-                    class="form-select mb-3"
-                >
+                <span class="badge bg-success">
+                    {{ booking.get_status_display }}
+                </span>
 
-                    {% for value, label in booking.STATUS_CHOICES %}
+            {% elif booking.status == "pending" %}
 
-                    <option
-                        value="{{ value }}"
-                        {% if booking.status == value %}
-                            selected
-                        {% endif %}
-                    >
+                <span class="badge bg-warning text-dark">
+                    {{ booking.get_status_display }}
+                </span>
 
-                        {{ label }}
+            {% elif booking.status == "cancelled" %}
 
-                    </option>
+                <span class="badge bg-danger">
+                    {{ booking.get_status_display }}
+                </span>
 
-                    {% endfor %}
+            {% elif booking.status == "completed" %}
 
-                </select>
+                <span class="badge bg-primary">
+                    {{ booking.get_status_display }}
+                </span>
 
+            {% elif booking.status == "failed" %}
 
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
+                <span class="badge bg-danger">
+                    {{ booking.get_status_display }}
+                </span>
 
-                    Update Status
+            {% else %}
 
-                </button>
+                <span class="badge bg-secondary">
+                    {{ booking.get_status_display }}
+                </span>
 
-            </form>
+            {% endif %}
 
-        </div>
+        </strong>
+    </div>
+
+</div>
 
 
     </div>

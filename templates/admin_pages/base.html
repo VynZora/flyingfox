@@ -1228,7 +1228,24 @@
     </a>
 
 </li>
+
 <li>
+
+    <a
+        href="{% url 'refund_list' %}"
+        class="{% if request.resolver_match.url_name == 'refund_list' or request.resolver_match.url_name == 'refund_detail' %}active{% endif %}"
+    >
+
+        <i class="icofont-undo"></i>
+
+        Refunds
+
+    </a>
+
+</li>
+
+
+{% comment %} <li>
 
     <a
         href="{% url 'coupon_list' %}"
@@ -1241,7 +1258,7 @@
 
     </a>
 
-</li>
+</li> {% endcomment %}
 
 
 
@@ -1340,18 +1357,6 @@
 
     </ul>
 
-</li>
-
-<li>
-    <a
-        href="{% url 'participant_weight_range_list' %}"
-    >
-        <i class="fas fa-weight-scale"></i>
-
-        <span>
-            Weight Ranges
-        </span>
-    </a>
 </li>
 
 

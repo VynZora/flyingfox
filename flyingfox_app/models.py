@@ -15,167 +15,41 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 
 
-# class Coupon(models.Model):
-#     DISCOUNT_TYPES = (
-#         ("percentage", "Percentage"),
-#         ("fixed", "Fixed Amount"),
-#     )
 
-#     code = models.CharField(
-#         max_length=50,
-#         unique=True
-#     )
+WEIGHT_RANGES = {
+    "30-50": {
+        "label": "30–50 KG",
+        "min_weight": 30,
+        "max_weight": 50,
+    },
 
-#     discount_type = models.CharField(
-#         max_length=20,
-#         choices=DISCOUNT_TYPES
-#     )
+    "50-70": {
+        "label": "50–70 KG",
+        "min_weight": 50,
+        "max_weight": 70,
+    },
 
-#     discount_value = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
+    "70-90": {
+        "label": "70–90 KG",
+        "min_weight": 70,
+        "max_weight": 90,
+    },
 
-#     valid_from = models.DateTimeField()
-#     valid_until = models.DateTimeField()
+    "90-110": {
+        "label": "90–110 KG",
+        "min_weight": 90,
+        "max_weight": 110,
+    },
+}
 
-#     usage_limit = models.PositiveIntegerField(
-#         blank=True,
-#         null=True
-#     )
-
-#     times_used = models.PositiveIntegerField(default=0)
-
-#     active = models.BooleanField(default=True)
-
-#     def __str__(self):
-#         return self.code
-
-
-# class Booking(models.Model):
-#     STATUS_CHOICES = (
-#         ("pending", "Pending"),
-#         ("confirmed", "Confirmed"),
-#         ("cancelled", "Cancelled"),
-#         ("checked_in", "Checked In"),
-#         ("refunded", "Refunded"),
-#     )
-
-#     booking_id = models.UUIDField(
-#         default=uuid.uuid4,
-#         editable=False,
-#         unique=True
-#     )
-
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.SET_NULL,
-#         blank=True,
-#         null=True,
-#         related_name="bookings"
-#     )
-
-#     timeslot = models.ForeignKey(
-#         RideTimeSlot,
-#         on_delete=models.PROTECT,
-#         related_name="bookings"
-#     )
-
-#     customer_name = models.CharField(max_length=150)
-#     email = models.EmailField()
-#     phone = models.CharField(max_length=20)
-
-#     quantity = models.PositiveIntegerField()
-
-#     price_per_person = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     subtotal = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     coupon = models.ForeignKey(
-#         Coupon,
-#         on_delete=models.SET_NULL,
-#         blank=True,
-#         null=True
-#     )
-
-#     discount = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2,
-#         default=0
-#     )
-
-#     total_amount = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     status = models.CharField(
-#         max_length=20,
-#         choices=STATUS_CHOICES,
-#         default="pending"
-#     )
-
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-
-#     def __str__(self):
-#         return str(self.booking_id)
-
-
-# class Payment(models.Model):
-#     PAYMENT_STATUS = (
-#         ("created", "Created"),
-#         ("paid", "Paid"),
-#         ("failed", "Failed"),
-#         ("refunded", "Refunded"),
-#     )
-
-#     booking = models.OneToOneField(
-#         Booking,
-#         on_delete=models.CASCADE,
-#         related_name="payment"
-#     )
-
-#     gateway = models.CharField(
-#         max_length=30,
-#         default="razorpay"
-#     )
-
-#     gateway_order_id = models.CharField(
-#         max_length=255,
-#         blank=True
-#     )
-
-#     gateway_payment_id = models.CharField(
-#         max_length=255,
-#         blank=True
-#     )
-
-#     amount = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     status = models.CharField(
-#         max_length=20,
-#         choices=PAYMENT_STATUS,
-#         default="created"
-#     )
-
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f"{self.booking.booking_id} - {self.status}"
-
-
-
-
+WEIGHT_RANGE_CHOICES = [
+    (
+        key,
+        data["label"],
+    )
+    for key, data
+    in WEIGHT_RANGES.items()
+]
 
 
 
@@ -1614,159 +1488,6 @@ class ContactEnquiry(models.Model):
 
 
 
-# class Offer(models.Model):
-
-#     STATUS_CHOICES = [
-#     ("upcoming", "Upcoming"),
-#     ("active", "Active"),
-#     ("expired", "Expired"),
-# ]
-#     title = models.CharField(
-#         max_length=200
-#     )
-
-#     slug = models.SlugField(
-#         unique=True,
-#         blank=True
-#     )
-
-#     description = models.TextField(
-#         blank=True
-#     )
-
-#     banner_image = models.ImageField(
-#         upload_to="offers/",
-#         blank=True,
-#         null=True
-#     )
-
-#     rides = models.ManyToManyField(
-#         Ride,
-#         related_name="offers",
-#         blank=True
-#     )
-
-#     coupon = models.OneToOneField(
-#         Coupon,
-#         on_delete=models.CASCADE,
-#         related_name="offer",
-#         blank=True,
-#         null=True,
-#         editable=False
-#     )
-
-#     discount_type = models.CharField(
-#         max_length=20,
-#         choices=Coupon.DISCOUNT_TYPE_CHOICES
-#     )
-
-#     discount_value = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     start_date = models.DateField()
-
-#     end_date = models.DateField()
-
-#     status = models.CharField(
-#         max_length=20,
-#         choices=STATUS_CHOICES,
-#         default="expired",
-#         editable=False
-#     )
-
-#     is_active = models.BooleanField(
-#         default=True,
-#         help_text="Manually disable an offer regardless of dates."
-#     )
-
-#     created_at = models.DateTimeField(
-#         auto_now_add=True
-#     )
-
-#     updated_at = models.DateTimeField(
-#         auto_now=True
-#     )
-
-#     class Meta:
-#         ordering = ["-created_at"]
-
-#     def __str__(self):
-#         return f"{self.title} ({self.status})"
-
-#     def generate_coupon_code(self):
-#         import random
-#         import string
-
-#         base = slugify(self.title).upper().replace("-", "")[:6] or "OFFER"
-
-#         while True:
-#             code = f"{base}{''.join(random.choices(string.digits, k=4))}"
-#             if not Coupon.objects.filter(code=code).exists():
-#                 return code
-
-#     def refresh_status(self):
-#         today = timezone.localdate()
-
-#         if not self.is_active:
-#            self.status = "expired"
-
-#         elif today < self.start_date:
-#            self.status = "upcoming"
-
-#         elif self.start_date <= today <= self.end_date:
-#             self.status = "active"
-
-#         else:
-#             self.status = "expired"
-
-#         return self.status
-
-#     def save(self, *args, **kwargs):
-
-#         if not self.slug:
-#             base_slug = slugify(self.title)
-#             slug = base_slug
-#             counter = 1
-
-#             while Offer.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-#                 slug = f"{base_slug}-{counter}"
-#                 counter += 1
-
-#             self.slug = slug
-
-#         self.refresh_status()
-
-#         creating_coupon = self.coupon_id is None
-
-#         super().save(*args, **kwargs)
-
-#         if creating_coupon:
-#             self.coupon = Coupon.objects.create(
-#                 code=self.generate_coupon_code(),
-#                 discount_type=self.discount_type,
-#                 discount_value=self.discount_value,
-#                 valid_from=self.start_date,
-#                 valid_until=self.end_date,
-#                 is_active=self.is_active,
-#             )
-#             super().save(update_fields=["coupon"])
-
-#     def sync_coupon(self):
-#         """Call after setting self.rides (M2M) — e.g. in admin's save_related,
-#         or after form.save_m2m() — to push rides/dates onto the linked coupon."""
-#         if self.coupon:
-#             self.coupon.rides.set(self.rides.all())
-#             self.coupon.valid_from = self.start_date
-#             self.coupon.valid_until = self.end_date
-#             self.coupon.discount_type = self.discount_type
-#             self.coupon.discount_value = self.discount_value
-#             self.coupon.is_active = self.is_active
-#             self.coupon.save()
-
-
-
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -2186,46 +1907,6 @@ class Offer(models.Model):
 
 
 
-
-
-
-class ParticipantWeightRange(models.Model):
-
-    label = models.CharField(
-        max_length=100,
-        blank=True,
-        default=""
-    )
-
-    min_weight = models.PositiveIntegerField()
-
-    max_weight = models.PositiveIntegerField()
-
-    sort_order = models.PositiveIntegerField(
-        default=0
-    )
-
-    is_active = models.BooleanField(
-        default=True
-    )
-
-    class Meta:
-        ordering = [
-            "sort_order",
-            "min_weight",
-        ]
-
-    def __str__(self):
-
-        if self.label:
-            return self.label
-
-        return (
-            f"{self.min_weight} - "
-            f"{self.max_weight} KG"
-        )
-
-
 class BookingWeightGroup(models.Model):
 
     booking = models.ForeignKey(
@@ -2234,14 +1915,13 @@ class BookingWeightGroup(models.Model):
         related_name="weight_groups"
     )
 
-    weight_range = models.ForeignKey(
-        ParticipantWeightRange,
-        on_delete=models.PROTECT,
-        related_name="booking_weight_groups"
+    range_key = models.CharField(
+        max_length=20,
+        choices=WEIGHT_RANGE_CHOICES
     )
 
     participant_count = models.PositiveIntegerField(
-        default=0
+        default=1
     )
 
     min_weight = models.PositiveIntegerField()
@@ -2261,9 +1941,9 @@ class BookingWeightGroup(models.Model):
             models.UniqueConstraint(
                 fields=[
                     "booking",
-                    "weight_range",
+                    "range_key",
                 ],
-                name="unique_booking_participant_weight_range"
+                name="unique_booking_weight_range"
             )
 
         ]
@@ -2272,6 +1952,166 @@ class BookingWeightGroup(models.Model):
 
         return (
             f"{self.booking.booking_id} - "
-            f"{self.label or self.weight_range} - "
+            f"{self.label or self.range_key} - "
             f"{self.participant_count} rider(s)"
         )
+
+
+
+
+
+class Refund(models.Model):
+
+    STATUS_CHOICES = [
+        ("requested", "Requested"),
+        ("approved", "Approved"),
+        ("processing", "Processing"),
+        ("processed", "Processed"),
+        ("rejected", "Rejected"),
+        ("failed", "Failed"),
+    ]
+
+
+    refund_id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+    )
+
+
+    booking = models.ForeignKey(
+        Booking,
+        on_delete=models.CASCADE,
+        related_name="refunds",
+    )
+
+
+    payment = models.ForeignKey(
+        Payment,
+        on_delete=models.CASCADE,
+        related_name="refunds",
+    )
+
+
+    # =====================================================
+    # ORIGINAL AMOUNT
+    # =====================================================
+
+    original_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+
+
+    # 10% Flying Fox cancellation charge
+    deduction_percentage = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=Decimal("10.00"),
+    )
+
+
+    deduction_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("0.00"),
+    )
+
+
+    # Actual 90% returned to customer
+    refund_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("0.00"),
+    )
+
+
+    # =====================================================
+    # CUSTOMER REQUEST
+    # =====================================================
+
+    reason = models.TextField(
+        blank=True,
+        default="",
+    )
+
+
+    admin_note = models.TextField(
+        blank=True,
+        default="",
+    )
+
+
+    # =====================================================
+    # RAZORPAY
+    # =====================================================
+
+    razorpay_payment_id = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+    )
+
+
+    razorpay_refund_id = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        db_index=True,
+    )
+
+
+    gateway_status = models.CharField(
+        max_length=50,
+        blank=True,
+        default="",
+    )
+
+
+    # Refund reference from bank/acquirer when available
+    arn = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+    )
+
+
+    # =====================================================
+    # STATUS
+    # =====================================================
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="requested",
+    )
+
+
+    requested_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+
+    processed_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+
+    class Meta:
+        ordering = [
+            "-requested_at",
+        ]
+
+
+    def __str__(self):
+
+        return (
+            f"{self.refund_id} - "
+            f"{self.booking.booking_id}"
+        )    

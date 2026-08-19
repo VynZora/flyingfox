@@ -145,25 +145,288 @@ My Bookings | Flying Fox
                         </div>
 
 
-                        <div class="ff-user-booking-actions">
+                       <!-- =====================================================
+     BOOKING ACTIONS
+====================================================== -->
+
+<div class="ff-user-booking-actions">
 
 
-                            {% if booking.ticket %}
+    <!-- DOWNLOAD TICKET -->
 
-                                <a
-                                    href="{% url 'download_ticket' booking.ticket.ticket_id %}"
-                                >
+    {% if booking.ticket %}
 
-                                    <i class="fas fa-download"></i>
+        <a
+            class="ff-booking-action-primary"
+            href="{% url 'download_ticket' booking.ticket.ticket_id %}"
+        >
 
-                                    Download Ticket
+            <i class="fas fa-download"></i>
 
-                                </a>
+            Download Ticket
 
-                            {% endif %}
+        </a>
+
+    {% endif %}
 
 
-                        </div>
+
+    <!-- =================================================
+         EXISTING REFUND REQUEST
+    ================================================== -->
+
+    {% if booking.latest_refund %}
+
+        <div class="
+            ff-refund-status
+            {{ booking.latest_refund.status }}
+        ">
+
+            <i class="fas fa-rotate-left"></i>
+
+
+            <span>
+
+                {% if booking.latest_refund.status == "requested" %}
+
+                    Cancellation Requested
+
+                {% elif booking.latest_refund.status == "approved" %}
+
+                    Refund Approved
+
+                {% elif booking.latest_refund.status == "processing" %}
+
+                    Refund Processing
+
+                {% elif booking.latest_refund.status == "processed" %}
+
+                    Refund Processed
+
+                {% elif booking.latest_refund.status == "rejected" %}
+
+                    Refund Rejected
+
+                {% elif booking.latest_refund.status == "failed" %}
+
+                    Refund Failed
+
+                {% else %}
+
+                    {{ booking.latest_refund.get_status_display }}
+
+                {% endif %}
+
+            </span>
+
+
+            {% if booking.latest_refund.refund_amount %}
+
+                <strong>
+                    ₹{{ booking.latest_refund.refund_amount }}
+                </strong>
+
+            {% endif %}
+
+        </div>
+
+
+
+    <!-- =================================================
+         CUSTOMER CAN CANCEL
+    ================================================== -->
+
+    {% elif booking.refund_info.eligible %}
+
+        <button
+            type="button"
+            class="ff-refund-open-btn"
+            data-refund-target="refund-form-{{ booking.id }}"
+        >
+
+            <i class="fas fa-ban"></i>
+
+            Cancel & Request Refund
+
+        </button>
+
+    {% endif %}
+
+
+</div>
+
+
+
+<!-- =====================================================
+     REFUND INFORMATION / FORM
+====================================================== -->
+
+{% if booking.refund_info.eligible %}
+
+    <div
+        class="ff-refund-panel"
+        id="refund-form-{{ booking.id }}"
+    >
+
+
+        <div class="ff-refund-panel-head">
+
+            <div>
+
+                <span>
+                    Cancellation & Refund
+                </span>
+
+                <h4>
+                    Cancel This Booking?
+                </h4>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="ff-refund-close-btn"
+            >
+
+                <i class="fas fa-times"></i>
+
+            </button>
+
+        </div>
+
+
+
+        <!-- REFUND BREAKDOWN -->
+
+        <div class="ff-refund-breakdown">
+
+
+            <div>
+
+                <span>
+                    Amount Paid
+                </span>
+
+                <strong>
+                    ₹{{ booking.refund_info.original_amount }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Cancellation Charge
+                </span>
+
+                <strong class="deduction">
+                    - ₹{{ booking.refund_info.deduction_amount }}
+                </strong>
+
+                <small>
+                    10%
+                </small>
+
+            </div>
+
+
+            <div class="refund-total">
+
+                <span>
+                    Refund Amount
+                </span>
+
+                <strong>
+                    ₹{{ booking.refund_info.refund_amount }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- COUNTDOWN -->
+
+        <div
+            class="ff-refund-countdown"
+            data-refund-seconds="{{ booking.refund_info.remaining_seconds }}"
+        >
+
+            <i class="far fa-clock"></i>
+
+            <span class="ff-refund-countdown-text">
+                Checking cancellation time...
+            </span>
+
+        </div>
+
+
+
+        <!-- POLICY -->
+
+        <p class="ff-refund-policy">
+
+            Cancellation is available only within
+            <strong>1 hour</strong>
+            of payment confirmation.
+
+            A
+            <strong>10% cancellation charge</strong>
+            applies and the remaining
+            <strong>90%</strong>
+            will be refunded after approval.
+
+        </p>
+
+
+
+        <!-- FORM -->
+
+        <form
+            method="POST"
+            action="{% url 'booking_refund_request' booking.booking_id %}"
+            class="ff-refund-form"
+        >
+
+            {% csrf_token %}
+
+
+            <label>
+                Reason for Cancellation
+            </label>
+
+
+            <textarea
+                name="reason"
+                rows="3"
+                maxlength="500"
+                required
+                placeholder="Please tell us why you want to cancel this booking..."
+            ></textarea>
+
+
+            <button
+                type="submit"
+                class="ff-refund-submit-btn"
+            >
+
+                <i class="fas fa-rotate-left"></i>
+
+                Submit Cancellation Request
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+{% endif %}
 
 
                     </article>
@@ -505,6 +768,617 @@ My Bookings | Flying Fox
 
 }
 
+
+
+
+/* =====================================================
+   BOOKING ACTIONS
+===================================================== */
+
+.ff-user-booking-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.ff-user-booking-actions a,
+.ff-user-booking-actions button {
+
+    border: 0;
+
+    cursor: pointer;
+
+    text-decoration: none;
+}
+
+
+/* DOWNLOAD */
+
+.ff-booking-action-primary {
+
+    display: inline-flex;
+
+    min-height: 40px;
+
+    padding: 0 16px;
+
+    border-radius: 22px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    color: #ffffff !important;
+
+    background: var(--ff-red);
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+/* CANCEL BUTTON */
+
+.ff-refund-open-btn {
+
+    display: inline-flex;
+
+    min-height: 40px;
+
+    padding: 0 16px;
+
+    border: 1px solid #e7a9a4 !important;
+
+    border-radius: 22px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    color: #b0180e;
+
+    background: #fff3f1;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    transition: .2s ease;
+}
+
+
+.ff-refund-open-btn:hover {
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    border-color: var(--ff-red) !important;
+}
+
+
+/* =====================================================
+   REFUND STATUS
+===================================================== */
+
+.ff-refund-status {
+
+    display: inline-flex;
+
+    min-height: 40px;
+
+    padding: 0 14px;
+
+    border-radius: 22px;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #8a6700;
+
+    background: #fff5cc;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+.ff-refund-status.processed {
+
+    color: #107532;
+
+    background: #eaf8ee;
+}
+
+
+.ff-refund-status.rejected,
+.ff-refund-status.failed {
+
+    color: #b0180e;
+
+    background: #ffedeb;
+}
+
+
+/* =====================================================
+   REFUND PANEL
+===================================================== */
+
+.ff-refund-panel {
+
+    display: none;
+
+    margin-top: 15px;
+
+    padding: 20px;
+
+    border: 1px solid #efc1bd;
+
+    border-radius: 18px;
+
+    background: #fff9f8;
+}
+
+
+.ff-refund-panel.show {
+
+    display: block;
+}
+
+
+.ff-refund-panel-head {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+}
+
+
+.ff-refund-panel-head span {
+
+    color: var(--ff-red);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+
+.ff-refund-panel-head h4 {
+
+    margin: 4px 0 0;
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+
+.ff-refund-close-btn {
+
+    width: 34px;
+
+    height: 34px;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    color: #a90d04;
+
+    background: #ffffff;
+}
+
+
+/* BREAKDOWN */
+
+.ff-refund-breakdown {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+
+.ff-refund-breakdown > div {
+
+    padding: 13px;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+}
+
+
+.ff-refund-breakdown span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--ff-text);
+
+    font-size: 9px;
+}
+
+
+.ff-refund-breakdown strong {
+
+    color: var(--ff-dark);
+
+    font-size: 13px;
+
+    font-weight: 900;
+}
+
+
+.ff-refund-breakdown .deduction {
+
+    color: #b0180e;
+}
+
+
+.ff-refund-breakdown .refund-total {
+
+    background: #eaf8ee;
+}
+
+
+.ff-refund-breakdown .refund-total strong {
+
+    color: #107532;
+}
+
+
+/* COUNTDOWN */
+
+.ff-refund-countdown {
+
+    display: flex;
+
+    margin-bottom: 14px;
+
+    padding: 11px 13px;
+
+    border-radius: 12px;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #8a6700;
+
+    background: #fff5cc;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+/* POLICY */
+
+.ff-refund-policy {
+
+    margin: 0 0 15px;
+
+    color: var(--ff-text);
+
+    font-size: 10px;
+
+    line-height: 1.7;
+}
+
+
+/* FORM */
+
+.ff-refund-form {
+
+    display: grid;
+
+    gap: 9px;
+}
+
+
+.ff-refund-form label {
+
+    color: var(--ff-dark);
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+.ff-refund-form textarea {
+
+    width: 100%;
+
+    min-height: 90px;
+
+    padding: 13px;
+
+    border: 1px solid var(--ff-border);
+
+    border-radius: 13px;
+
+    outline: none;
+
+    resize: vertical;
+
+    font-size: 11px;
+}
+
+
+.ff-refund-form textarea:focus {
+
+    border-color: var(--ff-red);
+}
+
+
+.ff-refund-submit-btn {
+
+    min-height: 44px;
+
+    border: 0;
+
+    border-radius: 23px;
+
+    cursor: pointer;
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .ff-user-booking-actions {
+
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .ff-user-booking-actions a,
+    .ff-user-booking-actions button {
+
+        width: 100%;
+
+    }
+
+
+    .ff-refund-breakdown {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+
 </style>
+
+{% endblock %}
+
+
+
+{% block account_extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =================================================
+           OPEN REFUND PANEL
+        ================================================= */
+
+        document
+            .querySelectorAll(
+                ".ff-refund-open-btn"
+            )
+            .forEach(
+                function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            const targetId =
+                                button.dataset.refundTarget;
+
+
+                            const panel =
+                                document.getElementById(
+                                    targetId
+                                );
+
+
+                            if (panel) {
+
+                                panel.classList.add(
+                                    "show"
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+
+        /* =================================================
+           CLOSE REFUND PANEL
+        ================================================= */
+
+        document
+            .querySelectorAll(
+                ".ff-refund-close-btn"
+            )
+            .forEach(
+                function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            const panel =
+                                button.closest(
+                                    ".ff-refund-panel"
+                                );
+
+
+                            if (panel) {
+
+                                panel.classList.remove(
+                                    "show"
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+
+        /* =================================================
+           REFUND COUNTDOWN
+        ================================================= */
+
+        document
+            .querySelectorAll(
+                ".ff-refund-countdown"
+            )
+            .forEach(
+                function (countdown) {
+
+                    let seconds =
+                        Number(
+                            countdown.dataset.refundSeconds
+                            ||
+                            0
+                        );
+
+
+                    const text =
+                        countdown.querySelector(
+                            ".ff-refund-countdown-text"
+                        );
+
+
+                    function updateCountdown() {
+
+                        if (seconds <= 0) {
+
+                            text.textContent =
+                                "Cancellation window expired.";
+
+                            countdown.classList.add(
+                                "expired"
+                            );
+
+                            return;
+
+                        }
+
+
+                        const minutes =
+                            Math.floor(
+                                seconds / 60
+                            );
+
+
+                        const remainingSeconds =
+                            seconds % 60;
+
+
+                        text.textContent =
+                            (
+                                "Refund available for "
+                                +
+                                minutes
+                                +
+                                ":"
+                                +
+                                String(
+                                    remainingSeconds
+                                ).padStart(
+                                    2,
+                                    "0"
+                                )
+                            );
+
+
+                        seconds -= 1;
+
+
+                        setTimeout(
+                            updateCountdown,
+                            1000
+                        );
+
+                    }
+
+
+                    updateCountdown();
+
+                }
+            );
+
+
+    }
+);
+
+</script>
 
 {% endblock %}

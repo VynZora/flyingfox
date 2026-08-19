@@ -229,3 +229,5 @@ TWILIO_WHATSAPP_CONTENT_SID = (
 RAZORPAY_KEY_ID = 'rzp_test_TQ96wUs3ohiL0B'
 
 RAZORPAY_KEY_SECRET ='yqqdk4VN62Qb4ZJuksvkjVlj'
+
+RAZORPAY_WEBHOOK_SECRET="your_actual_webhook_secret"

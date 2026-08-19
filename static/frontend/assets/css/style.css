@@ -15626,14 +15626,12 @@ span.flatpickr-weekday {
 
 
 
-/* =========================================================
-   MOBILE NAVBAR
-   Small rounded navbar + same design after scrolling
-========================================================= */
-
 @media (max-width: 991px) {
 
-    /* Main navbar wrapper */
+    /* =====================================================
+       MOBILE NAVBAR OUTER SPACE
+    ===================================================== */
+
     .header-2 .navbar {
         width: 100%;
 
@@ -15648,7 +15646,7 @@ span.flatpickr-weekday {
 
 
     /* =====================================================
-       WHITE ROUNDED MOBILE NAVBAR
+       WHITE ROUNDED NAVBAR
     ===================================================== */
 
     .header-2 .navbar > .container {
@@ -15656,7 +15654,8 @@ span.flatpickr-weekday {
 
         min-height: 66px !important;
 
-        padding: 6px 14px !important;
+        /* less space on left */
+        padding: 5px 12px 5px 5px !important;
 
         margin: 0 auto;
 
@@ -15687,19 +15686,28 @@ span.flatpickr-weekday {
         display: flex;
 
         align-items: center;
+
+        justify-content: flex-start;
+
+        flex-shrink: 0;
     }
 
-    .header-2 .navbar-brand img {
-        width: 72px !important;
 
-        max-height: 52px;
+    .header-2 .navbar-brand img {
+        width: 105px !important;
+
+        height: auto !important;
+
+        max-height: 58px !important;
 
         object-fit: contain;
+
+        display: block;
     }
 
 
     /* =====================================================
-       RIGHT SIDE MOBILE AREA
+       RIGHT HAMBURGER AREA
     ===================================================== */
 
     .header-2 .mobile-menu-right {
@@ -15713,71 +15721,20 @@ span.flatpickr-weekday {
     }
 
 
-    /* Hide search button if not needed */
     .header-2 .mobile-menu-btn {
         display: none;
     }
 
 
     /* =====================================================
-       HAMBURGER
-    ===================================================== */
-
-    .header-2 .navbar-toggler {
-        width: 42px;
-
-        height: 42px;
-
-        padding: 0;
-
-        border: 0;
-
-        border-radius: 50%;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-
-        justify-content: center;
-
-        gap: 5px;
-
-        background: transparent;
-
-        box-shadow: none !important;
-    }
-
-
-    .header-2 .navbar-toggler span {
-        display: block;
-
-        width: 22px;
-
-        height: 2px;
-
-        margin: 0;
-
-        background: #111111;
-
-        border-radius: 10px;
-
-        transition: 0.3s ease;
-    }
-
-
-    /* =====================================================
-       SCROLLED / FIXED MOBILE NAVBAR
+       FIXED / SCROLLED NAVBAR
     ===================================================== */
 
     .header-2 .navbar.fixed-top {
         position: fixed !important;
 
         top: 0 !important;
-
         left: 0 !important;
-
         right: 0 !important;
 
         width: 100% !important;
@@ -15789,22 +15746,15 @@ span.flatpickr-weekday {
         box-shadow: none !important;
 
         z-index: 9999 !important;
-
-        animation: ffNavbarSlideDown 0.35s ease;
     }
 
 
-    /*
-       MOST IMPORTANT PART:
-       do not allow fixed navbar container
-       to become rectangular.
-    */
     .header-2 .navbar.fixed-top > .container {
         width: 100%;
 
         min-height: 66px !important;
 
-        padding: 6px 14px !important;
+        padding: 5px 12px 5px 5px !important;
 
         margin: 0 auto;
 
@@ -15817,23 +15767,15 @@ span.flatpickr-weekday {
     }
 
 
-    /* Keep logo same size on scroll */
+    /* SAME LOGO SIZE AFTER SCROLL */
+
     .header-2 .navbar.fixed-top .navbar-brand img {
-        width: 72px !important;
+        width: 105px !important;
 
-        max-height: 52px;
+        height: auto !important;
+
+        max-height: 58px !important;
     }
-
-
-    /* Keep hamburger same */
-    .header-2 .navbar.fixed-top .navbar-toggler {
-        width: 42px;
-
-        height: 42px;
-
-        background: transparent !important;
-    }
-
 }
 
 
@@ -30568,6 +30510,136 @@ body:has(#offcanvasNavbar.showing) .header-2 {
 }
 
 
+/* =========================================================
+   FINAL MOBILE NAVBAR LOGO FIX
+   KEEP THIS AT VERY END OF style.css
+========================================================= */
+
+@media (max-width: 991px) {
+
+    /* -----------------------------------------------------
+       WHITE NAVBAR
+       Remove left internal gap
+    ----------------------------------------------------- */
+
+    .header-2 .main-navigation .navbar > .container {
+        width: 100% !important;
+
+        min-height: 70px !important;
+
+        padding-top: 5px !important;
+        padding-right: 10px !important;
+        padding-bottom: 5px !important;
+        padding-left: 0 !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        background: #ffffff !important;
+
+        border-radius: 50px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+
+    /* -----------------------------------------------------
+       LOGO LINK
+    ----------------------------------------------------- */
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand {
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        width: auto !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+
+        transform: translateX(-2px);
+    }
+
+
+    /* -----------------------------------------------------
+       LOGO IMAGE
+    ----------------------------------------------------- */
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img {
+
+        width: 140px !important;
+        max-width: none !important;
+
+        height: auto !important;
+
+        max-height: 62px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: block !important;
+
+        object-fit: contain !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HAMBURGER
+    ----------------------------------------------------- */
+
+    .header-2
+    .main-navigation
+    .mobile-menu-right {
+
+        margin-left: auto !important;
+
+        padding-right: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       FIXED / SCROLLED NAVBAR
+    ----------------------------------------------------- */
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    > .container {
+
+        padding-left: 0 !important;
+
+        padding-right: 10px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+
+        width: 140px !important;
+
+        max-width: none !important;
+
+        height: auto !important;
+
+        max-height: 62px !important;
+    }
+
+}
+
+
 
 
 /* =========================================================
@@ -30596,5 +30668,132 @@ body:has(#offcanvasNavbar.showing) .header-2 {
 @media (max-width: 576px) {
     .footer-logo img {
         width: 150px !important;
+    }
+}
+
+/* =========================================================
+   BIGGER LOGO - TABLET + MOBILE ONLY
+========================================================= */
+/* =========================================================
+   MOBILE + TABLET NAVBAR FINAL FIX
+   Keep existing navbar design.
+   Only enlarge logo and reduce empty vertical space.
+========================================================= */
+
+@media (max-width: 991px) {
+
+    /* Keep navbar compact */
+    .header-2 .main-navigation .navbar {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+
+
+    /* White rounded navbar */
+    .header-2 .main-navigation .navbar > .container {
+        min-height: 70px !important;
+        height: 70px !important;
+
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+
+        padding-left: 8px !important;
+        padding-right: 12px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+
+    /* Logo wrapper */
+    .header-2 .main-navigation .navbar .navbar-brand {
+        width: 190px !important;
+        height: 70px !important;
+
+        margin: 5px !important;
+        padding: 5px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+
+        overflow: visible !important;
+    }
+
+
+    /* IMPORTANT:
+       enlarge using width, DON'T force image height
+    */
+    .header-2 .main-navigation .navbar .navbar-brand img {
+        width: 150px !important;
+        max-width: none !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: block !important;
+
+        object-fit: unset !important;
+    }
+
+
+    /* Hamburger stays at right */
+    .header-2 .main-navigation .mobile-menu-right {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        flex-shrink: 0 !important;
+    }
+
+
+    .header-2 .main-navigation .navbar-toggler {
+        margin: 0 !important;
+        padding: 5px !important;
+    }
+
+
+    /* ================================
+       FIXED / SCROLLED NAVBAR
+       Keep exactly same logo size
+    ================================= */
+
+    .header-2 .main-navigation .navbar.fixed-top {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+
+
+    .header-2 .main-navigation .navbar.fixed-top > .container {
+        height: 70px !important;
+        min-height: 70px !important;
+
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+
+        padding-left: 8px !important;
+        padding-right: 12px !important;
+    }
+
+
+    .header-2 .main-navigation .navbar.fixed-top .navbar-brand {
+        width: 190px !important;
+        height: 70px !important;
+    }
+
+
+    .header-2 .main-navigation .navbar.fixed-top .navbar-brand img {
+        width: 150px !important;
+        max-width: none !important;
+
+        height: auto !important;
+        max-height: none !important;
     }
 }

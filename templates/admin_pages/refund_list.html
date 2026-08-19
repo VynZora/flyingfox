@@ -1,0 +1,270 @@
+{% extends "admin_pages/base.html" %}
+
+
+{% block title %}
+Refund Requests
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>
+                Refund Requests
+            </h2>
+
+            <p class="text-muted mb-0">
+                Review customer cancellation and refund requests.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         FILTERS
+    ================================================== -->
+
+    <form
+        method="GET"
+        class="row g-2 mb-4"
+    >
+
+        <div class="col-md-5">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                class="form-control"
+                placeholder="Search booking, customer or payment..."
+            >
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <select
+                name="status"
+                class="form-select"
+            >
+
+                <option value="">
+                    All Statuses
+                </option>
+
+
+                {% for value, label in status_choices %}
+
+                    <option
+                        value="{{ value }}"
+                        {% if selected_status == value %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ label }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="col-md-2">
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100"
+            >
+                Filter
+            </button>
+
+        </div>
+
+    </form>
+
+
+
+    <!-- =================================================
+         REFUND TABLE
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Booking
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Paid
+                            </th>
+
+                            <th>
+                                Deduction
+                            </th>
+
+                            <th>
+                                Refund
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Requested
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for refund in refunds %}
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        #{{ refund.booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+                                    </strong>
+
+                                    <small class="d-block text-muted">
+                                        {{ refund.booking.ride.name }}
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ refund.booking.customer_name }}
+
+                                    <small class="d-block text-muted">
+                                        {{ refund.booking.customer_phone }}
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+                                    ₹{{ refund.original_amount }}
+                                </td>
+
+
+                                <td>
+
+                                    ₹{{ refund.deduction_amount }}
+
+                                    <small class="d-block text-muted">
+                                        {{ refund.deduction_percentage }}%
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        ₹{{ refund.refund_amount }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="badge bg-secondary">
+                                        {{ refund.get_status_display }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ refund.requested_at|date:"d M Y" }}
+
+                                    <small class="d-block text-muted">
+                                        {{ refund.requested_at|date:"h:i A" }}
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'refund_detail' refund.refund_id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                    >
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td
+                                    colspan="8"
+                                    class="text-center py-5 text-muted"
+                                >
+                                    No refund requests found.
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

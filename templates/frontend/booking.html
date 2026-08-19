@@ -3946,6 +3946,387 @@ body.ff-message-open {
 
 }
 {% comment %} popup css end  {% endcomment %}
+
+
+{% comment %} participent css start {% endcomment %}
+/* =========================================================
+   PARTICIPANT TOTAL COUNTER
+========================================================= */
+
+.ff-participant-count-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+    padding: 17px;
+
+    border: 1px solid var(--ff-border);
+    border-radius: 16px;
+
+    background: #fafbfc;
+}
+
+
+.ff-participant-count-copy strong,
+.ff-participant-count-copy small {
+    display: block;
+}
+
+
+.ff-participant-count-copy strong {
+    color: var(--ff-dark);
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+
+.ff-participant-count-copy small {
+    margin-top: 4px;
+
+    color: var(--ff-text);
+
+    font-size: 9px;
+}
+
+
+
+/* =========================================================
+   MAIN +/- COUNTER
+========================================================= */
+
+.ff-main-counter {
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+
+    border: 1px solid #dce1e6;
+    border-radius: 25px;
+
+    background: #ffffff;
+}
+
+
+.ff-main-counter button {
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
+    border: 0;
+
+    color: var(--ff-dark);
+    background: #ffffff;
+
+    transition: .2s ease;
+}
+
+
+.ff-main-counter button:hover {
+    color: #ffffff;
+    background: var(--ff-red);
+}
+
+
+.ff-main-counter input {
+    width: 48px;
+    height: 42px;
+
+    padding: 0;
+
+    border: 0;
+    border-left: 1px solid #e1e5e9;
+    border-right: 1px solid #e1e5e9;
+
+    outline: none;
+
+    color: var(--ff-dark);
+    background: #f7f8fa;
+
+    text-align: center;
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+
+
+/* =========================================================
+   WEIGHT ALLOCATION
+========================================================= */
+
+.ff-weight-allocation-head {
+    margin-bottom: 12px;
+}
+
+
+.ff-weight-allocation-head strong,
+.ff-weight-allocation-head small {
+    display: block;
+}
+
+
+.ff-weight-allocation-head strong {
+    color: var(--ff-dark);
+
+    font-size: 13px;
+    font-weight: 900;
+}
+
+
+.ff-weight-allocation-head small {
+    margin-top: 4px;
+
+    color: var(--ff-text);
+
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+
+.ff-weight-list {
+    display: grid;
+
+    gap: 10px;
+}
+
+
+
+/* =========================================================
+   WEIGHT ROW
+========================================================= */
+
+.ff-weight-allocation-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        150px
+        38px;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    border: 1px solid var(--ff-border);
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+
+.ff-weight-range-select {
+    width: 100%;
+    height: 44px;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--ff-border);
+    border-radius: 11px;
+
+    outline: none;
+
+    color: var(--ff-dark);
+    background: #fafbfc;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+.ff-weight-range-select:focus {
+    border-color: var(--ff-red);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(195, 17, 3, 0.06);
+}
+
+
+
+/* =========================================================
+   RIDERS PER RANGE COUNTER
+========================================================= */
+
+.ff-range-counter {
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+
+    border: 1px solid #dde2e7;
+    border-radius: 23px;
+}
+
+
+.ff-range-counter button {
+    width: 37px;
+    height: 40px;
+
+    padding: 0;
+
+    border: 0;
+
+    color: var(--ff-dark);
+    background: #ffffff;
+}
+
+
+.ff-range-counter button:hover {
+    color: #ffffff;
+    background: var(--ff-red);
+}
+
+
+.ff-range-counter input {
+    width: 48px;
+    height: 40px;
+
+    padding: 0;
+
+    border: 0;
+    border-left: 1px solid var(--ff-border);
+    border-right: 1px solid var(--ff-border);
+
+    outline: none;
+
+    color: var(--ff-dark);
+    background: #f7f8fa;
+
+    text-align: center;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+
+
+/* =========================================================
+   REMOVE RANGE
+========================================================= */
+
+.ff-remove-weight-range {
+    display: flex;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    align-items: center;
+    justify-content: center;
+
+    color: var(--ff-red);
+    background: var(--ff-red-soft);
+}
+
+
+.ff-remove-weight-range:hover {
+    color: #ffffff;
+    background: var(--ff-red);
+}
+
+
+
+/* =========================================================
+   ADD RANGE
+========================================================= */
+
+.ff-add-weight-range {
+    display: inline-flex;
+
+    margin-top: 12px;
+
+    padding: 9px 15px;
+
+    border:
+        1px dashed
+        rgba(195, 17, 3, .35);
+
+    border-radius: 22px;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--ff-red);
+    background: #fff8f7;
+
+    font-size: 9px;
+    font-weight: 900;
+}
+
+
+.ff-add-weight-range:hover {
+    color: #ffffff;
+    border-color: var(--ff-red);
+    background: var(--ff-red);
+}
+
+
+
+/* =========================================================
+   VALIDATION MESSAGE
+========================================================= */
+
+.ff-weight-allocation-message {
+    display: none;
+
+    margin-top: 10px;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    color: #9d3800;
+    background: #fff4e8;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.ff-weight-allocation-message.show {
+    display: block;
+}
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 575px) {
+
+    .ff-participant-count-box {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .ff-weight-allocation-row {
+        grid-template-columns:
+            1fr
+            auto;
+    }
+
+
+    .ff-weight-range-select {
+        grid-column: 1 / -1;
+    }
+
+}
+{% comment %} participant css end  {% endcomment %}
 </style>
 {% endblock %}
 
@@ -4119,20 +4500,26 @@ body.ff-message-open {
                          GLOBAL PARTICIPANT WEIGHT RANGES
                          These ranges are shared by every ride.
                     ================================================== -->
-                    <div id="globalWeightRanges" style="display:none;">
+                    <!-- =================================================
+     STATIC PARTICIPANT WEIGHT RANGES
+================================================== -->
 
-                        {% for weight_range in weight_ranges %}
+<div
+    id="globalWeightRanges"
+    style="display:none;">
 
-                            <span
-                                data-id="{{ weight_range.id }}"
-                                data-label="{% if weight_range.label %}{{ weight_range.label|escape }}{% else %}{{ weight_range.min_weight|floatformat:0 }} - {{ weight_range.max_weight|floatformat:0 }} KG{% endif %}"
-                                data-min="{{ weight_range.min_weight }}"
-                                data-max="{{ weight_range.max_weight }}"
-                            ></span>
+    {% for weight_range in weight_ranges %}
 
-                        {% endfor %}
+        <span
+            data-key="{{ weight_range.key }}"
+            data-label="{{ weight_range.label|escape }}"
+            data-min="{{ weight_range.min_weight }}"
+            data-max="{{ weight_range.max_weight }}"
+        ></span>
 
-                    </div>
+    {% endfor %}
+
+</div>
 
 
                     <!-- =================================================
@@ -4592,66 +4979,6 @@ body.ff-message-open {
                                 id="offerCards"
                             >
 
-                                <!-- Regular ticket is always available -->
-                                <label class="ff-offer-card none selected">
-
-                                    <input
-                                        type="radio"
-                                        name="selected_offer_id"
-                                        value=""
-                                        class="ff-offer-radio"
-                                        data-name="Regular Ticket"
-                                        data-label="Regular ride price"
-                                        data-type=""
-                                        data-discount="0"
-                                        data-min-participants="1"
-                                        data-min-amount="0"
-                                        data-max-discount="0"
-                                        data-buy="0"
-                                        data-free="0"
-                                        data-coupon-required="0"
-                                        checked
-                                    >
-
-                                    <span class="ff-offer-main">
-
-                                        <span class="ff-offer-icon">
-                                            <i class="fas fa-ticket"></i>
-                                        </span>
-
-                                        <span class="ff-offer-content">
-                                            <h4>Regular Ticket</h4>
-                                            <p>
-                                                Standard Flying Fox ticket at the regular ride price.
-                                            </p>
-
-                                            <span class="ff-offer-meta">
-                                                <span class="ff-offer-label">
-                                                    Regular Price
-                                                </span>
-
-                                                <span class="ff-offer-rule">
-                                                    Always available
-                                                </span>
-                                            </span>
-                                        </span>
-
-                                    </span>
-
-                                    <span class="ff-offer-actions">
-
-                                         <button
-                                            type="button"
-                                            class="ff-offer-select-btn"
-                                            id="regularTicketSelect">
-                                            Select
-                                        </button>
-
-                                    </span>
-
-                                </label>
-
-
                                 <div
                                     id="dynamicOffers"
                                     style="display:contents;"
@@ -4699,103 +5026,188 @@ body.ff-message-open {
                     <!-- =================================================
                          PARTICIPANTS BY WEIGHT
                     ================================================== -->
-                    <section
-                        class="ff-panel locked"
-                        id="participantPanel"
-                    >
+                   <!-- =================================================
+     PARTICIPANTS & WEIGHT DISTRIBUTION
+================================================== -->
 
-                        <button
-                            type="button"
-                            class="ff-panel-head"
-                            id="participantPanelButton"
-                            disabled
-                        >
-                            <span class="ff-panel-heading">
-                                <span class="ff-panel-icon">
-                                    <i class="fas fa-weight-scale"></i>
-                                </span>
+<section
+    class="ff-panel locked"
+    id="participantPanel"
+>
 
-                                <span>
-                                    <h3>Participants By Weight</h3>
-                                    <p>
-                                        Add the number of riders in each weight range.
-                                    </p>
-                                </span>
-                            </span>
+    <!-- PANEL HEADER -->
 
-                            <span class="ff-panel-toggle">
-                                <i class="fas fa-plus"></i>
-                            </span>
-                        </button>
+    <button
+        type="button"
+        class="ff-panel-head"
+        id="participantPanelButton"
+        disabled
+    >
 
+        <span class="ff-panel-heading">
 
-                        <div
-                            class="ff-selected-bar"
-                            id="participantSelected"
-                        >
-                            <span class="ff-selected-icon">
-                                <i class="fas fa-users"></i>
-                            </span>
+            <span class="ff-panel-icon">
+                <i class="fas fa-users"></i>
+            </span>
 
-                            <div>
-                                <small>Participants</small>
-                                <strong id="participantSelectedTotal">
-                                    0 Riders
-                                </strong>
+            <span>
 
-                                <span>
-                                    Grouped by weight range
-                                </span>
-                            </div>
+                <h3>
+                    Participants
+                </h3>
 
-                            <button
-                                type="button"
-                                class="ff-change-btn"
-                                data-open="participantPanel"
-                            >
-                                Change
-                            </button>
-                        </div>
+                <p>
+                    Select one or more weight ranges and enter the number of riders in each range.
+                </p>
+
+            </span>
+
+        </span>
 
 
-                        <div class="ff-panel-body">
+        <span class="ff-panel-toggle">
+            <i class="fas fa-plus"></i>
+        </span>
 
-                            <div
-                                class="ff-weight-list"
-                                id="weightList"
-                            ></div>
-
-
-                            <div
-                                class="ff-empty"
-                                id="noWeightRanges"
-                                style="display:none;"
-                            >
-                                No active participant weight ranges are configured.
-                            </div>
+    </button>
 
 
-                            <div class="ff-weight-total">
 
-                                <span>
-                                    Total Participants
-                                </span>
+    <!-- SELECTED SUMMARY -->
 
-                                <strong id="participantTotal">
-                                    0
-                                </strong>
+    <div
+        class="ff-selected-bar"
+        id="participantSelected"
+    >
 
-                            </div>
+        <span class="ff-selected-icon">
+            <i class="fas fa-users"></i>
+        </span>
 
 
-                            <div
-                                class="ff-offer-status"
-                                id="offerStatus"
-                            ></div>
+        <div>
 
-                        </div>
+            <small>
+                Participants
+            </small>
 
-                    </section>
+            <strong id="participantSelectedTotal">
+                0 Riders
+            </strong>
+
+            <span id="participantDistributionStatus">
+                Assign participant weight ranges
+            </span>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="ff-change-btn"
+            data-open="participantPanel"
+        >
+            Change
+        </button>
+
+    </div>
+
+
+
+    <!-- PANEL BODY -->
+
+    <div class="ff-panel-body">
+
+
+        <!-- Total quantity is calculated automatically from weight groups -->
+        <input
+            type="hidden"
+            id="participantCount"
+            name="quantity"
+            value="0"
+        >
+
+
+        <!-- =============================================
+             WEIGHT DISTRIBUTION
+        ============================================== -->
+
+        <div class="ff-weight-allocation">
+
+            <div class="ff-weight-allocation-head">
+
+                <strong>
+                    Participant Weight
+                </strong>
+
+                <small>
+                    Select a weight range and enter how many
+                    riders belong to that range.
+                </small>
+
+            </div>
+
+
+            <div
+                class="ff-weight-list"
+                id="weightList"
+            ></div>
+
+
+            <div
+                class="ff-empty"
+                id="noWeightRanges"
+                style="display:none;"
+            >
+                No participant weight ranges are available.
+            </div>
+
+
+            <button
+                type="button"
+                class="ff-add-weight-range"
+                id="addWeightRange"
+            >
+
+                <i class="fas fa-plus"></i>
+
+                Add Weight Range
+
+            </button>
+
+
+            <!-- TOTAL RIDERS -->
+
+            <div class="ff-weight-total">
+
+                <span>
+                    Total Riders
+                </span>
+
+                <strong>
+                    <span id="participantTotal">0</span>
+                    <span id="allocatedParticipants" style="display:none;">0</span>
+                </strong>
+
+            </div>
+
+
+            <div
+                class="ff-weight-allocation-message"
+                id="weightAllocationMessage"
+            ></div>
+
+
+            <div
+                class="ff-offer-status"
+                id="offerStatus"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
 
 
                     <!-- =================================================
@@ -5263,10 +5675,45 @@ const messageIconElement =
     let drawerOfferRadio = null;
     let couponValidated = false;
 
-    const weightList = document.getElementById("weightList");
-    const noWeightRanges = document.getElementById("noWeightRanges");
-    const participantTotal = document.getElementById("participantTotal");
-    const offerStatus = document.getElementById("offerStatus");
+    const weightList =
+    document.getElementById(
+        "weightList"
+    );
+
+const noWeightRanges =
+    document.getElementById(
+        "noWeightRanges"
+    );
+
+const participantCount =
+    document.getElementById(
+        "participantCount"
+    );
+
+const addWeightRange =
+    document.getElementById(
+        "addWeightRange"
+    );
+
+const participantTotal =
+    document.getElementById(
+        "participantTotal"
+    );
+
+const allocatedParticipants =
+    document.getElementById(
+        "allocatedParticipants"
+    );
+
+const weightAllocationMessage =
+    document.getElementById(
+        "weightAllocationMessage"
+    );
+
+const offerStatus =
+    document.getElementById(
+        "offerStatus"
+    );
 
     const rideSelected = document.getElementById("rideSelected");
     const rideSelectedImage = document.getElementById("rideSelectedImage");
@@ -5600,49 +6047,103 @@ document.addEventListener(
 );
 
 
-    function getQuantity() {
+function getQuantity() {
 
-        let total = 0;
+    let total = 0;
 
-        document.querySelectorAll(
+    document.querySelectorAll(
+        ".ff-weight-allocation-row"
+    ).forEach(function (row) {
+
+        const select = row.querySelector(
+            ".ff-weight-range-select"
+        );
+
+        const input = row.querySelector(
             ".ff-weight-qty"
-        ).forEach(function (input) {
+        );
 
-            total += Number(
+        if (
+            select
+            &&
+            select.value
+            &&
+            input
+        ) {
+            total += Number(input.value || 0);
+        }
+
+    });
+
+    if (participantCount) {
+        participantCount.value = total;
+    }
+
+    return total;
+}
+
+
+ function getWeightGroups() {
+
+    const groups = [];
+
+    document.querySelectorAll(
+        ".ff-weight-allocation-row"
+    ).forEach(function (row) {
+
+        const select =
+            row.querySelector(
+                ".ff-weight-range-select"
+            );
+
+        const input =
+            row.querySelector(
+                ".ff-weight-qty"
+            );
+
+        if (
+            !select
+            ||
+            !input
+            ||
+            !select.value
+        ) {
+            return;
+        }
+
+        const selectedOption =
+            select.options[
+                select.selectedIndex
+            ];
+
+        const quantity =
+            Number(
                 input.value || 0
             );
 
-        });
+        if (quantity > 0) {
 
-        return total;
-    }
+            groups.push({
 
+                key:
+                    select.value,
 
-    function getWeightGroups() {
+                label:
+                    selectedOption.dataset.label
+                    ||
+                    selectedOption.textContent.trim(),
 
-        const groups = [];
+                quantity:
+                    quantity
 
-        document.querySelectorAll(
-            ".ff-weight-qty"
-        ).forEach(function (input) {
+            });
 
-            const quantity = Number(
-                input.value || 0
-            );
+        }
 
-            if (quantity > 0) {
+    });
 
-                groups.push({
-                    label: input.dataset.label,
-                    quantity: quantity
-                });
-
-            }
-
-        });
-
-        return groups;
-    }
+    return groups;
+}
 
 
     function resetOffer() {
@@ -6744,166 +7245,456 @@ function buildOffers(rideId) {
     );
 
 
-    function buildWeights() {
+    /* =====================================================
+   WEIGHT DISTRIBUTION
+===================================================== */
 
-        weightList.innerHTML = "";
+function getAvailableWeightRanges() {
 
-        const source = document.getElementById(
+    const source =
+        document.getElementById(
             "globalWeightRanges"
         );
 
-        const ranges = source
-            ? source.querySelectorAll("span[data-id]")
-            : [];
+
+    if (!source) {
+        return [];
+    }
 
 
-        noWeightRanges.style.display =
-            ranges.length
-            ? "none"
-            : "block";
+    return Array.from(
+        source.querySelectorAll(
+            "span[data-key]"
+        )
+    ).map(function (item) {
+
+        return {
+
+            key:
+                item.dataset.key,
+
+            label:
+                item.dataset.label,
+
+            min:
+                item.dataset.min,
+
+            max:
+                item.dataset.max
+
+        };
+
+    });
+
+}
 
 
-        ranges.forEach(function (range) {
 
-            const row =
-                document.createElement(
-                    "div"
+function buildWeightOptions() {
+
+    const ranges =
+        getAvailableWeightRanges();
+
+
+    let html = `
+        <option value="">
+            Select weight range
+        </option>
+    `;
+
+
+    ranges.forEach(function (range) {
+
+        html += `
+
+            <option
+                value="${range.key}"
+                data-label="${range.label}"
+            >
+                ${range.label}
+            </option>
+
+        `;
+
+    });
+
+
+    return html;
+}
+
+
+
+function getAllocatedQuantity() {
+
+    let total = 0;
+
+
+    document.querySelectorAll(
+        ".ff-weight-qty"
+    ).forEach(function (input) {
+
+        total += Number(
+            input.value
+            ||
+            0
+        );
+
+    });
+
+
+    return total;
+}
+
+
+
+function showWeightMessage(message) {
+
+    weightAllocationMessage.textContent =
+        message;
+
+
+    weightAllocationMessage.classList.add(
+        "show"
+    );
+
+}
+
+
+
+function clearWeightMessage() {
+
+    weightAllocationMessage.textContent =
+        "";
+
+
+    weightAllocationMessage.classList.remove(
+        "show"
+    );
+
+}
+
+
+function validateWeightAllocation() {
+
+    const rows = document.querySelectorAll(
+        ".ff-weight-allocation-row"
+    );
+
+    const usedRanges = new Set();
+    let total = 0;
+    let hasSelectedGroup = false;
+
+    for (const row of rows) {
+
+        const select = row.querySelector(
+            ".ff-weight-range-select"
+        );
+
+        const input = row.querySelector(
+            ".ff-weight-qty"
+        );
+
+        const count = Number(input?.value || 0);
+
+        // Completely unused row: ignore it.
+        if (!select?.value && count === 0) {
+            continue;
+        }
+
+        if (!select?.value && count > 0) {
+            showWeightMessage(
+                "Please select a weight range for every rider group."
+            );
+            return false;
+        }
+
+        if (select?.value) {
+
+            hasSelectedGroup = true;
+
+            if (count < 1) {
+                showWeightMessage(
+                    "Enter at least 1 rider for each selected weight range."
                 );
+                return false;
+            }
 
-            row.className =
-                "ff-weight-row";
+            if (usedRanges.has(select.value)) {
+                showWeightMessage(
+                    "The same weight range cannot be selected twice."
+                );
+                return false;
+            }
 
-            row.innerHTML = `
-                <div class="ff-weight-copy">
+            usedRanges.add(select.value);
+            total += count;
+        }
+    }
 
-                    <span class="ff-weight-icon">
-                        <i class="fas fa-weight-scale"></i>
-                    </span>
+    if (!hasSelectedGroup || total < 1) {
+        showWeightMessage(
+            "Please select at least one weight range and add riders."
+        );
+        participantTotal.textContent = "0";
+        allocatedParticipants.textContent = "0";
+        if (participantCount) participantCount.value = "0";
+        return false;
+    }
 
-                    <div>
-                        <strong>
-                            ${range.dataset.label}
-                        </strong>
+    if (total > maximumParticipants) {
+        showWeightMessage(
+            `Maximum ${maximumParticipants} riders are allowed per booking.`
+        );
+        participantTotal.textContent = total;
+        allocatedParticipants.textContent = total;
+        if (participantCount) participantCount.value = total;
+        return false;
+    }
 
-                        <small>
-                            Number of riders in this weight range
-                        </small>
-                    </div>
+    participantTotal.textContent = total;
+    allocatedParticipants.textContent = total;
+    if (participantCount) participantCount.value = total;
 
-                </div>
+    clearWeightMessage();
+    return true;
+}
 
-                <div class="ff-counter">
 
-                    <button
-                        type="button"
-                        class="ff-minus"
-                        aria-label="Decrease"
-                    >
-                        <i class="fas fa-minus"></i>
-                    </button>
+function createWeightRow() {
 
-                    <input
-                        type="number"
-                        name="weight_range_${range.dataset.id}"
-                        value="0"
-                        min="0"
-                        max="${maximumParticipants}"
-                        readonly
+    const ranges = getAvailableWeightRanges();
 
-                        class="ff-weight-qty"
+    if (!ranges.length) {
+        noWeightRanges.style.display = "block";
+        return;
+    }
 
-                        data-range-id="${range.dataset.id}"
-                        data-label="${range.dataset.label}"
-                    >
+    if (weightList.children.length >= ranges.length) {
+        showWeightMessage(
+            "All available weight ranges have already been added."
+        );
+        return;
+    }
 
-                    <button
-                        type="button"
-                        class="ff-plus"
-                        aria-label="Increase"
-                    >
-                        <i class="fas fa-plus"></i>
-                    </button>
+    const row = document.createElement("div");
+    row.className = "ff-weight-allocation-row";
 
-                </div>
-            `;
+    row.innerHTML = `
+        <select
+            class="ff-weight-range-select"
+            name="weight_range_key[]"
+        >
+            ${buildWeightOptions()}
+        </select>
 
-            weightList.appendChild(
-                row
+        <div class="ff-range-counter">
+            <button
+                type="button"
+                class="ff-range-minus"
+                aria-label="Decrease riders"
+            >
+                <i class="fas fa-minus"></i>
+            </button>
+
+            <input
+                type="number"
+                class="ff-weight-qty"
+                name="weight_range_count[]"
+                value="1"
+                min="1"
+                max="${maximumParticipants}"
+                inputmode="numeric"
+            >
+
+            <button
+                type="button"
+                class="ff-range-plus"
+                aria-label="Increase riders"
+            >
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <button
+            type="button"
+            class="ff-remove-weight-range"
+            aria-label="Remove weight range"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+
+    weightList.appendChild(row);
+    bindWeightRow(row);
+    updateSummary();
+}
+
+
+function bindWeightRow(row) {
+
+    const select = row.querySelector(
+        ".ff-weight-range-select"
+    );
+
+    const input = row.querySelector(
+        ".ff-weight-qty"
+    );
+
+    const minus = row.querySelector(
+        ".ff-range-minus"
+    );
+
+    const plus = row.querySelector(
+        ".ff-range-plus"
+    );
+
+    const remove = row.querySelector(
+        ".ff-remove-weight-range"
+    );
+
+    select.addEventListener("change", function () {
+        clearError();
+        clearWeightMessage();
+
+        if (select.value) {
+            const rows = document.querySelectorAll(
+                ".ff-weight-allocation-row"
             );
 
-        });
+            for (const otherRow of rows) {
+                if (otherRow === row) continue;
 
+                const otherSelect = otherRow.querySelector(
+                    ".ff-weight-range-select"
+                );
 
-        document.querySelectorAll(
-            ".ff-plus"
-        ).forEach(function (button) {
-
-            button.onclick =
-                function () {
-
-                    clearError();
-
-                    if (
-                        getQuantity()
-                        >=
-                        maximumParticipants
-                    ) {
-
-                        showError(
-                            `Maximum ${maximumParticipants} riders are allowed per booking.`
-                        );
-
-                        return;
-                    }
-
-                    const input =
-                        button
-                            .closest(".ff-counter")
-                            .querySelector(".ff-weight-qty");
-
-                    input.value =
-                        Number(
-                            input.value || 0
-                        ) + 1;
-
+                if (
+                    otherSelect
+                    &&
+                    otherSelect.value === select.value
+                ) {
+                    select.value = "";
+                    showWeightMessage(
+                        "This weight range is already selected."
+                    );
                     updateSummary();
-                };
-
-        });
-
-
-        document.querySelectorAll(
-            ".ff-minus"
-        ).forEach(function (button) {
-
-            button.onclick =
-                function () {
-
-                    const input =
-                        button
-                            .closest(".ff-counter")
-                            .querySelector(".ff-weight-qty");
-
-                    const value =
-                        Number(
-                            input.value || 0
-                        );
-
-                    if (value > 0) {
-
-                        input.value =
-                            value - 1;
-
-                    }
-
-                    updateSummary();
-                };
-
-        });
-
+                    return;
+                }
+            }
+        }
 
         updateSummary();
+    });
+
+    input.addEventListener("input", function () {
+        clearError();
+        clearWeightMessage();
+
+        let value = parseInt(input.value || "1", 10);
+
+        if (Number.isNaN(value) || value < 1) value = 1;
+        if (value > maximumParticipants) value = maximumParticipants;
+
+        input.value = value;
+        updateSummary();
+    });
+
+    minus.addEventListener("click", function () {
+        clearError();
+        clearWeightMessage();
+
+        const value = Number(input.value || 1);
+
+        if (value > 1) {
+            input.value = value - 1;
+        }
+
+        updateSummary();
+    });
+
+    plus.addEventListener("click", function () {
+        clearError();
+        clearWeightMessage();
+
+        const value = Number(input.value || 1);
+        const currentTotal = getQuantity();
+
+        if (currentTotal >= maximumParticipants) {
+            showWeightMessage(
+                `Maximum ${maximumParticipants} riders are allowed per booking.`
+            );
+            return;
+        }
+
+        input.value = Math.min(
+            maximumParticipants,
+            value + 1
+        );
+
+        updateSummary();
+    });
+
+    remove.addEventListener("click", function () {
+        row.remove();
+        clearWeightMessage();
+
+        if (weightList.children.length === 0) {
+            createWeightRow();
+            return;
+        }
+
+        updateSummary();
+    });
+}
+
+
+function buildWeights() {
+
+    weightList.innerHTML = "";
+    clearWeightMessage();
+
+    const ranges = getAvailableWeightRanges();
+
+    noWeightRanges.style.display =
+        ranges.length ? "none" : "block";
+
+    if (!ranges.length) {
+        return;
     }
+
+    createWeightRow();
+}
+
+
+/* =====================================================
+   ADD ANOTHER WEIGHT RANGE
+===================================================== */
+
+addWeightRange.addEventListener(
+    "click",
+    function () {
+
+        clearError();
+        clearWeightMessage();
+
+        const availableRanges =
+            getAvailableWeightRanges();
+
+        if (
+            weightList.children.length
+            >=
+            availableRanges.length
+        ) {
+            showWeightMessage(
+                "All available weight ranges have already been added."
+            );
+            return;
+        }
+
+        createWeightRow();
+    }
+);
+
 
 
     function calculateOffer(
@@ -7368,6 +8159,9 @@ function buildOffers(rideId) {
         const groups =
             getWeightGroups();
 
+            const weightAllocationValid =
+    validateWeightAllocation();
+
         summaryWeightItems.innerHTML = "";
 
         groups.forEach(function (group) {
@@ -7414,22 +8208,24 @@ function buildOffers(rideId) {
         }
 
 
-        const ready =
-            Boolean(
-                rideId
-                &&
-                bookingDate.value
-                &&
-                timeSlot.value
-                &&
-                quantity > 0
-                &&
-                (
-                    !selectedOffer
-                    ||
-                    offerResult.eligible
-                )
-            );
+      const ready =
+    Boolean(
+        rideId
+        &&
+        bookingDate.value
+        &&
+        timeSlot.value
+        &&
+        quantity > 0
+        &&
+        weightAllocationValid
+        &&
+        (
+            !selectedOffer
+            ||
+            offerResult.eligible
+        )
+    );
 
 
         reviewButton.disabled =
@@ -8011,6 +8807,24 @@ bookingDate.addEventListener(
 
                 showError(
                     "Please add at least one participant."
+                );
+
+                openPanel(
+                    participantPanel
+                );
+
+                return;
+            }
+
+
+            if (
+                !validateWeightAllocation()
+            ) {
+
+                event.preventDefault();
+
+                showError(
+                    "Please correctly assign all participants to weight ranges."
                 );
 
                 openPanel(

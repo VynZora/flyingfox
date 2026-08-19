@@ -85,6 +85,13 @@ from django.utils.dateparse import parse_date
 
 
 from flyingfox_app.forms import ContactEnquiryForm, TestimonialForm
+from .services.refunds import create_razorpay_refund
+from .services.refund_status import (
+    mark_refund_processed,
+    mark_refund_failed,
+)
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 from .models import (
     BookingWeightGroup,
@@ -104,7 +111,7 @@ from .models import (
     BookingPerson,
     Payment,
     Ticket,
-    Coupon,Testimonial,Offer,ParticipantWeightRange
+    Coupon,Testimonial,Offer,WEIGHT_RANGES, Refund,
 )
 
 
@@ -2702,245 +2709,242 @@ def booking_create(request):
         },
     )
 
+# @_admin_required
+# @transaction.atomic
+# def booking_update(request, pk):
+
+#     booking = get_object_or_404(
+#         Booking.objects.select_related(
+#             "ride",
+#             "ride_price",
+#             "coupon",
+#         ),
+#         pk=pk,
+#     )
+
+#     rides = (
+#         Ride.objects
+#         .filter(is_active=True)
+#         .order_by("name")
+#     )
+
+#     prices = (
+#         RidePrice.objects
+#         .filter(is_active=True)
+#         .select_related("ride")
+#         .order_by(
+#             "ride__name",
+#             "-start_date",
+#         )
+#     )
+
+#     if request.method == "POST":
+
+#         customer_name = request.POST.get(
+#             "customer_name",
+#             "",
+#         ).strip()
+
+#         customer_email = request.POST.get(
+#             "customer_email",
+#             "",
+#         ).strip()
+
+#         customer_phone = request.POST.get(
+#             "customer_phone",
+#             "",
+#         ).strip()
+
+#         customer_pincode = request.POST.get(
+#             "customer_pincode",
+#             "",
+#         ).strip()
+
+#         time_slot = request.POST.get(
+#             "time_slot",
+#             "",
+#         ).strip()
+
+#         ride_id = request.POST.get("ride")
+#         ride_price_id = request.POST.get("ride_price")
+
+#         booking_date_raw = request.POST.get(
+#             "booking_date",
+#             "",
+#         ).strip()
+
+#         quantity_raw = request.POST.get(
+#             "quantity",
+#             "1",
+#         )
+
+#         if not customer_name:
+#             messages.error(
+#                 request,
+#                 "Customer name is required.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         if not customer_email:
+#             messages.error(
+#                 request,
+#                 "Customer email is required.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         if (
+#             not customer_phone.isdigit()
+#             or len(customer_phone) != 10
+#         ):
+#             messages.error(
+#                 request,
+#                 "Enter a valid 10-digit customer phone number.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         if (
+#             not customer_pincode.isdigit()
+#             or len(customer_pincode) != 6
+#         ):
+#             messages.error(
+#                 request,
+#                 "Enter a valid 6-digit PIN code.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         if not time_slot:
+#             messages.error(
+#                 request,
+#                 "Time slot is required.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         try:
+#             quantity = int(quantity_raw)
+#         except (TypeError, ValueError):
+#             quantity = 0
+
+#         if quantity < 1:
+#             messages.error(
+#                 request,
+#                 "Quantity must be at least 1.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         selected_date = parse_date(
+#             booking_date_raw
+#         )
+
+#         if selected_date is None:
+#             messages.error(
+#                 request,
+#                 "Please select a valid booking date.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         ride = get_object_or_404(
+#             Ride,
+#             pk=ride_id,
+#             is_active=True,
+#         )
+
+#         ride_price = get_object_or_404(
+#             RidePrice,
+#             pk=ride_price_id,
+#             is_active=True,
+#         )
+
+#         if ride_price.ride_id != ride.id:
+#             messages.error(
+#                 request,
+#                 "Selected price does not belong to this ride.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         if not (
+#             ride_price.start_date
+#             <= selected_date
+#             <= ride_price.end_date
+#         ):
+#             messages.error(
+#                 request,
+#                 "The selected price is not valid for this booking date.",
+#             )
+#             return redirect(
+#                 "booking_update",
+#                 pk=booking.pk,
+#             )
+
+#         price_per_person = ride_price.price
+
+#         subtotal = (
+#             price_per_person
+#             * Decimal(quantity)
+#         )
+
+#         booking.customer_name = customer_name
+#         booking.customer_email = customer_email
+#         booking.customer_phone = customer_phone
+#         booking.customer_pincode = customer_pincode
+#         booking.time_slot = time_slot
+
+#         booking.ride = ride
+#         booking.ride_price = ride_price
+#         booking.booking_date = selected_date
+#         booking.quantity = quantity
+#         booking.price_per_person = price_per_person
+#         booking.subtotal = subtotal
+#         booking.total_amount = subtotal
+
+#         booking.save()
+
+#         messages.success(
+#             request,
+#             "Booking updated successfully.",
+#         )
+
+#         return redirect(
+#             "booking_detail",
+#             pk=booking.pk,
+#         )
+
+#     return render(
+#         request,
+#         "admin_pages/booking_form.html",
+#         {
+#             "booking": booking,
+#             "rides": rides,
+#             "prices": prices,
+#         },
+#     )
+
+
 @_admin_required
-@transaction.atomic
-def booking_update(request, pk):
-
-    booking = get_object_or_404(
-        Booking.objects.select_related(
-            "ride",
-            "ride_price",
-            "coupon",
-        ),
-        pk=pk,
-    )
-
-    rides = (
-        Ride.objects
-        .filter(is_active=True)
-        .order_by("name")
-    )
-
-    prices = (
-        RidePrice.objects
-        .filter(is_active=True)
-        .select_related("ride")
-        .order_by(
-            "ride__name",
-            "-start_date",
-        )
-    )
-
-    if request.method == "POST":
-
-        customer_name = request.POST.get(
-            "customer_name",
-            "",
-        ).strip()
-
-        customer_email = request.POST.get(
-            "customer_email",
-            "",
-        ).strip()
-
-        customer_phone = request.POST.get(
-            "customer_phone",
-            "",
-        ).strip()
-
-        customer_pincode = request.POST.get(
-            "customer_pincode",
-            "",
-        ).strip()
-
-        time_slot = request.POST.get(
-            "time_slot",
-            "",
-        ).strip()
-
-        ride_id = request.POST.get("ride")
-        ride_price_id = request.POST.get("ride_price")
-
-        booking_date_raw = request.POST.get(
-            "booking_date",
-            "",
-        ).strip()
-
-        quantity_raw = request.POST.get(
-            "quantity",
-            "1",
-        )
-
-        if not customer_name:
-            messages.error(
-                request,
-                "Customer name is required.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        if not customer_email:
-            messages.error(
-                request,
-                "Customer email is required.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        if (
-            not customer_phone.isdigit()
-            or len(customer_phone) != 10
-        ):
-            messages.error(
-                request,
-                "Enter a valid 10-digit customer phone number.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        if (
-            not customer_pincode.isdigit()
-            or len(customer_pincode) != 6
-        ):
-            messages.error(
-                request,
-                "Enter a valid 6-digit PIN code.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        if not time_slot:
-            messages.error(
-                request,
-                "Time slot is required.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        try:
-            quantity = int(quantity_raw)
-        except (TypeError, ValueError):
-            quantity = 0
-
-        if quantity < 1:
-            messages.error(
-                request,
-                "Quantity must be at least 1.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        selected_date = parse_date(
-            booking_date_raw
-        )
-
-        if selected_date is None:
-            messages.error(
-                request,
-                "Please select a valid booking date.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        ride = get_object_or_404(
-            Ride,
-            pk=ride_id,
-            is_active=True,
-        )
-
-        ride_price = get_object_or_404(
-            RidePrice,
-            pk=ride_price_id,
-            is_active=True,
-        )
-
-        if ride_price.ride_id != ride.id:
-            messages.error(
-                request,
-                "Selected price does not belong to this ride.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        if not (
-            ride_price.start_date
-            <= selected_date
-            <= ride_price.end_date
-        ):
-            messages.error(
-                request,
-                "The selected price is not valid for this booking date.",
-            )
-            return redirect(
-                "booking_update",
-                pk=booking.pk,
-            )
-
-        price_per_person = ride_price.price
-
-        subtotal = (
-            price_per_person
-            * Decimal(quantity)
-        )
-
-        booking.customer_name = customer_name
-        booking.customer_email = customer_email
-        booking.customer_phone = customer_phone
-        booking.customer_pincode = customer_pincode
-        booking.time_slot = time_slot
-
-        booking.ride = ride
-        booking.ride_price = ride_price
-        booking.booking_date = selected_date
-        booking.quantity = quantity
-        booking.price_per_person = price_per_person
-        booking.subtotal = subtotal
-        booking.total_amount = subtotal
-
-        booking.save()
-
-        messages.success(
-            request,
-            "Booking updated successfully.",
-        )
-
-        return redirect(
-            "booking_detail",
-            pk=booking.pk,
-        )
-
-    return render(
-        request,
-        "admin_pages/booking_form.html",
-        {
-            "booking": booking,
-            "rides": rides,
-            "prices": prices,
-        },
-    )
-
-
-@_admin_required
-def booking_detail(
-    request,
-    pk,
-):
+def booking_detail(request, pk):
 
     booking = get_object_or_404(
 
@@ -2955,7 +2959,6 @@ def booking_detail(
         )
         .prefetch_related(
             "weight_groups",
-            "weight_groups__weight_range",
         ),
 
         pk=pk,
@@ -2980,60 +2983,10 @@ def booking_detail(
         request,
         "admin_pages/booking_detail.html",
         {
-            "booking":
-                booking,
-
-            "payment":
-                payment,
-
-            "ticket":
-                ticket,
+            "booking": booking,
+            "payment": payment,
+            "ticket": ticket,
         },
-    )
-
-
-@_admin_required
-def booking_status_update(request, pk):
-
-    booking = get_object_or_404(
-        Booking,
-        pk=pk
-    )
-
-
-    if request.method == "POST":
-
-        status = request.POST.get(
-            "status"
-        )
-
-
-        valid_statuses = [
-            choice[0]
-            for choice in Booking.STATUS_CHOICES
-        ]
-
-
-        if status in valid_statuses:
-
-            booking.status = status
-
-            booking.save(
-                update_fields=[
-                    "status",
-                    "updated_at",
-                ]
-            )
-
-            messages.success(
-                request,
-                "Booking status updated."
-            )
-
-
-    return redirect(
-        "booking_detail",
-        pk=booking.pk
     )
 
 
@@ -3229,7 +3182,6 @@ def transaction_list(request):
     )
 
 
-
 # =========================================================
 # TRANSACTION DETAIL
 # =========================================================
@@ -3253,7 +3205,6 @@ def transaction_detail(
         )
         .prefetch_related(
             "booking__weight_groups",
-            "booking__weight_groups__weight_range",
         ),
 
         pk=pk,
@@ -5161,7 +5112,15 @@ def user_dashboard(request):
 # USER BOOKINGS
 # =========================================================
 
+# =========================================================
+# USER BOOKINGS
+# =========================================================
+
 def user_bookings(request):
+
+    # =====================================================
+    # LOGIN CHECK
+    # =====================================================
 
     user_id = request.session.get(
         "user_id"
@@ -5180,13 +5139,22 @@ def user_bookings(request):
         )
 
 
+    # =====================================================
+    # USER PROFILE
+    # =====================================================
+
     profile = get_object_or_404(
         UserProfile,
         id=user_id
     )
 
 
-    bookings = (
+    # =====================================================
+    # USER BOOKINGS
+    # =====================================================
+
+    bookings = list(
+
         Booking.objects
         .filter(
             user=profile
@@ -5195,23 +5163,118 @@ def user_bookings(request):
             "ride",
             "ride_price",
             "offer",
+            "payment",
+            "ticket",
+        )
+        .prefetch_related(
+            "refunds",
         )
         .order_by(
             "-created_at"
         )
+
     )
 
+
+    # =====================================================
+    # REFUND INFORMATION FOR EACH BOOKING
+    # =====================================================
+
+    for booking in bookings:
+
+        # ---------------------------------------------
+        # PAYMENT
+        # ---------------------------------------------
+
+        payment = getattr(
+            booking,
+            "payment",
+            None,
+        )
+
+
+        # ---------------------------------------------
+        # MOST RECENT REFUND REQUEST
+        # ---------------------------------------------
+
+        refund_list = list(
+            booking.refunds.all()
+        )
+
+
+        refund_list.sort(
+            key=lambda item: item.requested_at,
+            reverse=True,
+        )
+
+
+        booking.latest_refund = (
+            refund_list[0]
+            if refund_list
+            else None
+        )
+
+
+        # ---------------------------------------------
+        # IF A REFUND REQUEST ALREADY EXISTS,
+        # DON'T OFFER ANOTHER ONE
+        # ---------------------------------------------
+
+        if booking.latest_refund:
+
+            booking.refund_info = {
+                "eligible": False,
+                "message": (
+                    "A cancellation/refund request "
+                    "already exists for this booking."
+                ),
+            }
+
+            continue
+
+
+        # ---------------------------------------------
+        # CALCULATE CURRENT REFUND ELIGIBILITY
+        # ---------------------------------------------
+
+        if payment:
+
+            booking.refund_info = (
+                _calculate_booking_refund(
+                    booking,
+                    payment,
+                )
+            )
+
+        else:
+
+            booking.refund_info = {
+                "eligible": False,
+                "message": (
+                    "No successful payment "
+                    "was found for this booking."
+                ),
+            }
+
+
+    # =====================================================
+    # RENDER
+    # =====================================================
 
     return render(
         request,
         "authenticate/user_bookings.html",
         {
-            "profile": profile,
-            "bookings": bookings,
-            "active_page": "bookings",
+            "profile":
+                profile,
+
+            "bookings":
+                bookings,
+
+            "active_page":
+                "bookings",
         }
     )
-
 
 
 # =========================================================
@@ -5718,7 +5781,6 @@ from .models import (
     RideMedia,
     RidePrice,
     Offer,
-    ParticipantWeightRange,
 )
 
 from django.db.models import Prefetch
@@ -5727,7 +5789,6 @@ from django.utils import timezone
 
 from .models import (
     Offer,
-    ParticipantWeightRange,
     Ride,
     RideMedia,
     RidePrice,
@@ -5852,7 +5913,6 @@ def _identity_booking_queryset(
     return Booking.objects.none()
 
 
-
 def bookings(request):
 
     today = timezone.localdate()
@@ -5920,19 +5980,41 @@ def bookings(request):
 
 
     # =====================================================
-    # GLOBAL PARTICIPANT WEIGHT RANGES
+    # STATIC PARTICIPANT WEIGHT RANGES
+    #
+    # No database model is used anymore.
+    #
+    # WEIGHT_RANGES example:
+    #
+    # {
+    #     "30-50": {
+    #         "label": "30–50 KG",
+    #         "min_weight": 30,
+    #         "max_weight": 50,
+    #     },
+    #     ...
+    # }
     # =====================================================
 
-    weight_ranges = (
-        ParticipantWeightRange.objects
-        .filter(
-            is_active=True
-        )
-        .order_by(
-            "sort_order",
-            "min_weight",
-        )
-    )
+    weight_ranges = [
+
+        {
+            "key": key,
+
+            "label":
+                data["label"],
+
+            "min_weight":
+                data["min_weight"],
+
+            "max_weight":
+                data["max_weight"],
+        }
+
+        for key, data
+        in WEIGHT_RANGES.items()
+
+    ]
 
 
     # =====================================================
@@ -5984,13 +6066,18 @@ def bookings(request):
         request,
         "frontend/booking.html",
         {
-            "rides": rides,
-            "weight_ranges": weight_ranges,
-            "today": today,
+            "rides":
+                rides,
+
+            "weight_ranges":
+                weight_ranges,
+
+            "today":
+                today,
         },
     )
 
-
+    
 def _booking_user_profile(request):
     """
     Return the UserProfile connected to the current visitor when available.
@@ -6558,8 +6645,6 @@ def _calculate_offer_discount(
         "",
     )
 
-
-
 def booking_review(request):
 
     # =====================================================
@@ -6568,12 +6653,9 @@ def booking_review(request):
 
     if request.method == "GET":
 
-        booking_data = (
-            request.session.get(
-                "pending_booking"
-            )
+        booking_data = request.session.get(
+            "pending_booking"
         )
-
 
         if not booking_data:
 
@@ -6592,24 +6674,19 @@ def booking_review(request):
 
         ride = get_object_or_404(
             Ride,
-
             id=booking_data.get(
                 "ride_id"
             ),
-
             is_active=True,
         )
 
 
         ride_price = get_object_or_404(
             RidePrice,
-
             id=booking_data.get(
                 "ride_price_id"
             ),
-
             ride=ride,
-
             is_active=True,
         )
 
@@ -6624,10 +6701,9 @@ def booking_review(request):
             selected_offer = (
                 Offer.objects
                 .filter(
-                    id=
-                        booking_data[
-                            "offer_id"
-                        ]
+                    id=booking_data[
+                        "offer_id"
+                    ]
                 )
                 .first()
             )
@@ -6658,7 +6734,7 @@ def booking_review(request):
 
 
     # =====================================================
-    # POST
+    # POST ONLY
     # =====================================================
 
     if request.method != "POST":
@@ -6667,6 +6743,10 @@ def booking_review(request):
             "bookings"
         )
 
+
+    # =====================================================
+    # BASIC FORM VALUES
+    # =====================================================
 
     ride_id = (
         request.POST.get(
@@ -6790,6 +6870,10 @@ def booking_review(request):
         )
 
 
+    # =====================================================
+    # TIME SLOT
+    # =====================================================
+
     if not time_slot:
 
         messages.error(
@@ -6803,41 +6887,148 @@ def booking_review(request):
 
 
     # =====================================================
-    # PARTICIPANT WEIGHT COUNTS
+    # STATIC PARTICIPANT WEIGHT GROUPS
+    #
+    # Frontend sends:
+    #
+    # weight_range_key[]   = 30-50
+    # weight_range_count[] = 2
+    #
+    # weight_range_key[]   = 50-70
+    # weight_range_count[] = 1
+    #
+    # Total quantity is automatically calculated here.
     # =====================================================
 
-    weight_ranges = (
-        ParticipantWeightRange.objects
-        .filter(
-            is_active=True
-        )
-        .order_by(
-            "sort_order",
-            "min_weight",
+    weight_range_keys = (
+        request.POST.getlist(
+            "weight_range_key[]"
         )
     )
+
+    weight_range_counts = (
+        request.POST.getlist(
+            "weight_range_count[]"
+        )
+    )
+
+
+    # =====================================================
+    # MAKE SURE BOTH ARRAYS MATCH
+    # =====================================================
+
+    if (
+        len(weight_range_keys)
+        !=
+        len(weight_range_counts)
+    ):
+
+        messages.error(
+            request,
+            "Invalid participant weight information."
+        )
+
+        return redirect(
+            "bookings"
+        )
 
 
     selected_weight_groups = []
 
     quantity = 0
 
+    used_range_keys = set()
 
-    for weight_range in weight_ranges:
 
-        raw_count = (
-            request.POST.get(
-                f"weight_range_{weight_range.id}",
-                "0"
+    # =====================================================
+    # PROCESS WEIGHT GROUPS
+    # =====================================================
+
+    for (
+        range_key,
+        count_raw,
+    ) in zip(
+        weight_range_keys,
+        weight_range_counts,
+    ):
+
+        range_key = (
+            range_key
+            or
+            ""
+        ).strip()
+
+        count_raw = (
+            count_raw
+            or
+            "0"
+        ).strip()
+
+
+        # ---------------------------------------------
+        # Ignore completely empty unused rows
+        # ---------------------------------------------
+
+        if not range_key:
+
+            continue
+
+
+        # ---------------------------------------------
+        # Validate range against static configuration
+        # ---------------------------------------------
+
+        range_data = (
+            WEIGHT_RANGES.get(
+                range_key
             )
-            .strip()
         )
 
+
+        if not range_data:
+
+            messages.error(
+                request,
+                "One of the selected weight ranges is invalid."
+            )
+
+            return redirect(
+                "bookings"
+            )
+
+
+        # ---------------------------------------------
+        # Prevent same range appearing twice
+        # ---------------------------------------------
+
+        if range_key in used_range_keys:
+
+            messages.error(
+                request,
+                (
+                    "The same participant weight range "
+                    "cannot be selected more than once."
+                )
+            )
+
+            return redirect(
+                "bookings"
+            )
+
+
+        used_range_keys.add(
+            range_key
+        )
+
+
+        # ---------------------------------------------
+        # Convert rider quantity
+        # ---------------------------------------------
 
         try:
 
             participant_count = int(
-                raw_count
+                count_raw
             )
 
         except (
@@ -6848,14 +7039,23 @@ def booking_review(request):
             participant_count = 0
 
 
-        if participant_count < 0:
-
-            participant_count = 0
-
+        # ---------------------------------------------
+        # Selected range requires at least one rider
+        # ---------------------------------------------
 
         if participant_count <= 0:
 
-            continue
+            messages.error(
+                request,
+                (
+                    "Each selected weight range "
+                    "must contain at least one rider."
+                )
+            )
+
+            return redirect(
+                "bookings"
+            )
 
 
         quantity += (
@@ -6865,31 +7065,35 @@ def booking_review(request):
 
         selected_weight_groups.append(
             {
-                "weight_range_id":
-                    weight_range.id,
+
+                "range_key":
+                    range_key,
 
                 "label":
-                    (
-                        weight_range.label
-                        or
-                        (
-                            f"{weight_range.min_weight}"
-                            f" - "
-                            f"{weight_range.max_weight} KG"
-                        )
-                    ),
+                    range_data[
+                        "label"
+                    ],
 
                 "min_weight":
-                    weight_range.min_weight,
+                    range_data[
+                        "min_weight"
+                    ],
 
                 "max_weight":
-                    weight_range.max_weight,
+                    range_data[
+                        "max_weight"
+                    ],
 
                 "participant_count":
                     participant_count,
+
             }
         )
 
+
+    # =====================================================
+    # TOTAL PARTICIPANT VALIDATION
+    # =====================================================
 
     if quantity < 1:
 
@@ -7023,6 +7227,10 @@ def booking_review(request):
             )
 
 
+        # =================================================
+        # COUPON OFFER
+        # =================================================
+
         requires_coupon = (
             selected_offer.coupon_required
             or
@@ -7070,6 +7278,10 @@ def booking_review(request):
                     "bookings"
                 )
 
+
+        # =================================================
+        # SERVER-SIDE OFFER VALIDATION
+        # =================================================
 
         (
             discount_amount,
@@ -7122,12 +7334,14 @@ def booking_review(request):
         -
         discount_amount,
 
-        Decimal("0.00"),
+        Decimal(
+            "0.00"
+        ),
     )
 
 
     # =====================================================
-    # SESSION
+    # SESSION DATA
     # =====================================================
 
     booking_data = {
@@ -7146,6 +7360,10 @@ def booking_review(request):
 
         "time_slot":
             time_slot,
+
+        # ---------------------------------------------
+        # Automatically calculated from weight groups
+        # ---------------------------------------------
 
         "quantity":
             quantity,
@@ -7172,28 +7390,32 @@ def booking_review(request):
             (
                 selected_offer.id
                 if selected_offer
-                else None
+                else
+                None
             ),
 
         "offer_title":
             (
                 selected_offer.title
                 if selected_offer
-                else ""
+                else
+                ""
             ),
 
         "offer_label":
             (
                 selected_offer.discount_label
                 if selected_offer
-                else ""
+                else
+                ""
             ),
 
         "coupon_code":
             (
                 coupon_code
                 if selected_offer
-                else ""
+                else
+                ""
             ),
 
         "discount_amount":
@@ -7208,11 +7430,16 @@ def booking_review(request):
     }
 
 
+    # =====================================================
+    # SAVE PENDING BOOKING TO SESSION
+    # =====================================================
+
     request.session[
         "pending_booking"
     ] = booking_data
 
 
+    # Clear any previous unfinished booking ID
     request.session.pop(
         "current_booking_id",
         None,
@@ -7222,10 +7449,15 @@ def booking_review(request):
     request.session.modified = True
 
 
+    # =====================================================
+    # REVIEW PAGE
+    # =====================================================
+
     return render(
         request,
         "frontend/booking_review.html",
         {
+
             "booking_data":
                 booking_data,
 
@@ -7242,11 +7474,9 @@ def booking_review(request):
                 _booking_user_profile(
                     request
                 ),
+
         },
     )
-
-
-
 
 def _validate_pending_booking_before_payment(
     request,
@@ -7254,6 +7484,10 @@ def _validate_pending_booking_before_payment(
     customer_phone="",
     customer_email="",
 ):
+
+    # =====================================================
+    # PENDING BOOKING SESSION
+    # =====================================================
 
     booking_data = (
         request.session.get(
@@ -7269,6 +7503,10 @@ def _validate_pending_booking_before_payment(
             "Your booking session has expired."
         )
 
+
+    # =====================================================
+    # RIDE
+    # =====================================================
 
     ride = (
         Ride.objects
@@ -7289,6 +7527,10 @@ def _validate_pending_booking_before_payment(
             "The selected ride is no longer available."
         )
 
+
+    # =====================================================
+    # BOOKING DATE
+    # =====================================================
 
     booking_date = parse_date(
         booking_data.get(
@@ -7312,13 +7554,18 @@ def _validate_pending_booking_before_payment(
         )
 
 
+    # =====================================================
+    # TIME SLOT
+    # =====================================================
+
     time_slot = (
         booking_data.get(
             "time_slot",
             ""
         )
-        .strip()
-    )
+        or
+        ""
+    ).strip()
 
 
     if not time_slot:
@@ -7328,6 +7575,10 @@ def _validate_pending_booking_before_payment(
             "The selected time slot is invalid."
         )
 
+
+    # =====================================================
+    # RIDE PRICE
+    # =====================================================
 
     ride_price = (
         RidePrice.objects
@@ -7356,6 +7607,20 @@ def _validate_pending_booking_before_payment(
 
     # =====================================================
     # WEIGHT GROUPS
+    #
+    # Expected session format:
+    #
+    # {
+    #     "range_key": "30-50",
+    #     "label": "30–50 KG",
+    #     "min_weight": 30,
+    #     "max_weight": 50,
+    #     "participant_count": 2,
+    # }
+    #
+    # IMPORTANT:
+    # We do NOT trust label/min/max from session.
+    # We rebuild them from WEIGHT_RANGES.
     # =====================================================
 
     weight_groups_data = (
@@ -7368,21 +7633,110 @@ def _validate_pending_booking_before_payment(
     )
 
 
+    if not isinstance(
+        weight_groups_data,
+        list
+    ):
+
+        return (
+            None,
+            "Invalid participant weight-group data."
+        )
+
+
     validated_weight_groups = []
 
     quantity = 0
 
+    used_range_keys = set()
+
 
     for group in weight_groups_data:
 
-        try:
+        # ---------------------------------------------
+        # GROUP MUST BE A DICTIONARY
+        # ---------------------------------------------
 
-            weight_range_id = int(
-                group.get(
-                    "weight_range_id"
+        if not isinstance(
+            group,
+            dict
+        ):
+
+            return (
+                None,
+                "Invalid participant weight-group data."
+            )
+
+
+        # ---------------------------------------------
+        # RANGE KEY
+        # ---------------------------------------------
+
+        range_key = str(
+            group.get(
+                "range_key",
+                ""
+            )
+            or
+            ""
+        ).strip()
+
+
+        if not range_key:
+
+            return (
+                None,
+                "Invalid participant weight-group data."
+            )
+
+
+        # ---------------------------------------------
+        # RANGE MUST EXIST IN STATIC CONFIG
+        # ---------------------------------------------
+
+        range_data = (
+            WEIGHT_RANGES.get(
+                range_key
+            )
+        )
+
+
+        if not range_data:
+
+            return (
+                None,
+                (
+                    "One of the selected participant "
+                    "weight ranges is invalid."
                 )
             )
 
+
+        # ---------------------------------------------
+        # PREVENT DUPLICATE RANGE
+        # ---------------------------------------------
+
+        if range_key in used_range_keys:
+
+            return (
+                None,
+                (
+                    "The same participant weight range "
+                    "cannot be selected more than once."
+                )
+            )
+
+
+        used_range_keys.add(
+            range_key
+        )
+
+
+        # ---------------------------------------------
+        # PARTICIPANT COUNT
+        # ---------------------------------------------
+
+        try:
 
             participant_count = int(
                 group.get(
@@ -7390,7 +7744,6 @@ def _validate_pending_booking_before_payment(
                     0
                 )
             )
-
 
         except (
             TypeError,
@@ -7405,29 +7758,11 @@ def _validate_pending_booking_before_payment(
 
         if participant_count <= 0:
 
-            continue
-
-
-        weight_range = (
-            ParticipantWeightRange.objects
-            .filter(
-                id=
-                    weight_range_id,
-
-                is_active=
-                    True,
-            )
-            .first()
-        )
-
-
-        if not weight_range:
-
             return (
                 None,
                 (
-                    "One of the selected participant "
-                    "weight ranges is no longer available."
+                    "Each selected participant weight "
+                    "range must contain at least one rider."
                 )
             )
 
@@ -7437,27 +7772,41 @@ def _validate_pending_booking_before_payment(
         )
 
 
+        # ---------------------------------------------
+        # SERVER-VALIDATED GROUP
+        # ---------------------------------------------
+
         validated_weight_groups.append(
             {
-                "weight_range":
-                    weight_range,
+
+                "range_key":
+                    range_key,
+
+                "label":
+                    range_data[
+                        "label"
+                    ],
+
+                "min_weight":
+                    range_data[
+                        "min_weight"
+                    ],
+
+                "max_weight":
+                    range_data[
+                        "max_weight"
+                    ],
 
                 "participant_count":
                     participant_count,
 
-                "label":
-                    (
-                        weight_range.label
-                        or
-                        (
-                            f"{weight_range.min_weight}"
-                            f" - "
-                            f"{weight_range.max_weight} KG"
-                        )
-                    ),
             }
         )
 
+
+    # =====================================================
+    # RIDER QUANTITY
+    # =====================================================
 
     if (
         quantity < 1
@@ -7470,6 +7819,10 @@ def _validate_pending_booking_before_payment(
             "Invalid rider quantity."
         )
 
+
+    # =====================================================
+    # VERIFY SESSION QUANTITY
+    # =====================================================
 
     try:
 
@@ -7587,6 +7940,10 @@ def _validate_pending_booking_before_payment(
             )
 
 
+        # =================================================
+        # COUPON VALIDATION
+        # =================================================
+
         requires_coupon = (
             selected_offer.coupon_required
             or
@@ -7603,9 +7960,9 @@ def _validate_pending_booking_before_payment(
                     "coupon_code",
                     ""
                 )
-                .strip()
-                .upper()
-            )
+                or
+                ""
+            ).strip().upper()
 
 
             expected_code = (
@@ -7634,6 +7991,10 @@ def _validate_pending_booking_before_payment(
                 )
 
 
+        # =================================================
+        # SERVER-SIDE OFFER DISCOUNT VALIDATION
+        # =================================================
+
         (
             discount_amount,
             offer_error,
@@ -7660,9 +8021,8 @@ def _validate_pending_booking_before_payment(
             customer_phone=
                 customer_phone,
 
-            # IMPORTANT:
-            # billing details now exist,
-            # so one-use-per-user is enforced.
+            # Billing identity is now available,
+            # so one-use-per-user checks can be enforced.
             strict_identity=
                 True,
         )
@@ -7676,17 +8036,28 @@ def _validate_pending_booking_before_payment(
             )
 
 
+    # =====================================================
+    # TOTAL
+    # =====================================================
+
     total_amount = max(
         subtotal
         -
         discount_amount,
 
-        Decimal("0.00"),
+        Decimal(
+            "0.00"
+        ),
     )
 
 
+    # =====================================================
+    # VALIDATED RESULT
+    # =====================================================
+
     return (
         {
+
             "booking_data":
                 booking_data,
 
@@ -7728,12 +8099,12 @@ def _validate_pending_booking_before_payment(
 
             "user_profile":
                 user_profile,
+
         },
         None,
     )
 
-
-
+    
 # =========================================================
 # FIND OR CREATE CUSTOMER USER PROFILE DURING BOOKING
 # =========================================================
@@ -7879,20 +8250,19 @@ def _get_or_create_booking_user_profile(
 
     return user_profile
 
-
-
 @transaction.atomic
 def booking_confirm(request):
+
+    # =====================================================
+    # POST ONLY
+    # =====================================================
 
     if request.method != "POST":
 
         return JsonResponse(
             {
-                "success":
-                    False,
-
-                "message":
-                    "POST request required.",
+                "success": False,
+                "message": "POST request required.",
             },
             status=405,
         )
@@ -7947,19 +8317,24 @@ def booking_confirm(request):
     )
 
 
+    # =====================================================
+    # CUSTOMER NAME
+    # =====================================================
+
     if not customer_name:
 
         return JsonResponse(
             {
-                "success":
-                    False,
-
-                "message":
-                    "Please enter your full name.",
+                "success": False,
+                "message": "Please enter your full name.",
             },
             status=400,
         )
 
+
+    # =====================================================
+    # EMAIL
+    # =====================================================
 
     try:
 
@@ -7971,32 +8346,37 @@ def booking_confirm(request):
 
         return JsonResponse(
             {
-                "success":
-                    False,
-
-                "message":
-                    "Please enter a valid email address.",
+                "success": False,
+                "message": "Please enter a valid email address.",
             },
             status=400,
         )
 
-        # =====================================================
-# INTERNATIONAL PHONE VALIDATION
-# =====================================================
+
+    # =====================================================
+    # INTERNATIONAL PHONE VALIDATION
+    #
+    # Example:
+    # +919876543210
+    # =====================================================
 
     if not re.fullmatch(
-         r"\+[1-9]\d{7,14}",
-         customer_phone
+        r"\+[1-9]\d{7,14}",
+        customer_phone
     ):
 
         return JsonResponse(
-        {
-            "success": False,
-            "message": "Please enter a valid mobile number.",
-        },
-        status=400,
-    )
+            {
+                "success": False,
+                "message": "Please enter a valid mobile number.",
+            },
+            status=400,
+        )
 
+
+    # =====================================================
+    # PINCODE
+    # =====================================================
 
     if (
         not customer_pincode.isdigit()
@@ -8006,54 +8386,50 @@ def booking_confirm(request):
 
         return JsonResponse(
             {
-                "success":
-                    False,
-
-                "message":
-                    (
-                        "Please enter a valid "
-                        "6-digit PIN code."
-                    ),
+                "success": False,
+                "message": (
+                    "Please enter a valid "
+                    "6-digit PIN code."
+                ),
             },
             status=400,
         )
 
+
+    # =====================================================
+    # TERMS
+    # =====================================================
 
     if not terms_accepted:
 
         return JsonResponse(
             {
-                "success":
-                    False,
-
-                "message":
-                    (
-                        "Please accept the terms "
-                        "and conditions."
-                    ),
+                "success": False,
+                "message": (
+                    "Please accept the terms "
+                    "and conditions."
+                ),
             },
             status=400,
         )
 
 
     # =====================================================
-    # REVALIDATE EVERYTHING
+    # REVALIDATE BOOKING
     # =====================================================
 
     (
         validated,
         error_message,
-    ) = (
-        _validate_pending_booking_before_payment(
+    ) = _validate_pending_booking_before_payment(
 
-            request,
+        request,
 
-            customer_phone=
-                customer_phone,
+        customer_phone=
+            customer_phone,
 
-            customer_email=
-                customer_email,
-        )
+        customer_email=
+            customer_email,
     )
 
 
@@ -8061,15 +8437,16 @@ def booking_confirm(request):
 
         return JsonResponse(
             {
-                "success":
-                    False,
-
-                "message":
-                    error_message,
+                "success": False,
+                "message": error_message,
             },
             status=400,
         )
 
+
+    # =====================================================
+    # TOTAL AMOUNT
+    # =====================================================
 
     total_amount = (
         validated[
@@ -8086,15 +8463,13 @@ def booking_confirm(request):
 
         return JsonResponse(
             {
-                "success":
-                    False,
+                "success": False,
 
-                "message":
-                    (
-                        "This booking has a zero payable "
-                        "amount. Free bookings must be "
-                        "handled separately."
-                    ),
+                "message": (
+                    "This booking has a zero payable "
+                    "amount. Free bookings must be "
+                    "handled separately."
+                ),
             },
             status=400,
         )
@@ -8126,18 +8501,20 @@ def booking_confirm(request):
 
         return JsonResponse(
             {
-                "success":
-                    False,
+                "success": False,
 
-                "message":
-                    (
-                        "Razorpay API keys "
-                        "are not configured yet."
-                    ),
+                "message": (
+                    "Razorpay API keys "
+                    "are not configured yet."
+                ),
             },
             status=500,
         )
 
+
+    # =====================================================
+    # RAZORPAY CLIENT
+    # =====================================================
 
     client = razorpay.Client(
         auth=(
@@ -8147,173 +8524,321 @@ def booking_confirm(request):
     )
 
 
+    # =====================================================
+    # BOOKING SESSION DATA
+    # =====================================================
+
     booking_data = (
         validated[
             "booking_data"
         ]
     )
-    
+
 
     # =====================================================
-# FIND OR CREATE CUSTOMER USER PROFILE
-# =====================================================
+    # FIND OR CREATE CUSTOMER PROFILE
+    # =====================================================
 
-    user_profile = (
-          _get_or_create_booking_user_profile(
+    try:
 
-        request,
+        user_profile = (
+            _get_or_create_booking_user_profile(
 
-        customer_name=
-            customer_name,
+                request,
 
-        customer_email=
-            customer_email,
+                customer_name=
+                    customer_name,
 
-        customer_phone=
-            customer_phone,
+                customer_email=
+                    customer_email,
 
-        customer_pincode=
-            customer_pincode,
-    )
-)
+                customer_phone=
+                    customer_phone,
+
+                customer_pincode=
+                    customer_pincode,
+            )
+        )
+
+    except Exception as error:
+
+        print(
+            "\n=============================="
+        )
+
+        print(
+            "USER PROFILE ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "==============================\n"
+        )
 
 
-    
+        transaction.set_rollback(
+            True
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Unable to prepare your customer "
+                    "profile. Please try again."
+                ),
+            },
+            status=500,
+        )
 
 
     # =====================================================
     # CREATE BOOKING
     # =====================================================
 
-    booking = Booking.objects.create(
+    try:
 
-        user=
-         user_profile,
+        booking = Booking.objects.create(
 
-        customer_name=
-            customer_name,
+            user=
+                user_profile,
 
-        customer_email=
-            customer_email,
+            customer_name=
+                customer_name,
 
-        customer_phone=
-            customer_phone,
+            customer_email=
+                customer_email,
 
-        customer_pincode=
-            customer_pincode,
+            customer_phone=
+                customer_phone,
 
-        ride=
-            validated[
-                "ride"
-            ],
+            customer_pincode=
+                customer_pincode,
 
-        ride_price=
-            validated[
-                "ride_price"
-            ],
+            ride=
+                validated[
+                    "ride"
+                ],
 
-        booking_date=
-            validated[
-                "booking_date"
-            ],
+            ride_price=
+                validated[
+                    "ride_price"
+                ],
 
-        time_slot=
-            validated[
-                "time_slot"
-            ],
+            booking_date=
+                validated[
+                    "booking_date"
+                ],
 
-        quantity=
-            validated[
-                "quantity"
-            ],
+            time_slot=
+                validated[
+                    "time_slot"
+                ],
 
-        price_per_person=
-            validated[
-                "price_per_person"
-            ],
+            quantity=
+                validated[
+                    "quantity"
+                ],
 
-        offer=
-            validated[
-                "offer"
-            ],
+            price_per_person=
+                validated[
+                    "price_per_person"
+                ],
 
-        applied_coupon_code=
-            booking_data.get(
-                "coupon_code",
-                ""
-            ),
+            offer=
+                validated[
+                    "offer"
+                ],
 
-        discount_amount=
-            validated[
-                "discount_amount"
-            ],
+            applied_coupon_code=
+                booking_data.get(
+                    "coupon_code",
+                    ""
+                ),
 
-        subtotal=
-            validated[
-                "subtotal"
-            ],
+            discount_amount=
+                validated[
+                    "discount_amount"
+                ],
 
-        total_amount=
-            validated[
-                "total_amount"
-            ],
+            subtotal=
+                validated[
+                    "subtotal"
+                ],
 
-        status=
-            "payment_pending",
-    )
+            total_amount=
+                validated[
+                    "total_amount"
+                ],
+
+            status=
+                "payment_pending",
+        )
+
+    except Exception as error:
+
+        print(
+            "\n=============================="
+        )
+
+        print(
+            "BOOKING CREATE ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "==============================\n"
+        )
+
+
+        transaction.set_rollback(
+            True
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Unable to create the booking. "
+                    "Please try again."
+                ),
+            },
+            status=500,
+        )
 
 
     # =====================================================
-    # SAVE WEIGHT GROUPS
+    # SAVE STATIC WEIGHT GROUPS
+    #
+    # IMPORTANT:
+    #
+    # OLD:
+    # weight_range = item["weight_range"]
+    # weight_range=weight_range
+    #
+    # NEW:
+    # range_key=item["range_key"]
     # =====================================================
 
     weight_group_objects = []
 
 
-    for item in validated[
-        "weight_groups"
-    ]:
+    try:
 
-        weight_range = (
-            item[
-                "weight_range"
-            ]
-        )
+        for item in validated[
+            "weight_groups"
+        ]:
 
+            weight_group_objects.append(
 
-        weight_group_objects.append(
+                BookingWeightGroup(
 
-            BookingWeightGroup(
+                    booking=
+                        booking,
 
-                booking=
-                    booking,
+                    range_key=
+                        item[
+                            "range_key"
+                        ],
 
-                weight_range=
-                    weight_range,
+                    participant_count=
+                        item[
+                            "participant_count"
+                        ],
 
-                participant_count=
-                    item[
-                        "participant_count"
-                    ],
+                    min_weight=
+                        item[
+                            "min_weight"
+                        ],
 
-                min_weight=
-                    weight_range.min_weight,
+                    max_weight=
+                        item[
+                            "max_weight"
+                        ],
 
-                max_weight=
-                    weight_range.max_weight,
+                    label=
+                        item[
+                            "label"
+                        ],
 
-                label=
-                    item[
-                        "label"
-                    ],
+                )
+
             )
 
+
+        BookingWeightGroup.objects.bulk_create(
+            weight_group_objects
         )
 
 
-    BookingWeightGroup.objects.bulk_create(
-        weight_group_objects
-    )
+    except Exception as error:
+
+        print(
+            "\n=============================="
+        )
+
+        print(
+            "WEIGHT GROUP SAVE ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "VALIDATED WEIGHT GROUPS:",
+            validated.get(
+                "weight_groups"
+            )
+        )
+
+        print(
+            "==============================\n"
+        )
+
+
+        transaction.set_rollback(
+            True
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "Unable to save participant "
+                    "weight information."
+                ),
+            },
+            status=500,
+        )
 
 
     # =====================================================
@@ -8335,6 +8860,31 @@ def booking_confirm(request):
         )
     )
 
+
+    # =====================================================
+    # AMOUNT VALIDATION
+    # =====================================================
+
+    if amount_paise <= 0:
+
+        transaction.set_rollback(
+            True
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Invalid payment amount."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # RAZORPAY RECEIPT
+    # =====================================================
 
     receipt = (
         f"ff-"
@@ -8375,7 +8925,40 @@ def booking_confirm(request):
         )
 
 
-    except Exception:
+    except Exception as error:
+
+        print(
+            "\n=============================="
+        )
+
+        print(
+            "RAZORPAY ORDER CREATE ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "AMOUNT:",
+            amount_paise
+        )
+
+        print(
+            "RECEIPT:",
+            receipt
+        )
+
+        print(
+            "==============================\n"
+        )
+
 
         transaction.set_rollback(
             True
@@ -8384,45 +8967,121 @@ def booking_confirm(request):
 
         return JsonResponse(
             {
-                "success":
-                    False,
+                "success": False,
 
-                "message":
-                    (
-                        "Unable to create the Razorpay "
-                        "order. Please try again."
-                    ),
+                "message": (
+                    "Unable to create the Razorpay "
+                    "order. Please try again."
+                ),
             },
             status=502,
         )
 
 
     # =====================================================
-    # PAYMENT
+    # VERIFY RAZORPAY RESPONSE
     # =====================================================
 
-    payment = Payment.objects.create(
-
-        booking=
-            booking,
-
-        gateway=
-            "razorpay",
-
-        gateway_order_id=
-            razorpay_order[
-                "id"
-            ],
-
-        amount=
-            validated[
-                "total_amount"
-            ],
-
-        status=
-            "created",
+    razorpay_order_id = (
+        razorpay_order.get(
+            "id"
+        )
     )
 
+
+    if not razorpay_order_id:
+
+        transaction.set_rollback(
+            True
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "Invalid response received from "
+                    "the payment service."
+                ),
+            },
+            status=502,
+        )
+
+
+    # =====================================================
+    # CREATE PAYMENT RECORD
+    # =====================================================
+
+    try:
+
+        payment = Payment.objects.create(
+
+            booking=
+                booking,
+
+            gateway=
+                "razorpay",
+
+            gateway_order_id=
+                razorpay_order_id,
+
+            amount=
+                validated[
+                    "total_amount"
+                ],
+
+            status=
+                "created",
+        )
+
+
+    except Exception as error:
+
+        print(
+            "\n=============================="
+        )
+
+        print(
+            "PAYMENT RECORD CREATE ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "==============================\n"
+        )
+
+
+        transaction.set_rollback(
+            True
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "Payment order was prepared, "
+                    "but the local payment record "
+                    "could not be created."
+                ),
+            },
+            status=500,
+        )
+
+
+    # =====================================================
+    # SAVE CURRENT BOOKING TO SESSION
+    # =====================================================
 
     request.session[
         "current_booking_id"
@@ -8433,6 +9092,10 @@ def booking_confirm(request):
 
     request.session.modified = True
 
+
+    # =====================================================
+    # SUCCESS JSON FOR RAZORPAY CHECKOUT
+    # =====================================================
 
     return JsonResponse(
         {
@@ -8469,7 +9132,6 @@ def booking_confirm(request):
                 customer_phone,
         }
     )
-
 
 
 
@@ -13307,531 +13969,531 @@ def frontend_offer_detail(request, slug):
 
 #participant admin crud 
 
-@login_required(login_url="admin_login")
-def participant_weight_range_list(request):
+# @login_required(login_url="admin_login")
+# def participant_weight_range_list(request):
 
-    ranges_qs = (
-        ParticipantWeightRange.objects
-        .all()
-        .order_by(
-            "sort_order",
-            "min_weight",
-        )
-    )
+#     ranges_qs = (
+#         ParticipantWeightRange.objects
+#         .all()
+#         .order_by(
+#             "sort_order",
+#             "min_weight",
+#         )
+#     )
 
 
-    search = request.GET.get(
-        "search",
-        ""
-    ).strip()
+#     search = request.GET.get(
+#         "search",
+#         ""
+#     ).strip()
 
 
-    status = request.GET.get(
-        "status",
-        ""
-    ).strip()
+#     status = request.GET.get(
+#         "status",
+#         ""
+#     ).strip()
 
 
-    if search:
+#     if search:
 
-        ranges_qs = ranges_qs.filter(
-            label__icontains=search
-        )
+#         ranges_qs = ranges_qs.filter(
+#             label__icontains=search
+#         )
 
 
-    if status == "active":
+#     if status == "active":
 
-        ranges_qs = ranges_qs.filter(
-            is_active=True
-        )
+#         ranges_qs = ranges_qs.filter(
+#             is_active=True
+#         )
 
 
-    elif status == "inactive":
+#     elif status == "inactive":
 
-        ranges_qs = ranges_qs.filter(
-            is_active=False
-        )
+#         ranges_qs = ranges_qs.filter(
+#             is_active=False
+#         )
 
 
-    paginator = Paginator(
-        ranges_qs,
-        15
-    )
+#     paginator = Paginator(
+#         ranges_qs,
+#         15
+#     )
 
 
-    ranges = paginator.get_page(
-        request.GET.get("page")
-    )
+#     ranges = paginator.get_page(
+#         request.GET.get("page")
+#     )
 
 
-    return render(
-        request,
-        "admin_pages/participant_weight_range_list.html",
-        {
-            "ranges": ranges,
-            "search": search,
-            "selected_status": status,
-        }
-    )
+#     return render(
+#         request,
+#         "admin_pages/participant_weight_range_list.html",
+#         {
+#             "ranges": ranges,
+#             "search": search,
+#             "selected_status": status,
+#         }
+#     )
 
 
 
 
-@login_required(login_url="admin_login")
-def participant_weight_range_create(request):
+# @login_required(login_url="admin_login")
+# def participant_weight_range_create(request):
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        label = request.POST.get(
-            "label",
-            ""
-        ).strip()
+#         label = request.POST.get(
+#             "label",
+#             ""
+#         ).strip()
 
-        min_weight_raw = request.POST.get(
-            "min_weight",
-            ""
-        ).strip()
+#         min_weight_raw = request.POST.get(
+#             "min_weight",
+#             ""
+#         ).strip()
 
-        max_weight_raw = request.POST.get(
-            "max_weight",
-            ""
-        ).strip()
+#         max_weight_raw = request.POST.get(
+#             "max_weight",
+#             ""
+#         ).strip()
 
-        sort_order_raw = request.POST.get(
-            "sort_order",
-            "0"
-        ).strip()
+#         sort_order_raw = request.POST.get(
+#             "sort_order",
+#             "0"
+#         ).strip()
 
-        is_active = (
-            request.POST.get(
-                "is_active"
-            )
-            ==
-            "on"
-        )
+#         is_active = (
+#             request.POST.get(
+#                 "is_active"
+#             )
+#             ==
+#             "on"
+#         )
 
 
-        # ==========================================
-        # REQUIRED VALUES
-        # ==========================================
+#         # ==========================================
+#         # REQUIRED VALUES
+#         # ==========================================
 
-        if (
-            not min_weight_raw
-            or
-            not max_weight_raw
-        ):
+#         if (
+#             not min_weight_raw
+#             or
+#             not max_weight_raw
+#         ):
 
-            messages.error(
-                request,
-                "Minimum weight and maximum weight are required."
-            )
+#             messages.error(
+#                 request,
+#                 "Minimum weight and maximum weight are required."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        # ==========================================
-        # CONVERT TO INTEGER
-        # ==========================================
+#         # ==========================================
+#         # CONVERT TO INTEGER
+#         # ==========================================
 
-        try:
-
-            min_weight = int(
-                min_weight_raw
-            )
+#         try:
+
+#             min_weight = int(
+#                 min_weight_raw
+#             )
 
-            max_weight = int(
-                max_weight_raw
-            )
+#             max_weight = int(
+#                 max_weight_raw
+#             )
 
-            sort_order = int(
-                sort_order_raw
-                or
-                0
-            )
+#             sort_order = int(
+#                 sort_order_raw
+#                 or
+#                 0
+#             )
 
-        except ValueError:
+#         except ValueError:
 
-            messages.error(
-                request,
-                "Weight and sort order must be valid numbers."
-            )
+#             messages.error(
+#                 request,
+#                 "Weight and sort order must be valid numbers."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        # ==========================================
-        # VALIDATION
-        # ==========================================
+#         # ==========================================
+#         # VALIDATION
+#         # ==========================================
 
-        if min_weight <= 0:
+#         if min_weight <= 0:
 
-            messages.error(
-                request,
-                "Minimum weight must be greater than 0."
-            )
+#             messages.error(
+#                 request,
+#                 "Minimum weight must be greater than 0."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        if max_weight <= min_weight:
+#         if max_weight <= min_weight:
 
-            messages.error(
-                request,
-                "Maximum weight must be greater than minimum weight."
-            )
+#             messages.error(
+#                 request,
+#                 "Maximum weight must be greater than minimum weight."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        if sort_order < 0:
+#         if sort_order < 0:
 
-            sort_order = 0
+#             sort_order = 0
 
 
-        # ==========================================
-        # PREVENT EXACT DUPLICATE
-        # ==========================================
+#         # ==========================================
+#         # PREVENT EXACT DUPLICATE
+#         # ==========================================
 
-        duplicate = (
-            ParticipantWeightRange.objects
-            .filter(
-                min_weight=min_weight,
-                max_weight=max_weight,
-            )
-            .exists()
-        )
+#         duplicate = (
+#             ParticipantWeightRange.objects
+#             .filter(
+#                 min_weight=min_weight,
+#                 max_weight=max_weight,
+#             )
+#             .exists()
+#         )
 
 
-        if duplicate:
+#         if duplicate:
 
-            messages.error(
-                request,
-                "This participant weight range already exists."
-            )
+#             messages.error(
+#                 request,
+#                 "This participant weight range already exists."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        # ==========================================
-        # AUTO LABEL
-        # ==========================================
+#         # ==========================================
+#         # AUTO LABEL
+#         # ==========================================
 
-        if not label:
+#         if not label:
 
-            label = (
-                f"{min_weight} - "
-                f"{max_weight} KG"
-            )
+#             label = (
+#                 f"{min_weight} - "
+#                 f"{max_weight} KG"
+#             )
 
 
-        # ==========================================
-        # CREATE
-        # ==========================================
+#         # ==========================================
+#         # CREATE
+#         # ==========================================
 
-        ParticipantWeightRange.objects.create(
-            label=label,
-            min_weight=min_weight,
-            max_weight=max_weight,
-            sort_order=sort_order,
-            is_active=is_active,
-        )
+#         ParticipantWeightRange.objects.create(
+#             label=label,
+#             min_weight=min_weight,
+#             max_weight=max_weight,
+#             sort_order=sort_order,
+#             is_active=is_active,
+#         )
 
 
-        messages.success(
-            request,
-            "Participant weight range added successfully."
-        )
+#         messages.success(
+#             request,
+#             "Participant weight range added successfully."
+#         )
 
 
-        return redirect(
-            "participant_weight_range_list"
-        )
+#         return redirect(
+#             "participant_weight_range_list"
+#         )
 
 
-    return render(
-        request,
-        "admin_pages/participant_weight_range_form.html",
-        {}
-    )
+#     return render(
+#         request,
+#         "admin_pages/participant_weight_range_form.html",
+#         {}
+#     )
 
 
 
-@login_required(login_url="admin_login")
-def participant_weight_range_update(
-    request,
-    pk
-):
+# @login_required(login_url="admin_login")
+# def participant_weight_range_update(
+#     request,
+#     pk
+# ):
 
-    weight_range = get_object_or_404(
-        ParticipantWeightRange,
-        pk=pk
-    )
+#     weight_range = get_object_or_404(
+#         ParticipantWeightRange,
+#         pk=pk
+#     )
 
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        label = request.POST.get(
-            "label",
-            ""
-        ).strip()
+#         label = request.POST.get(
+#             "label",
+#             ""
+#         ).strip()
 
-        min_weight_raw = request.POST.get(
-            "min_weight",
-            ""
-        ).strip()
+#         min_weight_raw = request.POST.get(
+#             "min_weight",
+#             ""
+#         ).strip()
 
-        max_weight_raw = request.POST.get(
-            "max_weight",
-            ""
-        ).strip()
+#         max_weight_raw = request.POST.get(
+#             "max_weight",
+#             ""
+#         ).strip()
 
-        sort_order_raw = request.POST.get(
-            "sort_order",
-            "0"
-        ).strip()
+#         sort_order_raw = request.POST.get(
+#             "sort_order",
+#             "0"
+#         ).strip()
 
-        is_active = (
-            request.POST.get(
-                "is_active"
-            )
-            ==
-            "on"
-        )
+#         is_active = (
+#             request.POST.get(
+#                 "is_active"
+#             )
+#             ==
+#             "on"
+#         )
 
 
-        if (
-            not min_weight_raw
-            or
-            not max_weight_raw
-        ):
+#         if (
+#             not min_weight_raw
+#             or
+#             not max_weight_raw
+#         ):
 
-            messages.error(
-                request,
-                "Minimum weight and maximum weight are required."
-            )
+#             messages.error(
+#                 request,
+#                 "Minimum weight and maximum weight are required."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "weight_range": weight_range,
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "weight_range": weight_range,
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        try:
+#         try:
 
-            min_weight = int(
-                min_weight_raw
-            )
+#             min_weight = int(
+#                 min_weight_raw
+#             )
 
-            max_weight = int(
-                max_weight_raw
-            )
+#             max_weight = int(
+#                 max_weight_raw
+#             )
 
-            sort_order = int(
-                sort_order_raw
-                or
-                0
-            )
+#             sort_order = int(
+#                 sort_order_raw
+#                 or
+#                 0
+#             )
 
-        except ValueError:
+#         except ValueError:
 
-            messages.error(
-                request,
-                "Weight and sort order must be valid numbers."
-            )
+#             messages.error(
+#                 request,
+#                 "Weight and sort order must be valid numbers."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "weight_range": weight_range,
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "weight_range": weight_range,
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        if min_weight <= 0:
+#         if min_weight <= 0:
 
-            messages.error(
-                request,
-                "Minimum weight must be greater than 0."
-            )
+#             messages.error(
+#                 request,
+#                 "Minimum weight must be greater than 0."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "weight_range": weight_range,
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "weight_range": weight_range,
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        if max_weight <= min_weight:
+#         if max_weight <= min_weight:
 
-            messages.error(
-                request,
-                "Maximum weight must be greater than minimum weight."
-            )
+#             messages.error(
+#                 request,
+#                 "Maximum weight must be greater than minimum weight."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "weight_range": weight_range,
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "weight_range": weight_range,
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        if sort_order < 0:
+#         if sort_order < 0:
 
-            sort_order = 0
+#             sort_order = 0
 
 
-        duplicate = (
-            ParticipantWeightRange.objects
-            .filter(
-                min_weight=min_weight,
-                max_weight=max_weight,
-            )
-            .exclude(
-                pk=weight_range.pk
-            )
-            .exists()
-        )
+#         duplicate = (
+#             ParticipantWeightRange.objects
+#             .filter(
+#                 min_weight=min_weight,
+#                 max_weight=max_weight,
+#             )
+#             .exclude(
+#                 pk=weight_range.pk
+#             )
+#             .exists()
+#         )
 
 
-        if duplicate:
+#         if duplicate:
 
-            messages.error(
-                request,
-                "This participant weight range already exists."
-            )
+#             messages.error(
+#                 request,
+#                 "This participant weight range already exists."
+#             )
 
-            return render(
-                request,
-                "admin_pages/participant_weight_range_form.html",
-                {
-                    "weight_range": weight_range,
-                    "form_data": request.POST,
-                }
-            )
+#             return render(
+#                 request,
+#                 "admin_pages/participant_weight_range_form.html",
+#                 {
+#                     "weight_range": weight_range,
+#                     "form_data": request.POST,
+#                 }
+#             )
 
 
-        if not label:
+#         if not label:
 
-            label = (
-                f"{min_weight} - "
-                f"{max_weight} KG"
-            )
+#             label = (
+#                 f"{min_weight} - "
+#                 f"{max_weight} KG"
+#             )
 
 
-        weight_range.label = label
-        weight_range.min_weight = min_weight
-        weight_range.max_weight = max_weight
-        weight_range.sort_order = sort_order
-        weight_range.is_active = is_active
+#         weight_range.label = label
+#         weight_range.min_weight = min_weight
+#         weight_range.max_weight = max_weight
+#         weight_range.sort_order = sort_order
+#         weight_range.is_active = is_active
 
-        weight_range.save()
+#         weight_range.save()
 
 
-        messages.success(
-            request,
-            "Participant weight range updated successfully."
-        )
+#         messages.success(
+#             request,
+#             "Participant weight range updated successfully."
+#         )
 
 
-        return redirect(
-            "participant_weight_range_list"
-        )
+#         return redirect(
+#             "participant_weight_range_list"
+#         )
 
 
-    return render(
-        request,
-        "admin_pages/participant_weight_range_form.html",
-        {
-            "weight_range": weight_range,
-        }
-    )
+#     return render(
+#         request,
+#         "admin_pages/participant_weight_range_form.html",
+#         {
+#             "weight_range": weight_range,
+#         }
+#     )
 
 
 
-@login_required(login_url="admin_login")
-def participant_weight_range_delete(
-    request,
-    pk
-):
+# @login_required(login_url="admin_login")
+# def participant_weight_range_delete(
+#     request,
+#     pk
+# ):
 
-    weight_range = get_object_or_404(
-        ParticipantWeightRange,
-        pk=pk
-    )
+#     weight_range = get_object_or_404(
+#         ParticipantWeightRange,
+#         pk=pk
+#     )
 
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        label = str(
-            weight_range
-        )
+#         label = str(
+#             weight_range
+#         )
 
-        try:
+#         try:
 
-            weight_range.delete()
+#             weight_range.delete()
 
-            messages.success(
-                request,
-                f'"{label}" deleted successfully.'
-            )
+#             messages.success(
+#                 request,
+#                 f'"{label}" deleted successfully.'
+#             )
 
-        except Exception:
+#         except Exception:
 
-            messages.error(
-                request,
-                (
-                    "This weight range cannot be deleted because "
-                    "it may already be used by a booking. "
-                    "You can mark it inactive instead."
-                )
-            )
+#             messages.error(
+#                 request,
+#                 (
+#                     "This weight range cannot be deleted because "
+#                     "it may already be used by a booking. "
+#                     "You can mark it inactive instead."
+#                 )
+#             )
 
 
-    return redirect(
-        "participant_weight_range_list"
-    )
+#     return redirect(
+#         "participant_weight_range_list"
+#     )
 
 
 
@@ -14480,3 +15142,1307 @@ def privacy_policy(request):
         request,
         "frontend/privacy_policy.html",
     )
+
+
+
+
+
+
+
+
+
+
+# =========================================================
+# REFUND SETTINGS
+# =========================================================
+
+REFUND_WINDOW_HOURS = 1
+
+REFUND_DEDUCTION_PERCENTAGE = Decimal(
+    "10.00"
+)
+
+
+def _calculate_booking_refund(
+    booking,
+    payment,
+):
+
+    # =====================================================
+    # PAYMENT MUST EXIST
+    # =====================================================
+
+    if not payment:
+
+        return {
+            "eligible": False,
+            "message": "Payment information was not found.",
+        }
+
+
+    # =====================================================
+    # PAYMENT MUST BE SUCCESSFUL
+    # =====================================================
+
+    if payment.status != "paid":
+
+        return {
+            "eligible": False,
+            "message": (
+                "Only successfully paid bookings "
+                "are eligible for a refund."
+            ),
+        }
+
+
+    # =====================================================
+    # RAZORPAY PAYMENT ID REQUIRED
+    # =====================================================
+
+    if not payment.gateway_payment_id:
+
+        return {
+            "eligible": False,
+            "message": (
+                "Razorpay payment information "
+                "is unavailable."
+            ),
+        }
+
+
+    # =====================================================
+    # PAID TIME REQUIRED
+    # =====================================================
+
+    if not payment.paid_at:
+
+        return {
+            "eligible": False,
+            "message": (
+                "Payment confirmation time "
+                "is unavailable."
+            ),
+        }
+
+
+    # =====================================================
+    # DO NOT REFUND USED TICKET
+    # =====================================================
+
+    ticket = getattr(
+        booking,
+        "ticket",
+        None,
+    )
+
+
+    if (
+        ticket
+        and
+        ticket.is_used
+    ):
+
+        return {
+            "eligible": False,
+            "message": (
+                "This booking has already been "
+                "checked in and cannot be refunded."
+            ),
+        }
+
+
+    # =====================================================
+    # ALREADY CANCELLED
+    # =====================================================
+
+    if booking.status == "cancelled":
+
+        return {
+            "eligible": False,
+            "message": (
+                "This booking has already been cancelled."
+            ),
+        }
+
+
+    # =====================================================
+    # ONE-HOUR WINDOW
+    # =====================================================
+
+    refund_deadline = (
+        payment.paid_at
+        +
+        timedelta(
+            hours=REFUND_WINDOW_HOURS
+        )
+    )
+
+
+    now = timezone.now()
+
+
+    if now > refund_deadline:
+
+        return {
+            "eligible": False,
+
+            "message": (
+                "The 1-hour cancellation period "
+                "has expired."
+            ),
+
+            "deadline":
+                refund_deadline,
+        }
+
+
+    # =====================================================
+    # CALCULATE 10% DEDUCTION
+    # =====================================================
+
+    original_amount = (
+        Decimal(
+            payment.amount
+        )
+    )
+
+
+    deduction_amount = (
+        original_amount
+        *
+        REFUND_DEDUCTION_PERCENTAGE
+        /
+        Decimal("100")
+    ).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP,
+    )
+
+
+    # =====================================================
+    # CUSTOMER RECEIVES 90%
+    # =====================================================
+
+    refund_amount = (
+        original_amount
+        -
+        deduction_amount
+    ).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP,
+    )
+
+
+    return {
+
+        "eligible":
+            True,
+
+        "original_amount":
+            original_amount,
+
+        "deduction_percentage":
+            REFUND_DEDUCTION_PERCENTAGE,
+
+        "deduction_amount":
+            deduction_amount,
+
+        "refund_amount":
+            refund_amount,
+
+        "refund_deadline":
+            refund_deadline,
+
+        "remaining_seconds":
+            max(
+                0,
+                int(
+                    (
+                        refund_deadline
+                        -
+                        now
+                    ).total_seconds()
+                ),
+            ),
+    }
+
+
+
+
+# =========================================================
+# CUSTOMER CANCELLATION / REFUND REQUEST
+# =========================================================
+
+@require_POST
+def booking_refund_request(
+    request,
+    booking_id,
+):
+
+    # =====================================================
+    # LOGIN CHECK
+    # =====================================================
+
+    user_id = request.session.get(
+        "user_id"
+    )
+
+
+    if not user_id:
+
+        messages.error(
+            request,
+            "Please login to request a cancellation."
+        )
+
+        return redirect(
+            "user_signin"
+        )
+
+
+    # =====================================================
+    # USER
+    # =====================================================
+
+    profile = get_object_or_404(
+        UserProfile,
+        id=user_id,
+    )
+
+
+    # =====================================================
+    # BOOKING
+    #
+    # IMPORTANT:
+    # Only this customer's booking can be accessed.
+    # =====================================================
+
+    booking = get_object_or_404(
+
+        Booking.objects
+        .select_related(
+            "payment",
+            "ticket",
+        ),
+
+        booking_id=
+            booking_id,
+
+        user=
+            profile,
+    )
+
+
+    # =====================================================
+    # PAYMENT
+    # =====================================================
+
+    payment = getattr(
+        booking,
+        "payment",
+        None,
+    )
+
+
+    if not payment:
+
+        messages.error(
+            request,
+            "Payment information could not be found."
+        )
+
+        return redirect(
+            "user_bookings"
+        )
+
+
+    # =====================================================
+    # PREVENT DUPLICATE REFUND REQUEST
+    # =====================================================
+
+    existing_refund = (
+        Refund.objects
+        .filter(
+            booking=booking,
+            status__in=[
+                "requested",
+                "approved",
+                "processing",
+                "processed",
+            ],
+        )
+        .first()
+    )
+
+
+    if existing_refund:
+
+        messages.info(
+            request,
+            "A refund request already exists for this booking."
+        )
+
+        return redirect(
+            "user_bookings"
+        )
+
+
+    # =====================================================
+    # RECHECK ELIGIBILITY ON SERVER
+    #
+    # NEVER TRUST THE BUTTON/UI.
+    # =====================================================
+
+    refund_info = (
+        _calculate_booking_refund(
+            booking,
+            payment,
+        )
+    )
+
+
+    if not refund_info.get(
+        "eligible"
+    ):
+
+        messages.error(
+            request,
+            refund_info.get(
+                "message",
+                (
+                    "This booking is no longer "
+                    "eligible for cancellation."
+                )
+            )
+        )
+
+        return redirect(
+            "user_bookings"
+        )
+
+
+    # =====================================================
+    # REASON
+    # =====================================================
+
+    reason = (
+        request.POST.get(
+            "reason",
+            ""
+        )
+        .strip()
+    )
+
+
+    if not reason:
+
+        messages.error(
+            request,
+            "Please enter a reason for cancellation."
+        )
+
+        return redirect(
+            "user_bookings"
+        )
+
+
+    # =====================================================
+    # CREATE REFUND REQUEST
+    #
+    # 10% retained
+    # 90% refund
+    # =====================================================
+
+    Refund.objects.create(
+
+        booking=
+            booking,
+
+        payment=
+            payment,
+
+        original_amount=
+            refund_info[
+                "original_amount"
+            ],
+
+        deduction_percentage=
+            refund_info[
+                "deduction_percentage"
+            ],
+
+        deduction_amount=
+            refund_info[
+                "deduction_amount"
+            ],
+
+        refund_amount=
+            refund_info[
+                "refund_amount"
+            ],
+
+        razorpay_payment_id=
+            payment.gateway_payment_id,
+
+        reason=
+            reason,
+
+        status=
+            "requested",
+    )
+
+
+    # =====================================================
+    # IMPORTANT:
+    #
+    # DON'T CANCEL BOOKING YET.
+    #
+    # Admin must approve first.
+    # Razorpay refund must then succeed.
+    # =====================================================
+
+
+    messages.success(
+        request,
+        (
+            "Your cancellation request has been submitted. "
+            "If approved, 90% of the amount paid will be "
+            "refunded to the original payment method."
+        )
+    )
+
+
+    return redirect(
+        "user_bookings"
+    )
+
+
+
+
+
+
+
+# =========================================================
+# ADMIN REFUND LIST
+# =========================================================
+
+@_admin_required
+def refund_list(request):
+
+    refunds_qs = (
+        Refund.objects
+        .select_related(
+            "booking",
+            "booking__user",
+            "booking__ride",
+            "payment",
+        )
+        .order_by(
+            "-requested_at"
+        )
+    )
+
+
+    # =====================================================
+    # SEARCH
+    # =====================================================
+
+    search = (
+        request.GET.get(
+            "search",
+            ""
+        )
+        .strip()
+    )
+
+
+    if search:
+
+        refunds_qs = (
+            refunds_qs.filter(
+
+                Q(
+                    booking__customer_name__icontains=
+                        search
+                )
+
+                |
+
+                Q(
+                    booking__customer_email__icontains=
+                        search
+                )
+
+                |
+
+                Q(
+                    booking__customer_phone__icontains=
+                        search
+                )
+
+                |
+
+                Q(
+                    booking__booking_id__icontains=
+                        search
+                )
+
+                |
+
+                Q(
+                    razorpay_payment_id__icontains=
+                        search
+                )
+
+            )
+        )
+
+
+    # =====================================================
+    # STATUS FILTER
+    # =====================================================
+
+    selected_status = (
+        request.GET.get(
+            "status",
+            ""
+        )
+        .strip()
+    )
+
+
+    if selected_status:
+
+        refunds_qs = (
+            refunds_qs.filter(
+                status=
+                    selected_status
+            )
+        )
+
+
+    # =====================================================
+    # PAGINATION
+    # =====================================================
+
+    paginator = Paginator(
+        refunds_qs,
+        15,
+    )
+
+
+    refunds = (
+        paginator.get_page(
+            request.GET.get(
+                "page"
+            )
+        )
+    )
+
+
+    # =====================================================
+    # RENDER
+    # =====================================================
+
+    return render(
+        request,
+        "admin_pages/refund_list.html",
+        {
+            "refunds":
+                refunds,
+
+            "search":
+                search,
+
+            "selected_status":
+                selected_status,
+
+            "status_choices":
+                Refund.STATUS_CHOICES,
+        },
+    )
+
+
+
+
+
+# =========================================================
+# ADMIN REFUND DETAIL
+# =========================================================
+
+@_admin_required
+def refund_detail(
+    request,
+    refund_id,
+):
+
+    refund = get_object_or_404(
+
+        Refund.objects
+        .select_related(
+            "booking",
+            "booking__user",
+            "booking__ride",
+            "booking__ride_price",
+            "payment",
+        ),
+
+        refund_id=
+            refund_id,
+    )
+
+
+    return render(
+        request,
+        "admin_pages/refund_detail.html",
+        {
+            "refund":
+                refund,
+
+            "booking":
+                refund.booking,
+
+            "payment":
+                refund.payment,
+        },
+    )
+
+
+
+
+# =========================================================
+# ADMIN REJECT REFUND
+# =========================================================
+
+@_admin_required
+@require_POST
+def refund_reject(
+    request,
+    refund_id,
+):
+
+    refund = get_object_or_404(
+        Refund,
+        refund_id=
+            refund_id,
+    )
+
+
+    # Only requested refunds can be rejected
+    if refund.status != "requested":
+
+        messages.error(
+            request,
+            "This refund request cannot be rejected."
+        )
+
+        return redirect(
+            "refund_detail",
+            refund_id=
+                refund.refund_id,
+        )
+
+
+    admin_note = (
+        request.POST.get(
+            "admin_note",
+            ""
+        )
+        .strip()
+    )
+
+
+    if not admin_note:
+
+        messages.error(
+            request,
+            "Please enter a reason for rejecting the refund."
+        )
+
+        return redirect(
+            "refund_detail",
+            refund_id=
+                refund.refund_id,
+        )
+
+
+    refund.status = "rejected"
+
+    refund.admin_note = (
+        admin_note
+    )
+
+
+    refund.save(
+        update_fields=[
+            "status",
+            "admin_note",
+            "updated_at",
+        ]
+    )
+
+
+    messages.success(
+        request,
+        "Refund request rejected."
+    )
+
+
+    return redirect(
+        "refund_detail",
+        refund_id=
+            refund.refund_id,
+    )   
+
+
+
+
+# =========================================================
+# ADMIN APPROVE REFUND
+#
+# Razorpay refund processing will be implemented
+# in the next step.
+# =========================================================
+
+# =========================================================
+# ADMIN APPROVE REFUND
+# =========================================================
+
+@_admin_required
+@require_POST
+def refund_approve(
+    request,
+    refund_id,
+):
+
+    # =====================================================
+    # LOCK REFUND ROW
+    #
+    # Prevent two admins/processes from approving
+    # the same refund simultaneously.
+    # =====================================================
+
+    with transaction.atomic():
+
+        refund = get_object_or_404(
+
+            Refund.objects
+            .select_for_update()
+            .select_related(
+                "booking",
+                "payment",
+            ),
+
+            refund_id=
+                refund_id,
+        )
+
+
+        booking = (
+            refund.booking
+        )
+
+
+        payment = (
+            refund.payment
+        )
+
+
+        # =================================================
+        # STATUS CHECK
+        # =================================================
+
+        if refund.status != "requested":
+
+            messages.error(
+                request,
+                (
+                    "This refund request has already "
+                    "been processed or cannot be approved."
+                )
+            )
+
+            return redirect(
+                "refund_detail",
+                refund_id=
+                    refund.refund_id,
+            )
+
+
+        # =================================================
+        # PAYMENT CHECK
+        # =================================================
+
+        if payment.status != "paid":
+
+            messages.error(
+                request,
+                (
+                    "This payment is not in a valid "
+                    "state for refund."
+                )
+            )
+
+            return redirect(
+                "refund_detail",
+                refund_id=
+                    refund.refund_id,
+            )
+
+
+        # =================================================
+        # RAZORPAY PAYMENT ID
+        # =================================================
+
+        if not payment.gateway_payment_id:
+
+            messages.error(
+                request,
+                (
+                    "Razorpay payment ID is missing. "
+                    "Refund cannot be processed."
+                )
+            )
+
+            return redirect(
+                "refund_detail",
+                refund_id=
+                    refund.refund_id,
+            )
+
+
+        # =================================================
+        # REFUND AMOUNT
+        # =================================================
+
+        refund_amount = (
+            Decimal(
+                str(
+                    refund.refund_amount
+                )
+            )
+        )
+
+
+        if refund_amount <= Decimal("0.00"):
+
+            messages.error(
+                request,
+                "Invalid refund amount."
+            )
+
+            return redirect(
+                "refund_detail",
+                refund_id=
+                    refund.refund_id,
+            )
+
+
+        if refund_amount > payment.amount:
+
+            messages.error(
+                request,
+                (
+                    "Refund amount cannot exceed "
+                    "the original payment amount."
+                )
+            )
+
+            return redirect(
+                "refund_detail",
+                refund_id=
+                    refund.refund_id,
+            )
+
+
+        # =================================================
+        # MARK PROCESSING BEFORE API CALL
+        # =================================================
+
+        refund.status = "processing"
+
+        refund.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ]
+        )
+
+
+    # =====================================================
+    # CALL RAZORPAY
+    #
+    # Outside DB transaction so we don't keep a database
+    # lock while waiting for an external API.
+    # =====================================================
+
+    try:
+
+        razorpay_refund = (
+            create_razorpay_refund(
+
+                payment_id=
+                    payment.gateway_payment_id,
+
+                refund_amount=
+                    refund_amount,
+
+                booking_id=
+                    booking.booking_id,
+
+                refund_id=
+                    refund.refund_id,
+            )
+        )
+
+
+    except Exception as error:
+
+        print(
+            "RAZORPAY REFUND ERROR:",
+            repr(error)
+        )
+
+
+        refund.status = "failed"
+
+        refund.gateway_status = "failed"
+
+        refund.admin_note = (
+            f"Razorpay refund error: {str(error)}"
+        )[:1000]
+
+
+        refund.save(
+            update_fields=[
+                "status",
+                "gateway_status",
+                "admin_note",
+                "updated_at",
+            ]
+        )
+
+
+        messages.error(
+            request,
+            (
+                "Razorpay could not process the refund. "
+                "No successful refund was recorded."
+            )
+        )
+
+
+        return redirect(
+            "refund_detail",
+            refund_id=
+                refund.refund_id,
+        )
+
+
+    # =====================================================
+    # READ RAZORPAY RESPONSE
+    # =====================================================
+
+    razorpay_refund_id = (
+        razorpay_refund.get(
+            "id",
+            ""
+        )
+    )
+
+
+    gateway_status = (
+        razorpay_refund.get(
+            "status",
+            ""
+        )
+        or
+        ""
+    )
+
+
+    refund.razorpay_refund_id = (
+        razorpay_refund_id
+    )
+
+    refund.gateway_status = (
+        gateway_status
+    )
+
+
+    # =====================================================
+    # RAZORPAY ALREADY PROCESSED
+    # =====================================================
+
+    if gateway_status == "processed":
+
+        refund.status = "processed"
+
+        refund.processed_at = (
+            timezone.now()
+        )
+
+
+        # Booking is now cancelled
+        booking.status = "cancelled"
+
+        booking.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ]
+        )
+
+
+        # Because customer receives 90%,
+        # this is technically a partial refund.
+        payment.status = "partially_refunded"
+
+        payment.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ]
+        )
+
+
+    # =====================================================
+    # RAZORPAY ACCEPTED BUT STILL PROCESSING
+    # =====================================================
+
+    else:
+
+        refund.status = "processing"
+
+
+    refund.save()
+
+
+    # =====================================================
+    # SUCCESS MESSAGE
+    # =====================================================
+
+    if refund.status == "processed":
+
+        messages.success(
+            request,
+            (
+                f"Refund of ₹{refund.refund_amount} "
+                "has been processed successfully."
+            )
+        )
+
+    else:
+
+        messages.success(
+            request,
+            (
+                f"Refund of ₹{refund.refund_amount} "
+                "has been submitted to Razorpay "
+                "and is being processed."
+            )
+        )
+
+
+    return redirect(
+        "refund_detail",
+        refund_id=
+            refund.refund_id,
+    )
+
+
+
+
+@csrf_exempt
+@require_POST
+def razorpay_refund_webhook(
+    request,
+):
+
+    # =====================================================
+    # RAW BODY
+    #
+    # IMPORTANT:
+    # Razorpay requires raw bytes for signature checking.
+    # =====================================================
+
+    raw_body = request.body
+
+
+    signature = (
+        request.headers.get(
+            "X-Razorpay-Signature",
+            ""
+        )
+    )
+
+
+    webhook_secret = getattr(
+        settings,
+        "RAZORPAY_WEBHOOK_SECRET",
+        ""
+    )
+
+
+    if (
+        not signature
+        or
+        not webhook_secret
+    ):
+
+        return HttpResponse(
+            "Invalid webhook configuration",
+            status=400,
+        )
+
+
+    # =====================================================
+    # VERIFY SIGNATURE
+    # =====================================================
+
+    client = razorpay.Client(
+        auth=(
+            settings.RAZORPAY_KEY_ID,
+            settings.RAZORPAY_KEY_SECRET,
+        )
+    )
+
+
+    try:
+
+        client.utility.verify_webhook_signature(
+            raw_body,
+            signature,
+            webhook_secret,
+        )
+
+    except Exception:
+
+        return HttpResponse(
+            "Invalid signature",
+            status=400,
+        )
+
+
+    # =====================================================
+    # PARSE ONLY AFTER SIGNATURE VERIFICATION
+    # =====================================================
+
+    try:
+
+        payload = json.loads(
+            raw_body.decode(
+                "utf-8"
+            )
+        )
+
+    except Exception:
+
+        return HttpResponse(
+            "Invalid JSON",
+            status=400,
+        )
+
+
+    event = payload.get(
+        "event",
+        ""
+    )
+
+
+    refund_entity = (
+        payload
+        .get(
+            "payload",
+            {}
+        )
+        .get(
+            "refund",
+            {}
+        )
+        .get(
+            "entity",
+            {}
+        )
+    )
+
+
+    razorpay_refund_id = (
+        refund_entity.get(
+            "id",
+            ""
+        )
+    )
+
+
+    if not razorpay_refund_id:
+
+        return HttpResponse(
+            "OK",
+            status=200,
+        )
+
+
+    # =====================================================
+    # PROCESSED
+    # =====================================================
+
+    if event == "refund.processed":
+
+        acquirer_data = (
+            refund_entity.get(
+                "acquirer_data",
+                {}
+            )
+            or
+            {}
+        )
+
+
+        arn = (
+            acquirer_data.get(
+                "arn",
+                ""
+            )
+            or
+            ""
+        )
+
+
+        mark_refund_processed(
+            razorpay_refund_id=
+                razorpay_refund_id,
+
+            gateway_status=
+                refund_entity.get(
+                    "status",
+                    "processed"
+                ),
+
+            arn=
+                arn,
+        )
+
+
+    # =====================================================
+    # FAILED
+    # =====================================================
+
+    elif event == "refund.failed":
+
+        mark_refund_failed(
+            razorpay_refund_id=
+                razorpay_refund_id,
+
+            gateway_status=
+                refund_entity.get(
+                    "status",
+                    "failed"
+                ),
+        )
+
+
+    return HttpResponse(
+        "OK",
+        status=200,
+    )    

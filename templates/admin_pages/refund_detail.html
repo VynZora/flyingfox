@@ -1,0 +1,299 @@
+{% extends "admin_pages/base.html" %}
+
+
+{% block title %}
+Refund Details
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+
+    <div class="mb-4">
+
+        <a
+            href="{% url 'refund_list' %}"
+            class="btn btn-light mb-3"
+        >
+            ← Back to Refunds
+        </a>
+
+
+        <h2>
+            Refund Request
+        </h2>
+
+    </div>
+
+
+
+    <div class="row">
+
+
+        <!-- LEFT -->
+
+        <div class="col-lg-8">
+
+
+            <div class="card mb-4">
+
+                <div class="card-body">
+
+
+                    <h5 class="mb-4">
+                        Booking Information
+                    </h5>
+
+
+                    <p>
+                        <strong>Booking ID:</strong>
+
+                        {{ booking.booking_id }}
+                    </p>
+
+
+                    <p>
+                        <strong>Customer:</strong>
+
+                        {{ booking.customer_name }}
+                    </p>
+
+
+                    <p>
+                        <strong>Phone:</strong>
+
+                        {{ booking.customer_phone }}
+                    </p>
+
+
+                    <p>
+                        <strong>Email:</strong>
+
+                        {{ booking.customer_email }}
+                    </p>
+
+
+                    <p>
+                        <strong>Ride:</strong>
+
+                        {{ booking.ride.name }}
+                    </p>
+
+
+                    <p>
+                        <strong>Visit Date:</strong>
+
+                        {{ booking.booking_date|date:"d M Y" }}
+                    </p>
+
+
+                    <p>
+                        <strong>Time:</strong>
+
+                        {{ booking.time_slot }}
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+
+            <div class="card mb-4">
+
+                <div class="card-body">
+
+
+                    <h5 class="mb-4">
+                        Cancellation Reason
+                    </h5>
+
+
+                    <p>
+                        {{ refund.reason|default:"No reason provided." }}
+                    </p>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- RIGHT -->
+
+        <div class="col-lg-4">
+
+
+            <div class="card mb-4">
+
+                <div class="card-body">
+
+
+                    <h5 class="mb-4">
+                        Refund Summary
+                    </h5>
+
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span>
+                            Amount Paid
+                        </span>
+
+                        <strong>
+                            ₹{{ refund.original_amount }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span>
+                            Cancellation Fee
+                        </span>
+
+                        <strong class="text-danger">
+                            - ₹{{ refund.deduction_amount }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span>
+                            Fee Percentage
+                        </span>
+
+                        <strong>
+                            {{ refund.deduction_percentage }}%
+                        </strong>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            Customer Refund
+                        </span>
+
+                        <strong class="text-success fs-5">
+                            ₹{{ refund.refund_amount }}
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <div class="card-body">
+
+
+                    <h5 class="mb-3">
+                        Refund Status
+                    </h5>
+
+
+                    <p>
+
+                        <span class="badge bg-secondary">
+                            {{ refund.get_status_display }}
+                        </span>
+
+                    </p>
+
+
+                    {% if refund.status == "requested" %}
+
+
+                        <!-- APPROVE -->
+
+                        <form
+                            method="POST"
+                            action="{% url 'refund_approve' refund.refund_id %}"
+                            class="mb-2"
+                        >
+
+                            {% csrf_token %}
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-success w-100"
+                            >
+
+                                Approve ₹{{ refund.refund_amount }} Refund
+
+                            </button>
+
+                        </form>
+
+
+
+                        <!-- REJECT -->
+
+                        <form
+                            method="POST"
+                            action="{% url 'refund_reject' refund.refund_id %}"
+                        >
+
+                            {% csrf_token %}
+
+
+                            <textarea
+                                name="admin_note"
+                                class="form-control mb-2"
+                                rows="3"
+                                placeholder="Reason for rejection"
+                            ></textarea>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger w-100"
+                            >
+
+                                Reject Request
+
+                            </button>
+
+                        </form>
+
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
