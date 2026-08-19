@@ -9135,26 +9135,43 @@ def booking_confirm(request):
 
 
 
-@transaction.atomic
+
+
+
 def booking_payment_verify(request):
 
     """
-    Final Razorpay verification.
+    Final Razorpay payment verification.
 
-    After successful payment:
+    Flow:
 
-    1. Verify Razorpay order/signature.
-    2. Verify payment is captured.
-    3. Mark Payment = paid.
-    4. Mark Booking = confirmed.
-    5. Create Ticket.
-    6. Generate QR.
-    7. Generate PDF.
-    8. Send Email.
-    9. Send SMS.
-    10. Send WhatsApp.
-    11. Redirect to user account.
+    1. Receive Razorpay callback data.
+    2. Find local booking/payment.
+    3. Verify local order ID.
+    4. Verify Razorpay signature.
+    5. Fetch payment from Razorpay.
+    6. Verify Razorpay order ID.
+    7. Verify amount.
+    8. Verify payment is captured.
+    9. Permanently save Razorpay references.
+    10. Atomically:
+        - mark Payment = paid
+        - mark Booking = confirmed
+        - create Ticket database record
+    11. Generate QR separately.
+    12. Generate PDF separately.
+    13. Send Email/SMS/WhatsApp separately.
+    14. Return success.
+
+    IMPORTANT:
+    Ticket generation or notification failures must NEVER
+    roll back an already captured Razorpay payment.
     """
+
+
+    # =====================================================
+    # POST ONLY
+    # =====================================================
 
     if request.method != "POST":
 
@@ -9168,7 +9185,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # RAZORPAY DATA
+    # RAZORPAY CALLBACK DATA
     # =====================================================
 
     booking_id = (
@@ -9207,6 +9224,10 @@ def booking_payment_verify(request):
     )
 
 
+    # =====================================================
+    # REQUIRED DATA
+    # =====================================================
+
     if not all(
         [
             booking_id,
@@ -9216,47 +9237,110 @@ def booking_payment_verify(request):
         ]
     ):
 
+        print(
+            "RAZORPAY VERIFY MISSING DATA:",
+            {
+                "booking_id":
+                    bool(booking_id),
+
+                "payment_id":
+                    bool(razorpay_payment_id),
+
+                "order_id":
+                    bool(browser_order_id),
+
+                "signature":
+                    bool(razorpay_signature),
+            }
+        )
+
+
         return JsonResponse(
             {
                 "success": False,
-                "message":
-                    "Missing Razorpay payment information.",
+                "message": (
+                    "Missing Razorpay payment information."
+                ),
             },
             status=400,
         )
 
 
     # =====================================================
-    # BOOKING + PAYMENT
+    # FIND BOOKING
     # =====================================================
 
-    booking = get_object_or_404(
+    try:
 
-        Booking.objects
-        .select_for_update()
-        .select_related(
-            "ride",
-            "offer",
-        ),
+        booking = (
+            Booking.objects
+            .select_related(
+                "ride",
+                "offer",
+            )
+            .get(
+                booking_id=booking_id
+            )
+        )
 
-        booking_id=booking_id,
-    )
+
+    except Booking.DoesNotExist:
+
+        print(
+            "PAYMENT VERIFY BOOKING NOT FOUND:",
+            booking_id
+        )
 
 
-    payment = get_object_or_404(
-
-        Payment.objects
-        .select_for_update(),
-
-        booking=booking,
-    )
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Booking could not be found."
+                ),
+            },
+            status=404,
+        )
 
 
     # =====================================================
-    # ALREADY SUCCESSFUL
+    # FIND LOCAL PAYMENT
+    # =====================================================
+
+    try:
+
+        payment = (
+            Payment.objects
+            .get(
+                booking=booking
+            )
+        )
+
+
+    except Payment.DoesNotExist:
+
+        print(
+            "PAYMENT VERIFY PAYMENT RECORD NOT FOUND:",
+            booking_id
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Payment record could not be found."
+                ),
+            },
+            status=404,
+        )
+
+
+    # =====================================================
+    # ALREADY VERIFIED / IDEMPOTENCY
     #
-    # Prevent duplicate ticket/email creation if
-    # verification endpoint is called again.
+    # Razorpay callback or browser retry may call this
+    # endpoint more than once.
     # =====================================================
 
     if (
@@ -9277,14 +9361,22 @@ def booking_payment_verify(request):
 
                 "redirect_url":
                     reverse(
-                        "user_dashboard"
+                        "booking_success",
+                        kwargs={
+                            "booking_id":
+                                str(
+                                    booking.booking_id
+                                )
+                        },
                     ),
             }
         )
 
 
     # =====================================================
-    # CHECK ORDER ID
+    # VERIFY BROWSER ORDER AGAINST LOCAL ORDER
+    #
+    # Never trust browser order ID as source of truth.
     # =====================================================
 
     if (
@@ -9293,30 +9385,80 @@ def booking_payment_verify(request):
         payment.gateway_order_id
     ):
 
-        payment.status = "failed"
-
-        payment.failure_reason = (
-            "Razorpay order id mismatch."
+        print(
+            "\n========================================"
         )
 
-        payment.save(
-            update_fields=[
-                "status",
-                "failure_reason",
-                "updated_at",
-            ]
+        print(
+            "RAZORPAY LOCAL ORDER MISMATCH"
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "LOCAL ORDER:",
+            payment.gateway_order_id
+        )
+
+        print(
+            "BROWSER ORDER:",
+            browser_order_id
+        )
+
+        print(
+            "PAYMENT ID:",
+            razorpay_payment_id
+        )
+
+        print(
+            "========================================\n"
         )
 
 
-        booking.status = (
-            "payment_failed"
+        # IMPORTANT:
+        # Do not mark a real payment as failed because a
+        # malformed/forged callback supplied a wrong order ID.
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Payment order verification failed."
+                ),
+            },
+            status=400,
         )
 
-        booking.save(
-            update_fields=[
-                "status",
-                "updated_at",
-            ]
+
+    # =====================================================
+    # RAZORPAY SETTINGS
+    # =====================================================
+
+    key_id = getattr(
+        settings,
+        "RAZORPAY_KEY_ID",
+        ""
+    )
+
+
+    key_secret = getattr(
+        settings,
+        "RAZORPAY_KEY_SECRET",
+        ""
+    )
+
+
+    if (
+        not key_id
+        or
+        not key_secret
+    ):
+
+        print(
+            "RAZORPAY KEYS NOT CONFIGURED"
         )
 
 
@@ -9324,10 +9466,12 @@ def booking_payment_verify(request):
             {
                 "success": False,
 
-                "message":
-                    "Payment order verification failed.",
+                "message": (
+                    "Payment verification service "
+                    "is not configured."
+                ),
             },
-            status=400,
+            status=500,
         )
 
 
@@ -9337,20 +9481,23 @@ def booking_payment_verify(request):
 
     client = razorpay.Client(
         auth=(
-            settings.RAZORPAY_KEY_ID,
-            settings.RAZORPAY_KEY_SECRET,
+            key_id,
+            key_secret,
         )
     )
 
 
     # =====================================================
-    # SIGNATURE VERIFICATION
+    # VERIFY PAYMENT SIGNATURE
     # =====================================================
 
     try:
 
         client.utility.verify_payment_signature(
             {
+                # IMPORTANT:
+                # Use our DATABASE order ID.
+
                 "razorpay_order_id":
                     payment.gateway_order_id,
 
@@ -9366,47 +9513,77 @@ def booking_payment_verify(request):
     except Exception as error:
 
         print(
-            "RAZORPAY SIGNATURE ERROR:",
-            error,
+            "\n========================================"
+        )
+
+        print(
+            "RAZORPAY SIGNATURE ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "PAYMENT ID:",
+            razorpay_payment_id
+        )
+
+        print(
+            "LOCAL ORDER:",
+            payment.gateway_order_id
+        )
+
+        print(
+            "BROWSER ORDER:",
+            browser_order_id
+        )
+
+        print(
+            "KEY ID:",
+            key_id
+        )
+
+        print(
+            "========================================\n"
         )
 
 
-        payment.status = "failed"
-
-        payment.failure_reason = (
-            "Invalid Razorpay payment signature."
-        )
-
-        payment.save(
-            update_fields=[
-                "status",
-                "failure_reason",
-                "updated_at",
-            ]
-        )
-
-
-        booking.status = (
-            "payment_failed"
-        )
-
-        booking.save(
-            update_fields=[
-                "status",
-                "updated_at",
-            ]
-        )
-
+        # IMPORTANT:
+        #
+        # Do NOT mark payment/booking failed here.
+        # An invalid request should not be able to change
+        # a legitimate booking's state.
 
         return JsonResponse(
             {
                 "success": False,
 
-                "message":
-                    "Payment signature verification failed.",
+                "message": (
+                    "Payment signature verification failed."
+                ),
             },
             status=400,
         )
+
+
+    # =====================================================
+    # SIGNATURE IS VALID
+    #
+    # At this point payment ID + signature came from a
+    # cryptographically verified Razorpay callback.
+    # =====================================================
 
 
     # =====================================================
@@ -9425,9 +9602,79 @@ def booking_payment_verify(request):
     except Exception as error:
 
         print(
-            "RAZORPAY FETCH ERROR:",
-            error,
+            "\n========================================"
         )
+
+        print(
+            "RAZORPAY FETCH ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "PAYMENT ID:",
+            razorpay_payment_id
+        )
+
+        print(
+            "ORDER ID:",
+            payment.gateway_order_id
+        )
+
+        print(
+            "KEY ID:",
+            key_id
+        )
+
+        print(
+            "========================================\n"
+        )
+
+
+        # =================================================
+        # SAVE VERIFIED RAZORPAY REFERENCES
+        #
+        # Even if Razorpay's fetch API temporarily fails,
+        # do not lose the payment ID.
+        # =================================================
+
+        try:
+
+            payment.gateway_payment_id = (
+                razorpay_payment_id
+            )
+
+            payment.gateway_signature = (
+                razorpay_signature
+            )
+
+            payment.save(
+                update_fields=[
+                    "gateway_payment_id",
+                    "gateway_signature",
+                    "updated_at",
+                ]
+            )
+
+        except Exception as save_error:
+
+            print(
+                "RAZORPAY REFERENCE SAVE ERROR:",
+                repr(save_error)
+            )
 
 
         return JsonResponse(
@@ -9436,8 +9683,8 @@ def booking_payment_verify(request):
 
                 "message": (
                     "Payment was received but its "
-                    "status could not be confirmed. "
-                    "Please do not pay again."
+                    "status could not be confirmed yet. "
+                    "Please do not make another payment."
                 ),
             },
             status=502,
@@ -9445,46 +9692,13 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # VERIFY REMOTE ORDER
+    # REMOTE PAYMENT INFORMATION
     # =====================================================
 
     remote_order_id = (
         remote_payment.get(
-            "order_id"
-        )
-    )
-
-
-    if (
-        remote_order_id
-        !=
-        payment.gateway_order_id
-    ):
-
-        return JsonResponse(
-            {
-                "success": False,
-                "message":
-                    "Razorpay order verification failed.",
-            },
-            status=400,
-        )
-
-
-    # =====================================================
-    # VERIFY AMOUNT
-    # =====================================================
-
-    expected_amount_paise = int(
-        (
-            payment.amount
-            *
-            Decimal("100")
-        )
-        .quantize(
-            Decimal("1"),
-            rounding=
-                ROUND_HALF_UP,
+            "order_id",
+            ""
         )
     )
 
@@ -9496,26 +9710,6 @@ def booking_payment_verify(request):
     )
 
 
-    if (
-        remote_amount
-        !=
-        expected_amount_paise
-    ):
-
-        return JsonResponse(
-            {
-                "success": False,
-                "message":
-                    "Payment amount verification failed.",
-            },
-            status=400,
-        )
-
-
-    # =====================================================
-    # CAPTURED STATUS
-    # =====================================================
-
     remote_status = (
         remote_payment.get(
             "status",
@@ -9524,39 +9718,267 @@ def booking_payment_verify(request):
     )
 
 
-    payment.gateway_payment_id = (
+    # =====================================================
+    # LOG RAZORPAY RESPONSE
+    # =====================================================
+
+    print(
+        "\n========================================"
+    )
+
+    print(
+        "RAZORPAY PAYMENT FETCH SUCCESS"
+    )
+
+    print(
+        "BOOKING:",
+        booking.booking_id
+    )
+
+    print(
+        "PAYMENT ID:",
         razorpay_payment_id
     )
 
-    payment.gateway_signature = (
-        razorpay_signature
+    print(
+        "LOCAL ORDER:",
+        payment.gateway_order_id
+    )
+
+    print(
+        "REMOTE ORDER:",
+        remote_order_id
+    )
+
+    print(
+        "REMOTE STATUS:",
+        remote_status
+    )
+
+    print(
+        "REMOTE AMOUNT:",
+        remote_amount
+    )
+
+    print(
+        "========================================\n"
+    )
+
+
+    # =====================================================
+    # VERIFY REMOTE ORDER
+    # =====================================================
+
+    if (
+        remote_order_id
+        !=
+        payment.gateway_order_id
+    ):
+
+        print(
+            "RAZORPAY REMOTE ORDER MISMATCH:",
+            {
+                "booking":
+                    str(
+                        booking.booking_id
+                    ),
+
+                "local_order":
+                    payment.gateway_order_id,
+
+                "remote_order":
+                    remote_order_id,
+
+                "payment_id":
+                    razorpay_payment_id,
+            }
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "Razorpay order verification failed."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # VERIFY AMOUNT
+    # =====================================================
+
+    expected_amount_paise = int(
+        (
+            Decimal(
+                str(
+                    payment.amount
+                )
+            )
+            *
+            Decimal("100")
+        )
+        .quantize(
+            Decimal("1"),
+            rounding=ROUND_HALF_UP,
+        )
     )
 
 
     if (
-        remote_status
+        remote_amount
         !=
-        "captured"
+        expected_amount_paise
     ):
 
-        payment.status = (
-            "authorized"
-            if
-            remote_status
-            ==
-            "authorized"
-            else
-            "created"
+        print(
+            "RAZORPAY AMOUNT MISMATCH:",
+            {
+                "booking":
+                    str(
+                        booking.booking_id
+                    ),
+
+                "expected":
+                    expected_amount_paise,
+
+                "received":
+                    remote_amount,
+
+                "payment_id":
+                    razorpay_payment_id,
+            }
         )
 
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "Payment amount verification failed."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # SAVE VERIFIED RAZORPAY REFERENCES
+    #
+    # Do this BEFORE ticket/file generation.
+    #
+    # If anything later goes wrong, we still know which
+    # Razorpay payment belongs to this local record.
+    # =====================================================
+
+    try:
+
+        payment.gateway_payment_id = (
+            razorpay_payment_id
+        )
+
+        payment.gateway_signature = (
+            razorpay_signature
+        )
 
         payment.save(
             update_fields=[
                 "gateway_payment_id",
                 "gateway_signature",
+                "updated_at",
+            ]
+        )
+
+
+    except Exception as error:
+
+        print(
+            "\n========================================"
+        )
+
+        print(
+            "RAZORPAY REFERENCE SAVE ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "========================================\n"
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "Payment was verified but could not "
+                    "be recorded locally. "
+                    "Please contact support and do not pay again."
+                ),
+            },
+            status=500,
+        )
+
+
+    # =====================================================
+    # PAYMENT MUST BE CAPTURED
+    # =====================================================
+
+    if remote_status != "captured":
+
+        # ---------------------------------------------
+        # Razorpay may temporarily return authorized.
+        # Store that status and allow reconciliation.
+        # ---------------------------------------------
+
+        if remote_status == "authorized":
+
+            payment.status = (
+                "authorized"
+            )
+
+        else:
+
+            payment.status = (
+                "created"
+            )
+
+
+        payment.save(
+            update_fields=[
                 "status",
                 "updated_at",
             ]
+        )
+
+
+        print(
+            "RAZORPAY PAYMENT NOT CAPTURED:",
+            {
+                "booking":
+                    str(
+                        booking.booking_id
+                    ),
+
+                "payment_id":
+                    razorpay_payment_id,
+
+                "remote_status":
+                    remote_status,
+            }
         )
 
 
@@ -9574,84 +9996,286 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # PAYMENT SUCCESS
+    # PAYMENT IS CAPTURED
+    #
+    # NOW commit only the important DATABASE state.
+    #
+    # This transaction is intentionally SMALL.
     # =====================================================
 
-    payment.status = "paid"
+    try:
 
-    payment.paid_at = (
-        timezone.now()
-    )
+        with transaction.atomic():
 
-    payment.failure_reason = ""
+            # ---------------------------------------------
+            # LOCK PAYMENT
+            # ---------------------------------------------
 
-
-    payment.save(
-        update_fields=[
-            "gateway_payment_id",
-            "gateway_signature",
-            "status",
-            "paid_at",
-            "failure_reason",
-            "updated_at",
-        ]
-    )
+            locked_payment = (
+                Payment.objects
+                .select_for_update()
+                .get(
+                    pk=payment.pk
+                )
+            )
 
 
-    # =====================================================
-    # CONFIRM BOOKING
-    # =====================================================
+            # ---------------------------------------------
+            # LOCK BOOKING
+            # ---------------------------------------------
 
-    booking.status = (
-        "confirmed"
-    )
-
-
-    booking.save(
-        update_fields=[
-            "status",
-            "updated_at",
-        ]
-    )
+            locked_booking = (
+                Booking.objects
+                .select_for_update()
+                .get(
+                    pk=booking.pk
+                )
+            )
 
 
-    # =====================================================
-    # CREATE / GET TICKET
-    # =====================================================
+            # =============================================
+            # PAYMENT
+            # =============================================
 
-    ticket, created = (
-        Ticket.objects.get_or_create(
-            booking=booking
+            locked_payment.gateway_payment_id = (
+                razorpay_payment_id
+            )
+
+            locked_payment.gateway_signature = (
+                razorpay_signature
+            )
+
+            locked_payment.status = (
+                "paid"
+            )
+
+
+            if not locked_payment.paid_at:
+
+                locked_payment.paid_at = (
+                    timezone.now()
+                )
+
+
+            locked_payment.failure_reason = ""
+
+
+            locked_payment.save(
+                update_fields=[
+                    "gateway_payment_id",
+                    "gateway_signature",
+                    "status",
+                    "paid_at",
+                    "failure_reason",
+                    "updated_at",
+                ]
+            )
+
+
+            # =============================================
+            # BOOKING
+            # =============================================
+
+            locked_booking.status = (
+                "confirmed"
+            )
+
+
+            locked_booking.save(
+                update_fields=[
+                    "status",
+                    "updated_at",
+                ]
+            )
+
+
+            # =============================================
+            # TICKET DATABASE RECORD
+            #
+            # Only create/get DB row here.
+            # Do NOT generate files inside transaction.
+            # =============================================
+
+            ticket, created = (
+                Ticket.objects.get_or_create(
+                    booking=
+                        locked_booking
+                )
+            )
+
+
+            # Keep final objects after transaction
+            payment = (
+                locked_payment
+            )
+
+            booking = (
+                locked_booking
+            )
+
+
+    except Exception as error:
+
+        print(
+            "\n========================================"
         )
-    )
+
+        print(
+            "PAYMENT DATABASE FINALIZATION ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "PAYMENT ID:",
+            razorpay_payment_id
+        )
+
+        print(
+            "ORDER:",
+            payment.gateway_order_id
+        )
+
+        print(
+            "========================================\n"
+        )
+
+
+        # Razorpay payment is already captured.
+        # Customer MUST NOT pay again.
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "Your payment was successfully captured, "
+                    "but the booking could not be finalized. "
+                    "Please contact support and do not make "
+                    "another payment."
+                ),
+            },
+            status=500,
+        )
+
+
+    # =====================================================
+    # IMPORTANT
+    #
+    # DATABASE IS NOW COMMITTED:
+    #
+    # Payment = paid
+    # Booking = confirmed
+    # Ticket row exists
+    #
+    # Everything below is NON-CRITICAL.
+    #
+    # Failure below MUST NEVER turn payment into failure.
+    # =====================================================
 
 
     # =====================================================
     # GENERATE QR
     # =====================================================
 
-    if not ticket.qr_image:
+    try:
 
-        generate_ticket_qr(
-            request,
-            ticket,
+        if not ticket.qr_image:
+
+            generate_ticket_qr(
+                request,
+                ticket,
+            )
+
+            ticket.save()
+
+
+    except Exception as error:
+
+        print(
+            "\n========================================"
         )
 
-        # Save QR so PDF generator can use qr_image.path
-        ticket.save()
+        print(
+            "TICKET QR GENERATION ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "========================================\n"
+        )
 
 
     # =====================================================
     # GENERATE PDF
     # =====================================================
 
-    if not ticket.pdf_ticket:
+    try:
 
-        generate_ticket_pdf(
-            ticket
+        if not ticket.pdf_ticket:
+
+            generate_ticket_pdf(
+                ticket
+            )
+
+            ticket.save()
+
+
+    except Exception as error:
+
+        print(
+            "\n========================================"
         )
 
-        ticket.save()
+        print(
+            "TICKET PDF GENERATION ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "========================================\n"
+        )
 
 
     # =====================================================
@@ -9659,6 +10283,7 @@ def booking_payment_verify(request):
     # =====================================================
 
     email_sent = False
+
 
     try:
 
@@ -9668,11 +10293,34 @@ def booking_payment_verify(request):
             )
         )
 
+
     except Exception as error:
 
         print(
-            "TICKET EMAIL ERROR:",
-            error,
+            "\n========================================"
+        )
+
+        print(
+            "TICKET EMAIL ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "========================================\n"
         )
 
 
@@ -9682,6 +10330,7 @@ def booking_payment_verify(request):
 
     sms_sent = False
 
+
     try:
 
         sms_sent = (
@@ -9690,11 +10339,34 @@ def booking_payment_verify(request):
             )
         )
 
+
     except Exception as error:
 
         print(
-            "TICKET SMS ERROR:",
-            error,
+            "\n========================================"
+        )
+
+        print(
+            "TICKET SMS ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "========================================\n"
         )
 
 
@@ -9703,6 +10375,7 @@ def booking_payment_verify(request):
     # =====================================================
 
     whatsapp_sent = False
+
 
     try:
 
@@ -9713,91 +10386,198 @@ def booking_payment_verify(request):
             )
         )
 
+
     except Exception as error:
 
         print(
-            "TICKET WHATSAPP ERROR:",
-            error,
+            "\n========================================"
+        )
+
+        print(
+            "TICKET WHATSAPP ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "========================================\n"
         )
 
 
     # =====================================================
-    # SAVE TICKET DELIVERY STATUS
+    # SAVE TICKET NOTIFICATION STATUS
     # =====================================================
 
-    ticket.email_sent = (
-        email_sent
-    )
+    try:
 
-    ticket.whatsapp_sent = (
-        whatsapp_sent
-    )
+        ticket.email_sent = (
+            bool(
+                email_sent
+            )
+        )
 
 
-    ticket.save(
-        update_fields=[
-            "email_sent",
-            "whatsapp_sent",
-        ]
-    )
+        ticket.whatsapp_sent = (
+            bool(
+                whatsapp_sent
+            )
+        )
+
+
+        ticket.save(
+            update_fields=[
+                "email_sent",
+                "whatsapp_sent",
+            ]
+        )
+
+
+    except Exception as error:
+
+        print(
+            "TICKET DELIVERY STATUS SAVE ERROR:",
+            repr(error)
+        )
 
 
     # =====================================================
     # BOOKING NOTIFICATION STATUS
-    #
-    # We don't want failed SMS/WhatsApp to make the
-    # successfully paid booking fail.
     # =====================================================
 
-    booking.notifications_sent = (
-        email_sent
-        or
-        sms_sent
-        or
-        whatsapp_sent
+    try:
+
+        booking.notifications_sent = (
+            bool(
+                email_sent
+                or
+                sms_sent
+                or
+                whatsapp_sent
+            )
+        )
+
+
+        booking.save(
+            update_fields=[
+                "notifications_sent",
+                "updated_at",
+            ]
+        )
+
+
+    except Exception as error:
+
+        print(
+            "BOOKING NOTIFICATION STATUS ERROR:",
+            repr(error)
+        )
+
+
+    # =====================================================
+    # CLEAR TEMPORARY BOOKING SESSION
+    # =====================================================
+
+    try:
+
+        request.session.pop(
+            "pending_booking",
+            None,
+        )
+
+
+        request.session.pop(
+            "current_booking_id",
+            None,
+        )
+
+
+        request.session.modified = True
+
+
+    except Exception as error:
+
+        print(
+            "PAYMENT SESSION CLEANUP ERROR:",
+            repr(error)
+        )
+
+
+    # =====================================================
+    # FINAL SUCCESS
+    # =====================================================
+
+    print(
+        "\n========================================"
+    )
+
+    print(
+        "PAYMENT VERIFIED SUCCESSFULLY"
+    )
+
+    print(
+        "BOOKING:",
+        booking.booking_id
+    )
+
+    print(
+        "PAYMENT ID:",
+        payment.gateway_payment_id
+    )
+
+    print(
+        "ORDER ID:",
+        payment.gateway_order_id
+    )
+
+    print(
+        "AMOUNT:",
+        payment.amount
+    )
+
+    print(
+        "PAYMENT STATUS:",
+        payment.status
+    )
+
+    print(
+        "BOOKING STATUS:",
+        booking.status
+    )
+
+    print(
+        "========================================\n"
     )
 
 
-    booking.save(
-        update_fields=[
-            "notifications_sent",
-            "updated_at",
-        ]
-    )
+    return JsonResponse(
+        {
+            "success": True,
 
-
-    # =====================================================
-    # CLEAR TEMPORARY SESSION
-    # =====================================================
-
-    request.session.pop(
-        "pending_booking",
-        None,
-    )
-
-
-    request.session.pop(
-        "current_booking_id",
-        None,
-    )
-
-
-    request.session.modified = True
-
-
-    # =====================================================
-    # USER ACCOUNT
-    # =====================================================
-
-    return JsonResponse({
-         "success": True,
-         "redirect_url": reverse(
-        "booking_success",
-        kwargs={
-            "booking_id": str(booking.booking_id)
+            "redirect_url":
+                reverse(
+                    "booking_success",
+                    kwargs={
+                        "booking_id":
+                            str(
+                                booking.booking_id
+                            )
+                    },
+                ),
         }
     )
-})
 
 
 def generate_ticket_qr(request, ticket):
