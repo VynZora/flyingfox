@@ -481,6 +481,287 @@
 
         }
 
+
+
+        /* =====================================================
+   CHECK-IN CONFIRMATION POPUP
+===================================================== */
+
+.ff-confirm-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    padding: 20px;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 99999;
+
+    background:
+        rgba(
+            12,
+            24,
+            36,
+            .65
+        );
+
+    backdrop-filter: blur(5px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: .25s ease;
+}
+
+
+/* OPEN STATE */
+
+.ff-confirm-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.ff-confirm-modal {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 35px 30px 30px;
+
+    border-radius: 24px;
+
+    background: #ffffff;
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 80px
+        rgba(0, 0, 0, .20);
+
+    transform: translateY(15px) scale(.97);
+
+    transition: .25s ease;
+}
+
+
+.ff-confirm-overlay.show
+.ff-confirm-modal {
+    transform: translateY(0) scale(1);
+}
+
+
+/* =====================================================
+   ICON
+===================================================== */
+
+.ff-confirm-icon {
+    display: flex;
+
+    width: 72px;
+    height: 72px;
+
+    margin:
+        0
+        auto
+        20px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: var(--ff-green);
+
+    font-size: 28px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(22, 128, 58, .20);
+}
+
+
+/* =====================================================
+   TEXT
+===================================================== */
+
+.ff-confirm-modal h3 {
+    margin:
+        0
+        0
+        10px;
+
+    color: var(--ff-dark);
+
+    font-size: 21px;
+    font-weight: 900;
+}
+
+
+.ff-confirm-modal p {
+    max-width: 340px;
+
+    margin:
+        0
+        auto
+        22px;
+
+    color: var(--ff-text);
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   TICKET NUMBER
+===================================================== */
+
+.ff-confirm-ticket {
+    display: flex;
+
+    margin-bottom: 25px;
+
+    padding:
+        14px
+        16px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    border:
+        1px solid
+        var(--ff-border);
+
+    border-radius: 12px;
+
+    background: #f7f8fa;
+}
+
+
+.ff-confirm-ticket span {
+    color: var(--ff-text);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.ff-confirm-ticket strong {
+    color: var(--ff-dark);
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.ff-confirm-actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 10px;
+}
+
+
+.ff-confirm-actions button {
+    min-height: 48px;
+
+    border: 0;
+    border-radius: 25px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    transition: .2s ease;
+}
+
+
+/* CANCEL */
+
+.ff-confirm-cancel {
+    color: var(--ff-dark);
+
+    background: #edf0f3;
+}
+
+
+.ff-confirm-cancel:hover {
+    background: #e1e5e9;
+}
+
+
+/* CONFIRM */
+
+.ff-confirm-submit {
+    color: #ffffff;
+
+    background: var(--ff-green);
+}
+
+
+.ff-confirm-submit:hover {
+    filter: brightness(.92);
+}
+
+
+.ff-confirm-submit i {
+    margin-right: 5px;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 500px) {
+
+    .ff-confirm-modal {
+        padding:
+            30px
+            20px
+            22px;
+
+        border-radius: 20px;
+    }
+
+
+    .ff-confirm-actions {
+        grid-template-columns: 1fr;
+    }
+
+
+    .ff-confirm-submit {
+        order: 1;
+    }
+
+
+    .ff-confirm-cancel {
+        order: 2;
+    }
+
+}
+
+
     </style>
 
 </head>
@@ -1037,31 +1318,22 @@
 
             {% elif is_valid %}
 
-                <form
-                    method="POST"
-                    action="{% url 'ticket_check_in' ticket.ticket_id %}"
-                    onsubmit="
-                        return confirm(
-                            'Confirm check-in for this ticket?'
-                        );
-                    "
-                >
+<form
+    method="POST"
+    action="{% url 'ticket_check_in' ticket.ticket_id %}"
+    id="ffCheckinForm">
+    {% csrf_token %}
 
-                    {% csrf_token %}
+    <button
+        type="button"
+        class="ff-checkin-button"
+        id="ffOpenCheckinModal"
+    >
+        <i class="fas fa-circle-check"></i>
+        Check In Riders
+    </button>
 
-
-                    <button
-                        type="submit"
-                        class="ff-checkin-button"
-                    >
-
-                        <i class="fas fa-circle-check"></i>
-
-                        Check In Riders
-
-                    </button>
-
-                </form>
+</form>
 
 
             {% else %}
@@ -1084,6 +1356,223 @@
 
 </div>
 
+
+
+
+
+
+<!-- =====================================================
+     CHECK-IN CONFIRMATION MODAL
+===================================================== -->
+
+<div
+    class="ff-confirm-overlay"
+    id="ffCheckinModal"
+>
+
+    <div class="ff-confirm-modal">
+
+        <!-- ICON -->
+
+        <div class="ff-confirm-icon">
+            <i class="fas fa-ticket"></i>
+        </div>
+
+
+        <!-- CONTENT -->
+
+        <h3>
+            Confirm Ticket Check-In
+        </h3>
+
+        <p>
+            Are you sure you want to check in this ticket?
+            This action will mark the ticket as used.
+        </p>
+
+
+        <!-- TICKET INFO -->
+
+        <div class="ff-confirm-ticket">
+
+            <span>
+                Ticket Number
+            </span>
+
+            <strong>
+                {{ ticket.ticket_number }}
+            </strong>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="ff-confirm-actions">
+
+            <button
+                type="button"
+                class="ff-confirm-cancel"
+                id="ffCancelCheckin"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="button"
+                class="ff-confirm-submit"
+                id="ffConfirmCheckin"
+            >
+                <i class="fas fa-circle-check"></i>
+
+                Yes, Check In
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{% comment %} js start {% endcomment %}
+
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const modal =
+            document.getElementById(
+                "ffCheckinModal"
+            );
+
+        const openButton =
+            document.getElementById(
+                "ffOpenCheckinModal"
+            );
+
+        const cancelButton =
+            document.getElementById(
+                "ffCancelCheckin"
+            );
+
+        const confirmButton =
+            document.getElementById(
+                "ffConfirmCheckin"
+            );
+
+        const form =
+            document.getElementById(
+                "ffCheckinForm"
+            );
+
+
+        if (
+            !modal ||
+            !openButton ||
+            !form
+        ) {
+            return;
+        }
+
+
+        /* OPEN */
+
+        openButton.addEventListener(
+            "click",
+            function () {
+
+                modal.classList.add(
+                    "show"
+                );
+
+                document.body.style.overflow =
+                    "hidden";
+            }
+        );
+
+
+        /* CLOSE */
+
+        function closeModal() {
+
+            modal.classList.remove(
+                "show"
+            );
+
+            document.body.style.overflow =
+                "";
+        }
+
+
+        cancelButton.addEventListener(
+            "click",
+            closeModal
+        );
+
+
+        /* CLICK OUTSIDE */
+
+        modal.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === modal) {
+                    closeModal();
+                }
+
+            }
+        );
+
+
+        /* ESC KEY */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape"
+                    &&
+                    modal.classList.contains("show")
+                ) {
+                    closeModal();
+                }
+
+            }
+        );
+
+
+        /* CONFIRM CHECK-IN */
+
+        confirmButton.addEventListener(
+            "click",
+            function () {
+
+                /*
+                 * Prevent accidental double click
+                 */
+                confirmButton.disabled = true;
+
+                confirmButton.innerHTML =
+                    '<i class="fas fa-spinner fa-spin"></i> Checking In...';
+
+
+                /*
+                 * Submit actual Django POST form
+                 */
+                form.submit();
+
+            }
+        );
+
+    }
+);
+</script>
+{% comment %} js end {% endcomment %}
 
 </body>
 

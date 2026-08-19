@@ -11855,58 +11855,48 @@ def verify_ticket(
     "flyingfox_app.verify_ticket",
     login_url="ticket_staff_login",
 )
+
+
+
+@permission_required(
+    "flyingfox_app.verify_ticket",
+    login_url="ticket_staff_login",
+)
 @transaction.atomic
-def ticket_check_in(
-    request,
-    ticket_id,
-):
+def ticket_check_in(request, ticket_id):
 
     if request.method != "POST":
-
-        return redirect(
-            "ticket_scanner"
-        )
+        return redirect("ticket_scanner")
 
 
     ticket = get_object_or_404(
-
-        Ticket.objects
-        .select_for_update()
-        .select_related(
-            "booking",
-            "booking__payment",
-        ),
-
+        Ticket.objects.select_for_update(),
         ticket_id=ticket_id,
     )
 
 
-    booking = (
-        ticket.booking
+    booking = get_object_or_404(
+        Booking,
+        pk=ticket.booking_id,
     )
 
 
-    # =====================================================
-    # PAYMENT MUST BE PAID
-    # =====================================================
+    payment = (
+        Payment.objects
+        .filter(booking=booking)
+        .first()
+    )
+
 
     if (
-        not hasattr(
-            booking,
-            "payment"
-        )
+        payment is None
         or
-        booking.payment.status
-        !=
-        "paid"
+        payment.status != "paid"
     ):
 
         messages.error(
             request,
-            (
-                "This ticket cannot be checked in "
-                "because payment is not confirmed."
-            )
+            "This ticket cannot be checked in because payment is not confirmed."
         )
 
         return redirect(
@@ -11914,10 +11904,6 @@ def ticket_check_in(
             qr_token=ticket.qr_token,
         )
 
-
-    # =====================================================
-    # BOOKING MUST BE CONFIRMED
-    # =====================================================
 
     if booking.status not in [
         "confirmed",
@@ -11926,10 +11912,7 @@ def ticket_check_in(
 
         messages.error(
             request,
-            (
-                "This booking is not valid "
-                "for check-in."
-            )
+            "This booking is not valid for check-in."
         )
 
         return redirect(
@@ -11937,19 +11920,12 @@ def ticket_check_in(
             qr_token=ticket.qr_token,
         )
 
-
-    # =====================================================
-    # ALREADY USED
-    # =====================================================
 
     if ticket.is_used:
 
         messages.warning(
             request,
-            (
-                "This ticket has already "
-                "been checked in."
-            )
+            "This ticket has already been checked in."
         )
 
         return redirect(
@@ -11958,16 +11934,8 @@ def ticket_check_in(
         )
 
 
-    # =====================================================
-    # CHECK IN
-    # =====================================================
-
     ticket.is_used = True
-
-    ticket.checked_in_at = (
-        timezone.now()
-    )
-
+    ticket.checked_in_at = timezone.now()
 
     ticket.save(
         update_fields=[
@@ -11977,10 +11945,7 @@ def ticket_check_in(
     )
 
 
-    booking.status = (
-        "checked_in"
-    )
-
+    booking.status = "checked_in"
 
     booking.save(
         update_fields=[
@@ -12000,6 +11965,7 @@ def ticket_check_in(
         "verify_ticket",
         qr_token=ticket.qr_token,
     )
+
 
 
 
