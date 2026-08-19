@@ -246,12 +246,12 @@ Booking Details | FlyingFox Admin
         <div class="detail-actions">
 
 
-            <a
+            {% comment %} <a
                 href="{% url 'booking_update' booking.id %}"
                 class="btn btn-warning"
             >
                 Edit Booking
-            </a>
+            </a> {% endcomment %}
 
 
             <a
@@ -989,15 +989,28 @@ Booking Details | FlyingFox Admin
 
         <div class="info-row mt-3">
 
-            <span>
-                Ticket ID
-            </span>
+    <span>
+        Ticket Number
+    </span>
 
-            <strong>
-                {{ ticket.ticket_id }}
-            </strong>
+    <strong>
+        {{ ticket.ticket_number|default:"-" }}
+    </strong>
 
-        </div>
+</div>
+
+
+<div class="info-row">
+
+    <span>
+        Ticket ID
+    </span>
+
+    <strong>
+        {{ ticket.ticket_id }}
+    </strong>
+
+</div>
 
 
         <div class="info-row">

@@ -748,44 +748,46 @@ class Booking(models.Model):
 #         return f"{self.booking_id} - {self.user.full_name}"    
 
 
-class BookingPerson(models.Model):
+# class BookingPerson(models.Model):
 
-    booking = models.ForeignKey(
-        Booking,
-        on_delete=models.CASCADE,
-        related_name="participants"
-    )
+#     booking = models.ForeignKey(
+#         Booking,
+#         on_delete=models.CASCADE,
+#         related_name="participants"
+#     )
 
-    full_name = models.CharField(
-        max_length=150
-    )
+#     full_name = models.CharField(
+#         max_length=150
+#     )
 
-    age = models.PositiveIntegerField(
-        blank=True,
-        null=True
-    )
+#     age = models.PositiveIntegerField(
+#         blank=True,
+#         null=True
+#     )
 
-    weight = models.DecimalField(
-        max_digits=6,
-        decimal_places=2,
-        blank=True,
-        null=True
-    )
+#     weight = models.DecimalField(
+#         max_digits=6,
+#         decimal_places=2,
+#         blank=True,
+#         null=True
+#     )
 
-    phone = models.CharField(
-        max_length=20,
-        blank=True
-    )
+#     phone = models.CharField(
+#         max_length=20,
+#         blank=True
+#     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+#     created_at = models.DateTimeField(
+#         auto_now_add=True
+#     )
 
-    def __str__(self):
-        return (
-            f"{self.full_name} - "
-            f"{self.booking.booking_id}"
-        )
+#     def __str__(self):
+#         return (
+#             f"{self.full_name} - "
+#             f"{self.booking.booking_id}"
+#         )
+
+    
 class Payment(models.Model):
 
     STATUS_CHOICES = [
@@ -855,59 +857,6 @@ class Payment(models.Model):
             f"{self.booking.booking_id} - "
             f"{self.status}"
         )
-
-# class Payment(models.Model):
-
-#     STATUS_CHOICES = [
-#         ("created", "Created"),
-#         ("paid", "Paid"),
-#         ("failed", "Failed"),
-#         ("refunded", "Refunded"),
-#     ]
-
-#     booking = models.OneToOneField(
-#         Booking,
-#         on_delete=models.CASCADE,
-#         related_name="payment"
-#     )
-
-#     gateway = models.CharField(
-#         max_length=30,
-#         default="razorpay"
-#     )
-
-#     gateway_order_id = models.CharField(
-#         max_length=255,
-#         blank=True
-#     )
-
-#     gateway_payment_id = models.CharField(
-#         max_length=255,
-#         blank=True
-#     )
-
-#     amount = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     status = models.CharField(
-#         max_length=20,
-#         choices=STATUS_CHOICES,
-#         default="created"
-#     )
-
-#     paid_at = models.DateTimeField(
-#         blank=True,
-#         null=True
-#     )
-
-#     created_at = models.DateTimeField(
-#         auto_now_add=True
-#     )
-
-#     def __str__(self):
-#         return f"{self.booking.booking_id} - {self.status}"
 
 
 

@@ -230,11 +230,11 @@ path(
     name="booking_detail"
 ),
 
-# path(
-#     "dashboard/bookings/<int:pk>/edit/",
-#     views.booking_update,
-#     name="booking_update"
-# ),
+path(
+    "dashboard/bookings/<int:pk>/edit/",
+    views.booking_update,
+    name="booking_update"
+),
 
 path(
     "dashboard/bookings/<int:pk>/delete/",

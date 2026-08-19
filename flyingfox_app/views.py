@@ -108,7 +108,6 @@ from .models import (
     UserProfile,
     RideMedia,
     Ride, RidePrice, Booking,
-    BookingPerson,
     Payment,
     Ticket,
     Coupon,Testimonial,Offer,WEIGHT_RANGES, Refund,
@@ -2709,238 +2708,238 @@ def booking_create(request):
         },
     )
 
-# @_admin_required
-# @transaction.atomic
-# def booking_update(request, pk):
+@_admin_required
+@transaction.atomic
+def booking_update(request, pk):
 
-#     booking = get_object_or_404(
-#         Booking.objects.select_related(
-#             "ride",
-#             "ride_price",
-#             "coupon",
-#         ),
-#         pk=pk,
-#     )
+    booking = get_object_or_404(
+        Booking.objects.select_related(
+            "ride",
+            "ride_price",
+            "coupon",
+        ),
+        pk=pk,
+    )
 
-#     rides = (
-#         Ride.objects
-#         .filter(is_active=True)
-#         .order_by("name")
-#     )
+    rides = (
+        Ride.objects
+        .filter(is_active=True)
+        .order_by("name")
+    )
 
-#     prices = (
-#         RidePrice.objects
-#         .filter(is_active=True)
-#         .select_related("ride")
-#         .order_by(
-#             "ride__name",
-#             "-start_date",
-#         )
-#     )
+    prices = (
+        RidePrice.objects
+        .filter(is_active=True)
+        .select_related("ride")
+        .order_by(
+            "ride__name",
+            "-start_date",
+        )
+    )
 
-#     if request.method == "POST":
+    if request.method == "POST":
 
-#         customer_name = request.POST.get(
-#             "customer_name",
-#             "",
-#         ).strip()
+        customer_name = request.POST.get(
+            "customer_name",
+            "",
+        ).strip()
 
-#         customer_email = request.POST.get(
-#             "customer_email",
-#             "",
-#         ).strip()
+        customer_email = request.POST.get(
+            "customer_email",
+            "",
+        ).strip()
 
-#         customer_phone = request.POST.get(
-#             "customer_phone",
-#             "",
-#         ).strip()
+        customer_phone = request.POST.get(
+            "customer_phone",
+            "",
+        ).strip()
 
-#         customer_pincode = request.POST.get(
-#             "customer_pincode",
-#             "",
-#         ).strip()
+        customer_pincode = request.POST.get(
+            "customer_pincode",
+            "",
+        ).strip()
 
-#         time_slot = request.POST.get(
-#             "time_slot",
-#             "",
-#         ).strip()
+        time_slot = request.POST.get(
+            "time_slot",
+            "",
+        ).strip()
 
-#         ride_id = request.POST.get("ride")
-#         ride_price_id = request.POST.get("ride_price")
+        ride_id = request.POST.get("ride")
+        ride_price_id = request.POST.get("ride_price")
 
-#         booking_date_raw = request.POST.get(
-#             "booking_date",
-#             "",
-#         ).strip()
+        booking_date_raw = request.POST.get(
+            "booking_date",
+            "",
+        ).strip()
 
-#         quantity_raw = request.POST.get(
-#             "quantity",
-#             "1",
-#         )
+        quantity_raw = request.POST.get(
+            "quantity",
+            "1",
+        )
 
-#         if not customer_name:
-#             messages.error(
-#                 request,
-#                 "Customer name is required.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if not customer_name:
+            messages.error(
+                request,
+                "Customer name is required.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         if not customer_email:
-#             messages.error(
-#                 request,
-#                 "Customer email is required.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if not customer_email:
+            messages.error(
+                request,
+                "Customer email is required.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         if (
-#             not customer_phone.isdigit()
-#             or len(customer_phone) != 10
-#         ):
-#             messages.error(
-#                 request,
-#                 "Enter a valid 10-digit customer phone number.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if (
+            not customer_phone.isdigit()
+            or len(customer_phone) != 10
+        ):
+            messages.error(
+                request,
+                "Enter a valid 10-digit customer phone number.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         if (
-#             not customer_pincode.isdigit()
-#             or len(customer_pincode) != 6
-#         ):
-#             messages.error(
-#                 request,
-#                 "Enter a valid 6-digit PIN code.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if (
+            not customer_pincode.isdigit()
+            or len(customer_pincode) != 6
+        ):
+            messages.error(
+                request,
+                "Enter a valid 6-digit PIN code.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         if not time_slot:
-#             messages.error(
-#                 request,
-#                 "Time slot is required.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if not time_slot:
+            messages.error(
+                request,
+                "Time slot is required.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         try:
-#             quantity = int(quantity_raw)
-#         except (TypeError, ValueError):
-#             quantity = 0
+        try:
+            quantity = int(quantity_raw)
+        except (TypeError, ValueError):
+            quantity = 0
 
-#         if quantity < 1:
-#             messages.error(
-#                 request,
-#                 "Quantity must be at least 1.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if quantity < 1:
+            messages.error(
+                request,
+                "Quantity must be at least 1.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         selected_date = parse_date(
-#             booking_date_raw
-#         )
+        selected_date = parse_date(
+            booking_date_raw
+        )
 
-#         if selected_date is None:
-#             messages.error(
-#                 request,
-#                 "Please select a valid booking date.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if selected_date is None:
+            messages.error(
+                request,
+                "Please select a valid booking date.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         ride = get_object_or_404(
-#             Ride,
-#             pk=ride_id,
-#             is_active=True,
-#         )
+        ride = get_object_or_404(
+            Ride,
+            pk=ride_id,
+            is_active=True,
+        )
 
-#         ride_price = get_object_or_404(
-#             RidePrice,
-#             pk=ride_price_id,
-#             is_active=True,
-#         )
+        ride_price = get_object_or_404(
+            RidePrice,
+            pk=ride_price_id,
+            is_active=True,
+        )
 
-#         if ride_price.ride_id != ride.id:
-#             messages.error(
-#                 request,
-#                 "Selected price does not belong to this ride.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if ride_price.ride_id != ride.id:
+            messages.error(
+                request,
+                "Selected price does not belong to this ride.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         if not (
-#             ride_price.start_date
-#             <= selected_date
-#             <= ride_price.end_date
-#         ):
-#             messages.error(
-#                 request,
-#                 "The selected price is not valid for this booking date.",
-#             )
-#             return redirect(
-#                 "booking_update",
-#                 pk=booking.pk,
-#             )
+        if not (
+            ride_price.start_date
+            <= selected_date
+            <= ride_price.end_date
+        ):
+            messages.error(
+                request,
+                "The selected price is not valid for this booking date.",
+            )
+            return redirect(
+                "booking_update",
+                pk=booking.pk,
+            )
 
-#         price_per_person = ride_price.price
+        price_per_person = ride_price.price
 
-#         subtotal = (
-#             price_per_person
-#             * Decimal(quantity)
-#         )
+        subtotal = (
+            price_per_person
+            * Decimal(quantity)
+        )
 
-#         booking.customer_name = customer_name
-#         booking.customer_email = customer_email
-#         booking.customer_phone = customer_phone
-#         booking.customer_pincode = customer_pincode
-#         booking.time_slot = time_slot
+        booking.customer_name = customer_name
+        booking.customer_email = customer_email
+        booking.customer_phone = customer_phone
+        booking.customer_pincode = customer_pincode
+        booking.time_slot = time_slot
 
-#         booking.ride = ride
-#         booking.ride_price = ride_price
-#         booking.booking_date = selected_date
-#         booking.quantity = quantity
-#         booking.price_per_person = price_per_person
-#         booking.subtotal = subtotal
-#         booking.total_amount = subtotal
+        booking.ride = ride
+        booking.ride_price = ride_price
+        booking.booking_date = selected_date
+        booking.quantity = quantity
+        booking.price_per_person = price_per_person
+        booking.subtotal = subtotal
+        booking.total_amount = subtotal
 
-#         booking.save()
+        booking.save()
 
-#         messages.success(
-#             request,
-#             "Booking updated successfully.",
-#         )
+        messages.success(
+            request,
+            "Booking updated successfully.",
+        )
 
-#         return redirect(
-#             "booking_detail",
-#             pk=booking.pk,
-#         )
+        return redirect(
+            "booking_detail",
+            pk=booking.pk,
+        )
 
-#     return render(
-#         request,
-#         "admin_pages/booking_form.html",
-#         {
-#             "booking": booking,
-#             "rides": rides,
-#             "prices": prices,
-#         },
-#     )
+    return render(
+        request,
+        "admin_pages/booking_form.html",
+        {
+            "booking": booking,
+            "rides": rides,
+            "prices": prices,
+        },
+    )
 
 
 @_admin_required

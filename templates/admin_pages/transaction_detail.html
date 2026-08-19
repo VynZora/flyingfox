@@ -630,18 +630,30 @@ Transaction Details | FlyingFox Admin
 
                 <div class="ticket-information">
 
+<div class="info-row">
 
-                    <div class="info-row">
+    <span>
+        Ticket Number
+    </span>
 
-                        <span>
-                            Ticket ID
-                        </span>
+    <strong>
+        {{ ticket.ticket_number|default:"-" }}
+    </strong>
 
-                        <strong>
-                            {{ ticket.ticket_id }}
-                        </strong>
+</div>
 
-                    </div>
+
+<div class="info-row">
+
+    <span>
+        Ticket ID
+    </span>
+
+    <strong>
+        {{ ticket.ticket_id }}
+    </strong>
+
+</div>
 
 
                     <div class="info-row">
