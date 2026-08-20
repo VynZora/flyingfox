@@ -8249,6 +8249,8 @@ def _get_or_create_booking_user_profile(
 
     return user_profile
 
+
+
 @transaction.atomic
 def booking_confirm(request):
 

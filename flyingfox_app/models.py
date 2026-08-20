@@ -159,7 +159,7 @@ class Blog(OptimizedImageModel):
 
     slug = models.SlugField(
         unique=True,
-        blank=True
+        blank=True, max_length=220,
     )
 
     title = models.CharField(

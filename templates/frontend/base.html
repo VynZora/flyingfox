@@ -14,7 +14,35 @@
     <title>{% block title %}Flying Fox Adventure{% endblock %}</title>
 
     <!-- favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'frontend/assets/img/logo/logo.png' %}" />
+     
+    <!-- =====================================================
+     FLYING FOX FAVICONS
+===================================================== -->
+
+<link rel="icon"
+      type="image/x-icon"
+      href="{% static 'frontend/assets/img/favicon/favicon.ico' %}">
+
+<link rel="icon"
+      type="image/svg+xml"
+      href="{% static 'frontend/assets/img/favicon/favicon.svg' %}">
+
+<link rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="{% static 'frontend/assets/img/favicon/favicon-96x96.png' %}">
+
+<link rel="apple-touch-icon"
+      sizes="180x180"
+      href="{% static 'frontend/assets/img/favicon/apple-touch-icon.png' %}">
+
+<link rel="manifest"
+      href="{% static 'frontend/assets/img/favicon/site.webmanifest' %}">
+
+<meta name="theme-color" content="#d7190f">
+
+
+
 
     <!-- css -->
     <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap.min.css' %}" />
@@ -377,7 +405,7 @@
                     <i class="fab fa-x-twitter"></i>
                 </a>
 
-                <a href="#" aria-label="Instagram">
+                <a href="https://www.instagram.com/flyingfox_adventure/" aria-label="Instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
 
@@ -880,7 +908,7 @@
                                 <li>
 
                                     <a
-                                        href="#"
+                                        href="https://www.instagram.com/flyingfox_adventure/"
                                         aria-label="Instagram"
                                     >
 
@@ -907,14 +935,13 @@
 
                                 <li>
 
-                                    <a
-                                        href="#"
-                                        aria-label="WhatsApp"
-                                    >
-
-                                        <i class="fab fa-whatsapp"></i>
-
-                                    </a>
+                                   <a
+                                       href="https://wa.me/917907219198"
+                                       aria-label="WhatsApp"
+                                       target="_blank"
+                                      rel="noopener noreferrer">
+                                      <i class="fab fa-whatsapp"></i>
+                                   </a>
 
                                 </li>
 
