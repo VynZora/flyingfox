@@ -4327,6 +4327,296 @@ body.ff-message-open {
 
 }
 {% comment %} participant css end  {% endcomment %}
+
+/* =========================================================
+   MULTI-RIDE BOOKING ADDITIONS
+   IMPORTANT: This CSS stays INSIDE the <style> block.
+========================================================= */
+
+.ff-visit-date-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+}
+
+.ff-date-lock-note{
+    display:flex;
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:12px;
+    align-items:center;
+    gap:10px;
+    color:#6f7883;
+    background:#f6f7f9;
+    font-size:10px;
+    line-height:1.5;
+}
+
+.ff-date-lock-note i{
+    color:var(--ff-red);
+}
+
+.ff-add-current-ride-wrap{
+    display:flex;
+    margin-top:16px;
+    justify-content:flex-end;
+}
+
+.ff-add-current-ride{
+    display:inline-flex;
+    min-height:50px;
+    padding:10px 20px;
+    border:0;
+    border-radius:26px;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    color:#fff;
+    background:var(--ff-red);
+    box-shadow:0 9px 22px rgba(195,17,3,.18);
+    font-size:10px;
+    font-weight:900;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.ff-add-current-ride:hover{
+    color:#fff;
+    background:var(--ff-red-dark);
+    transform:translateY(-1px);
+}
+
+.ff-selected-adventures{
+    display:none;
+    margin:18px 0;
+    padding:18px;
+    border:1px solid var(--ff-border);
+    border-radius:18px;
+    background:#fafbfc;
+}
+
+.ff-selected-adventures.show{
+    display:block;
+}
+
+.ff-selected-adventures-head{
+    display:flex;
+    margin-bottom:13px;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.ff-selected-adventures-head small{
+    display:block;
+    margin-bottom:3px;
+    color:var(--ff-red);
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:.7px;
+    text-transform:uppercase;
+}
+
+.ff-selected-adventures-head h3{
+    margin:0;
+    color:var(--ff-dark);
+    font-size:16px;
+    font-weight:900;
+}
+
+.ff-added-ride-card{
+    padding:14px;
+    border:1px solid #e5e8ec;
+    border-radius:15px;
+    background:#fff;
+}
+
+.ff-added-ride-card + .ff-added-ride-card{
+    margin-top:10px;
+}
+
+.ff-added-ride-main{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+}
+
+.ff-added-ride-main small,
+.ff-added-ride-main strong,
+.ff-added-ride-main span{
+    display:block;
+}
+
+.ff-added-ride-main small{
+    margin-bottom:3px;
+    color:#8b939d;
+    font-size:8px;
+    font-weight:800;
+}
+
+.ff-added-ride-main strong{
+    color:var(--ff-dark);
+    font-size:14px;
+    font-weight:900;
+}
+
+.ff-added-ride-main span{
+    margin-top:3px;
+    color:var(--ff-text);
+    font-size:9px;
+    line-height:1.45;
+}
+
+.ff-added-ride-price{
+    white-space:nowrap;
+    text-align:right;
+}
+
+.ff-added-ride-price strong{
+    color:var(--ff-red);
+    font-size:17px;
+    font-weight:900;
+}
+
+.ff-added-weight-list{
+    display:flex;
+    flex-wrap:wrap;
+    margin-top:9px;
+    gap:6px;
+}
+
+.ff-added-weight-chip{
+    padding:5px 8px;
+    border-radius:20px;
+    color:var(--ff-red);
+    background:var(--ff-red-soft);
+    font-size:8px;
+    font-weight:800;
+}
+
+.ff-added-ride-actions{
+    display:flex;
+    margin-top:11px;
+    padding-top:10px;
+    border-top:1px solid #eef0f2;
+    justify-content:flex-end;
+    gap:8px;
+}
+
+.ff-remove-added-ride{
+    padding:8px 11px;
+    border:0;
+    border-radius:10px;
+    color:var(--ff-red);
+    background:#fff1ef;
+    font-size:9px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.ff-add-another-ride{
+    display:none;
+    width:100%;
+    min-height:48px;
+    margin-top:12px;
+    border:1px dashed rgba(195,17,3,.35);
+    border-radius:14px;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    color:var(--ff-red);
+    background:#fff8f7;
+    font-size:10px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.ff-add-another-ride.show{
+    display:flex;
+}
+
+.ff-add-another-ride span{
+    display:flex;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:var(--ff-red);
+}
+
+.ff-summary-adventures{
+    display:grid;
+    margin:6px 0 14px;
+    gap:7px;
+}
+
+.ff-summary-adventure-row{
+    display:flex;
+    padding:8px 0;
+    border-bottom:1px solid rgba(255,255,255,.09);
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.ff-summary-adventure-row:last-child{
+    border-bottom:0;
+}
+
+.ff-summary-adventure-row span{
+    color:rgba(255,255,255,.72);
+    font-size:9px;
+}
+
+.ff-summary-adventure-row span small{
+    display:block;
+    margin-top:2px;
+    color:rgba(255,255,255,.42);
+    font-size:8px;
+}
+
+.ff-summary-adventure-row strong{
+    color:#fff;
+    font-size:10px;
+}
+
+.ff-current-builder-note{
+    margin:12px 0 0;
+    color:#8a929d;
+    font-size:9px;
+    line-height:1.5;
+}
+
+.ff-ride-item.already-added{
+    opacity:.56;
+    cursor:not-allowed;
+}
+
+.ff-ride-item.already-added .ff-ride-select{
+    background:#8b939d !important;
+}
+
+.ff-ride-item.already-added .ff-ride-select::before{
+    content:"✓ ";
+}
+
+@media(max-width:575px){
+    .ff-added-ride-main{
+        flex-direction:column;
+    }
+
+    .ff-added-ride-price{
+        text-align:left;
+    }
+
+    .ff-add-current-ride{
+        width:100%;
+    }
+}
+
 </style>
 {% endblock %}
 
@@ -4365,9 +4655,7 @@ body.ff-message-open {
                     </div>
 
                     <p class="ff-booking-intro">
-                        Choose your ride, visit date, available offer and the
-                        number of riders in each weight range. Your exact
-                        booking amount will be verified before payment.
+                        Select your visit date once, then add one or more rides. Each ride can have its own offer and participant weight groups. Your exact booking amount will be verified before payment.
                     </p>
 
                     <div class="ff-booking-detail-list">
@@ -4429,7 +4717,7 @@ body.ff-message-open {
 
                     </div>
 
-                    <div class="ff-important-info">
+                    {% comment %} <div class="ff-important-info">
 
                         <div class="ff-important-heading">
                             <i class="fas fa-circle-info"></i>
@@ -4438,7 +4726,7 @@ body.ff-message-open {
 
                         <ul>
                             <li>
-                                Arrive at least 30 minutes before your selected slot.
+                                Arrive during operating hours on your selected visit date.
                             </li>
                             <li>
                                 Select the correct participant weight ranges before continuing.
@@ -4454,7 +4742,7 @@ body.ff-message-open {
                             </li>
                         </ul>
 
-                    </div>
+                    </div> {% endcomment %}
 
                     <div class="ff-left-help">
                         <span class="ff-left-help-icon">
@@ -4485,11 +4773,13 @@ body.ff-message-open {
                 >
                     {% csrf_token %}
 
+                    <input type="hidden" name="booking_items_json" id="bookingItemsJson">
+
                     <div class="ff-form-top">
                         <span>Adventure Booking</span>
                         <h2>Choose Your Experience</h2>
                         <p>
-                            Complete the selections below to review your booking.
+                            Choose one visit date, then add one or more adventures.
                         </p>
                     </div>
 
@@ -4522,11 +4812,142 @@ body.ff-message-open {
 </div>
 
 
+
+                    <!-- =================================================
+                         VISIT DATE - SELECT ONCE
+                    ================================================== -->
+                    <section
+                        class="ff-panel open active"
+                        id="datePanel"
+                    >
+                        <button
+                            type="button"
+                            class="ff-panel-head"
+                            id="datePanelButton"
+                        >
+                            <span class="ff-panel-heading">
+                                <span class="ff-panel-icon">
+                                    <i class="fas fa-calendar-days"></i>
+                                </span>
+
+                                <span>
+                                    <h3>Choose Visit Date</h3>
+                                    <p>This date will apply to every ride in this booking.</p>
+                                </span>
+                            </span>
+
+                            <span class="ff-panel-toggle">
+                                <i class="fas fa-minus"></i>
+                            </span>
+                        </button>
+
+                        <div
+                            class="ff-selected-bar"
+                            id="dateSelected"
+                        >
+                            <span class="ff-selected-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </span>
+
+                            <div>
+                                <small>Visit Date</small>
+                                <strong id="dateSelectedText">—</strong>
+                                <span>Applies to all selected adventures</span>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="ff-change-btn"
+                                data-open="datePanel"
+                            >
+                                Change
+                            </button>
+                        </div>
+
+                        <div class="ff-panel-body">
+
+                            <div class="ff-date-time-premium">
+
+                                <div class="ff-date-time-intro">
+
+                                    <div class="ff-date-time-intro-icon">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+
+                                    <div>
+                                        <strong>Plan Your Visit</strong>
+                                        <span>
+                                            Choose your visit date once. Every adventure you add below will use this same date.
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <div class="ff-visit-date-grid">
+
+                                    <div class="ff-premium-field">
+
+                                        <div class="ff-premium-field-top">
+
+                                            <span class="ff-premium-field-icon">
+                                                <i class="fas fa-calendar-days"></i>
+                                            </span>
+
+                                            <div>
+                                                <small>VISIT DATE</small>
+                                                <strong>Select your adventure day</strong>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="ff-premium-control">
+                                            <input
+                                                type="date"
+                                                id="bookingDate"
+                                                name="booking_date"
+                                                min="{{ today|date:'Y-m-d' }}"
+                                                required
+                                            >
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="ff-date-lock-note">
+                                    <i class="fas fa-circle-info"></i>
+                                    <span>
+                                        You will not be asked to select the date again when you add another ride.
+                                    </span>
+                                </div>
+
+                                <div class="ff-date-time-action">
+
+                                    <button
+                                        type="button"
+                                        class="ff-premium-continue"
+                                        id="dateContinue"
+                                    >
+                                        Continue to Rides
+
+                                        <span>
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
                     <!-- =================================================
                          RIDE
                     ================================================== -->
                     <section
-                        class="ff-panel open active"
+                        class="ff-panel locked"
                         id="ridePanel"
                     >
 
@@ -4534,6 +4955,7 @@ body.ff-message-open {
                             type="button"
                             class="ff-panel-head"
                             id="ridePanelButton"
+                            disabled
                         >
                             <span class="ff-panel-heading">
                                 <span class="ff-panel-icon">
@@ -4542,12 +4964,12 @@ body.ff-message-open {
 
                                 <span>
                                     <h3>Choose Your Ride</h3>
-                                    <p>Select one Flying Fox experience.</p>
+                                    <p>Select an adventure to add to this booking.</p>
                                 </span>
                             </span>
 
                             <span class="ff-panel-toggle">
-                                <i class="fas fa-minus"></i>
+                                <i class="fas fa-plus"></i>
                             </span>
                         </button>
 
@@ -4574,342 +4996,15 @@ body.ff-message-open {
 
                         <div class="ff-panel-body">
 
-                            {% if rides %}
-
-                                <div class="ff-ride-list">
-
-                                    {% for ride in rides %}
-
-                                        {% with ride_price=ride.current_prices.0 %}
-
-                                            {% if ride_price %}
-
-                                                <label class="ff-ride-item">
-
-                                                    <input
-                                                        type="radio"
-                                                        name="ride_id"
-                                                        value="{{ ride.id }}"
-                                                        class="ff-ride-radio"
-                                                        data-name="{{ ride.name|escape }}"
-                                                        data-price="{{ ride_price.price }}"
-                                                        data-image="{% if ride.booking_images %}{{ ride.booking_images.0.image.url }}{% endif %}"
-                                                        required
-                                                    >
-
-                                                    <span class="ff-ride-image">
-
-                                                        {% if ride.booking_images %}
-
-                                                            <img
-                                                                src="{{ ride.booking_images.0.image.url }}"
-                                                                alt="{{ ride.name }}"
-                                                                loading="lazy"
-                                                            >
-
-                                                        {% else %}
-
-                                                            <span class="ff-ride-placeholder">
-                                                                <i class="fas fa-person-falling"></i>
-                                                            </span>
-
-                                                        {% endif %}
-
-                                                    </span>
-
-                                                    <span class="ff-ride-copy">
-                                                        <strong>{{ ride.name }}</strong>
-                                                        <small>Flying Fox Adventure</small>
-                                                        <b>
-                                                            ₹{{ ride_price.price|floatformat:2 }}
-                                                        </b>
-                                                    </span>
-
-                                                    <span class="ff-ride-select">
-                                                        Select
-                                                    </span>
-
-                                                </label>
-
-
-                                                <!-- Hidden offers for selected ride -->
-                                                <div
-                                                    class="ff-offer-source"
-                                                    data-ride-id="{{ ride.id }}"
-                                                    style="display:none;"
-                                                >
-
-                                                    {% for offer in ride.current_offers %}
-
-                                                        <span
-                                                            data-id="{{ offer.id }}"
-                                                            data-title="{{ offer.title|escape }}"
-                                                            data-description="{{ offer.description|default:''|escape }}"
-                                                            data-label="{{ offer.discount_label|escape }}"
-                                                            data-type="{{ offer.offer_type }}"
-                                                            data-discount="{{ offer.discount_value }}"
-                                                            data-min-participants="{{ offer.minimum_participants }}"
-                                                            data-min-amount="{{ offer.minimum_booking_amount }}"
-                                                            data-max-discount="{% if offer.maximum_discount is not None %}{{ offer.maximum_discount }}{% else %}0{% endif %}"
-                                                            data-buy="{% if offer.buy_quantity %}{{ offer.buy_quantity }}{% else %}0{% endif %}"
-                                                            data-free="{% if offer.free_quantity %}{{ offer.free_quantity }}{% else %}0{% endif %}"
-                                                            data-coupon-required="{% if offer.coupon_required %}1{% else %}0{% endif %}"
-                                                            data-coupon="{{ offer.coupon_code|default:''|escape }}"
-                                                            data-start="{{ offer.start_date|date:'Y-m-d' }}"
-                                                            data-end="{{ offer.end_date|date:'Y-m-d' }}"
-                                                            data-first="{% if offer.first_booking_only %}1{% else %}0{% endif %}"
-                                                        ></span>
-
-                                                    {% endfor %}
-
-                                                </div>
-
-
-
-                                            {% endif %}
-
-                                        {% endwith %}
-
-                                    {% endfor %}
-
-                                </div>
-
-                            {% else %}
-
+                            <div class="ff-ride-list" id="rideList">
                                 <div class="ff-empty">
-                                    No active rides with a current price are available.
+                                    Select a visit date to see available rides.
                                 </div>
-
-                            {% endif %}
+                            </div>
 
                         </div>
 
                     </section>
-
-
-                    <!-- =================================================
-                         DATE AND TIME
-                    ================================================== -->
-                      <section
-                        class="ff-panel locked"
-                        id="datePanel">
-
-                        <button
-                            type="button"
-                            class="ff-panel-head"
-                            id="datePanelButton"
-                            disabled
-                        >
-                            <span class="ff-panel-heading">
-                                <span class="ff-panel-icon">
-                                    <i class="fas fa-calendar-days"></i>
-                                </span>
-
-                                <span>
-                                    <h3>Choose Visit Date & Time</h3>
-                                    <p>Select when you want to visit.</p>
-                                </span>
-                            </span>
-
-                            <span class="ff-panel-toggle">
-                                <i class="fas fa-plus"></i>
-                            </span>
-                        </button>
-
-
-                        <div
-                            class="ff-selected-bar"
-                            id="dateSelected"
-                        >
-                            <span class="ff-selected-icon">
-                                <i class="fas fa-calendar-check"></i>
-                            </span>
-
-                            <div>
-                                <small>Visit</small>
-                                <strong id="dateSelectedText">—</strong>
-                                <span id="timeSelectedText">—</span>
-                            </div>
-
-                            <button
-                                type="button"
-                                class="ff-change-btn"
-                                data-open="datePanel"
-                            >
-                                Change
-                            </button>
-                        </div>
-
-
-                        <div class="ff-date-time-premium">
-
-    <!-- =========================================
-         TOP INTRO
-    ========================================== -->
-
-    <div class="ff-date-time-intro">
-
-        <div class="ff-date-time-intro-icon">
-            <i class="fas fa-calendar-check"></i>
-        </div>
-
-        <div>
-            <strong>
-                Plan Your Visit
-            </strong>
-
-            <span>
-                Choose your preferred date and adventure time slot.
-            </span>
-        </div>
-
-    </div>
-
-
-    <!-- =========================================
-         DATE + TIME CARDS
-    ========================================== -->
-
-    <div class="ff-date-time-grid">
-
-
-        <!-- ===============================
-             DATE
-        ================================ -->
-
-        <div class="ff-premium-field">
-
-            <div class="ff-premium-field-top">
-
-                <span class="ff-premium-field-icon">
-                    <i class="fas fa-calendar-days"></i>
-                </span>
-
-                <div>
-                    <small>
-                        VISIT DATE
-                    </small>
-
-                    <strong>
-                        Select your adventure day
-                    </strong>
-                </div>
-
-            </div>
-
-
-            <div class="ff-premium-control">
-
-                <input
-                    type="date"
-                    id="bookingDate"
-                    name="booking_date"
-                    min="{{ today|date:'Y-m-d' }}"
-                    required
-                >
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ===============================
-             TIME
-        ================================ -->
-
-        <div class="ff-premium-field">
-
-            <div class="ff-premium-field-top">
-
-                <span class="ff-premium-field-icon">
-                    <i class="fas fa-clock"></i>
-                </span>
-
-                <div>
-                    <small>
-                        TIME SLOT
-                    </small>
-
-                    <strong>
-                        Choose your preferred time
-                    </strong>
-                </div>
-
-            </div>
-
-
-            <div class="ff-premium-control">
-
-                <select
-                    id="timeSlot"
-                    name="time_slot"
-                    required
-                >
-
-                    <option value="">
-                        Select time slot
-                    </option>
-
-                    <option value="08:30 AM - 10:00 AM">
-                        08:30 AM - 10:00 AM
-                    </option>
-
-                    <option value="10:00 AM - 11:30 AM">
-                        10:00 AM - 11:30 AM
-                    </option>
-
-                    <option value="11:30 AM - 01:00 PM">
-                        11:30 AM - 01:00 PM
-                    </option>
-
-                    <option value="02:00 PM - 03:30 PM">
-                        02:00 PM - 03:30 PM
-                    </option>
-
-                    <option value="03:30 PM - 05:00 PM">
-                        03:30 PM - 05:00 PM
-                    </option>
-
-                    <option value="05:00 PM - 06:00 PM">
-                        05:00 PM - 06:00 PM
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-    </div>
-
-    <!-- =========================================
-         CONTINUE
-    ========================================== -->
-
-    <div class="ff-date-time-action">
-
-        <button
-            type="button"
-            class="ff-premium-continue"
-            id="dateContinue"
-        >
-
-            Continue to Offers
-
-            <span>
-                <i class="fas fa-arrow-right"></i>
-            </span>
-
-        </button>
-
-    </div>
-
-</div>
-
-                    </section> 
-
 
 
                     <!-- =================================================
@@ -4997,8 +5092,7 @@ body.ff-message-open {
                                     <input
                                         type="text"
                                         id="couponCode"
-                                        name="coupon_code"
-                                        placeholder="Enter coupon code"
+                                                                                placeholder="Enter coupon code"
                                         autocomplete="off"
                                     >
 
@@ -5123,8 +5217,7 @@ body.ff-message-open {
         <input
             type="hidden"
             id="participantCount"
-            name="quantity"
-            value="0"
+                        value="0"
         >
 
 
@@ -5205,9 +5298,55 @@ body.ff-message-open {
 
         </div>
 
-    </div>
+    
+        <div class="ff-add-current-ride-wrap">
+            <button
+                type="button"
+                class="ff-add-current-ride"
+                id="addCurrentRide"
+            >
+                <i class="fas fa-plus"></i>
+                Add This Ride
+            </button>
+        </div>
+
+        <p class="ff-current-builder-note">
+            Add this ride to your booking before choosing another adventure.
+        </p>
+
+</div>
 
 </section>
+
+
+
+                    <!-- =================================================
+                         SELECTED ADVENTURES
+                    ================================================== -->
+                    <div
+                        class="ff-selected-adventures"
+                        id="selectedAdventures"
+                    >
+                        <div class="ff-selected-adventures-head">
+                            <div>
+                                <small>Your Visit</small>
+                                <h3>Selected Adventures</h3>
+                            </div>
+                        </div>
+
+                        <div id="selectedAdventureItems"></div>
+
+                        <button
+                            type="button"
+                            class="ff-add-another-ride"
+                            id="addAnotherRide"
+                        >
+                            <span>
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            Add Another Ride
+                        </button>
+                    </div>
 
 
                     <!-- =================================================
@@ -5219,60 +5358,38 @@ body.ff-message-open {
                             Booking Summary
                         </h3>
 
-
                         <div class="ff-summary-row">
-
                             <span>
-                                Selected Ride
-
-                                <small id="summaryRidePrice">
-                                    Select a ride
-                                </small>
-                            </span>
-
-                            <strong id="summaryRideName">
-                                —
-                            </strong>
-
-                        </div>
-
-
-                        <div class="ff-summary-row">
-
-                            <span>
-                                Visit
-
-                                <small id="summaryTime">
-                                    Select time
-                                </small>
+                                Visit Date
+                                <small>Same date for all adventures</small>
                             </span>
 
                             <strong id="summaryDate">
                                 Select date
                             </strong>
-
                         </div>
-
 
                         <div
-                            class="ff-summary-weights"
-                            id="summaryWeights"
-                        >
-
-                            <div class="ff-summary-weight-title">
-                                Participants by Weight
-                            </div>
-
-                            <div id="summaryWeightItems"></div>
-
-                        </div>
-
+                            class="ff-summary-adventures"
+                            id="summaryAdventures"
+                        ></div>
 
                         <div class="ff-summary-row">
-
                             <span>
-                                Participants
+                                Adventures
+                                <small id="summaryAdventureNote">
+                                    No rides added
+                                </small>
+                            </span>
 
+                            <strong id="summaryAdventureCount">
+                                0
+                            </strong>
+                        </div>
+
+                        <div class="ff-summary-row">
+                            <span>
+                                Participant Entries
                                 <small id="summaryParticipantNote">
                                     No riders added
                                 </small>
@@ -5281,62 +5398,31 @@ body.ff-message-open {
                             <strong id="summaryParticipants">
                                 0
                             </strong>
-
                         </div>
 
-
                         <div class="ff-summary-row">
-
                             <span>
-                                Ride Total
+                                Subtotal
                             </span>
 
-                            <strong id="summaryRideTotal">
+                            <strong id="summarySubtotal">
                                 ₹0
                             </strong>
-
                         </div>
-
-
-                        <div class="ff-summary-row">
-
-                            <span>
-                                Selected Offer
-
-                                <small id="summaryOfferLabel">
-                                    Regular price
-                                </small>
-                            </span>
-
-                            <strong id="summaryOfferName">
-                                Regular Ticket
-                            </strong>
-
-                        </div>
-
 
                         <div class="ff-summary-row discount">
-
                             <span>
                                 Offer Discount
-
-                                <small id="summaryDiscountNote">
-                                    No promotional discount
-                                </small>
                             </span>
 
                             <strong id="summaryDiscount">
                                 ₹0
                             </strong>
-
                         </div>
-
 
                         <div class="ff-summary-divider"></div>
 
-
                         <div class="ff-summary-total">
-
                             <span>
                                 Estimated Total
                             </span>
@@ -5344,9 +5430,7 @@ body.ff-message-open {
                             <strong id="summaryTotal">
                                 ₹0
                             </strong>
-
                         </div>
-
 
                         <button
                             type="submit"
@@ -5358,24 +5442,13 @@ body.ff-message-open {
                             <i class="fas fa-arrow-right"></i>
                         </button>
 
-
-                        <p class="ff-summary-warning">
-                            Final price and offer eligibility are recalculated
-                            securely by Django before payment.
-                        </p>
-
                     </div>
 
                 </form>
-
             </div>
-
         </div>
-
     </div>
 </section>
-
-
 
 
 <!-- =========================================================
@@ -5531,137 +5604,124 @@ body.ff-message-open {
 
 </aside>
 
+
 {% endblock %}
 
 
 {% block extra_js %}
 
 <script>
-/* =====================================================
-       SYNC RIGHT COLUMN HEIGHT TO LEFT COLUMN
-    ====================================================== */
+/* =========================================================
+   SYNC RIGHT COLUMN HEIGHT TO LEFT COLUMN + INTERNAL SCROLL
+========================================================= */
+(function () {
+    const infoCard = document.querySelector(".ff-booking-info-card");
+    const formCard = document.querySelector(".ff-booking-form-card");
 
-    const ffInfoCard = document.querySelector(".ff-booking-info-card");
-    const ffFormCard = document.querySelector(".ff-booking-form-card");
+    if (!infoCard || !formCard) return;
 
-    function syncFfColumnHeights() {
-
-        if (!ffInfoCard || !ffFormCard) {
+    function syncHeights() {
+        // Only desktop (992px+)
+        if (window.innerWidth < 992) {
+            formCard.style.height = "";
+            formCard.style.maxHeight = "";
             return;
         }
 
-        // Below 992px we stack naturally — let CSS handle it, don't cap.
-        if (window.innerWidth <= 991) {
-            ffFormCard.style.height = "";
-            return;
-        }
-
-        const leftHeight = ffInfoCard.offsetHeight;
-
-        ffFormCard.style.height = leftHeight + "px";
+        const leftHeight = infoCard.offsetHeight;
+        formCard.style.height = leftHeight + "px";
+        formCard.style.maxHeight = leftHeight + "px";
     }
 
-    // Run once now, once after full page load (images/fonts settled),
-    // and again on any resize.
-    syncFfColumnHeights();
+    // Initial
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", syncHeights);
+    } else {
+        syncHeights();
+    }
 
-    window.addEventListener("load", syncFfColumnHeights);
-
-    let ffResizeTimer;
+    // On resize
+    let resizeTimeout;
     window.addEventListener("resize", function () {
-        clearTimeout(ffResizeTimer);
-        ffResizeTimer = setTimeout(syncFfColumnHeights, 150);
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(syncHeights, 150);
     });
-</script>
 
+    // Dynamic changes
+    if (window.ResizeObserver) {
+        const observer = new ResizeObserver(syncHeights);
+        observer.observe(infoCard);
+    }
+})();
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+
     const form = document.getElementById("bookingForm");
-    const errorBox = document.getElementById("formError");
+    const bookingItemsInput = document.getElementById("bookingItemsJson");
 
-
-    /* =====================================================
-   MESSAGE POPUP ELEMENTS
-====================================================== */
-
-const messageBackdrop =
-    document.getElementById(
-        "ffMessageBackdrop"
-    );
-
-
-const messageModal =
-    document.getElementById(
-        "ffMessageModal"
-    );
-
-
-const messageClose =
-    document.getElementById(
-        "ffMessageClose"
-    );
-
-
-const messageAction =
-    document.getElementById(
-        "ffMessageAction"
-    );
-
-
-const messageTitle =
-    document.getElementById(
-        "ffMessageTitle"
-    );
-
-
-const messageText =
-    document.getElementById(
-        "ffMessageText"
-    );
-
-
-const messageKicker =
-    document.getElementById(
-        "ffMessageKicker"
-    );
-
-
-const messageIcon =
-    document.getElementById(
-        "ffMessageIcon"
-    );
-
-
-const messageIconElement =
-    document.getElementById(
-        "ffMessageIconElement"
-    );
-
-
-
-
-
-    const ridePanel = document.getElementById("ridePanel");
     const datePanel = document.getElementById("datePanel");
+    const ridePanel = document.getElementById("ridePanel");
     const offerPanel = document.getElementById("offerPanel");
     const participantPanel = document.getElementById("participantPanel");
 
-    const ridePanelButton = document.getElementById("ridePanelButton");
     const datePanelButton = document.getElementById("datePanelButton");
+    const ridePanelButton = document.getElementById("ridePanelButton");
     const offerPanelButton = document.getElementById("offerPanelButton");
     const participantPanelButton = document.getElementById("participantPanelButton");
 
     const bookingDate = document.getElementById("bookingDate");
-    const timeSlot = document.getElementById("timeSlot");
     const dateContinue = document.getElementById("dateContinue");
+    const rideList = document.getElementById("rideList");
+    const dateSelected = document.getElementById("dateSelected");
+    const dateSelectedText = document.getElementById("dateSelectedText");
+
+    const rideSelected = document.getElementById("rideSelected");
+    const rideSelectedImage = document.getElementById("rideSelectedImage");
+    const rideSelectedName = document.getElementById("rideSelectedName");
+    const rideSelectedPrice = document.getElementById("rideSelectedPrice");
 
     const dynamicOffers = document.getElementById("dynamicOffers");
     const couponWrap = document.getElementById("couponWrap");
     const couponCode = document.getElementById("couponCode");
     const couponApply = document.getElementById("couponApply");
     const couponMessage = document.getElementById("couponMessage");
+
+    const offerSelected = document.getElementById("offerSelected");
+    const offerSelectedName = document.getElementById("offerSelectedName");
+    const offerSelectedLabel = document.getElementById("offerSelectedLabel");
+
+    const participantSelected = document.getElementById("participantSelected");
+    const participantSelectedTotal = document.getElementById("participantSelectedTotal");
+    const participantCount = document.getElementById("participantCount");
+    const participantTotal = document.getElementById("participantTotal");
+    const allocatedParticipants = document.getElementById("allocatedParticipants");
+    const weightList = document.getElementById("weightList");
+    const noWeightRanges = document.getElementById("noWeightRanges");
+    const addWeightRange = document.getElementById("addWeightRange");
+    const weightAllocationMessage = document.getElementById("weightAllocationMessage");
+    const offerStatus = document.getElementById("offerStatus");
+
+    const addCurrentRide = document.getElementById("addCurrentRide");
+    const selectedAdventures = document.getElementById("selectedAdventures");
+    const selectedAdventureItems = document.getElementById("selectedAdventureItems");
+    const addAnotherRide = document.getElementById("addAnotherRide");
+
+    const summaryDate = document.getElementById("summaryDate");
+    const summaryAdventures = document.getElementById("summaryAdventures");
+    const summaryAdventureCount = document.getElementById("summaryAdventureCount");
+    const summaryAdventureNote = document.getElementById("summaryAdventureNote");
+    const summaryParticipants = document.getElementById("summaryParticipants");
+    const summaryParticipantNote = document.getElementById("summaryParticipantNote");
+    const summarySubtotal = document.getElementById("summarySubtotal");
+    const summaryDiscount = document.getElementById("summaryDiscount");
+    const summaryTotal = document.getElementById("summaryTotal");
+    const reviewButton = document.getElementById("reviewButton");
 
     const offerDrawer = document.getElementById("offerDrawer");
     const offerDrawerBackdrop = document.getElementById("offerDrawerBackdrop");
@@ -5672,88 +5732,38 @@ const messageIconElement =
     const drawerOfferDetails = document.getElementById("drawerOfferDetails");
     const drawerSelectOffer = document.getElementById("drawerSelectOffer");
 
-    let drawerOfferRadio = null;
-    let couponValidated = false;
+    const messageBackdrop = document.getElementById("ffMessageBackdrop");
+    const messageModal = document.getElementById("ffMessageModal");
+    const messageClose = document.getElementById("ffMessageClose");
+    const messageAction = document.getElementById("ffMessageAction");
+    const messageTitle = document.getElementById("ffMessageTitle");
+    const messageText = document.getElementById("ffMessageText");
+    const messageKicker = document.getElementById("ffMessageKicker");
+    const messageIcon = document.getElementById("ffMessageIcon");
+    const messageIconElement = document.getElementById("ffMessageIconElement");
 
-    const weightList =
-    document.getElementById(
-        "weightList"
-    );
+    /* =========================================================
+       STATE
+    ========================================================= */
 
-const noWeightRanges =
-    document.getElementById(
-        "noWeightRanges"
-    );
-
-const participantCount =
-    document.getElementById(
-        "participantCount"
-    );
-
-const addWeightRange =
-    document.getElementById(
-        "addWeightRange"
-    );
-
-const participantTotal =
-    document.getElementById(
-        "participantTotal"
-    );
-
-const allocatedParticipants =
-    document.getElementById(
-        "allocatedParticipants"
-    );
-
-const weightAllocationMessage =
-    document.getElementById(
-        "weightAllocationMessage"
-    );
-
-const offerStatus =
-    document.getElementById(
-        "offerStatus"
-    );
-
-    const rideSelected = document.getElementById("rideSelected");
-    const rideSelectedImage = document.getElementById("rideSelectedImage");
-    const rideSelectedName = document.getElementById("rideSelectedName");
-    const rideSelectedPrice = document.getElementById("rideSelectedPrice");
-
-    const dateSelected = document.getElementById("dateSelected");
-    const dateSelectedText = document.getElementById("dateSelectedText");
-    const timeSelectedText = document.getElementById("timeSelectedText");
-
-    const offerSelected = document.getElementById("offerSelected");
-    const offerSelectedName = document.getElementById("offerSelectedName");
-    const offerSelectedLabel = document.getElementById("offerSelectedLabel");
-
-    const participantSelected = document.getElementById("participantSelected");
-    const participantSelectedTotal = document.getElementById("participantSelectedTotal");
-
-    const summaryRidePrice = document.getElementById("summaryRidePrice");
-    const summaryRideName = document.getElementById("summaryRideName");
-    const summaryDate = document.getElementById("summaryDate");
-    const summaryTime = document.getElementById("summaryTime");
-    const summaryWeights = document.getElementById("summaryWeights");
-    const summaryWeightItems = document.getElementById("summaryWeightItems");
-    const summaryParticipants = document.getElementById("summaryParticipants");
-    const summaryParticipantNote = document.getElementById("summaryParticipantNote");
-    const summaryRideTotal = document.getElementById("summaryRideTotal");
-    const summaryOfferName = document.getElementById("summaryOfferName");
-    const summaryOfferLabel = document.getElementById("summaryOfferLabel");
-    const summaryDiscount = document.getElementById("summaryDiscount");
-    const summaryDiscountNote = document.getElementById("summaryDiscountNote");
-    const summaryTotal = document.getElementById("summaryTotal");
-    const reviewButton = document.getElementById("reviewButton");
+    const bookingState = {
+        bookingDate: "",
+        items: []
+    };
 
     let rideId = "";
     let rideName = "";
     let ridePrice = 0;
     let selectedOffer = null;
+    let currentRideOffers = [];
+    let couponValidated = false;
+    let drawerOfferRadio = null;
 
     const maximumParticipants = 10;
 
+    /* =========================================================
+       BASIC HELPERS
+    ========================================================= */
 
     function money(value) {
         return "₹" + Math.round(
@@ -5761,416 +5771,554 @@ const offerStatus =
         ).toLocaleString("en-IN");
     }
 
-
     function getPanelIcon(panel) {
-        return panel.querySelector(
-            ".ff-panel-toggle i"
-        );
+        return panel?.querySelector(".ff-panel-toggle i");
     }
-
 
     function openPanel(panel) {
+        if (!panel) return;
 
-        panel.classList.remove(
-            "locked"
-        );
+        panel.classList.remove("locked");
+        panel.classList.add("open", "active");
 
-        panel.classList.add(
-            "open",
-            "active"
-        );
-
-        getPanelIcon(panel).className =
-            "fas fa-minus";
+        const icon = getPanelIcon(panel);
+        if (icon) {
+            icon.className = "fas fa-minus";
+        }
     }
-
 
     function closePanel(panel) {
+        if (!panel) return;
 
-        panel.classList.remove(
-            "open",
-            "active"
-        );
+        panel.classList.remove("open", "active");
 
-        getPanelIcon(panel).className =
-            "fas fa-plus";
+        const icon = getPanelIcon(panel);
+        if (icon) {
+            icon.className = "fas fa-plus";
+        }
     }
 
+    function lockPanel(panel, button) {
+        if (!panel) return;
 
-    function unlockPanel(
-        panel,
-        button
-    ) {
+        closePanel(panel);
+        panel.classList.add("locked");
 
-        panel.classList.remove(
-            "locked"
-        );
+        if (button) {
+            button.disabled = true;
+        }
+    }
+
+    function unlockPanel(panel, button) {
+        if (!panel) return;
+
+        panel.classList.remove("locked");
 
         if (button) {
             button.disabled = false;
         }
     }
 
+    function formatDate(dateValue) {
+        if (!dateValue) {
+            return "Select date";
+        }
 
-    /* =====================================================
-   SHOW BOOKING MESSAGE
-====================================================== */
+        const date = new Date(dateValue + "T12:00:00");
 
-function showBookingMessage(
-    message,
-    type = "error",
-    title = ""
-) {
-
-    if (
-        !messageModal
-        ||
-        !messageBackdrop
-    ) {
-
-        alert(message);
-        return;
-
+        return date.toLocaleDateString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
     }
 
+    /* =========================================================
+       BOOKING MESSAGE POPUP
+    ========================================================= */
 
-    /* -----------------------------------------
-       RESET TYPE
-    ------------------------------------------ */
-
-    messageIcon.classList.remove(
-        "error",
-        "warning",
-        "success",
-        "info"
-    );
-
-
-    messageIcon.classList.add(
-        type
-    );
-
-
-    /* -----------------------------------------
-       CONTENT BY TYPE
-    ------------------------------------------ */
-
-    if (
-        type === "success"
-    ) {
-
-        messageKicker.textContent =
-            "Success";
-
-        messageTitle.textContent =
-            title || "Perfect!";
-
-        messageIconElement.className =
-            "fas fa-circle-check";
-
-    }
-
-    else if (
-        type === "warning"
-    ) {
-
-        messageKicker.textContent =
-            "Almost There";
-
-        messageTitle.textContent =
-            title || "One More Step";
-
-        messageIconElement.className =
-            "fas fa-triangle-exclamation";
-
-    }
-
-    else if (
-        type === "info"
-    ) {
-
-        messageKicker.textContent =
-            "Information";
-
-        messageTitle.textContent =
-            title || "Good To Know";
-
-        messageIconElement.className =
-            "fas fa-circle-info";
-
-    }
-
-    else {
-
-        messageKicker.textContent =
-            "Attention";
-
-        messageTitle.textContent =
-            title || "Uh-oh!";
-
-        messageIconElement.className =
-            "fas fa-circle-exclamation";
-
-    }
-
-
-    messageText.textContent =
-        message;
-
-
-    /* -----------------------------------------
-       OPEN MODAL
-    ------------------------------------------ */
-
-    messageBackdrop.classList.add(
-        "show"
-    );
-
-
-    messageModal.classList.add(
-        "show"
-    );
-
-
-    messageModal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    document.body.classList.add(
-        "ff-message-open"
-    );
-
-}
-
-
-/* =====================================================
-   CLOSE BOOKING MESSAGE
-====================================================== */
-
-function closeBookingMessage() {
-
-    messageBackdrop?.classList.remove(
-        "show"
-    );
-
-
-    messageModal?.classList.remove(
-        "show"
-    );
-
-
-    messageModal?.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-
-    document.body.classList.remove(
-        "ff-message-open"
-    );
-
-}
-
-
-/* =====================================================
-   EXISTING ERROR FUNCTION
-====================================================== */
-
-function showError(message) {
-
-    showBookingMessage(
+    function showBookingMessage(
         message,
-        "error"
-    );
-
-}
-
-
-    function clearError() {
-
-    if (errorBox) {
-
-        errorBox.classList.remove(
-            "show"
-        );
-
-        errorBox.textContent = "";
-
-    }
-
-}
-
-
-
-
-/* =====================================================
-   MESSAGE POPUP EVENTS
-====================================================== */
-
-messageClose?.addEventListener(
-    "click",
-    closeBookingMessage
-);
-
-
-messageAction?.addEventListener(
-    "click",
-    closeBookingMessage
-);
-
-
-messageBackdrop?.addEventListener(
-    "click",
-    closeBookingMessage
-);
-
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
+        type = "error",
+        title = ""
+    ) {
         if (
-            event.key === "Escape"
-            &&
-            messageModal?.classList.contains(
-                "show"
-            )
-        ) {
-
-            closeBookingMessage();
-
-        }
-
-    }
-);
-
-
-function getQuantity() {
-
-    let total = 0;
-
-    document.querySelectorAll(
-        ".ff-weight-allocation-row"
-    ).forEach(function (row) {
-
-        const select = row.querySelector(
-            ".ff-weight-range-select"
-        );
-
-        const input = row.querySelector(
-            ".ff-weight-qty"
-        );
-
-        if (
-            select
-            &&
-            select.value
-            &&
-            input
-        ) {
-            total += Number(input.value || 0);
-        }
-
-    });
-
-    if (participantCount) {
-        participantCount.value = total;
-    }
-
-    return total;
-}
-
-
- function getWeightGroups() {
-
-    const groups = [];
-
-    document.querySelectorAll(
-        ".ff-weight-allocation-row"
-    ).forEach(function (row) {
-
-        const select =
-            row.querySelector(
-                ".ff-weight-range-select"
-            );
-
-        const input =
-            row.querySelector(
-                ".ff-weight-qty"
-            );
-
-        if (
-            !select
+            !messageModal
             ||
-            !input
-            ||
-            !select.value
+            !messageBackdrop
         ) {
+            alert(message);
             return;
         }
 
-        const selectedOption =
-            select.options[
-                select.selectedIndex
-            ];
-
-        const quantity =
-            Number(
-                input.value || 0
-            );
-
-        if (quantity > 0) {
-
-            groups.push({
-
-                key:
-                    select.value,
-
-                label:
-                    selectedOption.dataset.label
-                    ||
-                    selectedOption.textContent.trim(),
-
-                quantity:
-                    quantity
-
-            });
-
-        }
-
-    });
-
-    return groups;
-}
-
-
-    function resetOffer() {
-
-        selectedOffer = null;
-
-        const noOffer = document.querySelector(
-            '.ff-offer-radio[value=""]'
+        messageIcon?.classList.remove(
+            "error",
+            "warning",
+            "success",
+            "info"
         );
 
-        if (noOffer) {
-            noOffer.checked = true;
+        messageIcon?.classList.add(type);
+
+        if (type === "success") {
+            messageKicker.textContent = "Success";
+            messageTitle.textContent = title || "Perfect!";
+            messageIconElement.className = "fas fa-circle-check";
+        }
+        else if (type === "warning") {
+            messageKicker.textContent = "Almost There";
+            messageTitle.textContent = title || "One More Step";
+            messageIconElement.className = "fas fa-triangle-exclamation";
+        }
+        else if (type === "info") {
+            messageKicker.textContent = "Information";
+            messageTitle.textContent = title || "Good To Know";
+            messageIconElement.className = "fas fa-circle-info";
+        }
+        else {
+            messageKicker.textContent = "Attention";
+            messageTitle.textContent = title || "Uh-oh!";
+            messageIconElement.className = "fas fa-circle-exclamation";
+        }
+
+        messageText.textContent = message;
+
+        messageBackdrop.classList.add("show");
+        messageModal.classList.add("show");
+        messageModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("ff-message-open");
+    }
+
+    function closeBookingMessage() {
+        messageBackdrop?.classList.remove("show");
+        messageModal?.classList.remove("show");
+        messageModal?.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("ff-message-open");
+    }
+
+    function showError(message) {
+        showBookingMessage(
+            message,
+            "error"
+        );
+    }
+
+    messageClose?.addEventListener(
+        "click",
+        closeBookingMessage
+    );
+
+    messageAction?.addEventListener(
+        "click",
+        closeBookingMessage
+    );
+
+    messageBackdrop?.addEventListener(
+        "click",
+        closeBookingMessage
+    );
+
+    /* =========================================================
+       PANEL HEADERS / CHANGE BUTTONS
+    ========================================================= */
+
+    document.querySelectorAll(".ff-panel-head").forEach(
+        function (button) {
+            button.addEventListener(
+                "click",
+                function () {
+                    const panel = button.closest(".ff-panel");
+
+                    if (
+                        !panel
+                        ||
+                        panel.classList.contains("locked")
+                    ) {
+                        return;
+                    }
+
+                    if (panel.classList.contains("open")) {
+                        closePanel(panel);
+                    }
+                    else {
+                        openPanel(panel);
+                    }
+                }
+            );
+        }
+    );
+
+    document.querySelectorAll("[data-open]").forEach(
+        function (button) {
+            button.addEventListener(
+                "click",
+                function () {
+                    const panel = document.getElementById(
+                        button.dataset.open
+                    );
+
+                    if (
+                        panel
+                        &&
+                        !panel.classList.contains("locked")
+                    ) {
+                        openPanel(panel);
+
+                        panel.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+                    }
+                }
+            );
+        }
+    );
+
+    /* =========================================================
+       DATE
+    ========================================================= */
+
+    async function loadBookingOptionsForDate() {
+
+        if (!bookingDate.value) {
+            showError(
+                "Please select your visit date."
+            );
+            return false;
+        }
+
+        try {
+            dateContinue.disabled = true;
+
+            const url =
+                `{% url 'booking_options_for_date' %}?date=${encodeURIComponent(bookingDate.value)}`;
+
+            const response = await fetch(
+                url,
+                {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }
+            );
+
+            const contentType =
+                response.headers.get("content-type") || "";
+
+            if (!contentType.includes("application/json")) {
+                const responseText = await response.text();
+
+                console.error(
+                    "Booking options returned non-JSON response:",
+                    response.status,
+                    responseText
+                );
+
+                throw new Error(
+                    "Unable to load rides for this date. Please check the Django server log."
+                );
+            }
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(
+                    data.message || "Unable to load available rides."
+                );
+            }
+
+            bookingState.bookingDate = bookingDate.value;
+
+            dateSelectedText.textContent =
+                formatDate(bookingState.bookingDate);
+
+            dateSelected.classList.add("show");
+
+            renderAvailableRides(
+                Array.isArray(data.rides) ? data.rides : []
+            );
+
+            closePanel(datePanel);
+
+            unlockPanel(
+                ridePanel,
+                ridePanelButton
+            );
+
+            openPanel(ridePanel);
+
+            updateBookingSummary();
+
+            ridePanel.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+            return true;
+        }
+        catch (error) {
+            showError(
+                error.message || "Unable to load available rides."
+            );
+            return false;
+        }
+        finally {
+            dateContinue.disabled = false;
+        }
+    }
+
+    dateContinue?.addEventListener(
+        "click",
+        loadBookingOptionsForDate
+    );
+
+    bookingDate?.addEventListener(
+        "change",
+        function () {
+
+            if (
+                bookingState.items.length
+                &&
+                bookingState.bookingDate
+                &&
+                bookingState.bookingDate !== bookingDate.value
+            ) {
+                bookingState.items = [];
+                renderSelectedAdventures();
+
+                showBookingMessage(
+                    "Your selected adventures were cleared because the visit date changed. Please add the rides again for the new date.",
+                    "info",
+                    "Visit Date Updated"
+                );
+            }
+
+            bookingState.bookingDate = bookingDate.value || "";
+
+            dateSelectedText.textContent =
+                formatDate(bookingState.bookingDate);
+
+            resetCurrentRideBuilder(false);
+
+            currentRideOffers = [];
+
+            if (rideList) {
+                rideList.innerHTML = `
+                    <div class="ff-empty">
+                        Click Continue to load rides available for this date.
+                    </div>
+                `;
+            }
+
+            lockPanel(
+                ridePanel,
+                ridePanelButton
+            );
+
+            lockPanel(
+                offerPanel,
+                offerPanelButton
+            );
+
+            lockPanel(
+                participantPanel,
+                participantPanelButton
+            );
+
+            updateBookingSummary();
+        }
+    );
+
+    /* =========================================================
+       RIDE SELECTION
+    ========================================================= */
+
+    function rideAlreadyAdded(id) {
+        return bookingState.items.some(
+            function (item) {
+                return String(item.rideId) === String(id);
+            }
+        );
+    }
+
+    function refreshRideAvailability() {
+        document.querySelectorAll(".ff-ride-radio").forEach(
+            function (radio) {
+                const card = radio.closest(".ff-ride-item");
+                const added = rideAlreadyAdded(radio.value);
+
+                card?.classList.toggle(
+                    "already-added",
+                    added
+                );
+
+                radio.disabled = added;
+
+                if (added) {
+                    radio.checked = false;
+                }
+            }
+        );
+    }
+
+    function renderAvailableRides(rides) {
+
+        if (!rideList) {
+            return;
+        }
+
+        rideList.innerHTML = "";
+
+        if (!rides.length) {
+            rideList.innerHTML = `
+                <div class="ff-empty">
+                    No rides have a valid active price for this date. Please choose another visit date.
+                </div>
+            `;
+            return;
+        }
+
+        rides.forEach(
+            function (ride) {
+
+                const card = document.createElement("label");
+                card.className = "ff-ride-item";
+
+                const imageHtml = ride.image
+                    ? `<img src="${escapeHtml(ride.image)}" alt="${escapeHtml(ride.name)}" loading="lazy">`
+                    : `<span class="ff-ride-placeholder"><i class="fas fa-person-falling"></i></span>`;
+
+                card.innerHTML = `
+                    <input
+                        type="radio"
+                        value="${ride.id}"
+                        class="ff-ride-radio"
+                        data-name="${escapeHtml(ride.name)}"
+                        data-price="${escapeHtml(ride.price)}"
+                        data-image="${escapeHtml(ride.image || "")}"
+                    >
+
+                    <span class="ff-ride-image">
+                        ${imageHtml}
+                    </span>
+
+                    <span class="ff-ride-copy">
+                        <strong>${escapeHtml(ride.name)}</strong>
+                        <small>${escapeHtml(truncateText("Flying Fox Adventure", 60))}</small>
+                        <b>${money(Number(ride.price || 0))}</b>
+                    </span>
+
+                    <span class="ff-ride-select">Select</span>
+                `;
+
+                const radio = card.querySelector(".ff-ride-radio");
+
+                radio.addEventListener(
+                    "change",
+                    function () {
+                        selectRideFromServerData(
+                            ride,
+                            radio
+                        );
+                    }
+                );
+
+                rideList.appendChild(card);
+            }
+        );
+
+        refreshRideAvailability();
+    }
+
+    function selectRideFromServerData(ride, radio) {
+
+        if (rideAlreadyAdded(ride.id)) {
+            radio.checked = false;
+
+            showError(
+                "This ride is already in your booking. Remove it first if you want to choose it again."
+            );
+            return;
         }
 
         document.querySelectorAll(
-            ".ff-offer-card"
-        ).forEach(function (card) {
+            ".ff-ride-item"
+        ).forEach(
+            function (card) {
+                card.classList.remove("selected");
+            }
+        );
 
-            card.classList.remove(
-                "selected"
-            );
-
-        });
-
-        noOffer
-            ?.closest(".ff-offer-card")
+        radio
+            .closest(".ff-ride-item")
             ?.classList.add("selected");
+
+        rideId = String(ride.id);
+        rideName = ride.name || "";
+        ridePrice = Number(ride.price || 0);
+        currentRideOffers = Array.isArray(ride.offers)
+            ? ride.offers
+            : [];
+
+        rideSelectedName.textContent = rideName;
+        rideSelectedPrice.textContent = `${money(ridePrice)} per rider`;
+
+        if (ride.image) {
+            rideSelectedImage.src = ride.image;
+            rideSelectedImage.style.display = "block";
+        }
+        else {
+            rideSelectedImage.style.display = "none";
+        }
+
+        rideSelected.classList.add("show");
+
+        resetOffer();
+        buildOffers();
+        buildWeights();
+
+        closePanel(ridePanel);
+
+        unlockPanel(
+            offerPanel,
+            offerPanelButton
+        );
+
+        openPanel(offerPanel);
+
+        lockPanel(
+            participantPanel,
+            participantPanelButton
+        );
+
+        updateCurrentRidePreview();
+
+        offerPanel.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    /* =========================================================
+       OFFER BUILDING - PRESERVES CURRENT OFFER LOGIC
+    ========================================================= */
+
+    function resetOffer() {
+        selectedOffer = null;
+        couponValidated = false;
+
+        dynamicOffers.innerHTML = "";
+
+        couponWrap.classList.remove("show");
+        couponCode.value = "";
+        couponMessage.textContent = "";
+        couponCode.classList.remove(
+            "is-invalid"
+        );
 
         offerSelectedName.textContent =
             "Regular Ticket";
@@ -6178,615 +6326,581 @@ function getQuantity() {
         offerSelectedLabel.textContent =
             "Regular ride price";
 
-        couponWrap.classList.remove(
+        offerSelected.classList.remove(
             "show"
         );
 
-        couponValidated = false;
+        offerStatus.className =
+            "ff-offer-status";
 
-        couponCode.value = "";
-
-        couponMessage.textContent = "";
+        offerStatus.textContent = "";
     }
 
-function buildOffers(rideId) {
+    function buildOffers() {
 
-    /* =====================================================
-       CLEAR CURRENT DYNAMIC OFFERS
-    ====================================================== */
+        dynamicOffers.innerHTML = "";
 
-    dynamicOffers.innerHTML = "";
+        const offers = currentRideOffers || [];
 
+        /* ---------------- REGULAR TICKET ---------------- */
 
-    /* =====================================================
-       GET OFFERS FOR SELECTED RIDE
-    ====================================================== */
+        const regularCard =
+            document.createElement("div");
 
-    const source =
-        document.querySelector(
-            `.ff-offer-source[data-ride-id="${rideId}"]`
-        );
+        regularCard.className =
+            "ff-offer-card none selected";
 
+        regularCard.innerHTML = `
+            <input
+                type="radio"
+                value=""
+                class="ff-offer-radio"
+                checked
+            >
 
-    const offers =
-        source
-            ? source.querySelectorAll(
-                "span[data-id]"
-            )
-            : [];
+            <div class="ff-offer-main">
+                <span class="ff-offer-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </span>
 
+                <div class="ff-offer-content">
+                    <h4>Regular Ticket</h4>
+                    <p>Standard Flying Fox ticket at the regular ride price.</p>
 
-    /* =====================================================
-       SELECTED VISIT DATE
-    ====================================================== */
-
-    const selectedDate =
-        bookingDate.value || "";
-
-
-    let validOfferCount = 0;
-
-
-    /* =====================================================
-       REGULAR TICKET
-       ALWAYS AVAILABLE
-    ====================================================== */
-
-    const regularCard =
-        document.createElement(
-            "div"
-        );
-
-
-    regularCard.className =
-        "ff-offer-card none selected";
-
-
-    regularCard.innerHTML = `
-
-        <input
-            type="radio"
-            name="selected_offer_id"
-            value=""
-            class="ff-offer-radio"
-            checked
-        >
-
-
-        <div class="ff-offer-main">
-
-            <span class="ff-offer-icon">
-
-                <i class="fas fa-ticket-alt"></i>
-
-            </span>
-
-
-            <div class="ff-offer-content">
-
-                <h4>
-                    Regular Ticket
-                </h4>
-
-                <p>
-                    Standard Flying Fox ticket at the regular ride price.
-                </p>
-
-
-                <div class="ff-offer-meta">
-
-                    <span class="ff-offer-label">
-                        Regular Price
-                    </span>
-
-                    <span class="ff-offer-rule">
-                        Always available
-                    </span>
-
+                    <div class="ff-offer-meta">
+                        <span class="ff-offer-label">Regular Price</span>
+                        <span class="ff-offer-rule">Always available</span>
+                    </div>
                 </div>
-
             </div>
 
-        </div>
-
-
-        <div class="ff-offer-actions">
-
-            <button
-                type="button"
-                class="ff-offer-select-btn"
-            >
-                Select
-            </button>
-
-        </div>
-
-    `;
-
-
-    dynamicOffers.appendChild(
-        regularCard
-    );
-
-
-    /* =====================================================
-       PROMOTIONAL OFFERS
-    ====================================================== */
-
-    offers.forEach(
-        function (offer) {
-
-
-            /* =============================================
-               OFFER VALIDITY
-            ============================================== */
-
-            const offerStart =
-                offer.dataset.start || "";
-
-
-            const offerEnd =
-                offer.dataset.end || "";
-
-
-            /* =============================================
-               ONLY SHOW OFFER VALID FOR SELECTED DATE
-            ============================================== */
-
-            if (selectedDate) {
-
-
-                if (
-                    offerStart
-                    &&
-                    selectedDate < offerStart
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
-                    offerEnd
-                    &&
-                    selectedDate > offerEnd
-                ) {
-
-                    return;
-
-                }
-
-            }
-
-
-            validOfferCount++;
-
-
-            /* =============================================
-               OFFER TYPE
-            ============================================== */
-
-            const type =
-                offer.dataset.type ||
-                "percentage";
-
-
-            /* =============================================
-               CREATE CARD
-            ============================================== */
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                `ff-offer-card ${type}`;
-
-
-            /* =============================================
-               CARD HTML
-            ============================================== */
-
-            card.innerHTML = `
-
-                <input
-                    type="radio"
-
-                    name="selected_offer_id"
-
-                    value="${offer.dataset.id}"
-
-                    class="ff-offer-radio"
-
-                    data-name="${offer.dataset.title || "Offer"}"
-
-                    data-description="${offer.dataset.description || ""}"
-
-                    data-label="${offer.dataset.label || "Offer"}"
-
-                    data-type="${type}"
-
-                    data-discount="${offer.dataset.discount || 0}"
-
-                    data-min-participants="${
-                        offer.dataset.minParticipants || 1
-                    }"
-
-                    data-min-amount="${
-                        offer.dataset.minAmount || 0
-                    }"
-
-                    data-max-discount="${
-                        offer.dataset.maxDiscount || 0
-                    }"
-
-                    data-buy="${
-                        offer.dataset.buy || 0
-                    }"
-
-                    data-free="${
-                        offer.dataset.free || 0
-                    }"
-
-                    data-coupon-required="${
-                        offer.dataset.couponRequired || 0
-                    }"
-
-                    data-coupon="${
-                        offer.dataset.coupon || ""
-                    }"
-
-                    data-start="${
-                        offer.dataset.start || ""
-                    }"
-
-                    data-end="${
-                        offer.dataset.end || ""
-                    }"
-
-                    data-first="${
-                        offer.dataset.first || 0
-                    }"
+            <div class="ff-offer-actions">
+                <button
+                    type="button"
+                    class="ff-offer-select-btn"
                 >
+                    Select
+                </button>
+            </div>
+        `;
 
+        dynamicOffers.appendChild(
+            regularCard
+        );
 
-                <div class="ff-offer-main">
+        /* ---------------- PROMOTIONAL OFFERS ---------------- */
 
+        offers.forEach(
+            function (offer) {
 
-                    <span class="ff-offer-icon">
+                const type =
+                    offer.offer_type
+                    ||
+                    "percentage";
 
-                        <i class="${getOfferIcon(type)}"></i>
+                const card =
+                    document.createElement("div");
 
-                    </span>
+                card.className =
+                    `ff-offer-card ${type}`;
 
+                card.innerHTML = `
+                    <input
+                        type="radio"
+                        value="${offer.id}"
+                        class="ff-offer-radio"
+                        data-name="${escapeHtml(offer.title || "Offer")}"
+                        data-description="${escapeHtml(offer.description || "")}"
+                        data-label="${escapeHtml(offer.discount_label || "Offer")}"
+                        data-type="${escapeHtml(type)}"
+                        data-discount="${escapeHtml(offer.discount_value || 0)}"
+                        data-min-participants="${escapeHtml(offer.minimum_participants || 1)}"
+                        data-min-amount="${escapeHtml(offer.minimum_booking_amount || 0)}"
+                        data-max-discount="${escapeHtml(offer.maximum_discount || 0)}"
+                        data-buy="${escapeHtml(offer.buy_quantity || 0)}"
+                        data-free="${escapeHtml(offer.free_quantity || 0)}"
+                        data-coupon-required="${offer.coupon_required ? 1 : 0}"
+                        data-coupon="${escapeHtml(offer.coupon_code || "")}"
+                        data-start="${escapeHtml(offer.start_date || "")}"
+                        data-end="${escapeHtml(offer.end_date || "")}"
+                        data-first="${offer.first_booking_only ? 1 : 0}"
+                    >
 
-                    <div class="ff-offer-content">
+                    <div class="ff-offer-main">
+                        <span class="ff-offer-icon">
+                            <i class="${offerIcon(type)}"></i>
+                        </span>
 
+                        <div class="ff-offer-content">
+                            <h4>${escapeHtml(offer.title || "Offer")}</h4>
+                            <p>${escapeHtml(stripHtml(offer.description || "Special promotional offer."))}</p>
 
-                        <h4>
+                            <div class="ff-offer-meta">
+                                <span class="ff-offer-label">
+                                    ${escapeHtml(offer.discount_label || "Offer")}
+                                </span>
 
-                            ${
-                                offer.dataset.title
-                                ||
-                                "Special Offer"
-                            }
-
-                        </h4>
-
-
-                        <p>
-
-                            ${
-                                offer.dataset.description
-                                ||
-                                "Special Flying Fox promotional offer."
-                            }
-
-                        </p>
-
-
-                        <div class="ff-offer-meta">
-
-
-                            <span class="ff-offer-label">
-
-                                ${
-                                    offer.dataset.label
-                                    ||
-                                    "Offer"
-                                }
-
-                            </span>
-
-
-                            <span class="ff-offer-rule">
-
-                                ${
-                                    Number(
-                                        offer.dataset.minParticipants || 1
-                                    ) > 1
-
-                                    ?
-
-                                    `Minimum ${
-                                        offer.dataset.minParticipants
-                                    } riders`
-
-                                    :
-
-                                    "Eligible booking offer"
-                                }
-
-                            </span>
-
-
+                                <span class="ff-offer-rule">
+                                    ${offerRuleTextFromData(offer)}
+                                </span>
+                            </div>
                         </div>
-
-
                     </div>
 
+                    <div class="ff-offer-actions">
+                        <button
+                            type="button"
+                            class="ff-offer-more"
+                        >
+                            Details
+                        </button>
 
-                </div>
+                        <button
+                            type="button"
+                            class="ff-offer-select-btn"
+                        >
+                            Select
+                        </button>
+                    </div>
+                `;
 
+                dynamicOffers.appendChild(card);
+            }
+        );
 
-                <!-- =========================================
-                     ACTION BUTTONS
-                ========================================== -->
+        bindOffers();
+    }
 
-                <div class="ff-offer-actions">
+    function offerRuleTextFromData(offer) {
+        const parts = [];
 
+        const minParticipants = Number(
+            offer.minimum_participants || 1
+        );
 
-                    <button
-                        type="button"
-                        class="ff-offer-more"
-                    >
+        const minAmount = Number(
+            offer.minimum_booking_amount || 0
+        );
 
-                        <i class="fas fa-circle-info"></i>
-
-                        More Info
-
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="ff-offer-select-btn"
-                    >
-
-                        Select
-
-                    </button>
-
-
-                </div>
-
-            `;
-
-
-            dynamicOffers.appendChild(
-                card
+        if (minParticipants > 1) {
+            parts.push(
+                `Min ${minParticipants} riders`
             );
-
         }
-    );
 
+        if (minAmount > 0) {
+            parts.push(
+                `Min ${money(minAmount)}`
+            );
+        }
 
-    /* =====================================================
-       RESET CURRENT OFFER
-    ====================================================== */
+        return parts.length
+            ? parts.join(" • ")
+            : "Eligible booking required";
+    }
 
-    selectedOffer = null;
+    function escapeHtml(value) {
+        return String(value || "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
 
-
-    offerSelectedName.textContent =
-        "Regular Ticket";
-
-
-    offerSelectedLabel.textContent =
-        "Regular ride price";
-
-
-    couponWrap.classList.remove(
-        "show"
-    );
-
-
-    couponValidated = false;
-
-
-    couponCode.value = "";
-
-
-    couponMessage.textContent = "";
-
-
-    /* =====================================================
-       VERY IMPORTANT:
-       RE-BIND EVENTS TO NEWLY CREATED CARDS
-    ====================================================== */
-
-    bindOffers();
-
-    bindOfferDetailsButtons();
-
-    bindRegularTicket();
-
-
-    /* =====================================================
-       UPDATE SUMMARY
-    ====================================================== */
-
-    updateSummary();
-
+    function truncateText(text, limit = 60) {
+    const trimmed = String(text || "").trim();
+    return trimmed.length > limit
+        ? trimmed.substring(0, limit) + "…"
+        : trimmed;
 }
 
+     function stripHtml(html) {
+    const doc = new DOMParser().parseFromString(html || "", "text/html");
+    return doc.body.textContent || "";
+}
 
-    function getOfferIcon(type) {
-
+    function offerIcon(type) {
         const icons = {
-            percentage: "fas fa-percent",
             fixed: "fas fa-indian-rupee-sign",
             buy_x_get_y: "fas fa-gift",
             group: "fas fa-users",
-            first_booking: "fas fa-user-plus",
+            first_booking: "fas fa-star",
             weekday: "fas fa-calendar-day",
             early_bird: "fas fa-clock",
             birthday: "fas fa-cake-candles",
             coupon: "fas fa-ticket"
         };
 
-        return icons[type] || "fas fa-tag";
+        return icons[type]
+            ||
+            "fas fa-tags";
     }
 
+    function offerRuleText(offer) {
+        const parts = [];
 
-    function getOfferDetailRows(radio) {
-
-        const rows = [];
-
-        if (
+        const minParticipants =
             Number(
-                radio.dataset.minParticipants || 1
-            ) > 1
-        ) {
-            rows.push([
-                "Minimum Participants",
-                `${radio.dataset.minParticipants} riders`
+                offer.dataset.minParticipants || 1
+            );
+
+        const minAmount =
+            Number(
+                offer.dataset.minAmount || 0
+            );
+
+        if (minParticipants > 1) {
+            parts.push(
+                `Min ${minParticipants} riders`
+            );
+        }
+
+        if (minAmount > 0) {
+            parts.push(
+                `Min ${money(minAmount)}`
+            );
+        }
+
+        return parts.length
+            ? parts.join(" • ")
+            : "Eligible booking required";
+    }
+
+    function radioToOffer(radio) {
+        if (!radio?.value) {
+            return null;
+        }
+
+        return {
+            id:
+                radio.value,
+
+            name:
+                radio.dataset.name || "Offer",
+
+            description:
+                radio.dataset.description || "",
+
+            label:
+                radio.dataset.label || "Offer",
+
+            type:
+                radio.dataset.type || "percentage",
+
+            discount:
+                Number(
+                    radio.dataset.discount || 0
+                ),
+
+            minParticipants:
+                Number(
+                    radio.dataset.minParticipants || 1
+                ),
+
+            minAmount:
+                Number(
+                    radio.dataset.minAmount || 0
+                ),
+
+            maxDiscount:
+                Number(
+                    radio.dataset.maxDiscount || 0
+                ),
+
+            buy:
+                Number(
+                    radio.dataset.buy || 0
+                ),
+
+            free:
+                Number(
+                    radio.dataset.free || 0
+                ),
+
+            couponRequired:
+                radio.dataset.couponRequired === "1",
+
+            coupon:
+                (
+                    radio.dataset.coupon || ""
+                )
+                .trim()
+                .toUpperCase(),
+
+            start:
+                radio.dataset.start || "",
+
+            end:
+                radio.dataset.end || "",
+
+            first:
+                radio.dataset.first === "1"
+        };
+    }
+
+    function selectOfferRadio(radio) {
+
+        document.querySelectorAll(
+            ".ff-offer-card"
+        ).forEach(
+            function (card) {
+                card.classList.remove(
+                    "selected"
+                );
+            }
+        );
+
+        radio
+            ?.closest(".ff-offer-card")
+            ?.classList.add("selected");
+
+        selectedOffer =
+            radioToOffer(radio);
+
+        offerSelectedName.textContent =
+            selectedOffer
+                ? selectedOffer.name
+                : "Regular Ticket";
+
+        offerSelectedLabel.textContent =
+            selectedOffer
+                ? selectedOffer.label
+                : "Regular ride price";
+
+        offerSelected.classList.add(
+            "show"
+        );
+
+        const requiresCoupon =
+            Boolean(
+                selectedOffer?.couponRequired
+            );
+
+        couponWrap.classList.toggle(
+            "show",
+            requiresCoupon
+        );
+
+        couponValidated = false;
+        couponCode.value = "";
+        couponMessage.textContent = "";
+        couponCode.classList.remove(
+            "is-invalid"
+        );
+
+        if (requiresCoupon) {
+
+            lockPanel(
+                participantPanel,
+                participantPanelButton
+            );
+
+            openPanel(
+                offerPanel
+            );
+
+            setTimeout(
+                function () {
+                    couponCode.focus();
+                },
+                120
+            );
+
+            updateCurrentRidePreview();
+
+            return;
+        }
+
+        unlockPanel(
+            participantPanel,
+            participantPanelButton
+        );
+
+        buildWeights();
+
+        closePanel(
+            offerPanel
+        );
+
+        openPanel(
+            participantPanel
+        );
+
+        updateCurrentRidePreview();
+
+        participantPanel.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function bindOffers() {
+
+        document.querySelectorAll(
+            ".ff-offer-radio"
+        ).forEach(
+            function (radio) {
+
+                radio.addEventListener(
+                    "change",
+                    function () {
+                        selectOfferRadio(
+                            radio
+                        );
+                    }
+                );
+
+                const card =
+                    radio.closest(
+                        ".ff-offer-card"
+                    );
+
+                const selectButton =
+                    card?.querySelector(
+                        ".ff-offer-select-btn"
+                    );
+
+                selectButton?.addEventListener(
+                    "click",
+                    function () {
+                        radio.checked = true;
+
+                        radio.dispatchEvent(
+                            new Event(
+                                "change",
+                                {
+                                    bubbles: true
+                                }
+                            )
+                        );
+                    }
+                );
+
+                const moreButton =
+                    card?.querySelector(
+                        ".ff-offer-more"
+                    );
+
+                moreButton?.addEventListener(
+                    "click",
+                    function () {
+                        openOfferDrawer(
+                            radio
+                        );
+                    }
+                );
+            }
+        );
+    }
+
+    /* =========================================================
+       OFFER DRAWER
+    ========================================================= */
+
+    function openOfferDrawer(radio) {
+
+        drawerOfferRadio =
+            radio;
+
+        const offer =
+            radioToOffer(
+                radio
+            );
+
+        if (!offer) {
+            return;
+        }
+
+        drawerOfferTitle.textContent =
+            offer.name;
+
+        drawerOfferLabel.textContent =
+            offer.label;
+
+        drawerOfferDescription.textContent =
+            offer.description
+            ||
+            "Special promotional offer for eligible bookings.";
+
+        const detailRows = [];
+
+        detailRows.push([
+            "Offer Type",
+            offer.type.replaceAll("_", " ")
+        ]);
+
+        detailRows.push([
+            "Minimum Riders",
+            offer.minParticipants
+        ]);
+
+        if (offer.minAmount > 0) {
+            detailRows.push([
+                "Minimum Amount",
+                money(
+                    offer.minAmount
+                )
             ]);
         }
 
-        if (
-            Number(
-                radio.dataset.minAmount || 0
-            ) > 0
-        ) {
-            rows.push([
-                "Minimum Booking",
-                money(radio.dataset.minAmount)
-            ]);
-        }
-
-        if (
-            Number(
-                radio.dataset.maxDiscount || 0
-            ) > 0
-        ) {
-            rows.push([
+        if (offer.maxDiscount > 0) {
+            detailRows.push([
                 "Maximum Discount",
-                money(radio.dataset.maxDiscount)
+                money(
+                    offer.maxDiscount
+                )
             ]);
         }
 
         if (
-            radio.dataset.type === "buy_x_get_y"
+            offer.type === "buy_x_get_y"
+            &&
+            offer.buy
+            &&
+            offer.free
         ) {
-            rows.push([
-                "Offer Rule",
-                `Buy ${radio.dataset.buy} Get ${radio.dataset.free} Free`
+            detailRows.push([
+                "Benefit",
+                `Buy ${offer.buy} Get ${offer.free} Free`
             ]);
         }
 
-        if (
-            radio.dataset.couponRequired === "1"
-        ) {
-            rows.push([
+        if (offer.couponRequired) {
+            detailRows.push([
                 "Coupon",
                 "Coupon code required"
             ]);
         }
 
         if (
-            radio.dataset.start
-            &&
-            radio.dataset.end
+            offer.start
+            ||
+            offer.end
         ) {
-            rows.push([
-                "Valid From",
-                `${radio.dataset.start} to ${radio.dataset.end}`
+            detailRows.push([
+                "Valid Dates",
+                `${offer.start || "—"} to ${offer.end || "—"}`
             ]);
         }
 
-        if (
-            radio.dataset.first === "1"
-        ) {
-            rows.push([
-                "Eligibility",
-                "First booking only"
-            ]);
-        }
+        drawerOfferDetails.innerHTML =
+            detailRows.map(
+                function (row) {
+                    return `
+                        <div class="ff-offer-detail-item">
+                            <span>${escapeHtml(row[0])}</span>
+                            <strong>${escapeHtml(row[1])}</strong>
+                        </div>
+                    `;
+                }
+            ).join("");
 
-        return rows;
-    }
-
-
-    function openOfferDrawer(radio) {
-
-        if (!radio) {
-            return;
-        }
-
-        drawerOfferRadio = radio;
-
-        drawerOfferTitle.textContent =
-            radio.dataset.name ||
-            "Special Offer";
-
-        drawerOfferLabel.textContent =
-            radio.dataset.label ||
-            "Offer";
-
-        drawerOfferDescription.textContent =
-            radio.dataset.description ||
-            "Special Flying Fox promotional offer.";
-
-        const rows =
-            getOfferDetailRows(
-                radio
-            );
-
-        drawerOfferDetails.innerHTML = "";
-
-        if (!rows.length) {
-
-            drawerOfferDetails.innerHTML = `
-                <div class="ff-offer-detail-item">
-                    <span>Availability</span>
-                    <strong>Eligible bookings</strong>
-                </div>
-            `;
-
-        } else {
-
-            rows.forEach(function (row) {
-
-                const item =
-                    document.createElement(
-                        "div"
-                    );
-
-                item.className =
-                    "ff-offer-detail-item";
-
-                item.innerHTML = `
-                    <span>${row[0]}</span>
-                    <strong>${row[1]}</strong>
-                `;
-
-                drawerOfferDetails.appendChild(
-                    item
-                );
-
-            });
-
-        }
-
-        offerDrawer.classList.add(
+        offerDrawerBackdrop.classList.add(
             "show"
         );
 
-        offerDrawerBackdrop.classList.add(
+        offerDrawer.classList.add(
             "show"
         );
 
@@ -6800,18 +6914,16 @@ function buildOffers(rideId) {
         );
     }
 
-
     function closeOfferDrawer() {
-
-        offerDrawer.classList.remove(
+        offerDrawerBackdrop?.classList.remove(
             "show"
         );
 
-        offerDrawerBackdrop.classList.remove(
+        offerDrawer?.classList.remove(
             "show"
         );
 
-        offerDrawer.setAttribute(
+        offerDrawer?.setAttribute(
             "aria-hidden",
             "true"
         );
@@ -6820,380 +6932,6 @@ function buildOffers(rideId) {
             "ff-drawer-open"
         );
     }
-
-
-    function bindOfferDetailsButtons() {
-
-        document.querySelectorAll(
-            ".ff-offer-card:not(.none)"
-        ).forEach(function (card) {
-
-            const radio =
-                card.querySelector(
-                    ".ff-offer-radio"
-                );
-
-            const moreButton =
-                card.querySelector(
-                    ".ff-offer-more"
-                );
-
-            const selectButton =
-                card.querySelector(
-                    ".ff-offer-select-btn"
-                );
-
-            if (moreButton) {
-
-                moreButton.onclick =
-                    function (event) {
-
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        openOfferDrawer(
-                            radio
-                        );
-                    };
-            }
-
-            if (selectButton) {
-
-                selectButton.onclick =
-                    function (event) {
-
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        radio.checked = true;
-
-                        radio.dispatchEvent(
-                            new Event(
-                                "change",
-                                {
-                                    bubbles: true
-                                }
-                            )
-                        );
-                    };
-            }
-
-            card.onclick =
-                function (event) {
-
-                    if (
-                        event.target.closest(
-                            ".ff-offer-more, .ff-offer-select-btn"
-                        )
-                    ) {
-                        return;
-                    }
-
-                    radio.checked = true;
-
-                    radio.dispatchEvent(
-                        new Event(
-                            "change",
-                            {
-                                bubbles: true
-                            }
-                        )
-                    );
-                };
-        });
-    }
-
-
-    function bindRegularTicket() {
-
-    const regularCard =
-        document.querySelector(
-            ".ff-offer-card.none"
-        );
-
-
-    if (!regularCard) {
-        return;
-    }
-
-
-    const regularRadio =
-        regularCard.querySelector(
-            ".ff-offer-radio"
-        );
-
-
-    const regularSelectButton =
-        regularCard.querySelector(
-            ".ff-offer-select-btn"
-        );
-
-
-    if (
-        !regularRadio
-        ||
-        !regularSelectButton
-    ) {
-
-        return;
-
-    }
-
-
-    /* =====================================================
-       SELECT BUTTON
-    ====================================================== */
-
-    regularSelectButton.onclick =
-        function (event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-
-            regularRadio.checked =
-                true;
-
-
-            regularRadio.dispatchEvent(
-                new Event(
-                    "change",
-                    {
-                        bubbles: true
-                    }
-                )
-            );
-
-        };
-
-
-    /* =====================================================
-       WHOLE CARD CLICK
-    ====================================================== */
-
-    regularCard.onclick =
-        function (event) {
-
-            if (
-                event.target.closest(
-                    ".ff-offer-select-btn"
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            regularRadio.checked =
-                true;
-
-
-            regularRadio.dispatchEvent(
-                new Event(
-                    "change",
-                    {
-                        bubbles: true
-                    }
-                )
-            );
-
-        };
-
-}
-
-
-    function bindOffers() {
-
-        document.querySelectorAll(
-            ".ff-offer-radio"
-        ).forEach(function (radio) {
-
-            radio.onchange =
-                function () {
-
-                    document.querySelectorAll(
-                        ".ff-offer-card"
-                    ).forEach(function (card) {
-
-                        card.classList.remove(
-                            "selected"
-                        );
-
-                    });
-
-                    radio
-                        .closest(".ff-offer-card")
-                        .classList.add("selected");
-
-
-                    if (radio.value) {
-
-                        selectedOffer = {
-                            id:
-                                radio.value,
-
-                            name:
-                                radio.dataset.name,
-
-                            label:
-                                radio.dataset.label,
-
-                            type:
-                                radio.dataset.type,
-
-                            discount:
-                                Number(
-                                    radio.dataset.discount || 0
-                                ),
-
-                            minParticipants:
-                                Number(
-                                    radio.dataset.minParticipants || 1
-                                ),
-
-                            minAmount:
-                                Number(
-                                    radio.dataset.minAmount || 0
-                                ),
-
-                            maxDiscount:
-                                Number(
-                                    radio.dataset.maxDiscount || 0
-                                ),
-
-                            buy:
-                                Number(
-                                    radio.dataset.buy || 0
-                                ),
-
-                            free:
-                                Number(
-                                    radio.dataset.free || 0
-                                ),
-
-                            couponRequired:
-                                radio.dataset.couponRequired === "1",
-
-                            coupon:
-                                (
-                                    radio.dataset.coupon || ""
-                                )
-                                .trim()
-                                .toUpperCase(),
-
-                            start:
-                                radio.dataset.start || "",
-
-                            end:
-                                radio.dataset.end || "",
-
-                            first:
-                                radio.dataset.first === "1"
-                        };
-
-                    } else {
-
-                        selectedOffer = null;
-
-                    }
-
-
-                    offerSelectedName.textContent =
-                        selectedOffer
-                        ? selectedOffer.name
-                        : "Regular Ticket";
-
-                    offerSelectedLabel.textContent =
-                        selectedOffer
-                        ? selectedOffer.label
-                        : "Regular ride price";
-
-                    offerSelected.classList.add(
-                        "show"
-                    );
-
-
-                    const requiresCoupon =
-                        Boolean(
-                            selectedOffer?.couponRequired
-                        );
-
-
-                    couponWrap.classList.toggle(
-                        "show",
-                        requiresCoupon
-                    );
-
-
-                    couponValidated = false;
-                    couponCode.value = "";
-                    couponMessage.textContent = "";
-                    couponCode.classList.remove(
-                        "is-invalid"
-                    );
-
-
-                    // =================================================
-                    // COUPON OFFER
-                    // Keep the offer panel open until coupon is applied.
-                    // =================================================
-
-                    if (requiresCoupon) {
-
-                        participantPanel.classList.add(
-                            "locked"
-                        );
-
-                        participantPanelButton.disabled =
-                            true;
-
-                        closePanel(
-                            participantPanel
-                        );
-
-                        openPanel(
-                            offerPanel
-                        );
-
-                        setTimeout(
-                            function () {
-                                couponCode.focus();
-                            },
-                            150
-                        );
-
-                        updateSummary();
-
-                        return;
-                    }
-
-
-                    // =================================================
-                    // NORMAL OFFER / REGULAR TICKET
-                    // =================================================
-
-                    unlockPanel(
-                        participantPanel,
-                        participantPanelButton
-                    );
-
-                    buildWeights();
-
-                    closePanel(
-                        offerPanel
-                    );
-
-                    openPanel(
-                        participantPanel
-                    );
-
-                    updateSummary();
-                };
-
-        });
-    }
-
 
     offerDrawerClose?.addEventListener(
         "click",
@@ -7213,7 +6951,8 @@ function buildOffers(rideId) {
                 return;
             }
 
-            drawerOfferRadio.checked = true;
+            drawerOfferRadio.checked =
+                true;
 
             drawerOfferRadio.dispatchEvent(
                 new Event(
@@ -7228,1269 +6967,21 @@ function buildOffers(rideId) {
         }
     );
 
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key === "Escape"
-                &&
-                offerDrawer.classList.contains(
-                    "show"
-                )
-            ) {
-                closeOfferDrawer();
-            }
-        }
-    );
-
-
-    /* =====================================================
-   WEIGHT DISTRIBUTION
-===================================================== */
-
-function getAvailableWeightRanges() {
-
-    const source =
-        document.getElementById(
-            "globalWeightRanges"
-        );
-
-
-    if (!source) {
-        return [];
-    }
-
-
-    return Array.from(
-        source.querySelectorAll(
-            "span[data-key]"
-        )
-    ).map(function (item) {
-
-        return {
-
-            key:
-                item.dataset.key,
-
-            label:
-                item.dataset.label,
-
-            min:
-                item.dataset.min,
-
-            max:
-                item.dataset.max
-
-        };
-
-    });
-
-}
-
-
-
-function buildWeightOptions() {
-
-    const ranges =
-        getAvailableWeightRanges();
-
-
-    let html = `
-        <option value="">
-            Select weight range
-        </option>
-    `;
-
-
-    ranges.forEach(function (range) {
-
-        html += `
-
-            <option
-                value="${range.key}"
-                data-label="${range.label}"
-            >
-                ${range.label}
-            </option>
-
-        `;
-
-    });
-
-
-    return html;
-}
-
-
-
-function getAllocatedQuantity() {
-
-    let total = 0;
-
-
-    document.querySelectorAll(
-        ".ff-weight-qty"
-    ).forEach(function (input) {
-
-        total += Number(
-            input.value
-            ||
-            0
-        );
-
-    });
-
-
-    return total;
-}
-
-
-
-function showWeightMessage(message) {
-
-    weightAllocationMessage.textContent =
-        message;
-
-
-    weightAllocationMessage.classList.add(
-        "show"
-    );
-
-}
-
-
-
-function clearWeightMessage() {
-
-    weightAllocationMessage.textContent =
-        "";
-
-
-    weightAllocationMessage.classList.remove(
-        "show"
-    );
-
-}
-
-
-function validateWeightAllocation() {
-
-    const rows = document.querySelectorAll(
-        ".ff-weight-allocation-row"
-    );
-
-    const usedRanges = new Set();
-    let total = 0;
-    let hasSelectedGroup = false;
-
-    for (const row of rows) {
-
-        const select = row.querySelector(
-            ".ff-weight-range-select"
-        );
-
-        const input = row.querySelector(
-            ".ff-weight-qty"
-        );
-
-        const count = Number(input?.value || 0);
-
-        // Completely unused row: ignore it.
-        if (!select?.value && count === 0) {
-            continue;
-        }
-
-        if (!select?.value && count > 0) {
-            showWeightMessage(
-                "Please select a weight range for every rider group."
-            );
-            return false;
-        }
-
-        if (select?.value) {
-
-            hasSelectedGroup = true;
-
-            if (count < 1) {
-                showWeightMessage(
-                    "Enter at least 1 rider for each selected weight range."
-                );
-                return false;
-            }
-
-            if (usedRanges.has(select.value)) {
-                showWeightMessage(
-                    "The same weight range cannot be selected twice."
-                );
-                return false;
-            }
-
-            usedRanges.add(select.value);
-            total += count;
-        }
-    }
-
-    if (!hasSelectedGroup || total < 1) {
-        showWeightMessage(
-            "Please select at least one weight range and add riders."
-        );
-        participantTotal.textContent = "0";
-        allocatedParticipants.textContent = "0";
-        if (participantCount) participantCount.value = "0";
-        return false;
-    }
-
-    if (total > maximumParticipants) {
-        showWeightMessage(
-            `Maximum ${maximumParticipants} riders are allowed per booking.`
-        );
-        participantTotal.textContent = total;
-        allocatedParticipants.textContent = total;
-        if (participantCount) participantCount.value = total;
-        return false;
-    }
-
-    participantTotal.textContent = total;
-    allocatedParticipants.textContent = total;
-    if (participantCount) participantCount.value = total;
-
-    clearWeightMessage();
-    return true;
-}
-
-
-function createWeightRow() {
-
-    const ranges = getAvailableWeightRanges();
-
-    if (!ranges.length) {
-        noWeightRanges.style.display = "block";
-        return;
-    }
-
-    if (weightList.children.length >= ranges.length) {
-        showWeightMessage(
-            "All available weight ranges have already been added."
-        );
-        return;
-    }
-
-    const row = document.createElement("div");
-    row.className = "ff-weight-allocation-row";
-
-    row.innerHTML = `
-        <select
-            class="ff-weight-range-select"
-            name="weight_range_key[]"
-        >
-            ${buildWeightOptions()}
-        </select>
-
-        <div class="ff-range-counter">
-            <button
-                type="button"
-                class="ff-range-minus"
-                aria-label="Decrease riders"
-            >
-                <i class="fas fa-minus"></i>
-            </button>
-
-            <input
-                type="number"
-                class="ff-weight-qty"
-                name="weight_range_count[]"
-                value="1"
-                min="1"
-                max="${maximumParticipants}"
-                inputmode="numeric"
-            >
-
-            <button
-                type="button"
-                class="ff-range-plus"
-                aria-label="Increase riders"
-            >
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-
-        <button
-            type="button"
-            class="ff-remove-weight-range"
-            aria-label="Remove weight range"
-        >
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-
-    weightList.appendChild(row);
-    bindWeightRow(row);
-    updateSummary();
-}
-
-
-function bindWeightRow(row) {
-
-    const select = row.querySelector(
-        ".ff-weight-range-select"
-    );
-
-    const input = row.querySelector(
-        ".ff-weight-qty"
-    );
-
-    const minus = row.querySelector(
-        ".ff-range-minus"
-    );
-
-    const plus = row.querySelector(
-        ".ff-range-plus"
-    );
-
-    const remove = row.querySelector(
-        ".ff-remove-weight-range"
-    );
-
-    select.addEventListener("change", function () {
-        clearError();
-        clearWeightMessage();
-
-        if (select.value) {
-            const rows = document.querySelectorAll(
-                ".ff-weight-allocation-row"
-            );
-
-            for (const otherRow of rows) {
-                if (otherRow === row) continue;
-
-                const otherSelect = otherRow.querySelector(
-                    ".ff-weight-range-select"
-                );
-
-                if (
-                    otherSelect
-                    &&
-                    otherSelect.value === select.value
-                ) {
-                    select.value = "";
-                    showWeightMessage(
-                        "This weight range is already selected."
-                    );
-                    updateSummary();
-                    return;
-                }
-            }
-        }
-
-        updateSummary();
-    });
-
-    input.addEventListener("input", function () {
-        clearError();
-        clearWeightMessage();
-
-        let value = parseInt(input.value || "1", 10);
-
-        if (Number.isNaN(value) || value < 1) value = 1;
-        if (value > maximumParticipants) value = maximumParticipants;
-
-        input.value = value;
-        updateSummary();
-    });
-
-    minus.addEventListener("click", function () {
-        clearError();
-        clearWeightMessage();
-
-        const value = Number(input.value || 1);
-
-        if (value > 1) {
-            input.value = value - 1;
-        }
-
-        updateSummary();
-    });
-
-    plus.addEventListener("click", function () {
-        clearError();
-        clearWeightMessage();
-
-        const value = Number(input.value || 1);
-        const currentTotal = getQuantity();
-
-        if (currentTotal >= maximumParticipants) {
-            showWeightMessage(
-                `Maximum ${maximumParticipants} riders are allowed per booking.`
-            );
-            return;
-        }
-
-        input.value = Math.min(
-            maximumParticipants,
-            value + 1
-        );
-
-        updateSummary();
-    });
-
-    remove.addEventListener("click", function () {
-        row.remove();
-        clearWeightMessage();
-
-        if (weightList.children.length === 0) {
-            createWeightRow();
-            return;
-        }
-
-        updateSummary();
-    });
-}
-
-
-function buildWeights() {
-
-    weightList.innerHTML = "";
-    clearWeightMessage();
-
-    const ranges = getAvailableWeightRanges();
-
-    noWeightRanges.style.display =
-        ranges.length ? "none" : "block";
-
-    if (!ranges.length) {
-        return;
-    }
-
-    createWeightRow();
-}
-
-
-/* =====================================================
-   ADD ANOTHER WEIGHT RANGE
-===================================================== */
-
-addWeightRange.addEventListener(
-    "click",
-    function () {
-
-        clearError();
-        clearWeightMessage();
-
-        const availableRanges =
-            getAvailableWeightRanges();
-
-        if (
-            weightList.children.length
-            >=
-            availableRanges.length
-        ) {
-            showWeightMessage(
-                "All available weight ranges have already been added."
-            );
-            return;
-        }
-
-        createWeightRow();
-    }
-);
-
-
-
-    function calculateOffer(
-        quantity,
-        rideTotal
-    ) {
-
-        if (!selectedOffer) {
-
-            return {
-                discount: 0,
-                eligible: true,
-                note: "No promotional offer selected"
-            };
-
-        }
-
-
-        if (
-            bookingDate.value
-            &&
-            selectedOffer.start
-            &&
-            bookingDate.value
-            <
-            selectedOffer.start
-        ) {
-
-            return {
-                discount: 0,
-                eligible: false,
-                note: "Offer is not valid for this visit date"
-            };
-
-        }
-
-
-        if (
-            bookingDate.value
-            &&
-            selectedOffer.end
-            &&
-            bookingDate.value
-            >
-            selectedOffer.end
-        ) {
-
-            return {
-                discount: 0,
-                eligible: false,
-                note: "Offer is not valid for this visit date"
-            };
-
-        }
-
-
-        if (
-            quantity
-            <
-            selectedOffer.minParticipants
-        ) {
-
-            const remaining =
-                selectedOffer.minParticipants
-                -
-                quantity;
-
-            return {
-                discount: 0,
-                eligible: false,
-                note:
-                    `Add ${remaining} more rider${remaining === 1 ? "" : "s"} to unlock ${selectedOffer.name}`
-            };
-
-        }
-
-
-        if (
-            rideTotal
-            <
-            selectedOffer.minAmount
-        ) {
-
-            return {
-                discount: 0,
-                eligible: false,
-                note:
-                    `Minimum booking amount is ${money(selectedOffer.minAmount)}`
-            };
-
-        }
-
-
-        if (
-            selectedOffer.couponRequired
-        ) {
-
-            const entered =
-                (
-                    couponCode.value || ""
-                )
-                .trim()
-                .toUpperCase();
-
-
-            if (!entered) {
-
-                return {
-                    discount: 0,
-                    eligible: false,
-                    note: "Enter the coupon code to activate this offer."
-                };
-
-            }
-
-
-            if (
-                !selectedOffer.coupon
-            ) {
-
-                return {
-                    discount: 0,
-                    eligible: false,
-                    note: "This coupon offer is not configured correctly."
-                };
-
-            }
-
-
-            if (
-                entered
-                !==
-                selectedOffer.coupon
-            ) {
-
-                return {
-                    discount: 0,
-                    eligible: false,
-                    note: "Invalid coupon code."
-                };
-
-            }
-
-
-            if (
-                !couponValidated
-            ) {
-
-                return {
-                    discount: 0,
-                    eligible: false,
-                    note: "Click Apply to activate this coupon."
-                };
-
-            }
-
-        }
-
-
-        if (
-            selectedOffer.type
-            ===
-            "weekday"
-            &&
-            bookingDate.value
-        ) {
-
-            const day =
-                new Date(
-                    bookingDate.value
-                    +
-                    "T12:00:00"
-                )
-                .getDay();
-
-            if (
-                day === 0
-                ||
-                day === 6
-            ) {
-
-                return {
-                    discount: 0,
-                    eligible: false,
-                    note: "This offer is available Monday to Friday only"
-                };
-
-            }
-
-        }
-
-
-        let discount = 0;
-        let note = "";
-
-
-        if (
-            selectedOffer.type
-            ===
-            "buy_x_get_y"
-        ) {
-
-            const groupSize =
-                selectedOffer.buy
-                +
-                selectedOffer.free;
-
-
-            if (groupSize <= 0) {
-
-                return {
-                    discount: 0,
-                    eligible: false,
-                    note: "Offer configuration is incomplete"
-                };
-
-            }
-
-
-            const freeRiders =
-                Math.floor(
-                    quantity / groupSize
-                )
-                *
-                selectedOffer.free;
-
-
-            if (freeRiders <= 0) {
-
-                const remaining =
-                    groupSize
-                    -
-                    quantity;
-
-                return {
-                    discount: 0,
-                    eligible: false,
-                    note:
-                        `Add ${remaining} more rider${remaining === 1 ? "" : "s"} to unlock this offer`
-                };
-
-            }
-
-
-            discount =
-                ridePrice
-                *
-                freeRiders;
-
-            note =
-                `${freeRiders} rider${freeRiders === 1 ? "" : "s"} free • Save ${money(discount)}`;
-
-        }
-
-
-        else if (
-            selectedOffer.type
-            ===
-            "fixed"
-        ) {
-
-            discount =
-                selectedOffer.discount;
-
-            note =
-                `You save ${money(discount)}`;
-
-        }
-
-
-        else {
-
-            discount =
-                rideTotal
-                *
-                selectedOffer.discount
-                /
-                100;
-
-            note =
-                `You save ${money(discount)} with ${selectedOffer.name}`;
-
-        }
-
-
-        if (
-            selectedOffer.maxDiscount
-            >
-            0
-        ) {
-
-            discount =
-                Math.min(
-                    discount,
-                    selectedOffer.maxDiscount
-                );
-
-        }
-
-
-        discount =
-            Math.min(
-                discount,
-                rideTotal
-            );
-
-
-        if (
-            selectedOffer.type
-            ===
-            "first_booking"
-            ||
-            selectedOffer.first
-        ) {
-
-            note =
-                `Estimated saving ${money(discount)} • First-booking eligibility is checked on review`;
-
-        }
-
-
-        if (
-            selectedOffer.type
-            ===
-            "birthday"
-        ) {
-
-            note =
-                `Estimated saving ${money(discount)} • Birthday eligibility is checked on review`;
-
-        }
-
-
-        if (
-            selectedOffer.type
-            ===
-            "early_bird"
-        ) {
-
-            note =
-                `Estimated saving ${money(discount)} • Early-bird eligibility is checked on review`;
-
-        }
-
-
-        return {
-            discount:
-                Math.max(
-                    0,
-                    discount
-                ),
-
-            eligible:
-                discount > 0,
-
-            note:
-                note
-        };
-    }
-
-
-    function updateSummary() {
-
-        const quantity =
-            getQuantity();
-
-        const rideTotal =
-            ridePrice
-            *
-            quantity;
-
-        const offerResult =
-            calculateOffer(
-                quantity,
-                rideTotal
-            );
-
-        const total =
-            Math.max(
-                0,
-                rideTotal
-                -
-                offerResult.discount
-            );
-
-
-        summaryRideName.textContent =
-            rideId
-            ? rideName
-            : "—";
-
-        summaryRidePrice.textContent =
-            rideId
-            ? `${money(ridePrice)} per rider`
-            : "Select a ride";
-
-
-        summaryDate.textContent =
-            bookingDate.value
-            ||
-            "Select date";
-
-        summaryTime.textContent =
-            timeSlot.value
-            ||
-            "Select time";
-
-
-        participantTotal.textContent =
-            quantity;
-
-        participantSelectedTotal.textContent =
-            `${quantity} Rider${quantity === 1 ? "" : "s"}`;
-
-        participantSelected.classList.toggle(
-            "show",
-            quantity > 0
-        );
-
-
-        summaryParticipants.textContent =
-            quantity;
-
-        summaryParticipantNote.textContent =
-            quantity
-            ? `${quantity} total rider${quantity === 1 ? "" : "s"}`
-            : "No riders added";
-
-
-        summaryRideTotal.textContent =
-            money(
-                rideTotal
-            );
-
-
-        summaryOfferName.textContent =
-            selectedOffer
-            ? selectedOffer.name
-            : "Regular Ticket";
-
-        summaryOfferLabel.textContent =
-            selectedOffer
-            ? selectedOffer.label
-            : "Regular price";
-
-
-        summaryDiscount.textContent =
-            offerResult.discount > 0
-            ? `− ${money(offerResult.discount)}`
-            : money(0);
-
-        summaryDiscountNote.textContent =
-            offerResult.note;
-
-
-        summaryTotal.textContent =
-            money(
-                total
-            );
-
-
-        const groups =
-            getWeightGroups();
-
-            const weightAllocationValid =
-    validateWeightAllocation();
-
-        summaryWeightItems.innerHTML = "";
-
-        groups.forEach(function (group) {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-            item.className =
-                "ff-summary-weight-item";
-
-            item.innerHTML = `
-                <span>${group.label}</span>
-                <strong>${group.quantity}</strong>
-            `;
-
-            summaryWeightItems.appendChild(
-                item
-            );
-
-        });
-
-
-        summaryWeights.classList.toggle(
-            "show",
-            groups.length > 0
-        );
-
-
-        if (selectedOffer) {
-
-            offerStatus.className =
-                `ff-offer-status show ${offerResult.eligible ? "success" : "warning"}`;
-
-            offerStatus.textContent =
-                offerResult.note;
-
-        } else {
-
-            offerStatus.className =
-                "ff-offer-status";
-
-        }
-
-
-      const ready =
-    Boolean(
-        rideId
-        &&
-        bookingDate.value
-        &&
-        timeSlot.value
-        &&
-        quantity > 0
-        &&
-        weightAllocationValid
-        &&
-        (
-            !selectedOffer
-            ||
-            offerResult.eligible
-        )
-    );
-
-
-        reviewButton.disabled =
-            !ready;
-    }
-
-
-    /* =====================================================
-       RIDE SELECTION
-    ====================================================== */
-
-    document.querySelectorAll(
-        ".ff-ride-radio"
-    ).forEach(function (radio) {
-
-        radio.addEventListener(
-            "change",
-            function () {
-
-                clearError();
-
-
-                document.querySelectorAll(
-                    ".ff-ride-item"
-                ).forEach(function (card) {
-
-                    card.classList.remove(
-                        "selected"
-                    );
-
-                });
-
-
-                radio
-                    .closest(".ff-ride-item")
-                    .classList.add("selected");
-
-
-                rideId =
-                    radio.value;
-
-                rideName =
-                    radio.dataset.name;
-
-                ridePrice =
-                    Number(
-                        radio.dataset.price || 0
-                    );
-
-
-                rideSelectedName.textContent =
-                    rideName;
-
-                rideSelectedPrice.textContent =
-                    `${money(ridePrice)} per rider`;
-
-
-                if (
-                    radio.dataset.image
-                ) {
-
-                    rideSelectedImage.src =
-                        radio.dataset.image;
-
-                    rideSelectedImage.style.display =
-                        "block";
-
-                } else {
-
-                    rideSelectedImage.style.display =
-                        "none";
-
-                }
-
-
-                rideSelected.classList.add(
-                    "show"
-                );
-
-
-                bookingDate.value = "";
-                timeSlot.value = "";
-
-                dateSelected.classList.remove(
-                    "show"
-                );
-
-                offerSelected.classList.remove(
-                    "show"
-                );
-
-                participantSelected.classList.remove(
-                    "show"
-                );
-
-
-                resetOffer();
-
-                buildOffers(
-                    rideId
-                );
-
-                buildWeights();
-
-
-                closePanel(
-                    ridePanel
-                );
-
-
-                unlockPanel(
-                    datePanel,
-                    datePanelButton
-                );
-
-                openPanel(
-                    datePanel
-                );
-
-
-                offerPanel.classList.add(
-                    "locked"
-                );
-
-                offerPanelButton.disabled =
-                    true;
-
-                closePanel(
-                    offerPanel
-                );
-
-
-                participantPanel.classList.add(
-                    "locked"
-                );
-
-                participantPanelButton.disabled =
-                    true;
-
-                closePanel(
-                    participantPanel
-                );
-
-
-                updateSummary();
-            }
-        );
-
-    });
-
-
-    /* =====================================================
-       DATE CONTINUE
-    ====================================================== */
-
-    dateContinue.addEventListener(
-        "click",
-        function () {
-
-            clearError();
-
-
-            if (
-                !bookingDate.value
-            ) {
-
-                showError(
-                    "Please select your visit date."
-                );
-
-                return;
-            }
-
-
-            if (
-                !timeSlot.value
-            ) {
-
-                showError(
-                    "Please select a time slot."
-                );
-
-                return;
-            }
-
-
-            dateSelectedText.textContent =
-                bookingDate.value;
-
-            timeSelectedText.textContent =
-                timeSlot.value;
-
-            dateSelected.classList.add(
-                "show"
-            );
-
-
-            closePanel(
-                datePanel
-            );
-
-
-            unlockPanel(
-                offerPanel,
-                offerPanelButton
-            );
-
-            openPanel(
-                offerPanel
-            );
-
-
-            updateSummary();
-        }
-    );
-
-bookingDate.addEventListener(
-    "change",
-    function () {
-
-
-        /* Reset previously selected offer */
-
-        resetOffer();
-
-
-        /* Rebuild offers for newly selected date */
-
-        if (selectedRide) {
-
-            buildOffers(
-                selectedRide.id
-            );
-
-        }
-
-
-        updateSummary();
-
-    }
-);
-
-    timeSlot.addEventListener(
-        "change",
-        updateSummary
-    );
-
-
-    /* =====================================================
-       COUPON
-    ====================================================== */
-
-    couponApply.addEventListener(
+    /* =========================================================
+       COUPON - SAME BEHAVIOR AS CURRENT PAGE
+    ========================================================= */
+
+    couponApply?.addEventListener(
         "click",
         function () {
 
             couponValidated = false;
-
 
             if (
                 !selectedOffer
                 ||
                 !selectedOffer.couponRequired
             ) {
-
                 couponMessage.textContent =
                     "Please select a coupon offer first.";
 
@@ -8500,7 +6991,6 @@ bookingDate.addEventListener(
                 return;
             }
 
-
             const entered =
                 (
                     couponCode.value || ""
@@ -8508,13 +6998,10 @@ bookingDate.addEventListener(
                 .trim()
                 .toUpperCase();
 
-
             couponCode.value =
                 entered;
 
-
             if (!entered) {
-
                 couponMessage.textContent =
                     "Please enter your coupon code.";
 
@@ -8523,34 +7010,24 @@ bookingDate.addEventListener(
 
                 couponCode.focus();
 
-                updateSummary();
-
                 return;
             }
 
-
-            if (
-                !selectedOffer.coupon
-            ) {
-
+            if (!selectedOffer.coupon) {
                 couponMessage.textContent =
                     "This coupon offer is not configured correctly.";
 
                 couponMessage.style.color =
                     "#c31103";
 
-                updateSummary();
-
                 return;
             }
-
 
             if (
                 entered
                 !==
                 selectedOffer.coupon
             ) {
-
                 couponMessage.innerHTML =
                     '<i class="fas fa-circle-xmark"></i> Invalid coupon code. Please check the code and try again.';
 
@@ -8561,24 +7038,21 @@ bookingDate.addEventListener(
                     "is-invalid"
                 );
 
-                updateSummary();
-
                 return;
             }
 
-
-            couponValidated = true;
+            couponValidated =
+                true;
 
             couponCode.classList.remove(
                 "is-invalid"
             );
 
             couponMessage.innerHTML =
-                `<i class="fas fa-circle-check"></i> Coupon <strong>${entered}</strong> applied successfully.`;
+                `<i class="fas fa-circle-check"></i> Coupon <strong>${escapeHtml(entered)}</strong> applied successfully.`;
 
             couponMessage.style.color =
                 "#16803a";
-
 
             unlockPanel(
                 participantPanel,
@@ -8587,12 +7061,10 @@ bookingDate.addEventListener(
 
             buildWeights();
 
-            updateSummary();
-
+            updateCurrentRidePreview();
 
             setTimeout(
                 function () {
-
                     closePanel(
                         offerPanel
                     );
@@ -8601,17 +7073,19 @@ bookingDate.addEventListener(
                         participantPanel
                     );
 
+                    participantPanel.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
                 },
-                450
+                250
             );
         }
     );
 
-
-    couponCode.addEventListener(
+    couponCode?.addEventListener(
         "input",
         function () {
-
             this.value =
                 this.value
                     .toUpperCase()
@@ -8630,259 +7104,1738 @@ bookingDate.addEventListener(
             if (
                 selectedOffer?.couponRequired
             ) {
-
                 couponMessage.textContent =
-                    "Click Apply to validate this coupon.";
+                    "Click Apply to activate this coupon.";
 
                 couponMessage.style.color =
-                    "#687281";
+                    "#8a5a00";
             }
 
-            updateSummary();
+            updateCurrentRidePreview();
         }
     );
 
+    /* =========================================================
+       WEIGHT GROUPS - PRESERVES CURRENT SYSTEM
+    ========================================================= */
 
-    /* =====================================================
-       MANUAL OPEN/CLOSE
-    ====================================================== */
+    function getAvailableWeightRanges() {
 
-    document.querySelectorAll(
-        "[data-open]"
-    ).forEach(function (button) {
+        const source =
+            document.getElementById(
+                "globalWeightRanges"
+            );
 
-        button.addEventListener(
-            "click",
-            function () {
+        if (!source) {
+            return [];
+        }
 
-                openPanel(
-                    document.getElementById(
-                        button.dataset.open
-                    )
-                );
+        return Array.from(
+            source.querySelectorAll(
+                "span[data-key]"
+            )
+        ).map(
+            function (item) {
+                return {
+                    key:
+                        item.dataset.key,
 
+                    label:
+                        item.dataset.label,
+
+                    min:
+                        item.dataset.min,
+
+                    max:
+                        item.dataset.max
+                };
+            }
+        );
+    }
+
+    function buildWeightOptions() {
+
+        const ranges =
+            getAvailableWeightRanges();
+
+        let html = `
+            <option value="">
+                Select weight range
+            </option>
+        `;
+
+        ranges.forEach(
+            function (range) {
+                html += `
+                    <option
+                        value="${escapeHtml(range.key)}"
+                        data-label="${escapeHtml(range.label)}"
+                    >
+                        ${escapeHtml(range.label)}
+                    </option>
+                `;
             }
         );
 
-    });
+        return html;
+    }
 
+    function getQuantity() {
 
-    [
-        [ridePanel, ridePanelButton],
-        [datePanel, datePanelButton],
-        [offerPanel, offerPanelButton],
-        [participantPanel, participantPanelButton]
-    ].forEach(function (pair) {
+        let total = 0;
 
-        const panel =
-            pair[0];
+        document.querySelectorAll(
+            ".ff-weight-allocation-row"
+        ).forEach(
+            function (row) {
 
-        const button =
-            pair[1];
+                const select =
+                    row.querySelector(
+                        ".ff-weight-range-select"
+                    );
 
-
-        button.addEventListener(
-            "click",
-            function () {
+                const input =
+                    row.querySelector(
+                        ".ff-weight-qty"
+                    );
 
                 if (
-                    button.disabled
+                    select
+                    &&
+                    select.value
+                    &&
+                    input
+                ) {
+                    total += Number(
+                        input.value || 0
+                    );
+                }
+            }
+        );
+
+        if (participantCount) {
+            participantCount.value =
+                total;
+        }
+
+        return total;
+    }
+
+    function getWeightGroups() {
+
+        const groups = [];
+
+        document.querySelectorAll(
+            ".ff-weight-allocation-row"
+        ).forEach(
+            function (row) {
+
+                const select =
+                    row.querySelector(
+                        ".ff-weight-range-select"
+                    );
+
+                const input =
+                    row.querySelector(
+                        ".ff-weight-qty"
+                    );
+
+                if (
+                    !select
+                    ||
+                    !input
+                    ||
+                    !select.value
                 ) {
                     return;
                 }
 
+                const selectedOption =
+                    select.options[
+                        select.selectedIndex
+                    ];
 
-                if (
-                    panel.classList.contains(
-                        "open"
-                    )
-                ) {
-
-                    closePanel(
-                        panel
+                const quantity =
+                    Number(
+                        input.value || 0
                     );
 
-                } else {
+                if (quantity > 0) {
+                    groups.push({
+                        key:
+                            select.value,
 
-                    openPanel(
-                        panel
-                    );
+                        label:
+                            selectedOption.dataset.label
+                            ||
+                            selectedOption.textContent.trim(),
 
+                        quantity:
+                            quantity
+                    });
                 }
-
             }
         );
 
-    });
+        return groups;
+    }
 
+    function showWeightMessage(message) {
+        weightAllocationMessage.textContent =
+            message;
 
-    /* =====================================================
-       FINAL FORM VALIDATION
-    ====================================================== */
+        weightAllocationMessage.classList.add(
+            "show"
+        );
+    }
 
-    form.addEventListener(
-        "submit",
-        function (event) {
+    function clearWeightMessage() {
+        weightAllocationMessage.textContent =
+            "";
 
-            clearError();
+        weightAllocationMessage.classList.remove(
+            "show"
+        );
+    }
 
+    function validateWeightAllocation(
+        showMessage = true
+    ) {
 
-            const quantity =
-                getQuantity();
+        const rows =
+            document.querySelectorAll(
+                ".ff-weight-allocation-row"
+            );
 
-            const offerResult =
-                calculateOffer(
-                    quantity,
-                    ridePrice
-                    *
-                    quantity
+        const usedRanges =
+            new Set();
+
+        let total = 0;
+        let hasSelectedGroup = false;
+
+        for (const row of rows) {
+
+            const select =
+                row.querySelector(
+                    ".ff-weight-range-select"
                 );
 
+            const input =
+                row.querySelector(
+                    ".ff-weight-qty"
+                );
+
+            const count =
+                Number(
+                    input?.value || 0
+                );
 
             if (
-                !document.querySelector(
-                    ".ff-ride-radio:checked"
-                )
-            ) {
-
-                event.preventDefault();
-
-                showError(
-                    "Please select a ride."
-                );
-
-                openPanel(
-                    ridePanel
-                );
-
-                return;
-            }
-
-
-            if (
-                !bookingDate.value
-                ||
-                !timeSlot.value
-            ) {
-
-                event.preventDefault();
-
-                showError(
-                    "Please select your visit date and time."
-                );
-
-                openPanel(
-                    datePanel
-                );
-
-                return;
-            }
-
-
-            if (
-                !document.querySelector(
-                    ".ff-offer-radio:checked"
-                )
-            ) {
-
-                event.preventDefault();
-
-                showError(
-                    "Please select an offer or Continue Without Offer."
-                );
-
-                openPanel(
-                    offerPanel
-                );
-
-                return;
-            }
-
-
-            if (
-                quantity < 1
-            ) {
-
-                event.preventDefault();
-
-                showError(
-                    "Please add at least one participant."
-                );
-
-                openPanel(
-                    participantPanel
-                );
-
-                return;
-            }
-
-
-            if (
-                !validateWeightAllocation()
-            ) {
-
-                event.preventDefault();
-
-                showError(
-                    "Please correctly assign all participants to weight ranges."
-                );
-
-                openPanel(
-                    participantPanel
-                );
-
-                return;
-            }
-
-
-            if (
-                selectedOffer
+                !select?.value
                 &&
-                !offerResult.eligible
+                count === 0
             ) {
-
-                event.preventDefault();
-
-                showError(
-                    offerResult.note
-                );
-
-                openPanel(
-                    participantPanel
-                );
-
-                return;
+                continue;
             }
-
 
             if (
-                selectedOffer?.couponRequired
+                !select?.value
                 &&
-                !couponCode.value.trim()
+                count > 0
             ) {
+                if (showMessage) {
+                    showWeightMessage(
+                        "Please select a weight range for every rider group."
+                    );
+                }
 
-                event.preventDefault();
+                return false;
+            }
 
-                showError(
-                    "Please enter the coupon code."
+            if (select?.value) {
+
+                hasSelectedGroup =
+                    true;
+
+                if (count < 1) {
+                    if (showMessage) {
+                        showWeightMessage(
+                            "Enter at least 1 rider for each selected weight range."
+                        );
+                    }
+
+                    return false;
+                }
+
+                if (
+                    usedRanges.has(
+                        select.value
+                    )
+                ) {
+                    if (showMessage) {
+                        showWeightMessage(
+                            "The same weight range cannot be selected twice."
+                        );
+                    }
+
+                    return false;
+                }
+
+                usedRanges.add(
+                    select.value
                 );
 
-                openPanel(
-                    offerPanel
+                total +=
+                    count;
+            }
+        }
+
+        if (
+            !hasSelectedGroup
+            ||
+            total < 1
+        ) {
+            if (showMessage) {
+                showWeightMessage(
+                    "Please select at least one weight range and add riders."
+                );
+            }
+
+            participantTotal.textContent =
+                "0";
+
+            allocatedParticipants.textContent =
+                "0";
+
+            if (participantCount) {
+                participantCount.value =
+                    "0";
+            }
+
+            return false;
+        }
+
+        if (
+            total
+            >
+            maximumParticipants
+        ) {
+            if (showMessage) {
+                showWeightMessage(
+                    `Maximum ${maximumParticipants} riders are allowed for one ride.`
+                );
+            }
+
+            participantTotal.textContent =
+                total;
+
+            allocatedParticipants.textContent =
+                total;
+
+            if (participantCount) {
+                participantCount.value =
+                    total;
+            }
+
+            return false;
+        }
+
+        participantTotal.textContent =
+            total;
+
+        allocatedParticipants.textContent =
+            total;
+
+        if (participantCount) {
+            participantCount.value =
+                total;
+        }
+
+        clearWeightMessage();
+
+        return true;
+    }
+
+    function createWeightRow() {
+
+        const ranges =
+            getAvailableWeightRanges();
+
+        if (!ranges.length) {
+            noWeightRanges.style.display =
+                "block";
+
+            return;
+        }
+
+        if (
+            weightList.children.length
+            >=
+            ranges.length
+        ) {
+            showWeightMessage(
+                "All available weight ranges have already been added."
+            );
+
+            return;
+        }
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+        row.className =
+            "ff-weight-allocation-row";
+
+        row.innerHTML = `
+            <select
+                class="ff-weight-range-select"
+            >
+                ${buildWeightOptions()}
+            </select>
+
+            <div class="ff-range-counter">
+
+                <button
+                    type="button"
+                    class="ff-range-minus"
+                    aria-label="Decrease riders"
+                >
+                    <i class="fas fa-minus"></i>
+                </button>
+
+                <input
+                    type="number"
+                    class="ff-weight-qty"
+                    value="1"
+                    min="1"
+                    max="${maximumParticipants}"
+                    inputmode="numeric"
+                >
+
+                <button
+                    type="button"
+                    class="ff-range-plus"
+                    aria-label="Increase riders"
+                >
+                    <i class="fas fa-plus"></i>
+                </button>
+
+            </div>
+
+            <button
+                type="button"
+                class="ff-remove-weight-range"
+                aria-label="Remove weight range"
+            >
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        weightList.appendChild(
+            row
+        );
+
+        bindWeightRow(
+            row
+        );
+
+        updateCurrentRidePreview();
+    }
+
+    function bindWeightRow(row) {
+
+        const select =
+            row.querySelector(
+                ".ff-weight-range-select"
+            );
+
+        const input =
+            row.querySelector(
+                ".ff-weight-qty"
+            );
+
+        const minus =
+            row.querySelector(
+                ".ff-range-minus"
+            );
+
+        const plus =
+            row.querySelector(
+                ".ff-range-plus"
+            );
+
+        const remove =
+            row.querySelector(
+                ".ff-remove-weight-range"
+            );
+
+        select.addEventListener(
+            "change",
+            function () {
+
+                clearWeightMessage();
+
+                if (select.value) {
+
+                    const rows =
+                        document.querySelectorAll(
+                            ".ff-weight-allocation-row"
+                        );
+
+                    for (const otherRow of rows) {
+
+                        if (
+                            otherRow === row
+                        ) {
+                            continue;
+                        }
+
+                        const otherSelect =
+                            otherRow.querySelector(
+                                ".ff-weight-range-select"
+                            );
+
+                        if (
+                            otherSelect
+                            &&
+                            otherSelect.value
+                            ===
+                            select.value
+                        ) {
+                            select.value = "";
+
+                            showWeightMessage(
+                                "This weight range is already selected."
+                            );
+
+                            updateCurrentRidePreview();
+
+                            return;
+                        }
+                    }
+                }
+
+                updateCurrentRidePreview();
+            }
+        );
+
+        input.addEventListener(
+            "input",
+            function () {
+
+                clearWeightMessage();
+
+                let value =
+                    parseInt(
+                        input.value || "1",
+                        10
+                    );
+
+                if (
+                    Number.isNaN(value)
+                    ||
+                    value < 1
+                ) {
+                    value = 1;
+                }
+
+                if (
+                    value
+                    >
+                    maximumParticipants
+                ) {
+                    value =
+                        maximumParticipants;
+                }
+
+                input.value =
+                    value;
+
+                updateCurrentRidePreview();
+            }
+        );
+
+        minus.addEventListener(
+            "click",
+            function () {
+
+                const value =
+                    Number(
+                        input.value || 1
+                    );
+
+                if (value > 1) {
+                    input.value =
+                        value - 1;
+                }
+
+                updateCurrentRidePreview();
+            }
+        );
+
+        plus.addEventListener(
+            "click",
+            function () {
+
+                const currentTotal =
+                    getQuantity();
+
+                if (
+                    currentTotal
+                    >=
+                    maximumParticipants
+                ) {
+                    showWeightMessage(
+                        `Maximum ${maximumParticipants} riders are allowed for one ride.`
+                    );
+
+                    return;
+                }
+
+                input.value =
+                    Math.min(
+                        maximumParticipants,
+                        Number(
+                            input.value || 1
+                        ) + 1
+                    );
+
+                updateCurrentRidePreview();
+            }
+        );
+
+        remove.addEventListener(
+            "click",
+            function () {
+
+                row.remove();
+
+                clearWeightMessage();
+
+                if (
+                    weightList.children.length
+                    ===
+                    0
+                ) {
+                    createWeightRow();
+                    return;
+                }
+
+                updateCurrentRidePreview();
+            }
+        );
+    }
+
+    function buildWeights() {
+
+        weightList.innerHTML = "";
+
+        clearWeightMessage();
+
+        const ranges =
+            getAvailableWeightRanges();
+
+        noWeightRanges.style.display =
+            ranges.length
+                ? "none"
+                : "block";
+
+        if (!ranges.length) {
+            return;
+        }
+
+        createWeightRow();
+    }
+
+    addWeightRange?.addEventListener(
+        "click",
+        function () {
+
+            const ranges =
+                getAvailableWeightRanges();
+
+            if (
+                weightList.children.length
+                >=
+                ranges.length
+            ) {
+                showWeightMessage(
+                    "All available weight ranges have already been added."
                 );
 
                 return;
             }
 
+            createWeightRow();
         }
     );
 
+    /* =========================================================
+       CURRENT OFFER CALCULATION
+       Frontend estimate only.
+       Django must recalculate before payment.
+    ========================================================= */
 
-    resetOffer();
-    bindOffers();
-    bindRegularTicket();
-    updateSummary();   
+    function calculateOffer(
+        quantity,
+        rideTotal
+    ) {
 
+        if (!selectedOffer) {
+            return {
+                discount:
+                    0,
+
+                eligible:
+                    true,
+
+                note:
+                    "No promotional offer selected"
+            };
+        }
+
+        const currentDate =
+            bookingState.bookingDate
+            ||
+            bookingDate.value;
+
+        if (
+            currentDate
+            &&
+            selectedOffer.start
+            &&
+            currentDate
+            <
+            selectedOffer.start
+        ) {
+            return {
+                discount: 0,
+                eligible: false,
+                note:
+                    "Offer is not valid for this visit date"
+            };
+        }
+
+        if (
+            currentDate
+            &&
+            selectedOffer.end
+            &&
+            currentDate
+            >
+            selectedOffer.end
+        ) {
+            return {
+                discount: 0,
+                eligible: false,
+                note:
+                    "Offer is not valid for this visit date"
+            };
+        }
+
+        if (
+            quantity
+            <
+            selectedOffer.minParticipants
+        ) {
+            const remaining =
+                selectedOffer.minParticipants
+                -
+                quantity;
+
+            return {
+                discount: 0,
+                eligible: false,
+                note:
+                    `Add ${remaining} more rider${remaining === 1 ? "" : "s"} to unlock ${selectedOffer.name}`
+            };
+        }
+
+        if (
+            rideTotal
+            <
+            selectedOffer.minAmount
+        ) {
+            return {
+                discount: 0,
+                eligible: false,
+                note:
+                    `Minimum booking amount is ${money(selectedOffer.minAmount)}`
+            };
+        }
+
+        if (
+            selectedOffer.couponRequired
+        ) {
+            const entered =
+                (
+                    couponCode.value || ""
+                )
+                .trim()
+                .toUpperCase();
+
+            if (!entered) {
+                return {
+                    discount: 0,
+                    eligible: false,
+                    note:
+                        "Enter the coupon code to activate this offer."
+                };
+            }
+
+            if (
+                !selectedOffer.coupon
+                ||
+                entered
+                !==
+                selectedOffer.coupon
+            ) {
+                return {
+                    discount: 0,
+                    eligible: false,
+                    note:
+                        "Invalid coupon code."
+                };
+            }
+
+            if (!couponValidated) {
+                return {
+                    discount: 0,
+                    eligible: false,
+                    note:
+                        "Click Apply to activate this coupon."
+                };
+            }
+        }
+
+        if (
+            selectedOffer.type
+            ===
+            "weekday"
+            &&
+            currentDate
+        ) {
+            const day =
+                new Date(
+                    currentDate
+                    +
+                    "T12:00:00"
+                )
+                .getDay();
+
+            if (
+                day === 0
+                ||
+                day === 6
+            ) {
+                return {
+                    discount: 0,
+                    eligible: false,
+                    note:
+                        "This offer is available Monday to Friday only"
+                };
+            }
+        }
+
+        let discount = 0;
+        let note = "";
+
+        if (
+            selectedOffer.type
+            ===
+            "buy_x_get_y"
+        ) {
+            const groupSize =
+                selectedOffer.buy
+                +
+                selectedOffer.free;
+
+            if (groupSize <= 0) {
+                return {
+                    discount: 0,
+                    eligible: false,
+                    note:
+                        "Offer configuration is incomplete"
+                };
+            }
+
+            const freeRiders =
+                Math.floor(
+                    quantity
+                    /
+                    groupSize
+                )
+                *
+                selectedOffer.free;
+
+            if (freeRiders <= 0) {
+                const remaining =
+                    groupSize
+                    -
+                    quantity;
+
+                return {
+                    discount: 0,
+                    eligible: false,
+                    note:
+                        `Add ${remaining} more rider${remaining === 1 ? "" : "s"} to unlock this offer`
+                };
+            }
+
+            discount =
+                ridePrice
+                *
+                freeRiders;
+
+            note =
+                `${freeRiders} rider${freeRiders === 1 ? "" : "s"} free • Save ${money(discount)}`;
+        }
+        else if (
+            selectedOffer.type
+            ===
+            "fixed"
+        ) {
+            discount =
+                selectedOffer.discount;
+
+            note =
+                `You save ${money(discount)}`;
+        }
+        else {
+            discount =
+                rideTotal
+                *
+                selectedOffer.discount
+                /
+                100;
+
+            note =
+                `You save ${money(discount)} with ${selectedOffer.name}`;
+        }
+
+        if (
+            selectedOffer.maxDiscount
+            >
+            0
+        ) {
+            discount =
+                Math.min(
+                    discount,
+                    selectedOffer.maxDiscount
+                );
+        }
+
+        discount =
+            Math.min(
+                Math.max(
+                    discount,
+                    0
+                ),
+                rideTotal
+            );
+
+        if (
+            selectedOffer.type
+            ===
+            "first_booking"
+            ||
+            selectedOffer.first
+        ) {
+            note =
+                `Estimated saving ${money(discount)} • First-booking eligibility is checked on review`;
+        }
+
+        if (
+            selectedOffer.type
+            ===
+            "birthday"
+        ) {
+            note =
+                `Estimated saving ${money(discount)} • Birthday eligibility is checked on review`;
+        }
+
+        if (
+            selectedOffer.type
+            ===
+            "early_bird"
+        ) {
+            note =
+                `Estimated saving ${money(discount)} • Early-bird eligibility is checked on review`;
+        }
+
+        return {
+            discount:
+                Math.max(
+                    0,
+                    discount
+                ),
+
+            eligible:
+                discount > 0,
+
+            note:
+                note
+        };
+    }
+
+    function updateCurrentRidePreview() {
+
+        const quantity =
+            getQuantity();
+
+        participantTotal.textContent =
+            quantity;
+
+        allocatedParticipants.textContent =
+            quantity;
+
+        participantSelectedTotal.textContent =
+            `${quantity} Rider${quantity === 1 ? "" : "s"}`;
+
+        participantSelected.classList.toggle(
+            "show",
+            quantity > 0
+        );
+
+        if (!rideId) {
+            offerStatus.className =
+                "ff-offer-status";
+
+            offerStatus.textContent =
+                "";
+
+            return;
+        }
+
+        const rideTotal =
+            ridePrice
+            *
+            quantity;
+
+        const offerResult =
+            calculateOffer(
+                quantity,
+                rideTotal
+            );
+
+        if (selectedOffer) {
+            offerStatus.className =
+                `ff-offer-status show ${offerResult.eligible ? "success" : "warning"}`;
+
+            offerStatus.textContent =
+                offerResult.note;
+        }
+        else {
+            offerStatus.className =
+                "ff-offer-status";
+        }
+    }
+
+    /* =========================================================
+       ADD CURRENT RIDE
+    ========================================================= */
+
+    function buildCurrentRideItem() {
+
+        if (!bookingState.bookingDate) {
+            showError(
+                "Please select your visit date first."
+            );
+            return null;
+        }
+
+        if (!rideId) {
+            showError(
+                "Please select a ride."
+            );
+            return null;
+        }
+
+        if (
+            !validateWeightAllocation(
+                true
+            )
+        ) {
+            return null;
+        }
+
+        const quantity =
+            getQuantity();
+
+        const groups =
+            getWeightGroups();
+
+        const rideTotal =
+            ridePrice
+            *
+            quantity;
+
+        const offerResult =
+            calculateOffer(
+                quantity,
+                rideTotal
+            );
+
+        if (
+            selectedOffer
+            &&
+            !offerResult.eligible
+        ) {
+            showError(
+                offerResult.note
+            );
+
+            return null;
+        }
+
+        return {
+            rideId:
+                Number(
+                    rideId
+                ),
+
+            rideName:
+                rideName,
+
+            price:
+                ridePrice,
+
+            offerId:
+                selectedOffer
+                    ? Number(
+                        selectedOffer.id
+                    )
+                    : null,
+
+            offerName:
+                selectedOffer
+                    ? selectedOffer.name
+                    : "Regular Ticket",
+
+            offerLabel:
+                selectedOffer
+                    ? selectedOffer.label
+                    : "Regular price",
+
+            couponCode:
+                selectedOffer?.couponRequired
+                    ? (
+                        couponCode.value
+                        ||
+                        ""
+                    )
+                    .trim()
+                    .toUpperCase()
+                    : "",
+
+            quantity:
+                quantity,
+
+            weightGroups:
+                groups.map(
+                    function (group) {
+                        return {
+                            rangeKey:
+                                group.key,
+
+                            label:
+                                group.label,
+
+                            participantCount:
+                                group.quantity
+                        };
+                    }
+                ),
+
+            subtotal:
+                rideTotal,
+
+            discount:
+                offerResult.discount,
+
+            total:
+                Math.max(
+                    0,
+                    rideTotal
+                    -
+                    offerResult.discount
+                )
+        };
+    }
+
+    addCurrentRide?.addEventListener(
+        "click",
+        function () {
+
+            const item =
+                buildCurrentRideItem();
+
+            if (!item) {
+                return;
+            }
+
+            if (
+                rideAlreadyAdded(
+                    item.rideId
+                )
+            ) {
+                showError(
+                    "This ride has already been added."
+                );
+
+                return;
+            }
+
+            bookingState.items.push(
+                item
+            );
+
+            renderSelectedAdventures();
+
+            resetCurrentRideBuilder(
+                false
+            );
+
+            updateBookingSummary();
+
+            showBookingMessage(
+                `${item.rideName} was added to your booking.`,
+                "success",
+                "Adventure Added"
+            );
+
+            selectedAdventures.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    );
+
+    /* =========================================================
+       SELECTED ADVENTURES
+    ========================================================= */
+
+    function renderSelectedAdventures() {
+
+        selectedAdventureItems.innerHTML =
+            "";
+
+        bookingState.items.forEach(
+            function (
+                item,
+                index
+            ) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.className =
+                    "ff-added-ride-card";
+
+                const weights =
+                    item.weightGroups
+                        .map(
+                            function (group) {
+                                return `
+                                    <span class="ff-added-weight-chip">
+                                        ${escapeHtml(group.label)} × ${group.participantCount}
+                                    </span>
+                                `;
+                            }
+                        )
+                        .join("");
+
+                card.innerHTML = `
+                    <div class="ff-added-ride-main">
+
+                        <div>
+                            <small>
+                                Adventure ${index + 1}
+                            </small>
+
+                            <strong>
+                                ${escapeHtml(item.rideName)}
+                            </strong>
+
+                            <span>
+                                ${item.quantity}
+                                rider${item.quantity === 1 ? "" : "s"}
+                                •
+                                ${escapeHtml(item.offerName)}
+                            </span>
+
+                            <div class="ff-added-weight-list">
+                                ${weights}
+                            </div>
+                        </div>
+
+                        <div class="ff-added-ride-price">
+                            <strong>
+                                ${money(item.total)}
+                            </strong>
+
+                            ${
+                                item.discount > 0
+                                ? `<span>Save ${money(item.discount)}</span>`
+                                : ""
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="ff-added-ride-actions">
+
+                        <button
+                            type="button"
+                            class="ff-remove-added-ride"
+                            data-index="${index}"
+                        >
+                            <i class="fas fa-trash"></i>
+                            Remove
+                        </button>
+
+                    </div>
+                `;
+
+                selectedAdventureItems.appendChild(
+                    card
+                );
+            }
+        );
+
+        selectedAdventures.classList.toggle(
+            "show",
+            bookingState.items.length > 0
+        );
+
+        addAnotherRide.classList.toggle(
+            "show",
+            bookingState.items.length > 0
+        );
+
+        document.querySelectorAll(
+            ".ff-remove-added-ride"
+        ).forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const index =
+                            Number(
+                                button.dataset.index
+                            );
+
+                        bookingState.items.splice(
+                            index,
+                            1
+                        );
+
+                        renderSelectedAdventures();
+                        refreshRideAvailability();
+                        updateBookingSummary();
+
+                        if (
+                            bookingState.items.length
+                            ===
+                            0
+                        ) {
+                            unlockPanel(
+                                ridePanel,
+                                ridePanelButton
+                            );
+
+                            openPanel(
+                                ridePanel
+                            );
+                        }
+                    }
+                );
+            }
+        );
+
+        refreshRideAvailability();
+    }
+
+    addAnotherRide?.addEventListener(
+        "click",
+        function () {
+
+            resetCurrentRideBuilder(
+                false
+            );
+
+            unlockPanel(
+                ridePanel,
+                ridePanelButton
+            );
+
+            openPanel(
+                ridePanel
+            );
+
+            lockPanel(
+                offerPanel,
+                offerPanelButton
+            );
+
+            lockPanel(
+                participantPanel,
+                participantPanelButton
+            );
+
+            ridePanel.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    );
+
+    /* =========================================================
+       RESET CURRENT RIDE BUILDER
+    ========================================================= */
+
+    function resetCurrentRideBuilder(
+        keepRidePanelOpen = false
+    ) {
+
+        rideId = "";
+        rideName = "";
+        ridePrice = 0;
+        selectedOffer = null;
+        couponValidated = false;
+        drawerOfferRadio = null;
+
+        document.querySelectorAll(
+            ".ff-ride-radio"
+        ).forEach(
+            function (radio) {
+                radio.checked = false;
+            }
+        );
+
+        document.querySelectorAll(
+            ".ff-ride-item"
+        ).forEach(
+            function (card) {
+                card.classList.remove(
+                    "selected"
+                );
+            }
+        );
+
+        rideSelected.classList.remove(
+            "show"
+        );
+
+        offerSelected.classList.remove(
+            "show"
+        );
+
+        participantSelected.classList.remove(
+            "show"
+        );
+
+        dynamicOffers.innerHTML = "";
+
+        couponWrap.classList.remove(
+            "show"
+        );
+
+        couponCode.value = "";
+        couponMessage.textContent = "";
+        couponCode.classList.remove(
+            "is-invalid"
+        );
+
+        weightList.innerHTML = "";
+
+        participantTotal.textContent =
+            "0";
+
+        allocatedParticipants.textContent =
+            "0";
+
+        if (participantCount) {
+            participantCount.value =
+                "0";
+        }
+
+        offerStatus.className =
+            "ff-offer-status";
+
+        offerStatus.textContent =
+            "";
+
+        clearWeightMessage();
+
+        lockPanel(
+            offerPanel,
+            offerPanelButton
+        );
+
+        lockPanel(
+            participantPanel,
+            participantPanelButton
+        );
+
+        if (keepRidePanelOpen) {
+            unlockPanel(
+                ridePanel,
+                ridePanelButton
+            );
+
+            openPanel(
+                ridePanel
+            );
+        }
+
+        refreshRideAvailability();
+    }
+
+    /* =========================================================
+       OVERALL BOOKING SUMMARY
+    ========================================================= */
+
+    function updateBookingSummary() {
+
+        let totalParticipants = 0;
+        let subtotal = 0;
+        let discount = 0;
+        let grandTotal = 0;
+
+        summaryAdventures.innerHTML =
+            "";
+
+        bookingState.items.forEach(
+            function (item) {
+
+                totalParticipants +=
+                    Number(
+                        item.quantity || 0
+                    );
+
+                subtotal +=
+                    Number(
+                        item.subtotal || 0
+                    );
+
+                discount +=
+                    Number(
+                        item.discount || 0
+                    );
+
+                grandTotal +=
+                    Number(
+                        item.total || 0
+                    );
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+                row.className =
+                    "ff-summary-adventure-row";
+
+                row.innerHTML = `
+                    <span>
+                        ${escapeHtml(item.rideName)}
+                        <small>
+                            ${item.quantity} rider${item.quantity === 1 ? "" : "s"}
+                            •
+                            ${escapeHtml(item.offerName)}
+                        </small>
+                    </span>
+
+                    <strong>
+                        ${money(item.total)}
+                    </strong>
+                `;
+
+                summaryAdventures.appendChild(
+                    row
+                );
+            }
+        );
+
+        summaryDate.textContent =
+            formatDate(
+                bookingState.bookingDate
+                ||
+                bookingDate.value
+            );
+
+        summaryAdventureCount.textContent =
+            bookingState.items.length;
+
+        summaryAdventureNote.textContent =
+            bookingState.items.length
+                ? `${bookingState.items.length} adventure${bookingState.items.length === 1 ? "" : "s"} selected`
+                : "No rides added";
+
+        summaryParticipants.textContent =
+            totalParticipants;
+
+        summaryParticipantNote.textContent =
+            totalParticipants
+                ? `${totalParticipants} total ride participant entr${totalParticipants === 1 ? "y" : "ies"}`
+                : "No riders added";
+
+        summarySubtotal.textContent =
+            money(
+                subtotal
+            );
+
+        summaryDiscount.textContent =
+            discount > 0
+                ? `− ${money(discount)}`
+                : money(0);
+
+        summaryTotal.textContent =
+            money(
+                grandTotal
+            );
+
+        reviewButton.disabled =
+            !(
+                bookingState.bookingDate
+                &&
+                bookingState.items.length > 0
+            );
+    }
+
+    /* =========================================================
+       FORM SUBMISSION
+    ========================================================= */
+
+    form?.addEventListener(
+        "submit",
+        function (event) {
+
+            if (
+                !bookingState.bookingDate
+            ) {
+                event.preventDefault();
+
+                showError(
+                    "Please select your visit date."
+                );
+
+                return;
+            }
+
+            if (
+                bookingState.items.length
+                <
+                1
+            ) {
+                event.preventDefault();
+
+                showError(
+                    "Please add at least one ride before reviewing your booking."
+                );
+
+                return;
+            }
+
+            bookingItemsInput.value =
+                JSON.stringify(
+                    bookingState.items.map(
+                        function (item) {
+                            return {
+                                rideId:
+                                    item.rideId,
+
+                                offerId:
+                                    item.offerId,
+
+                                couponCode:
+                                    item.couponCode,
+
+                                weightGroups:
+                                    item.weightGroups.map(
+                                        function (group) {
+                                            return {
+                                                rangeKey:
+                                                    group.rangeKey,
+
+                                                participantCount:
+                                                    group.participantCount
+                                            };
+                                        }
+                                    )
+                            };
+                        }
+                    )
+                );
+        }
+    );
+
+    /* =========================================================
+       ESCAPE KEY
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key
+                !==
+                "Escape"
+            ) {
+                return;
+            }
+
+            if (
+                messageModal?.classList.contains(
+                    "show"
+                )
+            ) {
+                closeBookingMessage();
+            }
+
+            if (
+                offerDrawer?.classList.contains(
+                    "show"
+                )
+            ) {
+                closeOfferDrawer();
+            }
+        }
+    );
+
+    /* =========================================================
+       INITIAL STATE
+    ========================================================= */
+
+    openPanel(
+        datePanel
+    );
+
+    lockPanel(
+        ridePanel,
+        ridePanelButton
+    );
+
+    lockPanel(
+        offerPanel,
+        offerPanelButton
+    );
+
+    lockPanel(
+        participantPanel,
+        participantPanelButton
+    );
+
+    updateBookingSummary();
 });
 </script>
+
 {% endblock %}

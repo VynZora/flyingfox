@@ -379,6 +379,11 @@ path(
 
 path('bookings/', views.bookings, name='bookings'),
 path(
+    "booking/options/",
+    views.booking_options_for_date,
+    name="booking_options_for_date",
+),
+path(
     "booking/review/",
     views.booking_review,
     name="booking_review",
@@ -767,7 +772,7 @@ path(
 ),
 
 path(
-    "staff/tickets/<uuid:ticket_id>/check-in/",
+    "staff/booking-items/<int:booking_item_id>/check-in/",
     views.ticket_check_in,
     name="ticket_check_in",
 ),

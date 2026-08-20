@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
@@ -16,349 +17,1423 @@
     </title>
 
 
-     <!-- =====================================================
-     FLYING FOX FAVICONS
-===================================================== -->
+    <!-- =====================================================
+         FLYING FOX FAVICONS
+    ====================================================== -->
 
-<link rel="icon"
-      type="image/x-icon"
-      href="{% static 'frontend/assets/img/favicon/favicon.ico' %}">
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="{% static 'frontend/assets/img/favicon/favicon.ico' %}"
+    >
 
-<link rel="icon"
-      type="image/svg+xml"
-      href="{% static 'frontend/assets/img/favicon/favicon.svg' %}">
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'frontend/assets/img/favicon/favicon.svg' %}"
+    >
 
-<link rel="icon"
-      type="image/png"
-      sizes="96x96"
-      href="{% static 'frontend/assets/img/favicon/favicon-96x96.png' %}">
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="96x96"
+        href="{% static 'frontend/assets/img/favicon/favicon-96x96.png' %}"
+    >
 
-<link rel="apple-touch-icon"
-      sizes="180x180"
-      href="{% static 'frontend/assets/img/favicon/apple-touch-icon.png' %}">
+    <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="{% static 'frontend/assets/img/favicon/apple-touch-icon.png' %}"
+    >
 
-<link rel="manifest"
-      href="{% static 'frontend/assets/img/favicon/site.webmanifest' %}">
+    <link
+        rel="manifest"
+        href="{% static 'frontend/assets/img/favicon/site.webmanifest' %}"
+    >
 
-<meta name="theme-color" content="#d7190f">
+    <meta
+        name="theme-color"
+        content="#d7190f"
+    >
+
+
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
+
+    <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
 
+
     <style>
+
         :root {
-            --ff-red: #c31103;
-            --ff-red-dark: #8f0c02;
-            --ff-red-light: #fff0ee;
-            --ff-dark: #192736;
-            --ff-text: #687281;
-            --ff-border: #e3e6ea;
+
+            --ff-red:
+                #c31103;
+
+            --ff-red-dark:
+                #8f0c02;
+
+            --ff-red-light:
+                #fff0ee;
+
+            --ff-dark:
+                #192736;
+
+            --ff-text:
+                #687281;
+
+            --ff-border:
+                #e3e6ea;
+
+            --ff-green:
+                #159447;
+
+            --ff-bg:
+                #f7f7f8;
         }
+
 
         * {
-            box-sizing: border-box;
+            box-sizing:
+                border-box;
         }
 
+
         body {
-            margin: 0;
-            color: var(--ff-text);
+
+            margin:
+                0;
+
+            color:
+                var(--ff-text);
+
             background:
+
                 radial-gradient(
                     circle at 10% 10%,
                     rgba(195, 17, 3, 0.08),
                     transparent 28%
                 ),
+
                 #ffffff;
-            font-family: Arial, Helvetica, sans-serif;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
         }
+
+
+        /* =================================================
+           PAGE
+        ================================================== */
 
         .ff-success-page {
-            display: flex;
-            min-height: 100vh;
-            padding: 60px 20px;
-            align-items: center;
-            justify-content: center;
+
+            display:
+                flex;
+
+            min-height:
+                100vh;
+
+            padding:
+                60px 20px;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
         }
+
 
         .ff-success-card {
-            width: 100%;
-            max-width: 720px;
-            padding: 50px 40px;
-            border: 1px solid var(--ff-border);
-            border-radius: 30px;
-            background: #ffffff;
-            box-shadow: 0 25px 70px rgba(25, 39, 54, 0.1);
-            text-align: center;
+
+            width:
+                100%;
+
+            max-width:
+                900px;
+
+            padding:
+                50px 40px;
+
+            border:
+                1px solid
+                var(--ff-border);
+
+            border-radius:
+                30px;
+
+            background:
+                #ffffff;
+
+            box-shadow:
+                0 25px 70px
+                rgba(
+                    25,
+                    39,
+                    54,
+                    0.1
+                );
+
+            text-align:
+                center;
         }
+
+
+        /* =================================================
+           SUCCESS ICON
+        ================================================== */
 
         .ff-success-icon {
-            display: inline-flex;
-            width: 95px;
-            height: 95px;
-            margin-bottom: 25px;
-            border-radius: 50%;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            background: #159447;
-            box-shadow: 0 15px 35px rgba(21, 148, 71, 0.25);
-            font-size: 40px;
+
+            display:
+                inline-flex;
+
+            width:
+                95px;
+
+            height:
+                95px;
+
+            margin-bottom:
+                25px;
+
+            border-radius:
+                50%;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            color:
+                #ffffff;
+
+            background:
+                var(--ff-green);
+
+            box-shadow:
+                0 15px 35px
+                rgba(
+                    21,
+                    148,
+                    71,
+                    0.25
+                );
+
+            font-size:
+                40px;
         }
+
 
         .ff-success-card h1 {
-            margin-bottom: 13px;
-            color: var(--ff-dark);
-            font-size: 36px;
-            font-weight: 800;
+
+            margin-bottom:
+                13px;
+
+            color:
+                var(--ff-dark);
+
+            font-size:
+                36px;
+
+            font-weight:
+                800;
         }
+
 
         .ff-success-card > p {
-            max-width: 540px;
-            margin: 0 auto 28px;
-            line-height: 1.7;
+
+            max-width:
+                620px;
+
+            margin:
+                0 auto 28px;
+
+            line-height:
+                1.7;
         }
 
+
+        /* =================================================
+           BOOKING SUMMARY
+        ================================================== */
+
         .ff-success-details {
-            display: grid;
-            margin-bottom: 28px;
-            padding: 23px;
-            border-radius: 18px;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-            background: #f7f7f8;
-            text-align: left;
+
+            display:
+                grid;
+
+            margin-bottom:
+                28px;
+
+            padding:
+                23px;
+
+            border-radius:
+                18px;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    1fr
+                );
+
+            gap:
+                18px;
+
+            background:
+                var(--ff-bg);
+
+            text-align:
+                left;
         }
+
 
         .ff-success-detail small,
         .ff-success-detail strong {
-            display: block;
+
+            display:
+                block;
         }
+
 
         .ff-success-detail small {
-            margin-bottom: 5px;
-            color: #8b939e;
-            font-size: 12px;
+
+            margin-bottom:
+                5px;
+
+            color:
+                #8b939e;
+
+            font-size:
+                12px;
         }
+
 
         .ff-success-detail strong {
-            overflow-wrap: anywhere;
-            color: var(--ff-dark);
+
+            overflow-wrap:
+                anywhere;
+
+            color:
+                var(--ff-dark);
+
+            font-size:
+                15px;
         }
+
+
+        /* =================================================
+           ADVENTURES
+        ================================================== */
+
+        .ff-adventures-section {
+
+            margin-bottom:
+                30px;
+
+            text-align:
+                left;
+        }
+
+
+        .ff-adventures-title {
+
+            display:
+                flex;
+
+            margin-bottom:
+                15px;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+        }
+
+
+        .ff-adventures-title h3 {
+
+            margin:
+                0;
+
+            color:
+                var(--ff-dark);
+
+            font-size:
+                20px;
+
+            font-weight:
+                800;
+        }
+
+
+        .ff-adventures-count {
+
+            display:
+                inline-flex;
+
+            padding:
+                7px 11px;
+
+            border-radius:
+                30px;
+
+            color:
+                var(--ff-red);
+
+            background:
+                var(--ff-red-light);
+
+            font-size:
+                12px;
+
+            font-weight:
+                800;
+        }
+
+
+        .ff-adventure-card {
+
+            margin-bottom:
+                15px;
+
+            padding:
+                20px;
+
+            border:
+                1px solid
+                var(--ff-border);
+
+            border-radius:
+                18px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .ff-adventure-card:last-child {
+
+            margin-bottom:
+                0;
+        }
+
+
+        .ff-adventure-head {
+
+            display:
+                flex;
+
+            align-items:
+                flex-start;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+        }
+
+
+        .ff-adventure-head h4 {
+
+            margin:
+                0 0 6px;
+
+            color:
+                var(--ff-dark);
+
+            font-size:
+                18px;
+
+            font-weight:
+                800;
+        }
+
+
+        .ff-adventure-head small {
+
+            display:
+                block;
+        }
+
+
+        .ff-adventure-total {
+
+            color:
+                var(--ff-red);
+
+            font-size:
+                18px;
+
+            font-weight:
+                900;
+
+            white-space:
+                nowrap;
+        }
+
+
+        /* =================================================
+           WEIGHT GROUPS
+        ================================================== */
+
+        .ff-weight-groups {
+
+            margin-top:
+                16px;
+
+            padding-top:
+                15px;
+
+            border-top:
+                1px solid
+                #eceef1;
+        }
+
+
+        .ff-weight-title {
+
+            display:
+                flex;
+
+            margin-bottom:
+                10px;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+            color:
+                var(--ff-dark);
+
+            font-size:
+                12px;
+
+            font-weight:
+                800;
+        }
+
+
+        .ff-weight-row {
+
+            display:
+                flex;
+
+            padding:
+                7px 0;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                10px;
+
+            font-size:
+                13px;
+        }
+
+
+        .ff-weight-row strong {
+
+            color:
+                var(--ff-dark);
+        }
+
+
+        /* =================================================
+           OFFER
+        ================================================== */
+
+        .ff-offer-applied {
+
+            display:
+                flex;
+
+            margin-top:
+                14px;
+
+            padding:
+                12px 14px;
+
+            border-radius:
+                12px;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+
+            background:
+                #ecf8ef;
+        }
+
+
+        .ff-offer-applied span {
+
+            color:
+                #24723d;
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+        }
+
+
+        .ff-offer-applied strong {
+
+            color:
+                #137b3c;
+        }
+
+
+        /* =================================================
+           GRAND TOTAL
+        ================================================== */
+
+        .ff-paid-summary {
+
+            display:
+                flex;
+
+            margin-bottom:
+                28px;
+
+            padding:
+                20px;
+
+            border-radius:
+                18px;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+
+            color:
+                #ffffff;
+
+            background:
+                var(--ff-dark);
+
+            text-align:
+                left;
+        }
+
+
+        .ff-paid-summary small {
+
+            display:
+                block;
+
+            margin-bottom:
+                4px;
+
+            opacity:
+                0.75;
+        }
+
+
+        .ff-paid-summary strong {
+
+            font-size:
+                26px;
+
+            font-weight:
+                900;
+        }
+
+
+        /* =================================================
+           ACTION BUTTONS
+        ================================================== */
 
         .ff-success-actions {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 13px;
+
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                13px;
         }
+
 
         .ff-success-button {
-            display: inline-flex;
-            min-height: 52px;
-            padding: 12px 23px;
-            border: 0;
-            border-radius: 30px;
-            align-items: center;
-            justify-content: center;
-            gap: 9px;
-            color: #ffffff;
-            background: var(--ff-red);
-            font-weight: 700;
-            text-decoration: none;
+
+            display:
+                inline-flex;
+
+            min-height:
+                52px;
+
+            padding:
+                12px 23px;
+
+            border:
+                0;
+
+            border-radius:
+                30px;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                9px;
+
+            color:
+                #ffffff;
+
+            background:
+                var(--ff-red);
+
+            font-weight:
+                700;
+
+            text-decoration:
+                none;
+
+            cursor:
+                pointer;
         }
+
 
         .ff-success-button:hover {
-            color: #ffffff;
-            background: var(--ff-red-dark);
+
+            color:
+                #ffffff;
+
+            background:
+                var(--ff-red-dark);
         }
+
 
         .ff-success-button.secondary {
-            color: var(--ff-dark);
-            background: #f1f2f4;
+
+            color:
+                var(--ff-dark);
+
+            background:
+                #f1f2f4;
         }
 
-        /* Modal */
+
+        /* =================================================
+           MODAL
+        ================================================== */
 
         .ff-ticket-modal .modal-content {
-            overflow: hidden;
-            border: 0;
-            border-radius: 28px;
+
+            overflow:
+                hidden;
+
+            border:
+                0;
+
+            border-radius:
+                28px;
         }
+
 
         .ff-ticket-modal-header {
-            padding: 24px 28px;
-            color: #ffffff;
-            background: var(--ff-red);
+
+            padding:
+                24px 28px;
+
+            color:
+                #ffffff;
+
+            background:
+                var(--ff-red);
         }
+
 
         .ff-ticket-modal-header h4 {
-            margin: 0;
-            font-weight: 800;
+
+            margin:
+                0;
+
+            font-weight:
+                800;
         }
+
 
         .ff-ticket-modal-body {
-            padding: 30px;
-            text-align: center;
+
+            padding:
+                30px;
+
+            text-align:
+                center;
         }
+
 
         .ff-ticket-qr {
-            width: 220px;
-            height: 220px;
-            margin: 0 auto 23px;
-            padding: 10px;
-            border: 1px solid var(--ff-border);
-            border-radius: 20px;
-            background: #ffffff;
+
+            width:
+                220px;
+
+            height:
+                220px;
+
+            margin:
+                0 auto 23px;
+
+            padding:
+                10px;
+
+            border:
+                1px solid
+                var(--ff-border);
+
+            border-radius:
+                20px;
+
+            background:
+                #ffffff;
         }
+
 
         .ff-ticket-qr img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+
+            width:
+                100%;
+
+            height:
+                100%;
+
+            object-fit:
+                contain;
         }
 
+
         .ff-ticket-id-box {
-            margin-bottom: 20px;
-            padding: 17px;
-            border-radius: 15px;
-            background: var(--ff-red-light);
+
+            margin-bottom:
+                15px;
+
+            padding:
+                17px;
+
+            border-radius:
+                15px;
+
+            background:
+                var(--ff-red-light);
         }
+
 
         .ff-ticket-id-box small,
         .ff-ticket-id-box strong {
-            display: block;
+
+            display:
+                block;
         }
+
 
         .ff-ticket-id-box small {
-            margin-bottom: 5px;
+
+            margin-bottom:
+                5px;
         }
+
 
         .ff-ticket-id-box strong {
-            overflow-wrap: anywhere;
-            color: var(--ff-red);
+
+            overflow-wrap:
+                anywhere;
+
+            color:
+                var(--ff-red);
         }
+
+
+        /* =================================================
+           MODAL RIDES
+        ================================================== */
+
+        .ff-modal-rides {
+
+            margin:
+                20px 0;
+
+            text-align:
+                left;
+        }
+
+
+        .ff-modal-ride {
+
+            display:
+                flex;
+
+            padding:
+                10px 0;
+
+            border-bottom:
+                1px solid
+                #eceef1;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                10px;
+        }
+
+
+        .ff-modal-ride:last-child {
+
+            border-bottom:
+                0;
+        }
+
+
+        .ff-modal-ride strong {
+
+            color:
+                var(--ff-dark);
+        }
+
+
+        /* =================================================
+           NOTIFICATION STATUS
+        ================================================== */
 
         .ff-notification-status {
-            display: flex;
-            margin: 22px 0;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
+
+            display:
+                flex;
+
+            margin:
+                22px 0;
+
+            justify-content:
+                center;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                10px;
         }
+
 
         .ff-status-pill {
-            display: inline-flex;
-            padding: 8px 12px;
-            border-radius: 30px;
-            align-items: center;
-            gap: 6px;
-            background: #f2f3f5;
-            font-size: 12px;
-            font-weight: 700;
+
+            display:
+                inline-flex;
+
+            padding:
+                8px 12px;
+
+            border-radius:
+                30px;
+
+            align-items:
+                center;
+
+            gap:
+                6px;
+
+            background:
+                #f2f3f5;
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
         }
+
 
         .ff-status-pill.sent {
-            color: #137b3c;
-            background: #e8f7ed;
+
+            color:
+                #137b3c;
+
+            background:
+                #e8f7ed;
         }
+
 
         .ff-status-pill.pending {
-            color: #876710;
-            background: #fff7d8;
+
+            color:
+                #876710;
+
+            background:
+                #fff7d8;
         }
 
-        @media (max-width: 575px) {
-            .ff-success-card {
-                padding: 35px 20px;
+
+        /* =================================================
+           MOBILE
+        ================================================== */
+
+        @media (
+            max-width:
+                575px
+        ) {
+
+            .ff-success-page {
+
+                padding:
+                    30px 12px;
             }
+
+
+            .ff-success-card {
+
+                padding:
+                    35px 18px;
+
+                border-radius:
+                    22px;
+            }
+
 
             .ff-success-card h1 {
-                font-size: 28px;
+
+                font-size:
+                    28px;
             }
+
 
             .ff-success-details {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    1fr;
             }
+
+
+            .ff-adventure-head {
+
+                flex-direction:
+                    column;
+            }
+
+
+            .ff-paid-summary {
+
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+
 
             .ff-success-button {
-                width: 100%;
+
+                width:
+                    100%;
             }
+
 
             .ff-ticket-modal-body {
-                padding: 23px 18px;
+
+                padding:
+                    23px 18px;
             }
 
+
             .ff-ticket-qr {
-                width: 190px;
-                height: 190px;
+
+                width:
+                    190px;
+
+                height:
+                    190px;
             }
         }
+
     </style>
 
 </head>
 
+
 <body>
+
 
 <main class="ff-success-page">
 
     <section class="ff-success-card">
 
+
+        <!-- =================================================
+             SUCCESS
+        ================================================== -->
+
         <div class="ff-success-icon">
+
             <i class="fas fa-check"></i>
+
         </div>
+
 
         <h1>
             Booking Confirmed!
         </h1>
 
+
         <p>
-            Your Flying Fox Adventure ticket has been generated.
-            Keep your QR ticket ready when you arrive at the venue.
+
+            Your Flying Fox Adventure booking has been
+            successfully confirmed.
+
+            Your QR ticket is valid for all adventures
+            included in this booking.
+
         </p>
+
+
+        <!-- =================================================
+             BOOKING DETAILS
+        ================================================== -->
 
         <div class="ff-success-details">
 
+
             <div class="ff-success-detail">
-              <small>Ticket Number</small>
-              <strong>#{{ ticket.ticket_number }}</strong>
+
+                <small>
+                    Ticket Number
+                </small>
+
+                <strong>
+                    #{{ ticket.ticket_number }}
+                </strong>
+
             </div>
 
 
             <div class="ff-success-detail">
-                <small>Booking ID</small>
-                <strong>{{ booking.booking_id }}</strong>
+
+                <small>
+                    Booking ID
+                </small>
+
+                <strong>
+                    {{ booking.booking_id }}
+                </strong>
+
             </div>
 
-            <div class="ff-success-detail">
-                <small>Ride</small>
-                <strong>{{ booking.ride.name }}</strong>
-            </div>
 
             <div class="ff-success-detail">
-                <small>Visit Date</small>
-                <strong>{{ booking.booking_date|date:"d M Y" }}</strong>
+
+                <small>
+                    Visit Date
+                </small>
+
+                <strong>
+                    {{ booking.booking_date|date:"d M Y" }}
+                </strong>
+
             </div>
 
-            <div class="ff-success-detail">
-                <small>Time Slot</small>
-                <strong>{{ booking.time_slot }}</strong>
-            </div>
 
             <div class="ff-success-detail">
-                <small>Total Paid</small>
-                <strong>₹{{ booking.total_amount }}</strong>
+
+                <small>
+                    Adventures
+                </small>
+
+                <strong>
+
+                    {{ ride_count }}
+
+                    Ride{{ ride_count|pluralize }}
+
+                </strong>
+
             </div>
+
+
+            <div class="ff-success-detail">
+
+                <small>
+                    Total Riders
+                </small>
+
+                <strong>
+
+                    {{ booking.quantity }}
+
+                    Rider{{ booking.quantity|pluralize }}
+
+                </strong>
+
+            </div>
+
+
+            <div class="ff-success-detail">
+
+                <small>
+                    Customer
+                </small>
+
+                <strong>
+                    {{ booking.customer_name }}
+                </strong>
+
+            </div>
+
 
         </div>
 
+
+        <!-- =================================================
+             SELECTED ADVENTURES
+        ================================================== -->
+
+        <div class="ff-adventures-section">
+
+
+            <div class="ff-adventures-title">
+
+                <h3>
+
+                    <i class="fas fa-person-falling"></i>
+
+                    Selected Adventures
+
+                </h3>
+
+
+                <span class="ff-adventures-count">
+
+                    {{ ride_count }}
+
+                    Adventure{{ ride_count|pluralize }}
+
+                </span>
+
+            </div>
+
+
+            {% for item in ride_items %}
+
+
+                <div class="ff-adventure-card">
+
+
+                    <!-- RIDE HEADER -->
+
+                    <div class="ff-adventure-head">
+
+
+                        <div>
+
+                            <h4>
+                                {{ item.ride.name }}
+                            </h4>
+
+
+                            <small>
+
+                                ₹{{ item.price_per_person }}
+
+                                ×
+
+                                {{ item.quantity }}
+
+                                rider{{ item.quantity|pluralize }}
+
+                            </small>
+
+                        </div>
+
+
+                        <div class="ff-adventure-total">
+
+                            ₹{{ item.total_amount }}
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =====================================
+                         WEIGHT GROUPS
+                    ====================================== -->
+
+                    {% if item.weight_groups.all %}
+
+                        <div class="ff-weight-groups">
+
+
+                            <div class="ff-weight-title">
+
+                                <i class="fas fa-weight-scale"></i>
+
+                                Participant Weight Details
+
+                            </div>
+
+
+                            {% for group in item.weight_groups.all %}
+
+                                <div class="ff-weight-row">
+
+                                    <span>
+                                        {{ group.label }}
+                                    </span>
+
+                                    <strong>
+
+                                        {{ group.participant_count }}
+
+                                        Rider{{ group.participant_count|pluralize }}
+
+                                    </strong>
+
+                                </div>
+
+                            {% endfor %}
+
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- =====================================
+                         OFFER
+                    ====================================== -->
+
+                    {% if item.offer %}
+
+                        <div class="ff-offer-applied">
+
+
+                            <span>
+
+                                <i class="fas fa-tag"></i>
+
+                                {{ item.offer.title }}
+
+                            </span>
+
+
+                            <strong>
+
+                                − ₹{{ item.discount_amount }}
+
+                            </strong>
+
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            {% empty %}
+
+
+                <div class="alert alert-warning">
+
+                    No ride information was found
+                    for this booking.
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+        <!-- =================================================
+             PAID TOTAL
+        ================================================== -->
+
+        <div class="ff-paid-summary">
+
+
+            <div>
+
+                <small>
+                    Total Paid
+                </small>
+
+                <span>
+                    Payment completed successfully
+                </span>
+
+            </div>
+
+
+            <strong>
+                ₹{{ booking.total_amount }}
+            </strong>
+
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
         <div class="ff-success-actions">
+
 
             <button
                 type="button"
@@ -366,33 +1441,49 @@
                 data-bs-toggle="modal"
                 data-bs-target="#ticketModal"
             >
+
                 <i class="fas fa-qrcode"></i>
+
                 View QR Ticket
+
             </button>
+
 
             <a
                 href="{% url 'download_ticket' ticket.ticket_id %}"
                 class="ff-success-button"
             >
+
                 <i class="fas fa-download"></i>
+
                 Download Ticket
+
             </a>
+
 
             <a
                 href="/"
                 class="ff-success-button secondary"
             >
+
                 <i class="fas fa-house"></i>
+
                 Return Home
+
             </a>
 
+
         </div>
+
 
     </section>
 
 </main>
 
-<!-- Ticket modal -->
+
+<!-- =====================================================
+     TICKET MODAL
+====================================================== -->
 
 <div
     class="modal fade ff-ticket-modal"
@@ -401,17 +1492,33 @@
     aria-labelledby="ticketModalLabel"
     aria-hidden="true"
 >
+
     <div class="modal-dialog modal-dialog-centered">
+
 
         <div class="modal-content">
 
+
+            <!-- HEADER -->
+
             <div class="ff-ticket-modal-header">
 
-                <div class="d-flex align-items-center justify-content-between">
+
+                <div
+                    class="
+                        d-flex
+                        align-items-center
+                        justify-content-between
+                    "
+                >
+
 
                     <h4 id="ticketModalLabel">
+
                         Your Flying Fox Ticket
+
                     </h4>
+
 
                     <button
                         type="button"
@@ -420,100 +1527,286 @@
                         aria-label="Close"
                     ></button>
 
+
                 </div>
+
 
             </div>
 
+
+            <!-- BODY -->
+
             <div class="ff-ticket-modal-body">
+
 
                 {% if ticket.qr_image %}
 
+
                     <div class="ff-ticket-qr">
+
                         <img
                             src="{{ ticket.qr_image.url }}"
                             alt="Flying Fox ticket QR code"
                         >
+
                     </div>
+
 
                 {% endif %}
 
-                <div class="ff-ticket-id-box">
-                    <small>Ticket Number</small>
-                    <strong>#{{ ticket.ticket_number }}</strong>
-                </div>
+
+                <!-- TICKET NUMBER -->
 
                 <div class="ff-ticket-id-box">
-                    <small>Booking ID</small>
-                    <strong>{{ booking.booking_id }}</strong>
+
+                    <small>
+                        Ticket Number
+                    </small>
+
+                    <strong>
+                        #{{ ticket.ticket_number }}
+                    </strong>
+
                 </div>
+
+
+                <!-- BOOKING ID -->
+
+                <div class="ff-ticket-id-box">
+
+                    <small>
+                        Booking ID
+                    </small>
+
+                    <strong>
+                        {{ booking.booking_id }}
+                    </strong>
+
+                </div>
+
+
+                <!-- VISIT DATE -->
+
+                <div class="ff-ticket-id-box">
+
+                    <small>
+                        Visit Date
+                    </small>
+
+                    <strong>
+                        {{ booking.booking_date|date:"d M Y" }}
+                    </strong>
+
+                </div>
+
+
+                <!-- RIDES -->
+
+                <div class="ff-modal-rides">
+
+
+                    {% for item in ride_items %}
+
+                        <div class="ff-modal-ride">
+
+
+                            <strong>
+                                {{ item.ride.name }}
+                            </strong>
+
+
+                            <span>
+
+                                {{ item.quantity }}
+
+                                rider{{ item.quantity|pluralize }}
+
+                            </span>
+
+
+                        </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+
+                <!-- =================================================
+                     NOTIFICATION STATUS
+                ================================================== -->
 
                 <div class="ff-notification-status">
 
-                    <span class="ff-status-pill {% if ticket.email_sent %}sent{% else %}pending{% endif %}">
+
+                    <!-- EMAIL -->
+
+                    <span
+                        class="
+                            ff-status-pill
+                            {% if ticket.email_sent %}
+                                sent
+                            {% else %}
+                                pending
+                            {% endif %}
+                        "
+                    >
+
                         <i class="fas fa-envelope"></i>
 
+
                         {% if ticket.email_sent %}
+
                             Email Sent
+
                         {% else %}
+
                             Email Pending
+
                         {% endif %}
+
+
                     </span>
 
-                    <span class="ff-status-pill {% if ticket.whatsapp_sent %}sent{% else %}pending{% endif %}">
+
+                    <!-- WHATSAPP -->
+
+                    <span
+                        class="
+                            ff-status-pill
+                            {% if ticket.whatsapp_sent %}
+                                sent
+                            {% else %}
+                                pending
+                            {% endif %}
+                        "
+                    >
+
                         <i class="fab fa-whatsapp"></i>
 
+
                         {% if ticket.whatsapp_sent %}
+
                             WhatsApp Sent
+
                         {% else %}
+
                             WhatsApp Setup Pending
+
                         {% endif %}
+
+
                     </span>
 
-                    <span class="ff-status-pill {% if ticket.sms_sent %}sent{% else %}pending{% endif %}">
+
+                    <!-- SMS -->
+
+                    <span
+                        class="
+                            ff-status-pill
+                            {% if ticket.sms_sent %}
+                                sent
+                            {% else %}
+                                pending
+                            {% endif %}
+                        "
+                    >
+
                         <i class="fas fa-comment-sms"></i>
 
+
                         {% if ticket.sms_sent %}
+
                             SMS Sent
+
                         {% else %}
+
                             SMS Setup Pending
+
                         {% endif %}
+
+
                     </span>
 
+
                 </div>
+
+
+                <!-- DOWNLOAD -->
 
                 <a
                     href="{% url 'download_ticket' ticket.ticket_id %}"
                     class="ff-success-button"
                 >
+
                     <i class="fas fa-download"></i>
+
                     Download PDF Ticket
+
                 </a>
+
 
             </div>
 
+
         </div>
 
+
     </div>
+
 </div>
+
+
+<!-- =====================================================
+     BOOTSTRAP
+====================================================== -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
 ></script>
 
+
+<!-- =====================================================
+     AUTO OPEN TICKET MODAL
+====================================================== -->
+
 {% if show_ticket_modal %}
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const modalElement = document.getElementById("ticketModal");
 
-    if (!modalElement) {
-        return;
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const modalElement =
+            document.getElementById(
+                "ticketModal"
+            );
+
+
+        if (!modalElement) {
+
+            return;
+
+        }
+
+
+        const ticketModal =
+            new bootstrap.Modal(
+                modalElement
+            );
+
+
+        ticketModal.show();
+
     }
+);
 
-    const ticketModal = new bootstrap.Modal(modalElement);
-    ticketModal.show();
-});
 </script>
+
 {% endif %}
 
+
 </body>
+
 </html>

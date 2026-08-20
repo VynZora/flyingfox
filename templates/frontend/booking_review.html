@@ -1967,7 +1967,270 @@
 }
        {% comment %} error message modal end  {% endcomment %}
 
-      </style>
+      
+
+        /* =========================================================
+           MULTI-RIDE REVIEW ADDITIONS
+        ========================================================= */
+
+        .ff-summary-heading-row {
+            display: flex;
+            margin-bottom: 18px;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .ff-summary-heading-row h3 {
+            margin-bottom: 4px;
+        }
+
+        .ff-summary-heading-row p {
+            margin: 0;
+            color: var(--ff-muted);
+            font-size: 10px;
+            line-height: 1.55;
+        }
+
+        .ff-adventure-count-badge {
+            display: inline-flex;
+            flex: 0 0 auto;
+            padding: 7px 11px;
+            border-radius: 20px;
+            color: var(--ff-red);
+            background: var(--ff-red-light);
+            font-size: 9px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .ff-multi-ride-review-item {
+            margin-bottom: 18px;
+            padding: 18px;
+            border: 1px solid var(--ff-border);
+            border-radius: 17px;
+            background: #ffffff;
+            box-shadow: 0 7px 22px rgba(25, 39, 54, 0.035);
+        }
+
+        .ff-multi-ride-review-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .ff-ride-review-top {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .ff-ride-review-number {
+            display: flex;
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            background: var(--ff-red);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .ff-ride-review-title {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .ff-ride-review-title small,
+        .ff-ride-review-title strong,
+        .ff-ride-review-title span,
+        .ff-ride-review-subtotal small,
+        .ff-ride-review-subtotal strong {
+            display: block;
+        }
+
+        .ff-ride-review-title small {
+            margin-bottom: 2px;
+            color: var(--ff-muted);
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .ff-ride-review-title strong {
+            color: var(--ff-dark);
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .ff-ride-review-title span {
+            margin-top: 4px;
+            color: var(--ff-text);
+            font-size: 10px;
+        }
+
+        .ff-ride-review-subtotal {
+            flex: 0 0 auto;
+            text-align: right;
+        }
+
+        .ff-ride-review-subtotal small {
+            margin-bottom: 3px;
+            color: var(--ff-muted);
+            font-size: 8px;
+        }
+
+        .ff-ride-review-subtotal strong {
+            color: var(--ff-red);
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .ff-review-item-total {
+            display: flex;
+            margin-top: 15px;
+            padding-top: 14px;
+            border-top: 1px solid #eceef1;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .ff-review-item-total span {
+            color: var(--ff-dark);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .ff-review-item-total strong {
+            color: var(--ff-red);
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .ff-regular-ticket-row {
+            display: flex;
+            margin-top: 16px;
+            padding: 13px 14px;
+            border: 1px solid #e8ebee;
+            border-radius: 13px;
+            align-items: center;
+            background: #f8f9fa;
+        }
+
+        .ff-regular-ticket-row span,
+        .ff-regular-ticket-row small {
+            display: block;
+        }
+
+        .ff-regular-ticket-row span {
+            color: var(--ff-dark);
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .ff-regular-ticket-row span i {
+            margin-right: 5px;
+            color: var(--ff-red);
+        }
+
+        .ff-regular-ticket-row small {
+            margin-top: 3px;
+            color: var(--ff-muted);
+            font-size: 9px;
+        }
+
+        .ff-empty-review-state {
+            padding: 30px 18px;
+            border: 1px dashed var(--ff-border);
+            border-radius: 15px;
+            text-align: center;
+            background: #ffffff;
+        }
+
+        .ff-empty-review-state i {
+            margin-bottom: 10px;
+            color: var(--ff-red);
+            font-size: 24px;
+        }
+
+        .ff-empty-review-state strong,
+        .ff-empty-review-state p {
+            display: block;
+        }
+
+        .ff-empty-review-state strong {
+            color: var(--ff-dark);
+            font-size: 13px;
+        }
+
+        .ff-empty-review-state p {
+            margin: 5px 0 0;
+            color: var(--ff-muted);
+            font-size: 10px;
+        }
+
+        @media (max-width: 575px) {
+            .ff-summary-heading-row,
+            .ff-ride-review-top {
+                align-items: flex-start;
+            }
+
+            .ff-summary-heading-row {
+                flex-direction: column;
+            }
+
+            .ff-ride-review-top {
+                flex-wrap: wrap;
+            }
+
+            .ff-ride-review-subtotal {
+                width: 100%;
+                padding-left: 51px;
+                text-align: left;
+            }
+
+            .ff-multi-ride-review-item {
+                padding: 14px;
+            }
+        }
+
+
+
+
+        {% comment %}  {% endcomment %}
+.ff-billing-card {
+    position: sticky;
+    top: 24px;
+    align-self: flex-start;
+    height: auto; /* was height: 100% */
+}
+
+.ff-review-card {
+    height: auto; /* was height: 100% — JS will set this explicitly */
+    display: flex;
+    flex-direction: column;
+}
+
+
+.ff-review-scroll-area {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0; /* without this, flex children refuse to scroll */
+}
+
+@media (max-width: 991px) {
+    .ff-billing-card {
+        position: static;
+    }
+    .ff-review-scroll-area {
+        overflow: visible;
+    }
+}
+        {% comment %}  {% endcomment %}
+</style>
 
 </head>
 
@@ -2025,7 +2288,7 @@
 
 
 
-        <div class="row g-4 align-items-stretch">
+        <div class="row g-4 align-items-start">
 
 
             <!-- =================================================
@@ -2035,6 +2298,8 @@
             <div class="col-lg-6">
 
                 <section class="ff-review-card">
+
+                  <div class="ff-review-scroll-area">
 
 
                     <div class="ff-card-body">
@@ -2066,395 +2331,238 @@
 
 
                         <!-- =====================================
-                             DATE / TIME / RIDERS
+                             DATE / ADVENTURES / RIDERS
                         ====================================== -->
 
                         <div class="ff-overview-grid">
 
-
                             <!-- DATE -->
-
                             <div class="ff-overview-item">
-
                                 <div class="ff-overview-icon">
-
                                     <i class="fas fa-calendar-days"></i>
-
                                 </div>
-
-                                <small>
-                                    Date of Visit
-                                </small>
-
-                                <strong>
-                                    {{ booking_data.booking_date }}
-                                </strong>
-
+                                <small>Date of Visit</small>
+                                <strong>{{ booking_data.booking_date }}</strong>
+                                <span>One visit date for all selected adventures</span>
                             </div>
 
-
-
-                            <!-- TIME -->
-
+                            <!-- ADVENTURES -->
                             <div class="ff-overview-item">
-
                                 <div class="ff-overview-icon">
-
-                                    <i class="fas fa-clock"></i>
-
+                                    <i class="fas fa-person-falling"></i>
                                 </div>
-
-                                <small>
-                                    Time Slot
-                                </small>
-
-                                <strong>
-                                    {{ booking_data.time_slot }}
-                                </strong>
-
+                                <small>Adventures</small>
+                                <strong>{{ booking_data.items|length }}</strong>
+                                <span>Selected ride{{ booking_data.items|length|pluralize }}</span>
                             </div>
-
-
 
                             <!-- RIDERS -->
-
                             <div class="ff-overview-item">
-
                                 <div class="ff-overview-icon">
-
                                     <i class="fas fa-users"></i>
-
                                 </div>
-
-                                <small>
-                                    Total Riders
-                                </small>
-
-                                <strong>
-                                    {{ booking_data.quantity }}
-                                </strong>
-
-                                <span>
-                                    Total participants for this booking
-                                </span>
-
+                                <small>Total Rider Entries</small>
+                                <strong>{{ booking_data.quantity }}</strong>
+                                <span>Total participants across all selected rides</span>
                             </div>
-
 
                         </div>
 
 
-
                         <!-- =====================================
-                             BOOKING SUMMARY
+                             MULTI-RIDE BOOKING SUMMARY
                         ====================================== -->
 
                         <div class="ff-ticket-summary">
 
-
-                            <h3>
-                                Booking Summary
-                            </h3>
-
-
-
-                            <!-- =================================
-                                 SELECTED RIDE
-                            ================================== -->
-
-                            <div class="ff-review-product-row">
-
+                            <div class="ff-summary-heading-row">
                                 <div>
-
-                                    <strong>
-                                        {{ booking_data.ride_name }}
-                                    </strong>
-
-
-                                    <small>
-
-                                        ₹{{ booking_data.price_per_person }}
-
-                                        ×
-
-                                        {{ booking_data.quantity }}
-
-                                        rider{{ booking_data.quantity|pluralize }}
-
-                                    </small>
-
+                                    <h3>Booking Summary</h3>
+                                    <p>Review every adventure, participant group and offer before payment.</p>
                                 </div>
-
-
-                                <b>
-                                    ₹{{ booking_data.participant_subtotal }}
-                                </b>
-
+                                <span class="ff-adventure-count-badge">
+                                    {{ booking_data.items|length }} Adventure{{ booking_data.items|length|pluralize }}
+                                </span>
                             </div>
 
+                            {% for item in booking_data.items %}
 
+                                <article class="ff-multi-ride-review-item">
 
-                            <!-- =================================
-                                 PARTICIPANT WEIGHT DETAILS
-                            ================================== -->
-
-                            {% if booking_data.weight_groups %}
-
-                                <div class="ff-weight-review-section">
-
-
-                                    <div class="ff-weight-review-heading">
-
-                                        <span>
-
-                                            <i class="fas fa-weight-scale"></i>
-
-                                        </span>
-
-
-                                        <div>
-
-                                            <strong>
-                                                Participant Weight Details
-                                            </strong>
-
-                                            <small>
-                                                Selected rider weight groups
-                                            </small>
-
+                                    <div class="ff-ride-review-top">
+                                        <div class="ff-ride-review-number">
+                                            {{ forloop.counter }}
                                         </div>
 
+                                        <div class="ff-ride-review-title">
+                                            <small>Adventure {{ forloop.counter }}</small>
+                                            <strong>{{ item.ride_name }}</strong>
+                                            <span>
+                                                ₹{{ item.price_per_person }} × {{ item.quantity }}
+                                                rider{{ item.quantity|pluralize }}
+                                            </span>
+                                        </div>
+
+                                        <div class="ff-ride-review-subtotal">
+                                            <small>Subtotal</small>
+                                            <strong>₹{{ item.subtotal }}</strong>
+                                        </div>
                                     </div>
 
 
+                                    <!-- PARTICIPANT WEIGHT DETAILS -->
+                                    {% if item.weight_groups %}
 
-                                    <div class="ff-weight-review-list">
+                                        <div class="ff-weight-review-section">
 
-
-                                        {% for group in booking_data.weight_groups %}
-
-                                            <div class="ff-weight-review-row">
-
+                                            <div class="ff-weight-review-heading">
                                                 <span>
-                                                    {{ group.label }}
+                                                    <i class="fas fa-weight-scale"></i>
                                                 </span>
 
+                                                <div>
+                                                    <strong>Participant Weight Details</strong>
+                                                    <small>{{ item.ride_name }}</small>
+                                                </div>
+                                            </div>
 
-                                                <strong>
+                                            <div class="ff-weight-review-list">
 
-                                                    {{ group.participant_count }}
+                                                {% for group in item.weight_groups %}
+                                                    <div class="ff-weight-review-row">
+                                                        <span>{{ group.label }}</span>
+                                                        <strong>
+                                                            {{ group.participant_count }}
+                                                            Rider{{ group.participant_count|pluralize }}
+                                                        </strong>
+                                                    </div>
+                                                {% endfor %}
 
-                                                    Rider{{ group.participant_count|pluralize }}
-
-                                                </strong>
+                                                <div class="ff-weight-review-total">
+                                                    <span>Ride Participants</span>
+                                                    <strong>
+                                                        {{ item.quantity }}
+                                                        Rider{{ item.quantity|pluralize }}
+                                                    </strong>
+                                                </div>
 
                                             </div>
 
-                                        {% endfor %}
+                                        </div>
+
+                                    {% endif %}
 
 
+                                    <!-- OFFER -->
+                                    {% if item.offer_id %}
 
-                                        <div class="ff-weight-review-total">
+                                        <div class="ff-review-offer-row">
 
-                                            <span>
-                                                Total Riders
-                                            </span>
+                                            <div>
+                                                <span class="ff-review-offer-label">
+                                                    <i class="fas fa-tag"></i>
+                                                    Offer Applied
+                                                </span>
 
-                                            <strong>
+                                                <strong>{{ item.offer_title }}</strong>
 
-                                                {{ booking_data.quantity }}
+                                                {% if item.offer_label %}
+                                                    <small>{{ item.offer_label }}</small>
+                                                {% endif %}
 
-                                                Rider{{ booking_data.quantity|pluralize }}
+                                                {% if item.coupon_code %}
+                                                    <small>
+                                                        Coupon:
+                                                        <b>{{ item.coupon_code }}</b>
+                                                    </small>
+                                                {% endif %}
+                                            </div>
 
+                                            <strong class="ff-review-saving">
+                                                − ₹{{ item.discount_amount }}
                                             </strong>
 
                                         </div>
 
+                                    {% else %}
 
+                                        <div class="ff-regular-ticket-row">
+                                            <div>
+                                                <span>
+                                                    <i class="fas fa-ticket"></i>
+                                                    Regular Ticket
+                                                </span>
+                                                <small>No promotional offer applied to this ride.</small>
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- ITEM TOTAL -->
+                                    <div class="ff-review-item-total">
+                                        <span>Ride Total</span>
+                                        <strong>₹{{ item.total_amount }}</strong>
                                     </div>
 
+                                </article>
 
+                            {% empty %}
+
+                                <div class="ff-empty-review-state">
+                                    <i class="fas fa-circle-exclamation"></i>
+                                    <strong>No adventures found</strong>
+                                    <p>Please return to the booking page and add at least one ride.</p>
                                 </div>
 
-                            {% endif %}
-
-
-
-                            <!-- =================================
-                                 OFFER
-                            ================================== -->
-
-                            {% if booking_data.offer_id %}
-
-                                <div class="ff-review-offer-row">
-
-                                    <div>
-
-
-                                        <span class="ff-review-offer-label">
-
-                                            <i class="fas fa-tag"></i>
-
-                                            Offer Applied
-
-                                        </span>
-
-
-                                        <strong>
-
-                                            {{ booking_data.offer_title }}
-
-                                        </strong>
-
-
-                                        {% if booking_data.offer_label %}
-
-                                            <small>
-
-                                                {{ booking_data.offer_label }}
-
-                                            </small>
-
-                                        {% endif %}
-
-
-                                        {% if booking_data.coupon_code %}
-
-                                            <small>
-
-                                                Coupon:
-
-                                                <b>
-                                                    {{ booking_data.coupon_code }}
-                                                </b>
-
-                                            </small>
-
-                                        {% endif %}
-
-
-                                    </div>
-
-
-                                    <strong class="ff-review-saving">
-
-                                        − ₹{{ booking_data.discount_amount }}
-
-                                    </strong>
-
-                                </div>
-
-                            {% endif %}
-
+                            {% endfor %}
 
                         </div>
-
 
                     </div>
 
 
-
                     <!-- =========================================
-                         PRICE SUMMARY
+                         COMBINED PRICE SUMMARY
                     ========================================== -->
 
                     <div class="ff-price-summary">
 
-
-                        <!-- RIDE TOTAL -->
-
                         <div class="ff-price-row">
-
-                            <span>
-                                Ride Total
-                            </span>
-
-
-                            <strong>
-
-                                ₹{{ booking_data.participant_subtotal }}
-
-                            </strong>
-
+                            <span>Adventures</span>
+                            <strong>{{ booking_data.items|length }}</strong>
                         </div>
 
-
-
-                        <!-- SUBTOTAL -->
-
                         <div class="ff-price-row">
-
-                            <span>
-                                Subtotal
-                            </span>
-
-
-                            <strong>
-
-                                ₹{{ booking_data.subtotal }}
-
-                            </strong>
-
+                            <span>Total Rider Entries</span>
+                            <strong>{{ booking_data.quantity }}</strong>
                         </div>
 
+                        <div class="ff-price-row">
+                            <span>Subtotal</span>
+                            <strong>₹{{ booking_data.subtotal }}</strong>
+                        </div>
 
-
-                        <!-- OFFER DISCOUNT -->
-
-                        {% if booking_data.offer_id %}
-
-                            <div class="ff-price-row discount">
-
-                                <span>
-
-                                    Offer Discount
-
-                                    <small>
-
-                                        {{ booking_data.offer_title }}
-
-                                    </small>
-
-                                </span>
-
-
-                                <strong>
-
-                                    − ₹{{ booking_data.discount_amount }}
-
-                                </strong>
-
-                            </div>
-
-                        {% endif %}
-
-
-
-                        <!-- GRAND TOTAL -->
+                        <div class="ff-price-row discount">
+                            <span>
+                                Total Offer Discount
+                                <small>Combined savings from all eligible ride offers</small>
+                            </span>
+                            <strong>− ₹{{ booking_data.discount_amount }}</strong>
+                        </div>
 
                         <div class="ff-grand-total">
-
-                            <span>
-                                Grand Total
-                            </span>
-
-
-                            <strong>
-
-                                ₹{{ booking_data.total_amount }}
-
-                            </strong>
-
+                            <span>Grand Total</span>
+                            <strong>₹{{ booking_data.total_amount }}</strong>
                         </div>
-
 
                     </div>
 
+                 </div>  
 
                 </section>
 
             </div>
-
 
 
             <!-- =================================================
@@ -3802,6 +3910,28 @@ if (phoneError) {
 
     }
 );
+
+
+
+
+
+
+
+function syncReviewCardHeight() {
+    const billingCard = document.querySelector('.ff-billing-card');
+    const reviewCard = document.querySelector('.ff-review-card');
+    if (!billingCard || !reviewCard) return;
+
+    if (window.innerWidth >= 992) {
+        reviewCard.style.height = billingCard.offsetHeight + 'px';
+    } else {
+        reviewCard.style.height = 'auto';
+    }
+}
+
+syncReviewCardHeight();
+window.addEventListener('load', syncReviewCardHeight);
+window.addEventListener('resize', syncReviewCardHeight);
 
 </script>
 

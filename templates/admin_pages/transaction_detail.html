@@ -330,17 +330,31 @@ Transaction Details | FlyingFox Admin
             </div>
 
 
-            <div class="info-row">
+<div class="info-row">
 
-                <span>
-                    Ride
-                </span>
+    <span>
+        Rides
+    </span>
 
-                <strong>
-                    {{ booking.ride.name }}
-                </strong>
+    <strong class="multi-value">
 
-            </div>
+        {% for item in ride_items %}
+
+            {{ item.ride.name }}
+
+            {% if not forloop.last %}
+                <br>
+            {% endif %}
+
+        {% empty %}
+
+            -
+
+        {% endfor %}
+
+    </strong>
+
+</div>
 
 
             <div class="info-row">
@@ -369,17 +383,17 @@ Transaction Details | FlyingFox Admin
             </div>
 
 
-            <div class="info-row">
+<div class="info-row">
 
-                <span>
-                    Riders
-                </span>
+    <span>
+        Total Riders
+    </span>
 
-                <strong>
-                    {{ booking.quantity }}
-                </strong>
+    <strong>
+        {{ total_participants }}
+    </strong>
 
-            </div>
+</div>
 
 
             {% comment %} <a
@@ -404,80 +418,69 @@ Transaction Details | FlyingFox Admin
          PRICE / OFFER
     ================================================== -->
 
-    <div class="detail-grid mt-4">
+    <!-- =================================================
+     PRICE / RIDE BREAKDOWN
+================================================== -->
+
+<div class="detail-grid mt-4">
 
 
-        <div class="detail-card">
+    <!-- =================================================
+         PRICE BREAKDOWN
+    ================================================== -->
 
-            <h5>
-                Price Breakdown
-            </h5>
+    <div class="detail-card">
 
-
-            <div class="info-row">
-
-                <span>
-                    Price / Rider
-                </span>
-
-                <strong>
-                    ₹{{ booking.price_per_person }}
-                </strong>
-
-            </div>
+        <h5>
+            Price Breakdown
+        </h5>
 
 
-            <div class="info-row">
+        {% for item in ride_items %}
 
-                <span>
-                    Riders
-                </span>
+            <div class="ride-price-block">
 
-                <strong>
-                    {{ booking.quantity }}
-                </strong>
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span>
-                    Subtotal
-                </span>
-
-                <strong>
-                    ₹{{ booking.subtotal }}
-                </strong>
-
-            </div>
-
-
-            {% if booking.offer %}
-
-                <div class="info-row">
-
-                    <span>
-                        Offer
-                    </span>
+                <div class="ride-price-header">
 
                     <strong>
-                        {{ booking.offer.title }}
+                        {{ item.ride.name }}
                     </strong>
+
+                    <span>
+                        {{ item.quantity }}
+                        Rider{{ item.quantity|pluralize }}
+                    </span>
 
                 </div>
 
 
-                {% if booking.applied_coupon_code %}
+                {% if item.ride_price %}
 
                     <div class="info-row">
 
                         <span>
-                            Coupon
+                            Ride Price
                         </span>
 
                         <strong>
-                            {{ booking.applied_coupon_code }}
+                            ₹{{ item.ride_price }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if item.offer %}
+
+                    <div class="info-row">
+
+                        <span>
+                            Offer
+                        </span>
+
+                        <strong>
+                            {{ item.offer.title }}
                         </strong>
 
                     </div>
@@ -488,60 +491,84 @@ Transaction Details | FlyingFox Admin
                 <div class="info-row">
 
                     <span>
-                        Discount
+                        Ride Total
                     </span>
 
-                    <strong class="discount-text">
-                        - ₹{{ booking.discount_amount }}
+                    <strong class="price-text">
+                        ₹{{ item.total_amount|default:"0" }}
                     </strong>
 
                 </div>
 
-            {% else %}
+            </div>
 
-                <div class="info-row">
 
-                    <span>
-                        Offer
-                    </span>
+            {% if not forloop.last %}
 
-                    <strong>
-                        No Offer
-                    </strong>
-
-                </div>
+                <hr class="ride-divider">
 
             {% endif %}
 
 
-            <div class="info-row total-row">
+        {% empty %}
 
-                <span>
-                    Total Paid
-                </span>
+            <p class="text-muted mb-0">
+                No ride items found.
+            </p>
 
-                <strong>
-                    ₹{{ booking.total_amount }}
-                </strong>
+        {% endfor %}
 
-            </div>
+
+        <div class="info-row">
+
+            <span>
+                Total Riders
+            </span>
+
+            <strong>
+                {{ total_participants }}
+            </strong>
 
         </div>
 
 
+        <div class="info-row total-row">
 
-        <!-- =================================================
-             PARTICIPANTS
-        ================================================== -->
+            <span>
+                Total Paid
+            </span>
 
-        <div class="detail-card">
+            <strong>
+                ₹{{ total_amount }}
+            </strong>
 
-            <h5>
-                Participant Weight Groups
-            </h5>
+        </div>
+
+    </div>
 
 
-            {% for group in booking.weight_groups.all %}
+    <!-- =================================================
+         PARTICIPANTS
+    ================================================== -->
+
+    <div class="detail-card">
+
+        <h5>
+            Participant Weight Groups
+        </h5>
+
+
+        {% for item in ride_items %}
+
+
+            <div class="weight-ride-title">
+
+                {{ item.ride.name }}
+
+            </div>
+
+
+            {% for group in item.weight_groups.all %}
 
                 <div class="weight-row">
 
@@ -552,10 +579,12 @@ Transaction Details | FlyingFox Admin
                         </strong>
 
                         <small>
+
                             {{ group.min_weight }}
                             -
                             {{ group.max_weight }}
                             KG
+
                         </small>
 
                     </div>
@@ -574,29 +603,46 @@ Transaction Details | FlyingFox Admin
 
             {% empty %}
 
-                <p class="text-muted">
-                    No participant weight details.
+                <p class="text-muted small">
+                    No weight details for this ride.
                 </p>
 
             {% endfor %}
 
 
-            <div class="weight-total">
+            {% if not forloop.last %}
 
-                <span>
-                    Total Riders
-                </span>
+                <hr class="ride-divider">
 
-                <strong>
-                    {{ booking.quantity }}
-                </strong>
+            {% endif %}
 
-            </div>
+
+        {% empty %}
+
+            <p class="text-muted">
+                No participant weight details.
+            </p>
+
+        {% endfor %}
+
+
+        <div class="weight-total">
+
+            <span>
+                Total Riders
+            </span>
+
+            <strong>
+                {{ total_participants }}
+            </strong>
 
         </div>
 
 
     </div>
+
+
+</div>
 
 
 
@@ -1148,6 +1194,51 @@ Transaction Details | FlyingFox Admin
     }
 
 }
+
+
+
+
+.ride-price-block {
+    padding: 4px 0;
+}
+
+.ride-price-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 6px;
+}
+
+.ride-price-header strong {
+    color: #1f2937;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.ride-price-header span {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.ride-divider {
+    margin: 14px 0;
+    border: 0;
+    border-top: 1px solid #f3f4f6;
+}
+
+.weight-ride-title {
+    margin: 8px 0 10px;
+    color: #1f2937;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.multi-value {
+    line-height: 1.7;
+}
+
 
 </style>
 

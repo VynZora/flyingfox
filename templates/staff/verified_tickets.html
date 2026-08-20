@@ -6,12 +6,10 @@ Verified Tickets | Flying Fox
 {% endblock %}
 
 
-
 {% block content %}
 
 
 <div class="verified-header">
-
 
     <div>
 
@@ -37,10 +35,13 @@ Verified Tickets | Flying Fox
 
     </a>
 
-
 </div>
 
 
+
+<!-- =====================================================
+     SEARCH / FILTER
+===================================================== -->
 
 <form
     method="GET"
@@ -75,13 +76,19 @@ Verified Tickets | Flying Fox
     <a
         href="{% url 'verified_ticket_list' %}"
     >
+
         Clear
+
     </a>
 
 
 </form>
 
 
+
+<!-- =====================================================
+     VERIFIED TICKETS
+===================================================== -->
 
 <div class="verified-card">
 
@@ -104,7 +111,7 @@ Verified Tickets | Flying Fox
                     </th>
 
                     <th>
-                        Ride
+                        Rides
                     </th>
 
                     <th>
@@ -135,6 +142,11 @@ Verified Tickets | Flying Fox
 
                     <tr>
 
+
+                        <!-- =================================
+                             TICKET NUMBER
+                        ================================== -->
+
                         <td>
 
                             <strong class="ticket-no">
@@ -145,6 +157,11 @@ Verified Tickets | Flying Fox
 
                         </td>
 
+
+
+                        <!-- =================================
+                             CUSTOMER
+                        ================================== -->
 
                         <td>
 
@@ -163,12 +180,62 @@ Verified Tickets | Flying Fox
                         </td>
 
 
+
+                        <!-- =================================
+                             RIDES
+                        ================================== -->
+
                         <td>
 
-                            {{ ticket.booking.ride.name }}
+                            {% if ticket.booking.ride_items.all %}
+
+                                <div class="ride-list">
+
+                                    {% for item in ticket.booking.ride_items.all %}
+
+                                        <div class="ride-item">
+
+                                            <strong>
+                                                {{ item.ride.name }}
+                                            </strong>
+
+                                            {% if item.offer %}
+
+                                                <small class="ride-offer">
+
+                                                    {{ item.offer.name }}
+
+                                                </small>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    {% empty %}
+
+                                        <span class="muted-text">
+                                            No rides
+                                        </span>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% else %}
+
+                                <span class="muted-text">
+                                    No rides
+                                </span>
+
+                            {% endif %}
 
                         </td>
 
+
+
+                        <!-- =================================
+                             VISIT DATE
+                        ================================== -->
 
                         <td>
 
@@ -177,25 +244,80 @@ Verified Tickets | Flying Fox
                         </td>
 
 
+
+                        <!-- =================================
+                             TOTAL RIDERS
+                        ================================== -->
+
                         <td>
 
-                            {{ ticket.booking.quantity }}
+                            {% if ticket.booking.ride_items.all %}
+
+                                <div class="rider-list">
+
+                                    {% for item in ticket.booking.ride_items.all %}
+
+                                        <div class="rider-row">
+
+                                            <span>
+                                                {{ item.ride.name }}
+                                            </span>
+
+                                            <strong>
+                                                {{ item.quantity }}
+                                            </strong>
+
+                                        </div>
+
+                                    {% empty %}
+
+                                        <span>
+                                            0
+                                        </span>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% else %}
+
+                                0
+
+                            {% endif %}
 
                         </td>
 
 
+
+                        <!-- =================================
+                             CHECKED IN TIME
+                        ================================== -->
+
                         <td>
 
-                            {{ ticket.checked_in_at|date:"d M Y" }}
+                            {% if ticket.checked_in_at %}
 
-                            <small>
+                                {{ ticket.checked_in_at|date:"d M Y" }}
 
-                                {{ ticket.checked_in_at|date:"h:i A" }}
+                                <small>
 
-                            </small>
+                                    {{ ticket.checked_in_at|date:"h:i A" }}
+
+                                </small>
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
 
                         </td>
 
+
+
+                        <!-- =================================
+                             STATUS
+                        ================================== -->
 
                         <td>
 
@@ -209,10 +331,12 @@ Verified Tickets | Flying Fox
 
                         </td>
 
+
                     </tr>
 
 
                 {% empty %}
+
 
                     <tr>
 
@@ -220,10 +344,17 @@ Verified Tickets | Flying Fox
                             colspan="7"
                             class="empty"
                         >
-                            No verified tickets found.
+
+                            <i class="fas fa-ticket-alt"></i>
+
+                            <div>
+                                No verified tickets found.
+                            </div>
+
                         </td>
 
                     </tr>
+
 
                 {% endfor %}
 
@@ -240,6 +371,10 @@ Verified Tickets | Flying Fox
 
 
 
+<!-- =====================================================
+     PAGINATION
+===================================================== -->
+
 {% if tickets.has_other_pages %}
 
     <nav class="mt-4">
@@ -255,7 +390,9 @@ Verified Tickets | Flying Fox
                         class="page-link"
                         href="?page={{ tickets.previous_page_number }}&search={{ search|urlencode }}{% if selected_date %}&date={{ selected_date|date:'Y-m-d' }}{% endif %}"
                     >
+
                         &laquo;
+
                     </a>
 
                 </li>
@@ -298,7 +435,9 @@ Verified Tickets | Flying Fox
                         class="page-link"
                         href="?page={{ tickets.next_page_number }}&search={{ search|urlencode }}{% if selected_date %}&date={{ selected_date|date:'Y-m-d' }}{% endif %}"
                     >
+
                         &raquo;
+
                     </a>
 
                 </li>
@@ -321,6 +460,11 @@ Verified Tickets | Flying Fox
 
 <style>
 
+
+/* =====================================================
+   HEADER
+===================================================== */
+
 .verified-header {
 
     display: flex;
@@ -328,6 +472,7 @@ Verified Tickets | Flying Fox
     margin-bottom: 22px;
 
     align-items: center;
+
     justify-content: space-between;
 
     gap: 20px;
@@ -357,6 +502,11 @@ Verified Tickets | Flying Fox
 }
 
 
+
+/* =====================================================
+   VERIFY BUTTON
+===================================================== */
+
 .verify-btn {
 
     display: inline-flex;
@@ -368,6 +518,8 @@ Verified Tickets | Flying Fox
         17px;
 
     align-items: center;
+
+    justify-content: center;
 
     gap: 7px;
 
@@ -384,6 +536,20 @@ Verified Tickets | Flying Fox
     font-weight: 800;
 }
 
+
+.verify-btn:hover {
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+}
+
+
+
+/* =====================================================
+   FILTER
+===================================================== */
 
 .verified-filter {
 
@@ -428,6 +594,13 @@ Verified Tickets | Flying Fox
 }
 
 
+.verified-filter input:focus {
+
+    border-color: var(--ff-red);
+
+}
+
+
 .verified-filter button,
 .verified-filter a {
 
@@ -444,6 +617,7 @@ Verified Tickets | Flying Fox
     border-radius: 9px;
 
     align-items: center;
+
     justify-content: center;
 
     gap: 6px;
@@ -461,6 +635,8 @@ Verified Tickets | Flying Fox
     color: #ffffff;
 
     background: var(--ff-red);
+
+    cursor: pointer;
 }
 
 
@@ -471,6 +647,11 @@ Verified Tickets | Flying Fox
     background: #e9edf1;
 }
 
+
+
+/* =====================================================
+   CARD
+===================================================== */
 
 .verified-card {
 
@@ -489,6 +670,8 @@ Verified Tickets | Flying Fox
 .verified-table-scroll {
 
     overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 
@@ -496,11 +679,16 @@ Verified Tickets | Flying Fox
 
     width: 100%;
 
-    min-width: 850px;
+    min-width: 950px;
 
     border-collapse: collapse;
 }
 
+
+
+/* =====================================================
+   TABLE HEADER
+===================================================== */
 
 .verified-card th {
 
@@ -514,9 +702,18 @@ Verified Tickets | Flying Fox
 
     font-size: 9px;
 
+    font-weight: 800;
+
     text-align: left;
+
+    white-space: nowrap;
 }
 
+
+
+/* =====================================================
+   TABLE BODY
+===================================================== */
 
 .verified-card td {
 
@@ -531,6 +728,8 @@ Verified Tickets | Flying Fox
     color: #4d5660;
 
     font-size: 10px;
+
+    vertical-align: top;
 }
 
 
@@ -552,6 +751,11 @@ Verified Tickets | Flying Fox
 }
 
 
+
+/* =====================================================
+   TICKET NUMBER
+===================================================== */
+
 .ticket-no {
 
     color: var(--ff-red) !important;
@@ -559,6 +763,117 @@ Verified Tickets | Flying Fox
     font-size: 12px;
 }
 
+
+
+/* =====================================================
+   RIDES
+===================================================== */
+
+.ride-list {
+
+    display: flex;
+
+    min-width: 150px;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.ride-item {
+
+    padding:
+        6px
+        8px;
+
+    border-radius: 7px;
+
+    background: #f7f8f9;
+}
+
+
+.ride-item strong {
+
+    display: block;
+
+    font-size: 10px;
+}
+
+
+.ride-offer {
+
+    color: var(--ff-red) !important;
+
+    font-size: 8px !important;
+}
+
+
+.muted-text {
+
+    color: #999;
+
+    font-size: 9px;
+}
+
+
+
+/* =====================================================
+   RIDER LIST
+===================================================== */
+
+.rider-list {
+
+    display: flex;
+
+    min-width: 110px;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.rider-row {
+
+    display: flex;
+
+    padding:
+        5px
+        7px;
+
+    border-radius: 6px;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    background: #f7f8f9;
+}
+
+
+.rider-row span {
+
+    color: #6f7780;
+
+    font-size: 8px;
+}
+
+
+.rider-row strong {
+
+    color: var(--ff-dark);
+
+    font-size: 9px;
+}
+
+
+
+/* =====================================================
+   STATUS
+===================================================== */
 
 .verified-badge {
 
@@ -581,26 +896,88 @@ Verified Tickets | Flying Fox
     font-size: 8px;
 
     font-weight: 800;
+
+    white-space: nowrap;
 }
 
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
 
 .empty {
 
-    padding: 40px !important;
+    padding: 50px !important;
+
+    color: #929aa3 !important;
 
     text-align: center;
+
+    font-size: 11px !important;
 }
 
+
+.empty i {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #c5cbd1;
+
+    font-size: 25px;
+}
+
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+.pagination {
+
+    gap: 4px;
+}
+
+
+.pagination .page-link {
+
+    border-radius: 7px;
+
+    font-size: 10px;
+}
+
+
+.pagination .page-item.active .page-link {
+
+    background: var(--ff-red);
+
+    border-color: var(--ff-red);
+}
+
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
 
 @media (
     max-width: 767px
 ) {
+
 
     .verified-header {
 
         flex-direction: column;
 
         align-items: flex-start;
+    }
+
+
+    .verified-header h1 {
+
+        font-size: 22px;
     }
 
 
@@ -618,6 +995,26 @@ Verified Tickets | Flying Fox
             1fr;
 
         max-width: none;
+    }
+
+
+    .verified-filter input,
+    .verified-filter button,
+    .verified-filter a {
+
+        width: 100%;
+    }
+
+
+    .verified-card {
+
+        border-radius: 10px;
+    }
+
+
+    .verified-card table {
+
+        min-width: 950px;
     }
 
 }

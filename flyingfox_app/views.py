@@ -110,7 +110,7 @@ from .models import (
     Ride, RidePrice, Booking,
     Payment,
     Ticket,
-    Coupon,Testimonial,Offer,WEIGHT_RANGES, Refund,
+    Coupon,Testimonial,Offer,WEIGHT_RANGES, Refund,BookingRideItem
 )
 
 
@@ -2237,7 +2237,6 @@ def ride_price_delete(request, pk):
 # # ==========================
 
 
-
 @_admin_required
 def booking_list(request):
 
@@ -2245,14 +2244,14 @@ def booking_list(request):
         Booking.objects
         .select_related(
             "user",
-            "ride",
-            "ride_price",
-            "offer",
             "payment",
             "ticket",
         )
         .prefetch_related(
-            "weight_groups"
+            "ride_items__ride",
+            "ride_items__ride_price",
+            "ride_items__offer",
+            "ride_items__weight_groups",
         )
         .order_by(
             "-created_at"
@@ -2309,13 +2308,6 @@ def booking_list(request):
                 |
 
                 Q(
-                    ride__name__icontains=
-                        search
-                )
-
-                |
-
-                Q(
                     booking_id__icontains=
                         search
                 )
@@ -2327,7 +2319,15 @@ def booking_list(request):
                         search
                 )
 
+                |
+
+                Q(
+                    ride_items__ride__name__icontains=
+                        search
+                )
+
             )
+            .distinct()
         )
 
 
@@ -2368,8 +2368,11 @@ def booking_list(request):
     # =====================================================
 
     return render(
+
         request,
+
         "admin_pages/booking_list.html",
+
         {
             "bookings":
                 bookings,
@@ -2383,6 +2386,7 @@ def booking_list(request):
             "status_choices":
                 Booking.STATUS_CHOICES,
         },
+
     )
 
 
@@ -2948,19 +2952,27 @@ def booking_detail(request, pk):
     booking = get_object_or_404(
 
         Booking.objects
+
         .select_related(
             "user",
-            "ride",
-            "ride_price",
-            "offer",
             "payment",
             "ticket",
         )
+
         .prefetch_related(
-            "weight_groups",
+
+            "ride_items__ride",
+
+            "ride_items__ride_price",
+
+            "ride_items__offer",
+
+            "ride_items__weight_groups",
+
         ),
 
         pk=pk,
+
     )
 
 
@@ -2978,16 +2990,75 @@ def booking_detail(request, pk):
     )
 
 
-    return render(
-        request,
-        "admin_pages/booking_detail.html",
-        {
-            "booking": booking,
-            "payment": payment,
-            "ticket": ticket,
-        },
+    ride_items = list(
+        booking.ride_items.all()
     )
 
+
+    # =====================================================
+    # TOTAL PARTICIPANTS
+    # =====================================================
+
+    total_participants = sum(
+
+        item.quantity
+
+        for item
+        in ride_items
+
+    )
+
+
+    # =====================================================
+    # TOTAL BOOKING AMOUNT
+    # =====================================================
+
+    total_amount = sum(
+
+        (
+            item.total_amount
+            or 0
+        )
+
+        for item
+        in ride_items
+
+    )
+
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+
+    return render(
+
+        request,
+
+        "admin_pages/booking_detail.html",
+
+        {
+
+            "booking":
+                booking,
+
+            "payment":
+                payment,
+
+            "ticket":
+                ticket,
+
+            "ride_items":
+                ride_items,
+
+            "total_participants":
+                total_participants,
+
+            "total_amount":
+                total_amount,
+
+        },
+
+    )
 
 
 @_admin_required
@@ -3184,6 +3255,9 @@ def transaction_list(request):
 # =========================================================
 # TRANSACTION DETAIL
 # =========================================================
+# =========================================================
+# TRANSACTION DETAIL
+# =========================================================
 
 @_admin_required
 def transaction_detail(
@@ -3194,25 +3268,27 @@ def transaction_detail(
     payment = get_object_or_404(
 
         Payment.objects
+
         .select_related(
             "booking",
             "booking__user",
-            "booking__ride",
-            "booking__ride_price",
-            "booking__offer",
             "booking__ticket",
         )
+
         .prefetch_related(
-            "booking__weight_groups",
+
+            "booking__ride_items__ride",
+            "booking__ride_items__ride_price",
+            "booking__ride_items__offer",
+            "booking__ride_items__weight_groups",
+
         ),
 
         pk=pk,
     )
 
 
-    booking = (
-        payment.booking
-    )
+    booking = payment.booking
 
 
     ticket = getattr(
@@ -3222,10 +3298,58 @@ def transaction_detail(
     )
 
 
+    # =====================================================
+    # RIDE ITEMS
+    # =====================================================
+
+    ride_items = list(
+        booking.ride_items.all()
+    )
+
+
+    # =====================================================
+    # TOTAL PARTICIPANTS
+    # =====================================================
+
+    total_participants = sum(
+
+        item.quantity
+
+        for item
+        in ride_items
+
+    )
+
+
+    # =====================================================
+    # TOTAL BOOKING AMOUNT
+    # =====================================================
+
+    total_amount = sum(
+
+        (
+            item.total_amount
+            or 0
+        )
+
+        for item
+        in ride_items
+
+    )
+
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+
     return render(
+
         request,
+
         "admin_pages/transaction_detail.html",
+
         {
+
             "payment":
                 payment,
 
@@ -3234,7 +3358,18 @@ def transaction_detail(
 
             "ticket":
                 ticket,
+
+            "ride_items":
+                ride_items,
+
+            "total_participants":
+                total_participants,
+
+            "total_amount":
+                total_amount,
+
         },
+
     )
 
 
@@ -5117,10 +5252,6 @@ def user_dashboard(request):
 
 def user_bookings(request):
 
-    # =====================================================
-    # LOGIN CHECK
-    # =====================================================
-
     user_id = request.session.get(
         "user_id"
     )
@@ -5918,87 +6049,14 @@ def bookings(request):
 
 
     # =====================================================
-    # RIDE IMAGES
-    # =====================================================
-
-    ride_images = (
-        RideMedia.objects
-        .filter(
-            media_type="image",
-            image__isnull=False,
-        )
-        .exclude(
-            image=""
-        )
-        .order_by(
-            "-created_at"
-        )
-    )
-
-
-    # =====================================================
-    # CURRENT VALID RIDE PRICES
-    # =====================================================
-
-    current_prices = (
-        RidePrice.objects
-        .filter(
-            is_active=True,
-            start_date__lte=today,
-            end_date__gte=today,
-        )
-        .order_by(
-            "-start_date",
-            "-created_at",
-        )
-    )
-
-
-    # =====================================================
-    # OFFERS AVAILABLE FROM TODAY FORWARD
-    #
-    # We intentionally DO NOT use:
-    #
-    # start_date__lte=today
-    #
-    # because customer may select a future visit date.
-    # JavaScript checks the selected visit date against
-    # each offer's start_date / end_date.
-    # =====================================================
-
-    available_offers = (
-        Offer.objects
-        .filter(
-            is_active=True,
-            end_date__gte=today,
-        )
-        .order_by(
-            "-created_at"
-        )
-    )
-
-
-    # =====================================================
     # STATIC PARTICIPANT WEIGHT RANGES
-    #
-    # No database model is used anymore.
-    #
-    # WEIGHT_RANGES example:
-    #
-    # {
-    #     "30-50": {
-    #         "label": "30–50 KG",
-    #         "min_weight": 30,
-    #         "max_weight": 50,
-    #     },
-    #     ...
-    # }
     # =====================================================
 
     weight_ranges = [
 
         {
-            "key": key,
+            "key":
+                key,
 
             "label":
                 data["label"],
@@ -6012,49 +6070,7 @@ def bookings(request):
 
         for key, data
         in WEIGHT_RANGES.items()
-
     ]
-
-
-    # =====================================================
-    # AVAILABLE RIDES
-    # =====================================================
-
-    rides = (
-        Ride.objects
-        .filter(
-            is_active=True,
-
-            prices__is_active=True,
-            prices__start_date__lte=today,
-            prices__end_date__gte=today,
-        )
-        .distinct()
-        .prefetch_related(
-
-            Prefetch(
-                "media",
-                queryset=ride_images,
-                to_attr="booking_images",
-            ),
-
-            Prefetch(
-                "prices",
-                queryset=current_prices,
-                to_attr="current_prices",
-            ),
-
-            Prefetch(
-                "offers",
-                queryset=available_offers,
-                to_attr="current_offers",
-            ),
-
-        )
-        .order_by(
-            "name"
-        )
-    )
 
 
     # =====================================================
@@ -6065,9 +6081,6 @@ def bookings(request):
         request,
         "frontend/booking.html",
         {
-            "rides":
-                rides,
-
             "weight_ranges":
                 weight_ranges,
 
@@ -6075,6 +6088,430 @@ def bookings(request):
                 today,
         },
     )
+
+
+
+@require_GET
+def booking_options_for_date(request):
+
+    try:
+
+        booking_date_raw = (
+            request.GET.get(
+                "date",
+                ""
+            )
+            .strip()
+        )
+
+        booking_date = parse_date(
+            booking_date_raw
+        )
+
+        if not booking_date:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Please select a valid visit date.",
+                    "rides": [],
+                },
+                status=400,
+            )
+
+        if (
+            booking_date
+            <
+            timezone.localdate()
+        ):
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "The visit date cannot be in the past.",
+                    "rides": [],
+                },
+                status=400,
+            )
+
+
+        rides = (
+            Ride.objects
+            .filter(
+                is_active=True
+            )
+            .order_by(
+                "name"
+            )
+        )
+
+
+        ride_results = []
+
+
+        for ride in rides:
+
+            # =================================================
+            # PRICE VALID FOR SELECTED DATE
+            # =================================================
+
+            ride_price = (
+                RidePrice.objects
+                .filter(
+                    ride=ride,
+                    is_active=True,
+                    start_date__lte=booking_date,
+                    end_date__gte=booking_date,
+                )
+                .order_by(
+                    "-start_date",
+                    "-created_at",
+                )
+                .first()
+            )
+
+
+            # No valid price = do not show ride
+            if not ride_price:
+                continue
+
+
+            # =================================================
+            # IMAGE
+            # =================================================
+
+            ride_image = (
+                RideMedia.objects
+                .filter(
+                    ride=ride,
+                    media_type="image",
+                    image__isnull=False,
+                )
+                .exclude(
+                    image=""
+                )
+                .order_by(
+                    "-created_at"
+                )
+                .first()
+            )
+
+
+            image_url = ""
+
+
+            if (
+                ride_image
+                and
+                ride_image.image
+            ):
+
+                try:
+
+                    image_url = (
+                        ride_image.image.url
+                    )
+
+                except Exception:
+
+                    image_url = ""
+
+
+            # =================================================
+            # OFFERS VALID FOR SELECTED DATE + RIDE
+            # =================================================
+
+            offers = (
+                Offer.objects
+                .filter(
+                    ride=ride,
+                    is_active=True,
+                    start_date__lte=booking_date,
+                    end_date__gte=booking_date,
+                )
+                .order_by(
+                    "-created_at"
+                )
+            )
+
+
+            offer_results = []
+
+
+            for offer in offers:
+
+                # -----------------------------------------
+                # WEEKDAY OFFER
+                # -----------------------------------------
+
+                if (
+                    offer.offer_type
+                    ==
+                    "weekday"
+                    and
+                    booking_date.weekday()
+                    >=
+                    5
+                ):
+
+                    continue
+
+
+                # -----------------------------------------
+                # EARLY BIRD OFFER
+                # -----------------------------------------
+
+                if (
+                    offer.offer_type
+                    ==
+                    "early_bird"
+                ):
+
+                    required_days = (
+                        getattr(
+                            offer,
+                            "minimum_advance_days",
+                            0
+                        )
+                        or
+                        0
+                    )
+
+
+                    advance_days = (
+                        booking_date
+                        -
+                        timezone.localdate()
+                    ).days
+
+
+                    if (
+                        advance_days
+                        <
+                        required_days
+                    ):
+
+                        continue
+
+
+                offer_results.append(
+                    {
+
+                        "id":
+                            offer.id,
+
+                        "title":
+                            offer.title,
+
+                        "description":
+                            offer.description
+                            or
+                            "",
+
+                        "offer_type":
+                            offer.offer_type,
+
+                        "discount_value":
+                            str(
+                                offer.discount_value
+                                or
+                                Decimal("0.00")
+                            ),
+
+                        "discount_label":
+                            getattr(
+                                offer,
+                                "discount_label",
+                                ""
+                            )
+                            or
+                            "",
+
+                        "minimum_participants":
+                            getattr(
+                                offer,
+                                "minimum_participants",
+                                1
+                            )
+                            or
+                            1,
+
+                        "minimum_booking_amount":
+                            str(
+                                getattr(
+                                    offer,
+                                    "minimum_booking_amount",
+                                    Decimal("0.00")
+                                )
+                                or
+                                Decimal("0.00")
+                            ),
+
+                        "maximum_discount":
+                            (
+                                str(
+                                    offer.maximum_discount
+                                )
+                                if
+                                getattr(
+                                    offer,
+                                    "maximum_discount",
+                                    None
+                                )
+                                is not None
+                                else
+                                "0"
+                            ),
+
+                        "buy_quantity":
+                            getattr(
+                                offer,
+                                "buy_quantity",
+                                0
+                            )
+                            or
+                            0,
+
+                        "free_quantity":
+                            getattr(
+                                offer,
+                                "free_quantity",
+                                0
+                            )
+                            or
+                            0,
+
+                        "coupon_required":
+                            bool(
+                                getattr(
+                                    offer,
+                                    "coupon_required",
+                                    False
+                                )
+                                or
+                                offer.offer_type
+                                ==
+                                "coupon"
+                            ),
+
+                        "coupon_code":
+                            getattr(
+                                offer,
+                                "coupon_code",
+                                ""
+                            )
+                            or
+                            "",
+
+                        "first_booking_only":
+                            bool(
+                                getattr(
+                                    offer,
+                                    "first_booking_only",
+                                    False
+                                )
+                            ),
+
+                        "minimum_advance_days":
+                            getattr(
+                                offer,
+                                "minimum_advance_days",
+                                0
+                            )
+                            or
+                            0,
+
+                        "start_date":
+                            offer.start_date.isoformat(),
+
+                        "end_date":
+                            offer.end_date.isoformat(),
+                    }
+                )
+
+
+            ride_results.append(
+                {
+
+                    "id":
+                        ride.id,
+
+                    "name":
+                        ride.name,
+
+                    "description":
+                        ride.description
+                        or
+                        "",
+
+                    "image":
+                        image_url,
+
+                    "price_id":
+                        ride_price.id,
+
+                    "price":
+                        str(
+                            ride_price.price
+                        ),
+
+                    "offers":
+                        offer_results,
+                }
+            )
+
+
+        return JsonResponse(
+            {
+                "success":
+                    True,
+
+                "date":
+                    booking_date.isoformat(),
+
+                "rides":
+                    ride_results,
+            }
+        )
+
+
+    except Exception as error:
+
+        print(
+            "\n================================"
+        )
+
+        print(
+            "BOOKING OPTIONS ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "================================\n"
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Unable to load rides for the selected date. "
+                    "Please try again."
+                ),
+                "rides": [],
+            },
+            status=500,
+        )
+
 
     
 def _booking_user_profile(request):
@@ -6122,6 +6559,7 @@ def _calculate_offer_discount(
     user_profile=None,
     customer_phone="",
     strict_identity=False,
+    check_customer_history=True,
 ):
 
     ZERO = Decimal("0.00")
@@ -6257,119 +6695,123 @@ def _calculate_offer_discount(
                 )
             )
 
-
     # =====================================================
     # CUSTOMER HISTORY
+    #
+    # During booking preview we can disable this check.
+    # During payment validation this must be enabled.
     # =====================================================
 
-    identity_bookings = (
-        _identity_booking_queryset(
-            user_profile=
-                user_profile,
+    if check_customer_history:
 
-            customer_phone=
-                customer_phone
+        identity_bookings = (
+            _identity_booking_queryset(
+                user_profile=
+                    user_profile,
+
+                customer_phone=
+                    customer_phone
+            )
         )
-    )
 
 
-    has_identity = bool(
-        user_profile
-        or
-        (customer_phone or "").strip()
-    )
+        has_identity = bool(
+            user_profile
+            or
+            (customer_phone or "").strip()
+        )
 
 
-    # =====================================================
-    # MAX USES PER CUSTOMER
-    # =====================================================
+        # =================================================
+        # MAX USES PER CUSTOMER
+        # =================================================
 
-    if offer.max_uses_per_user:
-
-        if (
-            strict_identity
-            and
-            not has_identity
-        ):
-
-            return (
-                ZERO,
-                (
-                    "Customer identity is required "
-                    "to use this offer."
-                )
-            )
-
-
-        if has_identity:
-
-            already_used = (
-                identity_bookings
-                .filter(
-                    offer=offer
-                )
-                .count()
-            )
-
+        if offer.max_uses_per_user:
 
             if (
-                already_used
-                >=
-                offer.max_uses_per_user
+                strict_identity
+                and
+                not has_identity
             ):
 
                 return (
                     ZERO,
                     (
-                        f'You have already used '
-                        f'"{offer.title}". '
-                        f"This offer can be used only "
-                        f"{offer.max_uses_per_user} "
-                        f"time(s) per customer."
+                        "Customer identity is required "
+                        "to use this offer."
                     )
                 )
 
 
-    # =====================================================
-    # FIRST BOOKING
-    # =====================================================
+            if has_identity:
 
-    if (
-        offer.first_booking_only
-        or
-        offer.offer_type
-        ==
-        "first_booking"
-    ):
+                already_used = (
+                    identity_bookings
+                    .filter(
+                        offer=offer
+                    )
+                    .count()
+                )
+
+
+                if (
+                    already_used
+                    >=
+                    offer.max_uses_per_user
+                ):
+
+                    return (
+                        ZERO,
+                        (
+                            f'You have already used '
+                            f'"{offer.title}". '
+                            f"This offer can be used only "
+                            f"{offer.max_uses_per_user} "
+                            f"time(s) per customer."
+                        )
+                    )
+
+
+        # =================================================
+        # FIRST BOOKING
+        # =================================================
 
         if (
-            strict_identity
-            and
-            not has_identity
+            offer.first_booking_only
+            or
+            offer.offer_type
+            ==
+            "first_booking"
         ):
 
-            return (
-                ZERO,
-                (
-                    "Customer details are required "
-                    "to verify this offer."
+            if (
+                strict_identity
+                and
+                not has_identity
+            ):
+
+                return (
+                    ZERO,
+                    (
+                        "Customer details are required "
+                        "to verify this offer."
+                    )
                 )
-            )
 
 
-        if (
-            has_identity
-            and
-            identity_bookings.exists()
-        ):
+            if (
+                has_identity
+                and
+                identity_bookings.exists()
+            ):
 
-            return (
-                ZERO,
-                (
-                    "This offer is available for "
-                    "your first successful booking only."
+                return (
+                    ZERO,
+                    (
+                        "This offer is available for "
+                        "your first successful booking only."
+                    )
                 )
-            )
 
 
     # =====================================================
@@ -6644,67 +7086,68 @@ def _calculate_offer_discount(
         "",
     )
 
+
+
 def booking_review(request):
 
+    ZERO = Decimal("0.00")
+
+
     # =====================================================
-    # GET
+    # HELPER — FAIL AND RETURN TO BOOKING PAGE
+    # =====================================================
+
+    def booking_fail(message):
+
+        print("\n" + "=" * 70)
+        print("BOOKING REVIEW FAILED")
+        print("MESSAGE:", message)
+        print("=" * 70 + "\n")
+
+        messages.error(
+            request,
+            message
+        )
+
+        return redirect(
+            "bookings"
+        )
+
+
+    # =====================================================
+    # GET — SHOW EXISTING REVIEW SESSION
     # =====================================================
 
     if request.method == "GET":
 
-        booking_data = request.session.get(
-            "pending_booking"
+        booking_data = (
+            request.session.get(
+                "pending_booking"
+            )
         )
 
         if not booking_data:
 
-            messages.error(
-                request,
-                (
-                    "Your booking session has expired. "
-                    "Please start again."
-                )
-            )
-
-            return redirect(
-                "bookings"
+            return booking_fail(
+                "Your booking session has expired. "
+                "Please start again."
             )
 
 
-        ride = get_object_or_404(
-            Ride,
-            id=booking_data.get(
-                "ride_id"
-            ),
-            is_active=True,
+        items = (
+            booking_data.get(
+                "items",
+                []
+            )
+            or
+            []
         )
 
+        if not items:
 
-        ride_price = get_object_or_404(
-            RidePrice,
-            id=booking_data.get(
-                "ride_price_id"
-            ),
-            ride=ride,
-            is_active=True,
-        )
-
-
-        selected_offer = None
-
-
-        if booking_data.get(
-            "offer_id"
-        ):
-
-            selected_offer = (
-                Offer.objects
-                .filter(
-                    id=booking_data[
-                        "offer_id"
-                    ]
-                )
-                .first()
+            return booking_fail(
+                "No rides were found in your booking. "
+                "Please start again."
             )
 
 
@@ -6715,15 +7158,6 @@ def booking_review(request):
                 "booking_data":
                     booking_data,
 
-                "ride":
-                    ride,
-
-                "ride_price":
-                    ride_price,
-
-                "offer":
-                    selected_offer,
-
                 "profile":
                     _booking_user_profile(
                         request
@@ -6733,7 +7167,7 @@ def booking_review(request):
 
 
     # =====================================================
-    # POST ONLY
+    # ONLY POST IS ALLOWED AFTER THIS POINT
     # =====================================================
 
     if request.method != "POST":
@@ -6744,17 +7178,18 @@ def booking_review(request):
 
 
     # =====================================================
-    # BASIC FORM VALUES
+    # DEBUG — RAW POST
     # =====================================================
 
-    ride_id = (
-        request.POST.get(
-            "ride_id",
-            ""
-        )
-        .strip()
-    )
+    print("\n" + "=" * 70)
+    print("BOOKING REVIEW POST")
+    print("POST DATA:", request.POST)
+    print("=" * 70 + "\n")
 
+
+    # =====================================================
+    # 1. BOOKING DATE
+    # =====================================================
 
     booking_date_raw = (
         request.POST.get(
@@ -6765,76 +7200,11 @@ def booking_review(request):
     )
 
 
-    time_slot = (
-        request.POST.get(
-            "time_slot",
-            ""
-        )
-        .strip()
+    print(
+        "BOOKING DATE RAW:",
+        booking_date_raw
     )
 
-
-    selected_offer_id = (
-        request.POST.get(
-            "selected_offer_id",
-            ""
-        )
-        or
-        request.POST.get(
-            "offer_id",
-            ""
-        )
-    ).strip()
-
-
-    if (
-        selected_offer_id
-        in
-        {
-            "none",
-            "0",
-        }
-    ):
-
-        selected_offer_id = ""
-
-
-    coupon_code = (
-        request.POST.get(
-            "coupon_code",
-            ""
-        )
-        .strip()
-        .upper()
-    )
-
-
-    # =====================================================
-    # RIDE
-    # =====================================================
-
-    if not ride_id:
-
-        messages.error(
-            request,
-            "Please select a ride."
-        )
-
-        return redirect(
-            "bookings"
-        )
-
-
-    ride = get_object_or_404(
-        Ride,
-        id=ride_id,
-        is_active=True,
-    )
-
-
-    # =====================================================
-    # DATE
-    # =====================================================
 
     booking_date = parse_date(
         booking_date_raw
@@ -6843,13 +7213,8 @@ def booking_review(request):
 
     if not booking_date:
 
-        messages.error(
-            request,
-            "Please select a valid booking date."
-        )
-
-        return redirect(
-            "bookings"
+        return booking_fail(
+            "Please select a valid visit date."
         )
 
 
@@ -6859,175 +7224,166 @@ def booking_review(request):
         timezone.localdate()
     ):
 
-        messages.error(
-            request,
-            "The booking date cannot be in the past."
-        )
-
-        return redirect(
-            "bookings"
+        return booking_fail(
+            "The visit date cannot be in the past."
         )
 
 
     # =====================================================
-    # TIME SLOT
+    # 2. READ MULTI-RIDE JSON
     # =====================================================
 
-    if not time_slot:
-
-        messages.error(
-            request,
-            "Please select a time slot."
+    booking_items_raw = (
+        request.POST.get(
+            "booking_items_json",
+            ""
         )
-
-        return redirect(
-            "bookings"
-        )
-
-
-    # =====================================================
-    # STATIC PARTICIPANT WEIGHT GROUPS
-    #
-    # Frontend sends:
-    #
-    # weight_range_key[]   = 30-50
-    # weight_range_count[] = 2
-    #
-    # weight_range_key[]   = 50-70
-    # weight_range_count[] = 1
-    #
-    # Total quantity is automatically calculated here.
-    # =====================================================
-
-    weight_range_keys = (
-        request.POST.getlist(
-            "weight_range_key[]"
-        )
-    )
-
-    weight_range_counts = (
-        request.POST.getlist(
-            "weight_range_count[]"
-        )
+        .strip()
     )
 
 
+    print(
+        "BOOKING ITEMS RAW:",
+        booking_items_raw
+    )
+
+
+    if not booking_items_raw:
+
+        return booking_fail(
+            "No ride information was received. "
+            "Please add at least one ride."
+        )
+
+
     # =====================================================
-    # MAKE SURE BOTH ARRAYS MATCH
+    # 3. PARSE JSON
     # =====================================================
+
+    try:
+
+        submitted_items = json.loads(
+            booking_items_raw
+        )
+
+    except (
+        TypeError,
+        ValueError,
+        json.JSONDecodeError,
+    ) as error:
+
+        print(
+            "JSON ERROR:",
+            repr(error)
+        )
+
+        return booking_fail(
+            "The booking information is invalid. "
+            "Please select your rides again."
+        )
+
+
+    print(
+        "PARSED BOOKING ITEMS:",
+        submitted_items
+    )
+
 
     if (
-        len(weight_range_keys)
-        !=
-        len(weight_range_counts)
+        not isinstance(
+            submitted_items,
+            list
+        )
+        or
+        not submitted_items
     ):
 
-        messages.error(
-            request,
-            "Invalid participant weight information."
+        return booking_fail(
+            "Please add at least one ride "
+            "before continuing."
         )
-
-        return redirect(
-            "bookings"
-        )
-
-
-    selected_weight_groups = []
-
-    quantity = 0
-
-    used_range_keys = set()
 
 
     # =====================================================
-    # PROCESS WEIGHT GROUPS
+    # 4. INITIAL VALUES
     # =====================================================
 
-    for (
-        range_key,
-        count_raw,
-    ) in zip(
-        weight_range_keys,
-        weight_range_counts,
+    validated_items = []
+
+    used_ride_ids = set()
+
+    total_quantity = 0
+
+    booking_subtotal = ZERO
+
+    booking_discount = ZERO
+
+    booking_total = ZERO
+
+
+    user_profile = (
+        _booking_user_profile(
+            request
+        )
+    )
+
+
+    # =====================================================
+    # 5. PROCESS EACH SELECTED RIDE
+    # =====================================================
+
+    for item_index, submitted_item in enumerate(
+        submitted_items,
+        start=1,
     ):
 
-        range_key = (
-            range_key
-            or
-            ""
-        ).strip()
-
-        count_raw = (
-            count_raw
-            or
-            "0"
-        ).strip()
+        print("\n" + "-" * 60)
+        print(
+            f"PROCESSING RIDE ITEM #{item_index}"
+        )
+        print(
+            submitted_item
+        )
+        print("-" * 60)
 
 
-        # ---------------------------------------------
-        # Ignore completely empty unused rows
-        # ---------------------------------------------
+        # =================================================
+        # VALIDATE ITEM FORMAT
+        # =================================================
 
-        if not range_key:
+        if not isinstance(
+            submitted_item,
+            dict
+        ):
 
-            continue
+            return booking_fail(
+                f"Ride #{item_index} contains "
+                "invalid booking information."
+            )
 
 
-        # ---------------------------------------------
-        # Validate range against static configuration
-        # ---------------------------------------------
+        # =================================================
+        # RIDE ID
+        # =================================================
 
-        range_data = (
-            WEIGHT_RANGES.get(
-                range_key
+        ride_id = (
+            submitted_item.get(
+                "rideId"
             )
         )
 
 
-        if not range_data:
+        if not ride_id:
 
-            messages.error(
-                request,
-                "One of the selected weight ranges is invalid."
+            return booking_fail(
+                f"Ride #{item_index} is invalid."
             )
 
-            return redirect(
-                "bookings"
-            )
-
-
-        # ---------------------------------------------
-        # Prevent same range appearing twice
-        # ---------------------------------------------
-
-        if range_key in used_range_keys:
-
-            messages.error(
-                request,
-                (
-                    "The same participant weight range "
-                    "cannot be selected more than once."
-                )
-            )
-
-            return redirect(
-                "bookings"
-            )
-
-
-        used_range_keys.add(
-            range_key
-        )
-
-
-        # ---------------------------------------------
-        # Convert rider quantity
-        # ---------------------------------------------
 
         try:
 
-            participant_count = int(
-                count_raw
+            ride_id = int(
+                ride_id
             )
 
         except (
@@ -7035,402 +7391,829 @@ def booking_review(request):
             ValueError,
         ):
 
-            participant_count = 0
-
-
-        # ---------------------------------------------
-        # Selected range requires at least one rider
-        # ---------------------------------------------
-
-        if participant_count <= 0:
-
-            messages.error(
-                request,
-                (
-                    "Each selected weight range "
-                    "must contain at least one rider."
-                )
-            )
-
-            return redirect(
-                "bookings"
+            return booking_fail(
+                f"Ride #{item_index} has "
+                "an invalid ride ID."
             )
 
 
-        quantity += (
-            participant_count
-        )
+        # =================================================
+        # PREVENT SAME RIDE TWICE
+        # =================================================
 
+        if ride_id in used_ride_ids:
 
-        selected_weight_groups.append(
-            {
-
-                "range_key":
-                    range_key,
-
-                "label":
-                    range_data[
-                        "label"
-                    ],
-
-                "min_weight":
-                    range_data[
-                        "min_weight"
-                    ],
-
-                "max_weight":
-                    range_data[
-                        "max_weight"
-                    ],
-
-                "participant_count":
-                    participant_count,
-
-            }
-        )
-
-
-    # =====================================================
-    # TOTAL PARTICIPANT VALIDATION
-    # =====================================================
-
-    if quantity < 1:
-
-        messages.error(
-            request,
-            "Please add at least one participant."
-        )
-
-        return redirect(
-            "bookings"
-        )
-
-
-    if quantity > 10:
-
-        messages.error(
-            request,
-            (
-                "A maximum of 10 riders "
-                "is allowed per booking."
+            return booking_fail(
+                "The same ride cannot be "
+                "added more than once."
             )
-        )
-
-        return redirect(
-            "bookings"
-        )
 
 
-    # =====================================================
-    # PRICE
-    # =====================================================
-
-    ride_price = (
-        RidePrice.objects
-        .filter(
-            ride=ride,
-            is_active=True,
-            start_date__lte=
-                booking_date,
-            end_date__gte=
-                booking_date,
-        )
-        .order_by(
-            "-start_date",
-            "-created_at",
-        )
-        .first()
-    )
-
-
-    if not ride_price:
-
-        messages.error(
-            request,
-            (
-                f"No active price is available "
-                f"for {ride.name} on "
-                f"{booking_date}."
-            )
-        )
-
-        return redirect(
-            "bookings"
+        used_ride_ids.add(
+            ride_id
         )
 
 
-    price_per_person = (
-        ride_price.price
-    )
+        # =================================================
+        # FIND ACTIVE RIDE
+        # =================================================
 
-
-    participant_subtotal = (
-        price_per_person
-        *
-        quantity
-    )
-
-
-    subtotal = (
-        participant_subtotal
-    )
-
-
-    # =====================================================
-    # OFFER
-    # =====================================================
-
-    selected_offer = None
-
-    discount_amount = Decimal(
-        "0.00"
-    )
-
-
-    if selected_offer_id:
-
-        selected_offer = (
-            Offer.objects
+        ride = (
+            Ride.objects
             .filter(
-                id=
-                    selected_offer_id,
-
-                ride=
-                    ride,
-
-                is_active=
-                    True,
-
-                start_date__lte=
-                    booking_date,
-
-                end_date__gte=
-                    booking_date,
+                id=ride_id,
+                is_active=True,
             )
             .first()
         )
 
 
-        if not selected_offer:
+        if not ride:
 
-            messages.error(
-                request,
-                (
-                    "The selected offer is not "
-                    "available for this ride/date."
-                )
-            )
-
-            return redirect(
-                "bookings"
+            return booking_fail(
+                "One of the selected rides "
+                "is no longer available."
             )
 
 
-        # =================================================
-        # COUPON OFFER
-        # =================================================
-
-        requires_coupon = (
-            selected_offer.coupon_required
-            or
-            selected_offer.offer_type
-            ==
-            "coupon"
+        print(
+            "RIDE:",
+            ride.id,
+            ride.name
         )
 
 
-        if requires_coupon:
+        # =================================================
+        # FIND PRICE VALID FOR SELECTED DATE
+        # =================================================
 
-            expected_code = (
-                selected_offer.coupon_code
-                or
-                ""
-            ).strip().upper()
+        ride_price = (
+            RidePrice.objects
+            .filter(
+                ride=ride,
+                is_active=True,
+                start_date__lte=
+                    booking_date,
+                end_date__gte=
+                    booking_date,
+            )
+            .order_by(
+                "-start_date",
+                "-created_at",
+            )
+            .first()
+        )
 
 
-            if not coupon_code:
+        print(
+            "RIDE PRICE:",
+            ride_price
+        )
 
-                messages.error(
-                    request,
-                    "Please enter the coupon code."
+
+        if not ride_price:
+
+            return booking_fail(
+                (
+                    f"{ride.name} does not have "
+                    f"a valid price for "
+                    f"{booking_date.strftime('%d %b %Y')}."
                 )
+            )
 
-                return redirect(
-                    "bookings"
+
+        # =================================================
+        # WEIGHT GROUPS
+        # =================================================
+
+        submitted_groups = (
+            submitted_item.get(
+                "weightGroups",
+                []
+            )
+            or
+            []
+        )
+
+
+        print(
+            "SUBMITTED WEIGHT GROUPS:",
+            submitted_groups
+        )
+
+
+        if not isinstance(
+            submitted_groups,
+            list
+        ):
+
+            return booking_fail(
+                (
+                    f"Invalid participant information "
+                    f"for {ride.name}."
                 )
+            )
 
 
-            if (
-                not expected_code
-                or
-                coupon_code
-                !=
-                expected_code
+        if not submitted_groups:
+
+            return booking_fail(
+                (
+                    f"Please add participant weight "
+                    f"details for {ride.name}."
+                )
+            )
+
+
+        validated_weight_groups = []
+
+        used_range_keys = set()
+
+        item_quantity = 0
+
+
+        # =================================================
+        # PROCESS WEIGHT GROUPS
+        # =================================================
+
+        for group_index, group in enumerate(
+            submitted_groups,
+            start=1,
+        ):
+
+            if not isinstance(
+                group,
+                dict
             ):
 
-                messages.error(
-                    request,
-                    "The coupon code is invalid."
+                return booking_fail(
+                    (
+                        f"Invalid participant information "
+                        f"for {ride.name}."
+                    )
                 )
 
-                return redirect(
-                    "bookings"
+
+            # =============================================
+            # RANGE KEY
+            # =============================================
+
+            range_key = str(
+                group.get(
+                    "rangeKey",
+                    ""
                 )
+                or
+                ""
+            ).strip()
+
+
+            if not range_key:
+
+                return booking_fail(
+                    (
+                        f"Please select a weight range "
+                        f"for {ride.name}."
+                    )
+                )
+
+
+            # =============================================
+            # CHECK AGAINST SERVER WEIGHT RANGES
+            # =============================================
+
+            range_data = (
+                WEIGHT_RANGES.get(
+                    range_key
+                )
+            )
+
+
+            if not range_data:
+
+                print(
+                    "INVALID RANGE KEY:",
+                    range_key
+                )
+
+                print(
+                    "AVAILABLE RANGE KEYS:",
+                    list(
+                        WEIGHT_RANGES.keys()
+                    )
+                )
+
+                return booking_fail(
+                    (
+                        f"The selected weight range "
+                        f"for {ride.name} is invalid."
+                    )
+                )
+
+
+            # =============================================
+            # DUPLICATE WEIGHT RANGE
+            # =============================================
+
+            if range_key in used_range_keys:
+
+                return booking_fail(
+                    (
+                        f"The weight range "
+                        f"{range_data['label']} "
+                        f"was selected more than once "
+                        f"for {ride.name}."
+                    )
+                )
+
+
+            used_range_keys.add(
+                range_key
+            )
+
+
+            # =============================================
+            # PARTICIPANT COUNT
+            # =============================================
+
+            try:
+
+                participant_count = int(
+                    group.get(
+                        "participantCount",
+                        0
+                    )
+                )
+
+            except (
+                TypeError,
+                ValueError,
+            ):
+
+                participant_count = 0
+
+
+            if participant_count <= 0:
+
+                return booking_fail(
+                    (
+                        f"Please enter at least one rider "
+                        f"for {range_data['label']} "
+                        f"in {ride.name}."
+                    )
+                )
+
+
+            item_quantity += (
+                participant_count
+            )
+
+
+            validated_weight_groups.append(
+                {
+                    "range_key":
+                        range_key,
+
+                    "label":
+                        range_data[
+                            "label"
+                        ],
+
+                    "min_weight":
+                        range_data[
+                            "min_weight"
+                        ],
+
+                    "max_weight":
+                        range_data[
+                            "max_weight"
+                        ],
+
+                    "participant_count":
+                        participant_count,
+                }
+            )
 
 
         # =================================================
-        # SERVER-SIDE OFFER VALIDATION
+        # PARTICIPANT LIMIT
         # =================================================
 
-        (
-            discount_amount,
-            offer_error,
-        ) = _calculate_offer_discount(
+        if item_quantity < 1:
 
-            offer=
-                selected_offer,
+            return booking_fail(
+                (
+                    f"Please add at least one "
+                    f"participant for {ride.name}."
+                )
+            )
 
-            booking_date=
-                booking_date,
 
-            quantity=
-                quantity,
+        if item_quantity > 10:
 
-            participant_subtotal=
-                participant_subtotal,
+            return booking_fail(
+                (
+                    f"A maximum of 10 riders "
+                    f"is allowed for {ride.name}."
+                )
+            )
 
-            subtotal_before_discount=
-                subtotal,
 
-            user_profile=
-                _booking_user_profile(
-                    request
-                ),
+        print(
+            "ITEM QUANTITY:",
+            item_quantity
+        )
 
-            strict_identity=
-                False,
+        print(
+            "VALIDATED WEIGHT GROUPS:",
+            validated_weight_groups
         )
 
 
-        if offer_error:
+        # =================================================
+        # PRICE CALCULATION
+        # =================================================
 
-            messages.error(
-                request,
-                offer_error
+        price_per_person = Decimal(
+            str(
+                ride_price.price
+            )
+        )
+
+
+        participant_subtotal = (
+            price_per_person
+            *
+            Decimal(
+                item_quantity
+            )
+        )
+
+
+        item_subtotal = (
+            participant_subtotal
+        )
+
+
+        print(
+            "PRICE PER PERSON:",
+            price_per_person
+        )
+
+        print(
+            "ITEM SUBTOTAL:",
+            item_subtotal
+        )
+
+
+        # =================================================
+        # OFFER
+        # =================================================
+
+        selected_offer = None
+
+        item_discount = ZERO
+
+
+        offer_id = (
+            submitted_item.get(
+                "offerId"
+            )
+        )
+
+
+        if (
+            offer_id
+            in
+            {
+                "",
+                "0",
+                0,
+                "none",
+                "null",
+                None,
+            }
+        ):
+
+            offer_id = None
+
+
+        coupon_code = str(
+            submitted_item.get(
+                "couponCode",
+                ""
+            )
+            or
+            ""
+        ).strip().upper()
+
+
+        print(
+            "OFFER ID:",
+            offer_id
+        )
+
+        print(
+            "COUPON CODE:",
+            coupon_code
+        )
+
+
+        # =================================================
+        # VALIDATE OFFER
+        # =================================================
+
+        if offer_id:
+
+            try:
+
+                offer_id = int(
+                    offer_id
+                )
+
+            except (
+                TypeError,
+                ValueError,
+            ):
+
+                return booking_fail(
+                    (
+                        f"The selected offer for "
+                        f"{ride.name} is invalid."
+                    )
+                )
+
+
+            selected_offer = (
+                Offer.objects
+                .filter(
+                    id=offer_id,
+                    ride=ride,
+                    is_active=True,
+                    start_date__lte=
+                        booking_date,
+                    end_date__gte=
+                        booking_date,
+                )
+                .first()
             )
 
-            return redirect(
-                "bookings"
+
+            print(
+                "SELECTED OFFER:",
+                selected_offer
             )
 
 
+            if not selected_offer:
+
+                return booking_fail(
+                    (
+                        f"The selected offer is not "
+                        f"available for {ride.name} "
+                        f"on "
+                        f"{booking_date.strftime('%d %b %Y')}."
+                    )
+                )
+
+
+            # =============================================
+            # COUPON VALIDATION
+            # =============================================
+
+            requires_coupon = (
+                selected_offer.coupon_required
+                or
+                selected_offer.offer_type
+                ==
+                "coupon"
+            )
+
+
+            if requires_coupon:
+
+                expected_code = (
+                    selected_offer.coupon_code
+                    or
+                    ""
+                ).strip().upper()
+
+
+                if not coupon_code:
+
+                    return booking_fail(
+                        (
+                            f"Please enter the coupon "
+                            f"code for {ride.name}."
+                        )
+                    )
+
+
+                if (
+                    not expected_code
+                    or
+                    coupon_code
+                    !=
+                    expected_code
+                ):
+
+                    return booking_fail(
+                        (
+                            f"The coupon code entered "
+                            f"for {ride.name} is invalid."
+                        )
+                    )
+
+
+            # =============================================
+            # SERVER-SIDE OFFER CALCULATION
+            # =============================================
+
+            (
+    item_discount,
+    offer_error,
+) = _calculate_offer_discount(
+
+    offer=
+        selected_offer,
+
+    booking_date=
+        booking_date,
+
+    quantity=
+        item_quantity,
+
+    participant_subtotal=
+        participant_subtotal,
+
+    subtotal_before_discount=
+        item_subtotal,
+
+    user_profile=
+        user_profile,
+
+    strict_identity=
+        False,
+
+    # IMPORTANT:
+    # Do not check previous customer bookings yet.
+    # Customer information will be verified before payment.
+    check_customer_history=
+        False,
+)
+
+
+            if offer_error:
+
+                return booking_fail(
+                    (
+                        f"{ride.name}: "
+                        f"{offer_error}"
+                    )
+                )
+
+
+        # =================================================
+        # NORMALIZE DISCOUNT
+        # =================================================
+
+        item_discount = Decimal(
+            str(
+                item_discount
+                or
+                ZERO
+            )
+        )
+
+
+        if item_discount < ZERO:
+
+            item_discount = ZERO
+
+
+        if item_discount > item_subtotal:
+
+            item_discount = (
+                item_subtotal
+            )
+
+
+        # =================================================
+        # ITEM TOTAL
+        # =================================================
+
+        item_total = max(
+            item_subtotal
+            -
+            item_discount,
+
+            ZERO,
+        )
+
+
+        print(
+            "ITEM DISCOUNT:",
+            item_discount
+        )
+
+        print(
+            "ITEM TOTAL:",
+            item_total
+        )
+
+
+        # =================================================
+        # SAVE VALIDATED ITEM
+        # =================================================
+
+        validated_items.append(
+            {
+
+                "ride_id":
+                    ride.id,
+
+                "ride_price_id":
+                    ride_price.id,
+
+                "ride_name":
+                    ride.name,
+
+                "quantity":
+                    item_quantity,
+
+                "weight_groups":
+                    validated_weight_groups,
+
+                "price_per_person":
+                    str(
+                        price_per_person
+                    ),
+
+                "participant_subtotal":
+                    str(
+                        participant_subtotal
+                    ),
+
+                "subtotal":
+                    str(
+                        item_subtotal
+                    ),
+
+                "offer_id":
+                    (
+                        selected_offer.id
+                        if selected_offer
+                        else
+                        None
+                    ),
+
+                "offer_title":
+                    (
+                        selected_offer.title
+                        if selected_offer
+                        else
+                        ""
+                    ),
+
+                "offer_label":
+                    (
+                        selected_offer.discount_label
+                        if selected_offer
+                        else
+                        ""
+                    ),
+
+                "coupon_code":
+                    (
+                        coupon_code
+                        if selected_offer
+                        else
+                        ""
+                    ),
+
+                "discount_amount":
+                    str(
+                        item_discount
+                    ),
+
+                "total_amount":
+                    str(
+                        item_total
+                    ),
+            }
+        )
+
+
+        # =================================================
+        # ADD TO BOOKING TOTALS
+        # =================================================
+
+        total_quantity += (
+            item_quantity
+        )
+
+        booking_subtotal += (
+            item_subtotal
+        )
+
+        booking_discount += (
+            item_discount
+        )
+
+        booking_total += (
+            item_total
+        )
+
+
     # =====================================================
-    # TOTAL
+    # 6. FINAL VALIDATION
     # =====================================================
 
-    total_amount = max(
-        subtotal
-        -
-        discount_amount,
+    if not validated_items:
 
-        Decimal(
-            "0.00"
-        ),
-    )
+        return booking_fail(
+            "No valid rides were found "
+            "in your booking."
+        )
+
+
+    if total_quantity <= 0:
+
+        return booking_fail(
+            "Please add at least one participant."
+        )
 
 
     # =====================================================
-    # SESSION DATA
+    # 7. BUILD FINAL SESSION DATA
     # =====================================================
 
     booking_data = {
 
-        "ride_id":
-            ride.id,
-
-        "ride_price_id":
-            ride_price.id,
-
-        "ride_name":
-            ride.name,
-
         "booking_date":
             booking_date.isoformat(),
 
-        "time_slot":
-            time_slot,
-
-        # ---------------------------------------------
-        # Automatically calculated from weight groups
-        # ---------------------------------------------
+        "items":
+            validated_items,
 
         "quantity":
-            quantity,
-
-        "weight_groups":
-            selected_weight_groups,
-
-        "price_per_person":
-            str(
-                price_per_person
-            ),
-
-        "participant_subtotal":
-            str(
-                participant_subtotal
-            ),
+            total_quantity,
 
         "subtotal":
             str(
-                subtotal
-            ),
-
-        "offer_id":
-            (
-                selected_offer.id
-                if selected_offer
-                else
-                None
-            ),
-
-        "offer_title":
-            (
-                selected_offer.title
-                if selected_offer
-                else
-                ""
-            ),
-
-        "offer_label":
-            (
-                selected_offer.discount_label
-                if selected_offer
-                else
-                ""
-            ),
-
-        "coupon_code":
-            (
-                coupon_code
-                if selected_offer
-                else
-                ""
+                booking_subtotal
             ),
 
         "discount_amount":
             str(
-                discount_amount
+                booking_discount
             ),
 
         "total_amount":
             str(
-                total_amount
+                booking_total
             ),
     }
 
 
     # =====================================================
-    # SAVE PENDING BOOKING TO SESSION
+    # DEBUG FINAL DATA
+    # =====================================================
+
+    print("\n" + "=" * 70)
+    print("BOOKING REVIEW SUCCESS")
+    print("DATE:", booking_date)
+    print(
+        "NUMBER OF RIDES:",
+        len(
+            validated_items
+        )
+    )
+    print(
+        "TOTAL RIDERS:",
+        total_quantity
+    )
+    print(
+        "SUBTOTAL:",
+        booking_subtotal
+    )
+    print(
+        "DISCOUNT:",
+        booking_discount
+    )
+    print(
+        "TOTAL:",
+        booking_total
+    )
+    print(
+        "BOOKING DATA:",
+        booking_data
+    )
+    print("=" * 70 + "\n")
+
+
+    # =====================================================
+    # 8. SAVE TO SESSION
     # =====================================================
 
     request.session[
@@ -7438,7 +8221,7 @@ def booking_review(request):
     ] = booking_data
 
 
-    # Clear any previous unfinished booking ID
+    # Remove previous unfinished booking
     request.session.pop(
         "current_booking_id",
         None,
@@ -7449,33 +8232,21 @@ def booking_review(request):
 
 
     # =====================================================
-    # REVIEW PAGE
+    # 9. SHOW REVIEW PAGE
     # =====================================================
 
     return render(
         request,
         "frontend/booking_review.html",
         {
-
             "booking_data":
                 booking_data,
 
-            "ride":
-                ride,
-
-            "ride_price":
-                ride_price,
-
-            "offer":
-                selected_offer,
-
             "profile":
-                _booking_user_profile(
-                    request
-                ),
-
+                user_profile,
         },
     )
+
 
 def _validate_pending_booking_before_payment(
     request,
@@ -7484,8 +8255,11 @@ def _validate_pending_booking_before_payment(
     customer_email="",
 ):
 
+    ZERO = Decimal("0.00")
+
+
     # =====================================================
-    # PENDING BOOKING SESSION
+    # 1. PENDING BOOKING SESSION
     # =====================================================
 
     booking_data = (
@@ -7499,36 +8273,13 @@ def _validate_pending_booking_before_payment(
 
         return (
             None,
-            "Your booking session has expired."
+            "Your booking session has expired. "
+            "Please start your booking again."
         )
 
 
     # =====================================================
-    # RIDE
-    # =====================================================
-
-    ride = (
-        Ride.objects
-        .filter(
-            id=booking_data.get(
-                "ride_id"
-            ),
-            is_active=True,
-        )
-        .first()
-    )
-
-
-    if not ride:
-
-        return (
-            None,
-            "The selected ride is no longer available."
-        )
-
-
-    # =====================================================
-    # BOOKING DATE
+    # 2. BOOKING DATE
     # =====================================================
 
     booking_date = parse_date(
@@ -7539,9 +8290,15 @@ def _validate_pending_booking_before_payment(
     )
 
 
+    if not booking_date:
+
+        return (
+            None,
+            "The selected visit date is invalid."
+        )
+
+
     if (
-        not booking_date
-        or
         booking_date
         <
         timezone.localdate()
@@ -7549,82 +8306,17 @@ def _validate_pending_booking_before_payment(
 
         return (
             None,
-            "The selected booking date is no longer valid."
+            "The selected visit date is no longer valid."
         )
 
 
     # =====================================================
-    # TIME SLOT
+    # 3. MULTI-RIDE ITEMS
     # =====================================================
 
-    time_slot = (
+    items_data = (
         booking_data.get(
-            "time_slot",
-            ""
-        )
-        or
-        ""
-    ).strip()
-
-
-    if not time_slot:
-
-        return (
-            None,
-            "The selected time slot is invalid."
-        )
-
-
-    # =====================================================
-    # RIDE PRICE
-    # =====================================================
-
-    ride_price = (
-        RidePrice.objects
-        .filter(
-            id=booking_data.get(
-                "ride_price_id"
-            ),
-            ride=ride,
-            is_active=True,
-            start_date__lte=
-                booking_date,
-            end_date__gte=
-                booking_date,
-        )
-        .first()
-    )
-
-
-    if not ride_price:
-
-        return (
-            None,
-            "The selected ride price is no longer valid."
-        )
-
-
-    # =====================================================
-    # WEIGHT GROUPS
-    #
-    # Expected session format:
-    #
-    # {
-    #     "range_key": "30-50",
-    #     "label": "30–50 KG",
-    #     "min_weight": 30,
-    #     "max_weight": 50,
-    #     "participant_count": 2,
-    # }
-    #
-    # IMPORTANT:
-    # We do NOT trust label/min/max from session.
-    # We rebuild them from WEIGHT_RANGES.
-    # =====================================================
-
-    weight_groups_data = (
-        booking_data.get(
-            "weight_groups",
+            "items",
             []
         )
         or
@@ -7632,114 +8324,465 @@ def _validate_pending_booking_before_payment(
     )
 
 
-    if not isinstance(
-        weight_groups_data,
-        list
+    if (
+        not isinstance(
+            items_data,
+            list
+        )
+        or
+        not items_data
     ):
 
         return (
             None,
-            "Invalid participant weight-group data."
+            "No rides were found in your booking."
         )
 
 
-    validated_weight_groups = []
+    # =====================================================
+    # 4. CUSTOMER IDENTITY
+    #
+    # Logged-in user:
+    #     user_profile can identify customer.
+    #
+    # Guest:
+    #     customer_phone can identify previous bookings.
+    # =====================================================
 
-    quantity = 0
+    user_profile = (
+        _booking_user_profile(
+            request
+        )
+    )
 
-    used_range_keys = set()
+
+    customer_phone = (
+        customer_phone
+        or
+        ""
+    ).strip()
 
 
-    for group in weight_groups_data:
+    customer_email = (
+        customer_email
+        or
+        ""
+    ).strip()
 
-        # ---------------------------------------------
-        # GROUP MUST BE A DICTIONARY
-        # ---------------------------------------------
+
+    if not customer_phone:
+
+        return (
+            None,
+            "Customer phone number is required "
+            "to verify booking offers."
+        )
+
+
+    # =====================================================
+    # 5. PREPARE FINAL TOTALS
+    # =====================================================
+
+    validated_items = []
+
+    used_ride_ids = set()
+
+    total_quantity = 0
+
+    booking_subtotal = ZERO
+
+    booking_discount = ZERO
+
+    booking_total = ZERO
+
+
+    # =====================================================
+    # 6. VALIDATE EVERY RIDE
+    # =====================================================
+
+    for item_index, item_data in enumerate(
+        items_data,
+        start=1,
+    ):
+
+
+        # =================================================
+        # ITEM FORMAT
+        # =================================================
 
         if not isinstance(
-            group,
+            item_data,
             dict
         ):
 
             return (
                 None,
-                "Invalid participant weight-group data."
-            )
-
-
-        # ---------------------------------------------
-        # RANGE KEY
-        # ---------------------------------------------
-
-        range_key = str(
-            group.get(
-                "range_key",
-                ""
-            )
-            or
-            ""
-        ).strip()
-
-
-        if not range_key:
-
-            return (
-                None,
-                "Invalid participant weight-group data."
-            )
-
-
-        # ---------------------------------------------
-        # RANGE MUST EXIST IN STATIC CONFIG
-        # ---------------------------------------------
-
-        range_data = (
-            WEIGHT_RANGES.get(
-                range_key
-            )
-        )
-
-
-        if not range_data:
-
-            return (
-                None,
                 (
-                    "One of the selected participant "
-                    "weight ranges is invalid."
+                    f"Adventure #{item_index} "
+                    f"contains invalid booking data."
                 )
             )
 
 
-        # ---------------------------------------------
-        # PREVENT DUPLICATE RANGE
-        # ---------------------------------------------
+        # =================================================
+        # RIDE ID
+        # =================================================
 
-        if range_key in used_range_keys:
+        ride_id = (
+            item_data.get(
+                "ride_id"
+            )
+        )
+
+
+        if not ride_id:
 
             return (
                 None,
                 (
-                    "The same participant weight range "
-                    "cannot be selected more than once."
+                    f"Adventure #{item_index} "
+                    f"is no longer valid."
                 )
             )
 
-
-        used_range_keys.add(
-            range_key
-        )
-
-
-        # ---------------------------------------------
-        # PARTICIPANT COUNT
-        # ---------------------------------------------
 
         try:
 
-            participant_count = int(
+            ride_id = int(
+                ride_id
+            )
+
+        except (
+            TypeError,
+            ValueError,
+        ):
+
+            return (
+                None,
+                (
+                    f"Adventure #{item_index} "
+                    f"contains an invalid ride."
+                )
+            )
+
+
+        # =================================================
+        # PREVENT SAME RIDE TWICE
+        # =================================================
+
+        if ride_id in used_ride_ids:
+
+            return (
+                None,
+                (
+                    "The same ride cannot appear "
+                    "more than once in one booking."
+                )
+            )
+
+
+        used_ride_ids.add(
+            ride_id
+        )
+
+
+        # =================================================
+        # ACTIVE RIDE
+        # =================================================
+
+        ride = (
+            Ride.objects
+            .filter(
+                id=ride_id,
+                is_active=True,
+            )
+            .first()
+        )
+
+
+        if not ride:
+
+            return (
+                None,
+                (
+                    f"One of your selected rides "
+                    f"is no longer available."
+                )
+            )
+
+
+        # =================================================
+        # RIDE PRICE
+        #
+        # Recheck exact price row saved during review.
+        # =================================================
+
+        ride_price_id = (
+            item_data.get(
+                "ride_price_id"
+            )
+        )
+
+
+        ride_price = (
+            RidePrice.objects
+            .filter(
+                id=ride_price_id,
+                ride=ride,
+                is_active=True,
+                start_date__lte=
+                    booking_date,
+                end_date__gte=
+                    booking_date,
+            )
+            .first()
+        )
+
+
+        if not ride_price:
+
+            return (
+                None,
+                (
+                    f"The price for {ride.name} "
+                    f"is no longer valid for "
+                    f"{booking_date.strftime('%d %b %Y')}."
+                )
+            )
+
+
+        # =================================================
+        # WEIGHT GROUPS
+        # =================================================
+
+        weight_groups_data = (
+            item_data.get(
+                "weight_groups",
+                []
+            )
+            or
+            []
+        )
+
+
+        if (
+            not isinstance(
+                weight_groups_data,
+                list
+            )
+            or
+            not weight_groups_data
+        ):
+
+            return (
+                None,
+                (
+                    f"Participant weight information "
+                    f"for {ride.name} is invalid."
+                )
+            )
+
+
+        validated_weight_groups = []
+
+        used_range_keys = set()
+
+        item_quantity = 0
+
+
+        # =================================================
+        # VALIDATE WEIGHT GROUPS
+        # =================================================
+
+        for group in weight_groups_data:
+
+
+            if not isinstance(
+                group,
+                dict
+            ):
+
+                return (
+                    None,
+                    (
+                        f"Participant weight information "
+                        f"for {ride.name} is invalid."
+                    )
+                )
+
+
+            # =============================================
+            # RANGE KEY
+            # =============================================
+
+            range_key = str(
                 group.get(
-                    "participant_count",
+                    "range_key",
+                    ""
+                )
+                or
+                ""
+            ).strip()
+
+
+            if not range_key:
+
+                return (
+                    None,
+                    (
+                        f"A participant weight range "
+                        f"for {ride.name} is missing."
+                    )
+                )
+
+
+            # =============================================
+            # REBUILD RANGE FROM SERVER CONFIG
+            # =============================================
+
+            range_data = (
+                WEIGHT_RANGES.get(
+                    range_key
+                )
+            )
+
+
+            if not range_data:
+
+                return (
+                    None,
+                    (
+                        f"One of the participant weight "
+                        f"ranges for {ride.name} "
+                        f"is no longer valid."
+                    )
+                )
+
+
+            # =============================================
+            # DUPLICATE RANGE
+            # =============================================
+
+            if range_key in used_range_keys:
+
+                return (
+                    None,
+                    (
+                        f"The same weight range cannot "
+                        f"appear more than once for "
+                        f"{ride.name}."
+                    )
+                )
+
+
+            used_range_keys.add(
+                range_key
+            )
+
+
+            # =============================================
+            # PARTICIPANT COUNT
+            # =============================================
+
+            try:
+
+                participant_count = int(
+                    group.get(
+                        "participant_count",
+                        0
+                    )
+                )
+
+            except (
+                TypeError,
+                ValueError,
+            ):
+
+                return (
+                    None,
+                    (
+                        f"Participant quantity "
+                        f"for {ride.name} is invalid."
+                    )
+                )
+
+
+            if participant_count <= 0:
+
+                return (
+                    None,
+                    (
+                        f"Each selected weight range "
+                        f"for {ride.name} must contain "
+                        f"at least one rider."
+                    )
+                )
+
+
+            item_quantity += (
+                participant_count
+            )
+
+
+            # =============================================
+            # SERVER-VALIDATED WEIGHT GROUP
+            # =============================================
+
+            validated_weight_groups.append(
+                {
+
+                    "range_key":
+                        range_key,
+
+                    "label":
+                        range_data[
+                            "label"
+                        ],
+
+                    "min_weight":
+                        range_data[
+                            "min_weight"
+                        ],
+
+                    "max_weight":
+                        range_data[
+                            "max_weight"
+                        ],
+
+                    "participant_count":
+                        participant_count,
+                }
+            )
+
+
+        # =================================================
+        # QUANTITY LIMIT — PER RIDE
+        # =================================================
+
+        if (
+            item_quantity < 1
+            or
+            item_quantity > 10
+        ):
+
+            return (
+                None,
+                (
+                    f"{ride.name} must contain "
+                    f"between 1 and 10 riders."
+                )
+            )
+
+
+        # =================================================
+        # VERIFY QUANTITY SAVED IN SESSION
+        # =================================================
+
+        try:
+
+            session_item_quantity = int(
+                item_data.get(
+                    "quantity",
                     0
                 )
             )
@@ -7751,211 +8794,154 @@ def _validate_pending_booking_before_payment(
 
             return (
                 None,
-                "Invalid participant weight-group data."
-            )
-
-
-        if participant_count <= 0:
-
-            return (
-                None,
                 (
-                    "Each selected participant weight "
-                    "range must contain at least one rider."
+                    f"Participant quantity for "
+                    f"{ride.name} is invalid."
                 )
             )
 
 
-        quantity += (
-            participant_count
+        if (
+            session_item_quantity
+            !=
+            item_quantity
+        ):
+
+            return (
+                None,
+                (
+                    f"Participant quantity for "
+                    f"{ride.name} has changed. "
+                    f"Please review your booking again."
+                )
+            )
+
+
+        # =================================================
+        # PRICE CALCULATION
+        # =================================================
+
+        price_per_person = Decimal(
+            str(
+                ride_price.price
+            )
         )
 
 
-        # ---------------------------------------------
-        # SERVER-VALIDATED GROUP
-        # ---------------------------------------------
+        participant_subtotal = (
+            price_per_person
+            *
+            Decimal(
+                item_quantity
+            )
+        )
 
-        validated_weight_groups.append(
+
+        item_subtotal = (
+            participant_subtotal
+        )
+
+
+        # =================================================
+        # OFFER
+        # =================================================
+
+        selected_offer = None
+
+        item_discount = ZERO
+
+
+        offer_id = (
+            item_data.get(
+                "offer_id"
+            )
+        )
+
+
+        if (
+            offer_id
+            in
             {
-
-                "range_key":
-                    range_key,
-
-                "label":
-                    range_data[
-                        "label"
-                    ],
-
-                "min_weight":
-                    range_data[
-                        "min_weight"
-                    ],
-
-                "max_weight":
-                    range_data[
-                        "max_weight"
-                    ],
-
-                "participant_count":
-                    participant_count,
-
-            }
-        )
-
-
-    # =====================================================
-    # RIDER QUANTITY
-    # =====================================================
-
-    if (
-        quantity < 1
-        or
-        quantity > 10
-    ):
-
-        return (
-            None,
-            "Invalid rider quantity."
-        )
-
-
-    # =====================================================
-    # VERIFY SESSION QUANTITY
-    # =====================================================
-
-    try:
-
-        session_quantity = int(
-            booking_data.get(
-                "quantity",
-                0
-            )
-        )
-
-    except (
-        TypeError,
-        ValueError,
-    ):
-
-        return (
-            None,
-            "Invalid rider quantity."
-        )
-
-
-    if (
-        quantity
-        !=
-        session_quantity
-    ):
-
-        return (
-            None,
-            (
-                "Participant quantity changed. "
-                "Please review the booking again."
-            )
-        )
-
-
-    # =====================================================
-    # PRICE
-    # =====================================================
-
-    price_per_person = (
-        ride_price.price
-    )
-
-
-    participant_subtotal = (
-        price_per_person
-        *
-        quantity
-    )
-
-
-    subtotal = (
-        participant_subtotal
-    )
-
-
-    # =====================================================
-    # OFFER
-    # =====================================================
-
-    selected_offer = None
-
-    discount_amount = Decimal(
-        "0.00"
-    )
-
-
-    user_profile = (
-        _booking_user_profile(
-            request
-        )
-    )
-
-
-    offer_id = (
-        booking_data.get(
-            "offer_id"
-        )
-    )
-
-
-    if offer_id:
-
-        selected_offer = (
-            Offer.objects
-            .filter(
-                id=
-                    offer_id,
-
-                ride=
-                    ride,
-
-                is_active=
-                    True,
-
-                start_date__lte=
-                    booking_date,
-
-                end_date__gte=
-                    booking_date,
-            )
-            .first()
-        )
-
-
-        if not selected_offer:
-
-            return (
+                "",
+                "0",
+                0,
+                "none",
+                "null",
                 None,
-                (
-                    "The selected offer "
-                    "is no longer available."
+            }
+        ):
+
+            offer_id = None
+
+
+        # =================================================
+        # OFFER EXISTS
+        # =================================================
+
+        if offer_id:
+
+            try:
+
+                offer_id = int(
+                    offer_id
                 )
+
+            except (
+                TypeError,
+                ValueError,
+            ):
+
+                return (
+                    None,
+                    (
+                        f"The selected offer for "
+                        f"{ride.name} is invalid."
+                    )
+                )
+
+
+            selected_offer = (
+                Offer.objects
+                .filter(
+                    id=offer_id,
+                    ride=ride,
+                    is_active=True,
+                    start_date__lte=
+                        booking_date,
+                    end_date__gte=
+                        booking_date,
+                )
+                .first()
             )
 
 
-        # =================================================
-        # COUPON VALIDATION
-        # =================================================
+            if not selected_offer:
 
-        requires_coupon = (
-            selected_offer.coupon_required
-            or
-            selected_offer.offer_type
-            ==
-            "coupon"
-        )
+                return (
+                    None,
+                    (
+                        f"The selected offer for "
+                        f"{ride.name} is no longer "
+                        f"available."
+                    )
+                )
 
 
-        if requires_coupon:
+            # =================================================
+            # COUPON
+            # =================================================
+
+            requires_coupon = (
+                selected_offer.coupon_required
+                or
+                selected_offer.offer_type
+                ==
+                "coupon"
+            )
+
 
             supplied_code = (
-                booking_data.get(
+                item_data.get(
                     "coupon_code",
                     ""
                 )
@@ -7964,146 +8950,636 @@ def _validate_pending_booking_before_payment(
             ).strip().upper()
 
 
-            expected_code = (
-                selected_offer.coupon_code
-                or
-                ""
-            ).strip().upper()
+            if requires_coupon:
+
+                expected_code = (
+                    selected_offer.coupon_code
+                    or
+                    ""
+                ).strip().upper()
 
 
-            if (
-                not supplied_code
-                or
-                not expected_code
-                or
-                supplied_code
-                !=
-                expected_code
-            ):
+                if (
+                    not supplied_code
+                    or
+                    not expected_code
+                    or
+                    supplied_code
+                    !=
+                    expected_code
+                ):
+
+                    return (
+                        None,
+                        (
+                            f"The coupon for "
+                            f"{ride.name} is invalid."
+                        )
+                    )
+
+
+            # =================================================
+            # FULL OFFER VALIDATION
+            #
+            # IMPORTANT:
+            #
+            # Now the review form has customer_phone.
+            # Therefore NOW we check:
+            #
+            # - previous bookings
+            # - first booking
+            # - max uses per customer
+            # - logged-in profile
+            # - phone identity
+            # =================================================
+
+            (
+                item_discount,
+                offer_error,
+            ) = _calculate_offer_discount(
+
+                offer=
+                    selected_offer,
+
+                booking_date=
+                    booking_date,
+
+                quantity=
+                    item_quantity,
+
+                participant_subtotal=
+                    participant_subtotal,
+
+                subtotal_before_discount=
+                    item_subtotal,
+
+                user_profile=
+                    user_profile,
+
+                customer_phone=
+                    customer_phone,
+
+                strict_identity=
+                    True,
+
+                check_customer_history=
+                    True,
+            )
+
+
+            if offer_error:
 
                 return (
                     None,
                     (
-                        "The selected coupon "
-                        "is no longer valid."
+                        f"{ride.name}: "
+                        f"{offer_error}"
                     )
                 )
 
 
         # =================================================
-        # SERVER-SIDE OFFER DISCOUNT VALIDATION
+        # NORMALIZE DISCOUNT
         # =================================================
 
-        (
-            discount_amount,
-            offer_error,
-        ) = _calculate_offer_discount(
-
-            offer=
-                selected_offer,
-
-            booking_date=
-                booking_date,
-
-            quantity=
-                quantity,
-
-            participant_subtotal=
-                participant_subtotal,
-
-            subtotal_before_discount=
-                subtotal,
-
-            user_profile=
-                user_profile,
-
-            customer_phone=
-                customer_phone,
-
-            # Billing identity is now available,
-            # so one-use-per-user checks can be enforced.
-            strict_identity=
-                True,
+        item_discount = Decimal(
+            str(
+                item_discount
+                or
+                ZERO
+            )
         )
 
 
-        if offer_error:
+        if item_discount < ZERO:
 
-            return (
-                None,
-                offer_error
+            item_discount = ZERO
+
+
+        if (
+            item_discount
+            >
+            item_subtotal
+        ):
+
+            item_discount = (
+                item_subtotal
             )
 
 
+        # =================================================
+        # ITEM TOTAL
+        # =================================================
+
+        item_total = max(
+
+            item_subtotal
+            -
+            item_discount,
+
+            ZERO,
+        )
+
+
+        # =================================================
+        # COMPARE WITH REVIEW SESSION
+        #
+        # This detects unexpected manipulation or changes.
+        # =================================================
+
+        try:
+
+            session_price = Decimal(
+                str(
+                    item_data.get(
+                        "price_per_person",
+                        "0"
+                    )
+                )
+            )
+
+
+            session_subtotal = Decimal(
+                str(
+                    item_data.get(
+                        "subtotal",
+                        "0"
+                    )
+                )
+            )
+
+
+        except Exception:
+
+            return (
+                None,
+                (
+                    f"Price information for "
+                    f"{ride.name} is invalid."
+                )
+            )
+
+
+        if (
+            session_price
+            !=
+            price_per_person
+        ):
+
+            return (
+                None,
+                (
+                    f"The price for {ride.name} "
+                    f"has changed. Please review "
+                    f"your booking again."
+                )
+            )
+
+
+        if (
+            session_subtotal
+            !=
+            item_subtotal
+        ):
+
+            return (
+                None,
+                (
+                    f"The subtotal for {ride.name} "
+                    f"has changed. Please review "
+                    f"your booking again."
+                )
+            )
+
+
+        # =================================================
+        # VALIDATED ITEM
+        # =================================================
+
+        validated_items.append(
+            {
+
+                "ride":
+                    ride,
+
+                "ride_id":
+                    ride.id,
+
+                "ride_price":
+                    ride_price,
+
+                "ride_price_id":
+                    ride_price.id,
+
+                "ride_name":
+                    ride.name,
+
+                "quantity":
+                    item_quantity,
+
+                "weight_groups":
+                    validated_weight_groups,
+
+                "price_per_person":
+                    price_per_person,
+
+                "participant_subtotal":
+                    participant_subtotal,
+
+                "subtotal":
+                    item_subtotal,
+
+                "offer":
+                    selected_offer,
+
+                "offer_id":
+                    (
+                        selected_offer.id
+                        if selected_offer
+                        else
+                        None
+                    ),
+
+                "offer_title":
+                    (
+                        selected_offer.title
+                        if selected_offer
+                        else
+                        ""
+                    ),
+
+                "offer_label":
+                    (
+                        selected_offer.discount_label
+                        if selected_offer
+                        else
+                        ""
+                    ),
+
+                "coupon_code":
+                    (
+                        supplied_code
+                        if selected_offer
+                        else
+                        ""
+                    ),
+
+                "discount_amount":
+                    item_discount,
+
+                "total_amount":
+                    item_total,
+            }
+        )
+
+
+        # =================================================
+        # BOOKING TOTALS
+        # =================================================
+
+        total_quantity += (
+            item_quantity
+        )
+
+
+        booking_subtotal += (
+            item_subtotal
+        )
+
+
+        booking_discount += (
+            item_discount
+        )
+
+
+        booking_total += (
+            item_total
+        )
+
+
     # =====================================================
-    # TOTAL
+    # 7. FINAL BOOKING VALIDATION
     # =====================================================
 
-    total_amount = max(
-        subtotal
-        -
-        discount_amount,
+    if not validated_items:
 
-        Decimal(
-            "0.00"
-        ),
+        return (
+            None,
+            "No valid rides remain in this booking."
+        )
+
+
+    if total_quantity <= 0:
+
+        return (
+            None,
+            "The booking must contain at least one rider."
+        )
+
+
+    # =====================================================
+    # VERIFY BOOKING-LEVEL SESSION TOTALS
+    # =====================================================
+
+    try:
+
+        session_total_quantity = int(
+            booking_data.get(
+                "quantity",
+                0
+            )
+        )
+
+
+        session_subtotal = Decimal(
+            str(
+                booking_data.get(
+                    "subtotal",
+                    "0"
+                )
+            )
+        )
+
+
+    except Exception:
+
+        return (
+            None,
+            "The booking totals are invalid. "
+            "Please review your booking again."
+        )
+
+
+    if (
+        session_total_quantity
+        !=
+        total_quantity
+    ):
+
+        return (
+            None,
+            (
+                "The total number of participants "
+                "has changed. Please review "
+                "your booking again."
+            )
+        )
+
+
+    if (
+        session_subtotal
+        !=
+        booking_subtotal
+    ):
+
+        return (
+            None,
+            (
+                "The booking subtotal has changed. "
+                "Please review your booking again."
+            )
+        )
+
+
+    # =====================================================
+    # IMPORTANT:
+    #
+    # Discount can legitimately change here because
+    # customer-history validation is performed NOW.
+    #
+    # Example:
+    # Review preview showed First Booking discount,
+    # but entered phone has already booked before.
+    #
+    # In that case _calculate_offer_discount() above
+    # already returned an error, so payment is stopped.
+    # =====================================================
+
+
+    # =====================================================
+    # 8. BUILD UPDATED SESSION DATA
+    #
+    # Store only JSON-serializable values in session.
+    # =====================================================
+
+    updated_session_items = []
+
+
+    for item in validated_items:
+
+        updated_session_items.append(
+            {
+
+                "ride_id":
+                    item[
+                        "ride_id"
+                    ],
+
+                "ride_price_id":
+                    item[
+                        "ride_price_id"
+                    ],
+
+                "ride_name":
+                    item[
+                        "ride_name"
+                    ],
+
+                "quantity":
+                    item[
+                        "quantity"
+                    ],
+
+                "weight_groups":
+                    item[
+                        "weight_groups"
+                    ],
+
+                "price_per_person":
+                    str(
+                        item[
+                            "price_per_person"
+                        ]
+                    ),
+
+                "participant_subtotal":
+                    str(
+                        item[
+                            "participant_subtotal"
+                        ]
+                    ),
+
+                "subtotal":
+                    str(
+                        item[
+                            "subtotal"
+                        ]
+                    ),
+
+                "offer_id":
+                    item[
+                        "offer_id"
+                    ],
+
+                "offer_title":
+                    item[
+                        "offer_title"
+                    ],
+
+                "offer_label":
+                    item[
+                        "offer_label"
+                    ],
+
+                "coupon_code":
+                    item[
+                        "coupon_code"
+                    ],
+
+                "discount_amount":
+                    str(
+                        item[
+                            "discount_amount"
+                        ]
+                    ),
+
+                "total_amount":
+                    str(
+                        item[
+                            "total_amount"
+                        ]
+                    ),
+            }
+        )
+
+
+    updated_booking_data = {
+
+        "booking_date":
+            booking_date.isoformat(),
+
+        "items":
+            updated_session_items,
+
+        "quantity":
+            total_quantity,
+
+        "subtotal":
+            str(
+                booking_subtotal
+            ),
+
+        "discount_amount":
+            str(
+                booking_discount
+            ),
+
+        "total_amount":
+            str(
+                booking_total
+            ),
+    }
+
+
+    # =====================================================
+    # UPDATE SESSION WITH FINAL SERVER CALCULATION
+    # =====================================================
+
+    request.session[
+        "pending_booking"
+    ] = updated_booking_data
+
+
+    request.session.modified = True
+
+
+    # =====================================================
+    # DEBUG
+    # =====================================================
+
+    print("\n" + "=" * 70)
+
+    print(
+        "MULTI-RIDE PAYMENT VALIDATION SUCCESS"
     )
 
+    print(
+        "DATE:",
+        booking_date
+    )
+
+    print(
+        "RIDES:",
+        len(
+            validated_items
+        )
+    )
+
+    print(
+        "TOTAL RIDERS:",
+        total_quantity
+    )
+
+    print(
+        "SUBTOTAL:",
+        booking_subtotal
+    )
+
+    print(
+        "DISCOUNT:",
+        booking_discount
+    )
+
+    print(
+        "TOTAL:",
+        booking_total
+    )
+
+    print("=" * 70 + "\n")
+
 
     # =====================================================
-    # VALIDATED RESULT
+    # 9. FINAL RESULT
     # =====================================================
 
     return (
         {
 
             "booking_data":
-                booking_data,
-
-            "ride":
-                ride,
-
-            "ride_price":
-                ride_price,
+                updated_booking_data,
 
             "booking_date":
                 booking_date,
 
-            "time_slot":
-                time_slot,
+            "items":
+                validated_items,
 
             "quantity":
-                quantity,
-
-            "weight_groups":
-                validated_weight_groups,
-
-            "price_per_person":
-                price_per_person,
-
-            "participant_subtotal":
-                participant_subtotal,
+                total_quantity,
 
             "subtotal":
-                subtotal,
-
-            "offer":
-                selected_offer,
+                booking_subtotal,
 
             "discount_amount":
-                discount_amount,
+                booking_discount,
 
             "total_amount":
-                total_amount,
+                booking_total,
 
             "user_profile":
                 user_profile,
 
+            "customer_phone":
+                customer_phone,
+
+            "customer_email":
+                customer_email,
         },
+
         None,
     )
 
-    
+
 # =========================================================
 # FIND OR CREATE CUSTOMER USER PROFILE DURING BOOKING
 # =========================================================
@@ -8250,7 +9726,6 @@ def _get_or_create_booking_user_profile(
     return user_profile
 
 
-
 @transaction.atomic
 def booking_confirm(request):
 
@@ -8355,7 +9830,7 @@ def booking_confirm(request):
 
 
     # =====================================================
-    # INTERNATIONAL PHONE VALIDATION
+    # PHONE
     #
     # Example:
     # +919876543210
@@ -8416,7 +9891,16 @@ def booking_confirm(request):
 
 
     # =====================================================
-    # REVALIDATE BOOKING
+    # REVALIDATE COMPLETE MULTI-RIDE BOOKING
+    #
+    # This performs final:
+    #
+    # - ride validation
+    # - price validation
+    # - participant validation
+    # - offer validation
+    # - customer-history validation
+    # - final total calculation
     # =====================================================
 
     (
@@ -8439,14 +9923,46 @@ def booking_confirm(request):
         return JsonResponse(
             {
                 "success": False,
-                "message": error_message,
+                "message": (
+                    error_message
+                    or
+                    "The booking could not be validated."
+                ),
             },
             status=400,
         )
 
 
     # =====================================================
-    # TOTAL AMOUNT
+    # VALIDATED ITEMS
+    # =====================================================
+
+    validated_items = (
+        validated.get(
+            "items",
+            []
+        )
+        or
+        []
+    )
+
+
+    if not validated_items:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "No valid rides were found "
+                    "in this booking."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # FINAL TOTAL
     # =====================================================
 
     total_amount = (
@@ -8465,7 +9981,6 @@ def booking_confirm(request):
         return JsonResponse(
             {
                 "success": False,
-
                 "message": (
                     "This booking has a zero payable "
                     "amount. Free bookings must be "
@@ -8503,7 +10018,6 @@ def booking_confirm(request):
         return JsonResponse(
             {
                 "success": False,
-
                 "message": (
                     "Razorpay API keys "
                     "are not configured yet."
@@ -8526,7 +10040,7 @@ def booking_confirm(request):
 
 
     # =====================================================
-    # BOOKING SESSION DATA
+    # FINAL SESSION DATA
     # =====================================================
 
     booking_data = (
@@ -8537,7 +10051,7 @@ def booking_confirm(request):
 
 
     # =====================================================
-    # FIND OR CREATE CUSTOMER PROFILE
+    # FIND / CREATE CUSTOMER PROFILE
     # =====================================================
 
     try:
@@ -8564,7 +10078,7 @@ def booking_confirm(request):
     except Exception as error:
 
         print(
-            "\n=============================="
+            "\n================================"
         )
 
         print(
@@ -8582,7 +10096,7 @@ def booking_confirm(request):
         )
 
         print(
-            "==============================\n"
+            "================================\n"
         )
 
 
@@ -8604,7 +10118,29 @@ def booking_confirm(request):
 
 
     # =====================================================
-    # CREATE BOOKING
+    # FIRST ITEM
+    #
+    # TEMPORARY LEGACY COMPATIBILITY
+    #
+    # Booking still contains the old fields:
+    #
+    # ride
+    # ride_price
+    # price_per_person
+    # offer
+    # time_slot
+    #
+    # We keep the first ride in those fields until the
+    # entire payment/ticket/staff system is migrated.
+    # =====================================================
+
+    first_item = (
+        validated_items[0]
+    )
+
+
+    # =====================================================
+    # CREATE PARENT BOOKING
     # =====================================================
 
     try:
@@ -8626,50 +10162,34 @@ def booking_confirm(request):
             customer_pincode=
                 customer_pincode,
 
-            ride=
-                validated[
-                    "ride"
-                ],
 
-            ride_price=
-                validated[
-                    "ride_price"
-                ],
+            # =============================================
+            # ONE DATE FOR WHOLE BOOKING
+            # =============================================
 
             booking_date=
                 validated[
                     "booking_date"
                 ],
 
+
+            # =============================================
+            # TEMPORARY LEGACY TIME FIELD
+            #
+            # There is no time in the new booking flow.
+            # =============================================
+
             time_slot=
-                validated[
-                    "time_slot"
-                ],
+                "",
+
+
+            # =============================================
+            # PARENT TOTALS
+            # =============================================
 
             quantity=
                 validated[
                     "quantity"
-                ],
-
-            price_per_person=
-                validated[
-                    "price_per_person"
-                ],
-
-            offer=
-                validated[
-                    "offer"
-                ],
-
-            applied_coupon_code=
-                booking_data.get(
-                    "coupon_code",
-                    ""
-                ),
-
-            discount_amount=
-                validated[
-                    "discount_amount"
                 ],
 
             subtotal=
@@ -8677,19 +10197,64 @@ def booking_confirm(request):
                     "subtotal"
                 ],
 
+            discount_amount=
+                validated[
+                    "discount_amount"
+                ],
+
             total_amount=
                 validated[
                     "total_amount"
                 ],
 
+
+            # =============================================
+            # TEMPORARY LEGACY SINGLE-RIDE FIELDS
+            #
+            # First ride only.
+            # Remove later after full migration.
+            # =============================================
+
+            ride=
+                first_item[
+                    "ride"
+                ],
+
+            ride_price=
+                first_item[
+                    "ride_price"
+                ],
+
+            price_per_person=
+                first_item[
+                    "price_per_person"
+                ],
+
+            offer=
+                first_item[
+                    "offer"
+                ],
+
+            applied_coupon_code=
+                first_item.get(
+                    "coupon_code",
+                    ""
+                ),
+
+
+            # =============================================
+            # STATUS
+            # =============================================
+
             status=
                 "payment_pending",
         )
 
+
     except Exception as error:
 
         print(
-            "\n=============================="
+            "\n================================"
         )
 
         print(
@@ -8707,7 +10272,12 @@ def booking_confirm(request):
         )
 
         print(
-            "==============================\n"
+            "VALIDATED:",
+            validated
+        )
+
+        print(
+            "================================\n"
         )
 
 
@@ -8729,77 +10299,170 @@ def booking_confirm(request):
 
 
     # =====================================================
-    # SAVE STATIC WEIGHT GROUPS
+    # CREATE BOOKING RIDE ITEMS
     #
-    # IMPORTANT:
-    #
-    # OLD:
-    # weight_range = item["weight_range"]
-    # weight_range=weight_range
-    #
-    # NEW:
-    # range_key=item["range_key"]
+    # One BookingRideItem per selected adventure.
     # =====================================================
 
-    weight_group_objects = []
+    created_booking_items = []
 
 
     try:
 
-        for item in validated[
-            "weight_groups"
-        ]:
+        for item_index, item in enumerate(
+            validated_items,
+            start=1,
+        ):
 
-            weight_group_objects.append(
-
-                BookingWeightGroup(
+            booking_item = (
+                BookingRideItem.objects.create(
 
                     booking=
                         booking,
 
-                    range_key=
+                    ride=
                         item[
-                            "range_key"
+                            "ride"
                         ],
 
-                    participant_count=
+                    ride_price=
                         item[
-                            "participant_count"
+                            "ride_price"
                         ],
 
-                    min_weight=
+                    quantity=
                         item[
-                            "min_weight"
+                            "quantity"
                         ],
 
-                    max_weight=
+                    price_per_person=
                         item[
-                            "max_weight"
+                            "price_per_person"
                         ],
 
-                    label=
+                    offer=
                         item[
-                            "label"
+                            "offer"
                         ],
 
+                    applied_coupon_code=
+                        item.get(
+                            "coupon_code",
+                            ""
+                        ),
+
+                    discount_amount=
+                        item[
+                            "discount_amount"
+                        ],
+
+                    subtotal=
+                        item[
+                            "subtotal"
+                        ],
+
+                    total_amount=
+                        item[
+                            "total_amount"
+                        ],
+
+                    status=
+                        "booked",
                 )
-
             )
 
 
-        BookingWeightGroup.objects.bulk_create(
-            weight_group_objects
-        )
+            created_booking_items.append(
+                booking_item
+            )
+
+
+            # =============================================
+            # WEIGHT GROUPS FOR THIS RIDE
+            # =============================================
+
+            weight_group_objects = []
+
+
+            for group in item[
+                "weight_groups"
+            ]:
+
+                weight_group_objects.append(
+
+                    BookingWeightGroup(
+
+                        # =================================
+                        # OLD PARENT RELATION
+                        #
+                        # Keep temporarily for compatibility
+                        # with old ticket/admin code.
+                        # =================================
+
+                        booking=
+                            booking,
+
+
+                        # =================================
+                        # NEW CORRECT RELATION
+                        # =================================
+
+                        booking_item=
+                            booking_item,
+
+                        range_key=
+                            group[
+                                "range_key"
+                            ],
+
+                        participant_count=
+                            group[
+                                "participant_count"
+                            ],
+
+                        min_weight=
+                            group[
+                                "min_weight"
+                            ],
+
+                        max_weight=
+                            group[
+                                "max_weight"
+                            ],
+
+                        label=
+                            group[
+                                "label"
+                            ],
+                    )
+                )
+
+
+            if weight_group_objects:
+
+                BookingWeightGroup.objects.bulk_create(
+                    weight_group_objects
+                )
+
+
+            print(
+                (
+                    f"BOOKING ITEM #{item_index} CREATED | "
+                    f"Ride: {booking_item.ride.name} | "
+                    f"Riders: {booking_item.quantity} | "
+                    f"Total: {booking_item.total_amount}"
+                )
+            )
 
 
     except Exception as error:
 
         print(
-            "\n=============================="
+            "\n================================"
         )
 
         print(
-            "WEIGHT GROUP SAVE ERROR"
+            "BOOKING ITEM CREATE ERROR"
         )
 
         print(
@@ -8813,14 +10476,12 @@ def booking_confirm(request):
         )
 
         print(
-            "VALIDATED WEIGHT GROUPS:",
-            validated.get(
-                "weight_groups"
-            )
+            "VALIDATED ITEMS:",
+            validated_items
         )
 
         print(
-            "==============================\n"
+            "================================\n"
         )
 
 
@@ -8832,13 +10493,68 @@ def booking_confirm(request):
         return JsonResponse(
             {
                 "success": False,
-
                 "message": (
-                    "Unable to save participant "
-                    "weight information."
+                    "Unable to save the selected "
+                    "rides and participant details."
                 ),
             },
             status=500,
+        )
+
+
+    # =====================================================
+    # VERIFY CHILD ITEMS WERE CREATED
+    # =====================================================
+
+    if (
+        len(
+            created_booking_items
+        )
+        !=
+        len(
+            validated_items
+        )
+    ):
+
+        transaction.set_rollback(
+            True
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Not all selected rides could "
+                    "be saved. Please try again."
+                ),
+            },
+            status=500,
+        )
+
+
+    # =====================================================
+    # RIDE NAMES
+    #
+    # Used by Razorpay and checkout description.
+    # =====================================================
+
+    ride_names = ", ".join(
+        [
+            item[
+                "ride_name"
+            ]
+
+            for item
+            in validated_items
+        ]
+    )
+
+
+    if not ride_names:
+
+        ride_names = (
+            "Flying Fox Adventure Booking"
         )
 
 
@@ -8871,6 +10587,7 @@ def booking_confirm(request):
         transaction.set_rollback(
             True
         )
+
 
         return JsonResponse(
             {
@@ -8918,8 +10635,22 @@ def booking_confirm(request):
                                     booking.booking_id
                                 ),
 
-                            "ride":
-                                booking.ride.name,
+                            "rides":
+                                ride_names[:250],
+
+                            "ride_count":
+                                str(
+                                    len(
+                                        validated_items
+                                    )
+                                ),
+
+                            "total_riders":
+                                str(
+                                    validated[
+                                        "quantity"
+                                    ]
+                                ),
                         },
                 }
             )
@@ -8929,7 +10660,7 @@ def booking_confirm(request):
     except Exception as error:
 
         print(
-            "\n=============================="
+            "\n================================"
         )
 
         print(
@@ -8957,7 +10688,12 @@ def booking_confirm(request):
         )
 
         print(
-            "==============================\n"
+            "RIDES:",
+            ride_names
+        )
+
+        print(
+            "================================\n"
         )
 
 
@@ -8969,7 +10705,6 @@ def booking_confirm(request):
         return JsonResponse(
             {
                 "success": False,
-
                 "message": (
                     "Unable to create the Razorpay "
                     "order. Please try again."
@@ -8996,10 +10731,10 @@ def booking_confirm(request):
             True
         )
 
+
         return JsonResponse(
             {
                 "success": False,
-
                 "message": (
                     "Invalid response received from "
                     "the payment service."
@@ -9011,6 +10746,8 @@ def booking_confirm(request):
 
     # =====================================================
     # CREATE PAYMENT RECORD
+    #
+    # One payment for whole booking.
     # =====================================================
 
     try:
@@ -9039,7 +10776,7 @@ def booking_confirm(request):
     except Exception as error:
 
         print(
-            "\n=============================="
+            "\n================================"
         )
 
         print(
@@ -9057,7 +10794,7 @@ def booking_confirm(request):
         )
 
         print(
-            "==============================\n"
+            "================================\n"
         )
 
 
@@ -9069,7 +10806,6 @@ def booking_confirm(request):
         return JsonResponse(
             {
                 "success": False,
-
                 "message": (
                     "Payment order was prepared, "
                     "but the local payment record "
@@ -9092,6 +10828,59 @@ def booking_confirm(request):
 
 
     request.session.modified = True
+
+
+    # =====================================================
+    # DEBUG SUCCESS
+    # =====================================================
+
+    print(
+        "\n================================"
+    )
+
+    print(
+        "MULTI-RIDE BOOKING CREATED"
+    )
+
+    print(
+        "BOOKING:",
+        booking.booking_id
+    )
+
+    print(
+        "RIDES:",
+        ride_names
+    )
+
+    print(
+        "RIDE COUNT:",
+        len(
+            validated_items
+        )
+    )
+
+    print(
+        "TOTAL RIDERS:",
+        validated[
+            "quantity"
+        ]
+    )
+
+    print(
+        "TOTAL:",
+        validated[
+            "total_amount"
+        ]
+    )
+
+    print(
+        "RAZORPAY ORDER:",
+        razorpay_order_id
+    )
+
+    print(
+        "================================\n"
+    )
 
 
     # =====================================================
@@ -9121,7 +10910,12 @@ def booking_confirm(request):
                 ),
 
             "description":
-                booking.ride.name,
+                ride_names,
+
+            "ride_count":
+                len(
+                    validated_items
+                ),
 
             "customer_name":
                 customer_name,
@@ -9136,42 +10930,43 @@ def booking_confirm(request):
 
 
 
-
-
-
 def booking_payment_verify(request):
 
     """
-    Final Razorpay payment verification.
+    Final Razorpay payment verification
+    for the multi-ride booking system.
 
     Flow:
 
     1. Receive Razorpay callback data.
-    2. Find local booking/payment.
-    3. Verify local order ID.
-    4. Verify Razorpay signature.
-    5. Fetch payment from Razorpay.
-    6. Verify Razorpay order ID.
-    7. Verify amount.
-    8. Verify payment is captured.
-    9. Permanently save Razorpay references.
+    2. Find parent Booking + all BookingRideItems.
+    3. Find local Payment.
+    4. Verify browser order ID against local order ID.
+    5. Verify Razorpay signature.
+    6. Fetch payment directly from Razorpay.
+    7. Verify Razorpay order ID.
+    8. Verify paid amount.
+    9. Verify payment status = captured.
     10. Atomically:
         - mark Payment = paid
         - mark Booking = confirmed
-        - create Ticket database record
-    11. Generate QR separately.
-    12. Generate PDF separately.
-    13. Send Email/SMS/WhatsApp separately.
-    14. Return success.
+        - keep all BookingRideItems booked
+        - create/get one Ticket for whole booking
+    11. Generate QR.
+    12. Generate PDF.
+    13. Send email/SMS/WhatsApp.
+    14. Clear temporary booking session.
+    15. Return success URL.
 
     IMPORTANT:
-    Ticket generation or notification failures must NEVER
+
+    A ticket, PDF or notification failure must NEVER
     roll back an already captured Razorpay payment.
     """
 
 
     # =====================================================
-    # POST ONLY
+    # 1. POST ONLY
     # =====================================================
 
     if request.method != "POST":
@@ -9186,7 +10981,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # RAZORPAY CALLBACK DATA
+    # 2. RAZORPAY CALLBACK DATA
     # =====================================================
 
     booking_id = (
@@ -9226,7 +11021,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # REQUIRED DATA
+    # 3. REQUIRED DATA
     # =====================================================
 
     if not all(
@@ -9239,28 +11034,49 @@ def booking_payment_verify(request):
     ):
 
         print(
-            "RAZORPAY VERIFY MISSING DATA:",
+            "\n========================================"
+        )
+
+        print(
+            "RAZORPAY VERIFY MISSING DATA"
+        )
+
+        print(
             {
                 "booking_id":
-                    bool(booking_id),
+                    bool(
+                        booking_id
+                    ),
 
                 "payment_id":
-                    bool(razorpay_payment_id),
+                    bool(
+                        razorpay_payment_id
+                    ),
 
                 "order_id":
-                    bool(browser_order_id),
+                    bool(
+                        browser_order_id
+                    ),
 
                 "signature":
-                    bool(razorpay_signature),
+                    bool(
+                        razorpay_signature
+                    ),
             }
+        )
+
+        print(
+            "========================================\n"
         )
 
 
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
-                    "Missing Razorpay payment information."
+                    "Missing Razorpay payment "
+                    "information."
                 ),
             },
             status=400,
@@ -9268,19 +11084,39 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # FIND BOOKING
+    # 4. FIND PARENT BOOKING
+    #
+    # NEW:
+    #
+    # Load all BookingRideItem rows together with:
+    #
+    # ride
+    # ride_price
+    # offer
+    # weight_groups
+    #
+    # Parent Booking.ride is only temporary legacy data.
     # =====================================================
 
     try:
 
         booking = (
             Booking.objects
+
             .select_related(
-                "ride",
-                "offer",
+                "user",
             )
+
+            .prefetch_related(
+                "ride_items__ride",
+                "ride_items__ride_price",
+                "ride_items__offer",
+                "ride_items__weight_groups",
+            )
+
             .get(
-                booking_id=booking_id
+                booking_id=
+                    booking_id
             )
         )
 
@@ -9296,6 +11132,7 @@ def booking_payment_verify(request):
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
                     "Booking could not be found."
                 ),
@@ -9305,7 +11142,64 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # FIND LOCAL PAYMENT
+    # 5. VERIFY BOOKING HAS RIDE ITEMS
+    # =====================================================
+
+    booking_items = list(
+        booking.ride_items.all()
+    )
+
+
+    if not booking_items:
+
+        print(
+            "\n========================================"
+        )
+
+        print(
+            "PAYMENT VERIFY: NO BOOKING ITEMS"
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "========================================\n"
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    "No rides were found in this booking."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # RIDE NAMES FOR LOGGING
+    # =====================================================
+
+    ride_names = ", ".join(
+        [
+            item.ride.name
+
+            for item
+            in booking_items
+
+            if item.ride
+        ]
+    )
+
+
+    # =====================================================
+    # 6. FIND LOCAL PAYMENT
     # =====================================================
 
     try:
@@ -9313,7 +11207,8 @@ def booking_payment_verify(request):
         payment = (
             Payment.objects
             .get(
-                booking=booking
+                booking=
+                    booking
             )
         )
 
@@ -9329,6 +11224,7 @@ def booking_payment_verify(request):
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
                     "Payment record could not be found."
                 ),
@@ -9338,10 +11234,9 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # ALREADY VERIFIED / IDEMPOTENCY
+    # 7. IDEMPOTENCY
     #
-    # Razorpay callback or browser retry may call this
-    # endpoint more than once.
+    # Razorpay/browser may call verification twice.
     # =====================================================
 
     if (
@@ -9375,9 +11270,9 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # VERIFY BROWSER ORDER AGAINST LOCAL ORDER
+    # 8. VERIFY BROWSER ORDER AGAINST LOCAL ORDER
     #
-    # Never trust browser order ID as source of truth.
+    # Never use browser order ID as source of truth.
     # =====================================================
 
     if (
@@ -9400,6 +11295,11 @@ def booking_payment_verify(request):
         )
 
         print(
+            "RIDES:",
+            ride_names
+        )
+
+        print(
             "LOCAL ORDER:",
             payment.gateway_order_id
         )
@@ -9419,13 +11319,13 @@ def booking_payment_verify(request):
         )
 
 
-        # IMPORTANT:
-        # Do not mark a real payment as failed because a
-        # malformed/forged callback supplied a wrong order ID.
+        # Do NOT modify a real booking/payment because
+        # somebody supplied an incorrect callback.
 
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
                     "Payment order verification failed."
                 ),
@@ -9435,7 +11335,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # RAZORPAY SETTINGS
+    # 9. RAZORPAY SETTINGS
     # =====================================================
 
     key_id = getattr(
@@ -9477,7 +11377,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # RAZORPAY CLIENT
+    # 10. RAZORPAY CLIENT
     # =====================================================
 
     client = razorpay.Client(
@@ -9489,15 +11389,15 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # VERIFY PAYMENT SIGNATURE
+    # 11. VERIFY PAYMENT SIGNATURE
     # =====================================================
 
     try:
 
         client.utility.verify_payment_signature(
             {
-                # IMPORTANT:
-                # Use our DATABASE order ID.
+                # Always verify using our DATABASE
+                # Razorpay order ID.
 
                 "razorpay_order_id":
                     payment.gateway_order_id,
@@ -9537,6 +11437,11 @@ def booking_payment_verify(request):
         )
 
         print(
+            "RIDES:",
+            ride_names
+        )
+
+        print(
             "PAYMENT ID:",
             razorpay_payment_id
         )
@@ -9552,27 +11457,19 @@ def booking_payment_verify(request):
         )
 
         print(
-            "KEY ID:",
-            key_id
-        )
-
-        print(
             "========================================\n"
         )
 
 
-        # IMPORTANT:
-        #
-        # Do NOT mark payment/booking failed here.
-        # An invalid request should not be able to change
-        # a legitimate booking's state.
+        # Never change booking/payment status here.
 
         return JsonResponse(
             {
                 "success": False,
 
                 "message": (
-                    "Payment signature verification failed."
+                    "Payment signature "
+                    "verification failed."
                 ),
             },
             status=400,
@@ -9581,14 +11478,11 @@ def booking_payment_verify(request):
 
     # =====================================================
     # SIGNATURE IS VALID
-    #
-    # At this point payment ID + signature came from a
-    # cryptographically verified Razorpay callback.
     # =====================================================
 
 
     # =====================================================
-    # FETCH PAYMENT FROM RAZORPAY
+    # 12. FETCH PAYMENT DIRECTLY FROM RAZORPAY
     # =====================================================
 
     try:
@@ -9636,20 +11530,15 @@ def booking_payment_verify(request):
         )
 
         print(
-            "KEY ID:",
-            key_id
-        )
-
-        print(
             "========================================\n"
         )
 
 
         # =================================================
-        # SAVE VERIFIED RAZORPAY REFERENCES
+        # Signature is already valid.
         #
-        # Even if Razorpay's fetch API temporarily fails,
-        # do not lose the payment ID.
+        # Save references so we don't lose them even if
+        # Razorpay's fetch endpoint temporarily fails.
         # =================================================
 
         try:
@@ -9670,11 +11559,14 @@ def booking_payment_verify(request):
                 ]
             )
 
+
         except Exception as save_error:
 
             print(
                 "RAZORPAY REFERENCE SAVE ERROR:",
-                repr(save_error)
+                repr(
+                    save_error
+                )
             )
 
 
@@ -9693,7 +11585,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # REMOTE PAYMENT INFORMATION
+    # 13. REMOTE PAYMENT DETAILS
     # =====================================================
 
     remote_order_id = (
@@ -9720,7 +11612,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # LOG RAZORPAY RESPONSE
+    # LOG REMOTE DATA
     # =====================================================
 
     print(
@@ -9734,6 +11626,11 @@ def booking_payment_verify(request):
     print(
         "BOOKING:",
         booking.booking_id
+    )
+
+    print(
+        "RIDES:",
+        ride_names
     )
 
     print(
@@ -9767,7 +11664,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # VERIFY REMOTE ORDER
+    # 14. VERIFY REMOTE ORDER
     # =====================================================
 
     if (
@@ -9801,7 +11698,8 @@ def booking_payment_verify(request):
                 "success": False,
 
                 "message": (
-                    "Razorpay order verification failed."
+                    "Razorpay order "
+                    "verification failed."
                 ),
             },
             status=400,
@@ -9809,7 +11707,9 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # VERIFY AMOUNT
+    # 15. VERIFY AMOUNT
+    #
+    # Payment.amount contains the combined multi-ride total.
     # =====================================================
 
     expected_amount_paise = int(
@@ -9824,7 +11724,8 @@ def booking_payment_verify(request):
         )
         .quantize(
             Decimal("1"),
-            rounding=ROUND_HALF_UP,
+            rounding=
+                ROUND_HALF_UP,
         )
     )
 
@@ -9860,7 +11761,8 @@ def booking_payment_verify(request):
                 "success": False,
 
                 "message": (
-                    "Payment amount verification failed."
+                    "Payment amount "
+                    "verification failed."
                 ),
             },
             status=400,
@@ -9868,12 +11770,9 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # SAVE VERIFIED RAZORPAY REFERENCES
+    # 16. SAVE VERIFIED RAZORPAY REFERENCES
     #
-    # Do this BEFORE ticket/file generation.
-    #
-    # If anything later goes wrong, we still know which
-    # Razorpay payment belongs to this local record.
+    # Store before ticket generation.
     # =====================================================
 
     try:
@@ -9927,7 +11826,8 @@ def booking_payment_verify(request):
                 "message": (
                     "Payment was verified but could not "
                     "be recorded locally. "
-                    "Please contact support and do not pay again."
+                    "Please contact support and "
+                    "do not pay again."
                 ),
             },
             status=500,
@@ -9935,15 +11835,13 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # PAYMENT MUST BE CAPTURED
+    # 17. PAYMENT MUST BE CAPTURED
     # =====================================================
 
     if remote_status != "captured":
 
-        # ---------------------------------------------
-        # Razorpay may temporarily return authorized.
-        # Store that status and allow reconciliation.
-        # ---------------------------------------------
+        # Razorpay may sometimes temporarily return:
+        # authorized
 
         if remote_status == "authorized":
 
@@ -9997,46 +11895,82 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # PAYMENT IS CAPTURED
+    # 18. PAYMENT CAPTURED
     #
-    # NOW commit only the important DATABASE state.
-    #
-    # This transaction is intentionally SMALL.
+    # Only DB finalization is inside this transaction.
     # =====================================================
 
     try:
 
         with transaction.atomic():
 
-            # ---------------------------------------------
+            # =================================================
             # LOCK PAYMENT
-            # ---------------------------------------------
+            # =================================================
 
             locked_payment = (
                 Payment.objects
                 .select_for_update()
                 .get(
-                    pk=payment.pk
+                    pk=
+                        payment.pk
                 )
             )
 
 
-            # ---------------------------------------------
-            # LOCK BOOKING
-            # ---------------------------------------------
+            # =================================================
+            # LOCK PARENT BOOKING
+            # =================================================
 
             locked_booking = (
                 Booking.objects
                 .select_for_update()
                 .get(
-                    pk=booking.pk
+                    pk=
+                        booking.pk
                 )
             )
 
 
-            # =============================================
-            # PAYMENT
-            # =============================================
+            # =================================================
+            # LOCK RIDE ITEMS
+            #
+            # Makes payment finalization safe if callbacks
+            # happen at the same time.
+            # =================================================
+
+            locked_booking_items = list(
+
+                BookingRideItem.objects
+
+                .select_for_update()
+
+                .filter(
+                    booking=
+                        locked_booking
+                )
+
+                .select_related(
+                    "ride",
+                    "ride_price",
+                    "offer",
+                )
+            )
+
+
+            if not locked_booking_items:
+
+                raise ValueError(
+                    (
+                        "Booking has no "
+                        "BookingRideItem records."
+                    )
+                )
+
+
+            # =================================================
+            # PAYMENT → PAID
+            # =================================================
 
             locked_payment.gateway_payment_id = (
                 razorpay_payment_id
@@ -10073,9 +12007,9 @@ def booking_payment_verify(request):
             )
 
 
-            # =============================================
-            # BOOKING
-            # =============================================
+            # =================================================
+            # PARENT BOOKING → CONFIRMED
+            # =================================================
 
             locked_booking.status = (
                 "confirmed"
@@ -10090,22 +12024,54 @@ def booking_payment_verify(request):
             )
 
 
-            # =============================================
-            # TICKET DATABASE RECORD
+            # =================================================
+            # BOOKING RIDE ITEMS
             #
-            # Only create/get DB row here.
-            # Do NOT generate files inside transaction.
-            # =============================================
+            # booking_confirm() currently creates each item
+            # with status="booked".
+            #
+            # Keep that state after successful payment.
+            #
+            # This section also repairs any item that somehow
+            # still has another pre-payment status.
+            # =================================================
+
+            for booking_item in locked_booking_items:
+
+                if (
+                    booking_item.status
+                    !=
+                    "booked"
+                ):
+
+                    booking_item.status = (
+                        "booked"
+                    )
+
+                    booking_item.save(
+                        update_fields=[
+                            "status",
+                        ]
+                    )
+
+
+            # =================================================
+            # ONE TICKET FOR WHOLE PARENT BOOKING
+            # =================================================
 
             ticket, created = (
-                Ticket.objects.get_or_create(
+                Ticket.objects
+                .get_or_create(
                     booking=
                         locked_booking
                 )
             )
 
 
-            # Keep final objects after transaction
+            # =================================================
+            # KEEP FINAL OBJECTS
+            # =================================================
+
             payment = (
                 locked_payment
             )
@@ -10141,6 +12107,11 @@ def booking_payment_verify(request):
         )
 
         print(
+            "RIDES:",
+            ride_names
+        )
+
+        print(
             "PAYMENT ID:",
             razorpay_payment_id
         )
@@ -10155,8 +12126,8 @@ def booking_payment_verify(request):
         )
 
 
-        # Razorpay payment is already captured.
-        # Customer MUST NOT pay again.
+        # Razorpay has already captured the money.
+        # Never ask customer to pay again.
 
         return JsonResponse(
             {
@@ -10174,22 +12145,58 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # IMPORTANT
+    # DATABASE IS NOW COMMITTED
     #
-    # DATABASE IS NOW COMMITTED:
+    # Payment             = paid
+    # Booking             = confirmed
+    # BookingRideItems    = booked
+    # Ticket row          = exists
     #
-    # Payment = paid
-    # Booking = confirmed
-    # Ticket row exists
-    #
-    # Everything below is NON-CRITICAL.
-    #
-    # Failure below MUST NEVER turn payment into failure.
+    # Everything below is non-critical.
     # =====================================================
 
 
     # =====================================================
-    # GENERATE QR
+    # 19. RELOAD BOOKING WITH MULTI-RIDE DETAILS
+    #
+    # Ticket PDF / notifications can access these.
+    # =====================================================
+
+    try:
+
+        booking = (
+            Booking.objects
+
+            .select_related(
+                "user",
+            )
+
+            .prefetch_related(
+                "ride_items__ride",
+                "ride_items__ride_price",
+                "ride_items__offer",
+                "ride_items__weight_groups",
+            )
+
+            .get(
+                pk=
+                    booking.pk
+            )
+        )
+
+        ticket.booking = booking
+
+
+    except Exception as error:
+
+        print(
+            "BOOKING MULTI-RIDE RELOAD ERROR:",
+            repr(error)
+        )
+
+
+    # =====================================================
+    # 20. GENERATE QR
     # =====================================================
 
     try:
@@ -10235,7 +12242,11 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # GENERATE PDF
+    # 21. GENERATE PDF
+    #
+    # NOTE:
+    # generate_ticket_pdf() still needs its own
+    # multi-ride update next.
     # =====================================================
 
     try:
@@ -10280,7 +12291,10 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # EMAIL
+    # 22. EMAIL
+    #
+    # Notification functions will be updated separately
+    # to list all rides.
     # =====================================================
 
     email_sent = False
@@ -10326,7 +12340,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # SMS
+    # 23. SMS
     # =====================================================
 
     sms_sent = False
@@ -10372,7 +12386,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # WHATSAPP
+    # 24. WHATSAPP
     # =====================================================
 
     whatsapp_sent = False
@@ -10419,7 +12433,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # SAVE TICKET NOTIFICATION STATUS
+    # 25. SAVE TICKET NOTIFICATION STATUS
     # =====================================================
 
     try:
@@ -10455,7 +12469,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # BOOKING NOTIFICATION STATUS
+    # 26. BOOKING NOTIFICATION STATUS
     # =====================================================
 
     try:
@@ -10488,7 +12502,9 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # CLEAR TEMPORARY BOOKING SESSION
+    # 27. CLEAR TEMPORARY BOOKING SESSION
+    #
+    # Only clear after successful payment finalization.
     # =====================================================
 
     try:
@@ -10517,7 +12533,7 @@ def booking_payment_verify(request):
 
 
     # =====================================================
-    # FINAL SUCCESS
+    # 28. FINAL SUCCESS LOG
     # =====================================================
 
     print(
@@ -10525,12 +12541,24 @@ def booking_payment_verify(request):
     )
 
     print(
-        "PAYMENT VERIFIED SUCCESSFULLY"
+        "MULTI-RIDE PAYMENT VERIFIED SUCCESSFULLY"
     )
 
     print(
         "BOOKING:",
         booking.booking_id
+    )
+
+    print(
+        "RIDES:",
+        ride_names
+    )
+
+    print(
+        "RIDE COUNT:",
+        len(
+            booking_items
+        )
     )
 
     print(
@@ -10563,9 +12591,14 @@ def booking_payment_verify(request):
     )
 
 
+    # =====================================================
+    # 29. SUCCESS
+    # =====================================================
+
     return JsonResponse(
         {
-            "success": True,
+            "success":
+                True,
 
             "redirect_url":
                 reverse(
@@ -10579,6 +12612,7 @@ def booking_payment_verify(request):
                 ),
         }
     )
+
 
 
 def generate_ticket_qr(request, ticket):
@@ -10623,8 +12657,38 @@ def generate_ticket_qr(request, ticket):
 
 def generate_ticket_pdf(ticket):
 
-    booking = ticket.booking
+    # =====================================================
+    # BOOKING
+    # =====================================================
 
+    booking = (
+        Booking.objects
+
+        .prefetch_related(
+            "ride_items__ride",
+            "ride_items__ride_price",
+            "ride_items__offer",
+            "ride_items__weight_groups",
+        )
+
+        .get(
+            pk=ticket.booking_id
+        )
+    )
+
+
+    # =====================================================
+    # RIDE ITEMS
+    # =====================================================
+
+    ride_items = list(
+        booking.ride_items.all()
+    )
+
+
+    # =====================================================
+    # PDF BUFFER
+    # =====================================================
 
     buffer = BytesIO()
 
@@ -10635,74 +12699,206 @@ def generate_ticket_pdf(ticket):
     )
 
 
-    page_width, page_height = (
-        A4
-    )
+    page_width, page_height = A4
 
 
     pdf.setTitle(
-    f"Flying Fox Ticket {ticket.ticket_number}"
-     )
+        f"Flying Fox Ticket {ticket.ticket_number}"
+    )
 
 
     # =====================================================
-    # TITLE
+    # PAGE SETTINGS
+    # =====================================================
+
+    LEFT = 55
+
+    RIGHT = (
+        page_width - 55
+    )
+
+    TOP = (
+        page_height - 70
+    )
+
+    BOTTOM_LIMIT = 175
+
+
+    # =====================================================
+    # HELPER — NEW PAGE
+    # =====================================================
+
+    def new_page():
+
+        pdf.showPage()
+
+        pdf.setFont(
+            "Helvetica-Bold",
+            17,
+        )
+
+        pdf.drawString(
+            LEFT,
+            page_height - 55,
+            "FLYING FOX ADVENTURE",
+        )
+
+        pdf.setFont(
+            "Helvetica",
+            10,
+        )
+
+        pdf.drawString(
+            LEFT,
+            page_height - 75,
+            (
+                f"Ticket #{ticket.ticket_number}"
+            ),
+        )
+
+        pdf.line(
+            LEFT,
+            page_height - 90,
+            RIGHT,
+            page_height - 90,
+        )
+
+        return (
+            page_height - 120
+        )
+
+
+    # =====================================================
+    # HELPER — ENSURE SPACE
+    # =====================================================
+
+    def ensure_space(
+        y_position,
+        required_height=40,
+    ):
+
+        if (
+            y_position
+            -
+            required_height
+            <
+            BOTTOM_LIMIT
+        ):
+
+            return new_page()
+
+        return y_position
+
+
+    # =====================================================
+    # HELPER — LABEL / VALUE
+    # =====================================================
+
+    def draw_row(
+        label,
+        value,
+        y_position,
+    ):
+
+        y_position = ensure_space(
+            y_position,
+            30,
+        )
+
+
+        pdf.setFont(
+            "Helvetica-Bold",
+            10,
+        )
+
+
+        pdf.drawString(
+            LEFT,
+            y_position,
+            f"{label}:",
+        )
+
+
+        pdf.setFont(
+            "Helvetica",
+            10,
+        )
+
+
+        pdf.drawString(
+            180,
+            y_position,
+            str(
+                value
+                if value is not None
+                else
+                ""
+            ),
+        )
+
+
+        return (
+            y_position - 20
+        )
+
+
+    # =====================================================
+    # HEADER
     # =====================================================
 
     pdf.setFont(
         "Helvetica-Bold",
-        22
+        22,
     )
 
 
     pdf.drawString(
-        55,
-        page_height - 70,
+        LEFT,
+        TOP,
         "FLYING FOX ADVENTURE",
     )
 
 
     pdf.setFont(
         "Helvetica",
-        12
+        12,
     )
 
 
     pdf.drawString(
-        55,
-        page_height - 95,
+        LEFT,
+        TOP - 25,
         "Munnar, Kerala",
     )
 
 
     pdf.line(
-        55,
-        page_height - 115,
-        page_width - 55,
-        page_height - 115,
+        LEFT,
+        TOP - 45,
+        RIGHT,
+        TOP - 45,
     )
 
 
     y_position = (
-        page_height - 155
+        TOP - 85
     )
 
 
     # =====================================================
-    # BASIC TICKET DATA
+    # BASIC TICKET DETAILS
     # =====================================================
 
-    ticket_rows = [
+    basic_rows = [
 
         (
-         "Ticket ID",
-         ticket.ticket_number,),
+            "Ticket Number",
+            ticket.ticket_number,
+        ),
 
         (
             "Booking ID",
-            str(
-                booking.booking_id
-            ),
+            booking.booking_id,
         ),
 
         (
@@ -10721,11 +12917,6 @@ def generate_ticket_pdf(ticket):
         ),
 
         (
-            "Ride",
-            booking.ride.name,
-        ),
-
-        (
             "Visit Date",
             booking.booking_date.strftime(
                 "%d %B %Y"
@@ -10733,118 +12924,341 @@ def generate_ticket_pdf(ticket):
         ),
 
         (
-            "Time Slot",
-            booking.time_slot,
-        ),
-
-        (
-            "Participants",
-            str(
-                booking.quantity
+            "Adventures",
+            len(
+                ride_items
             ),
         ),
 
         (
-            "Price Per Person",
-            f"INR {booking.price_per_person}",
+            "Total Riders",
+            booking.quantity,
         ),
 
         (
             "Subtotal",
-            f"INR {booking.subtotal}",
+            (
+                f"INR "
+                f"{booking.subtotal}"
+            ),
         ),
 
         (
             "Discount",
-            f"INR {booking.discount_amount}",
+            (
+                f"INR "
+                f"{booking.discount_amount}"
+            ),
         ),
 
         (
             "Total Paid",
-            f"INR {booking.total_amount}",
+            (
+                f"INR "
+                f"{booking.total_amount}"
+            ),
         ),
 
         (
             "Booking Status",
             booking.get_status_display(),
         ),
+
     ]
 
 
-    for label, value in ticket_rows:
+    for label, value in basic_rows:
 
-        pdf.setFont(
-            "Helvetica-Bold",
-            11
-        )
-
-
-        pdf.drawString(
-            55,
+        y_position = draw_row(
+            label,
+            value,
             y_position,
-            f"{label}:",
         )
-
-
-        pdf.setFont(
-            "Helvetica",
-            11
-        )
-
-
-        pdf.drawString(
-            180,
-            y_position,
-            str(value),
-        )
-
-
-        y_position -= 23
 
 
     # =====================================================
-    # WEIGHT GROUPS
+    # SELECTED ADVENTURES
     # =====================================================
 
-    y_position -= 10
+    y_position -= 8
+
+
+    y_position = ensure_space(
+        y_position,
+        55,
+    )
 
 
     pdf.setFont(
         "Helvetica-Bold",
-        14
+        14,
     )
 
 
     pdf.drawString(
-        55,
+        LEFT,
         y_position,
-        "Participant Weight Groups",
+        "Selected Adventures",
     )
 
 
-    y_position -= 25
+    y_position -= 26
 
 
-    for group in (
-        booking.weight_groups.all()
+    # =====================================================
+    # EACH RIDE
+    # =====================================================
+
+    for index, item in enumerate(
+        ride_items,
+        start=1,
     ):
 
-        text = (
-            f"{group.label}: "
-            f"{group.participant_count} rider(s)"
+        y_position = ensure_space(
+            y_position,
+            130,
         )
 
 
+        # =============================================
+        # RIDE TITLE
+        # =============================================
+
         pdf.setFont(
-            "Helvetica",
-            10
+            "Helvetica-Bold",
+            12,
         )
 
 
         pdf.drawString(
-            65,
+            LEFT,
             y_position,
-            text,
+            (
+                f"{index}. "
+                f"{item.ride.name}"
+            ),
+        )
+
+
+        y_position -= 20
+
+
+        # =============================================
+        # RIDE PRICE DETAILS
+        # =============================================
+
+        pdf.setFont(
+            "Helvetica",
+            10,
+        )
+
+
+        pdf.drawString(
+            LEFT + 10,
+            y_position,
+            (
+                f"Riders: "
+                f"{item.quantity}"
+            ),
+        )
+
+
+        y_position -= 17
+
+
+        pdf.drawString(
+            LEFT + 10,
+            y_position,
+            (
+                f"Price per rider: "
+                f"INR "
+                f"{item.price_per_person}"
+            ),
+        )
+
+
+        y_position -= 17
+
+
+        pdf.drawString(
+            LEFT + 10,
+            y_position,
+            (
+                f"Subtotal: "
+                f"INR "
+                f"{item.subtotal}"
+            ),
+        )
+
+
+        y_position -= 17
+
+
+        # =============================================
+        # OFFER
+        # =============================================
+
+        if item.offer:
+
+            offer_text = (
+                f"Offer: "
+                f"{item.offer.title}"
+            )
+
+
+            pdf.drawString(
+                LEFT + 10,
+                y_position,
+                offer_text,
+            )
+
+
+            y_position -= 17
+
+
+            pdf.drawString(
+                LEFT + 10,
+                y_position,
+                (
+                    f"Discount: "
+                    f"INR "
+                    f"{item.discount_amount}"
+                ),
+            )
+
+
+            y_position -= 17
+
+
+            if item.applied_coupon_code:
+
+                pdf.drawString(
+                    LEFT + 10,
+                    y_position,
+                    (
+                        f"Coupon: "
+                        f"{item.applied_coupon_code}"
+                    ),
+                )
+
+
+                y_position -= 17
+
+
+        # =============================================
+        # RIDE TOTAL
+        # =============================================
+
+        pdf.setFont(
+            "Helvetica-Bold",
+            10,
+        )
+
+
+        pdf.drawString(
+            LEFT + 10,
+            y_position,
+            (
+                f"Ride Total: "
+                f"INR "
+                f"{item.total_amount}"
+            ),
+        )
+
+
+        y_position -= 22
+
+
+        # =============================================
+        # WEIGHT GROUPS FOR THIS RIDE
+        # =============================================
+
+        weight_groups = list(
+            item.weight_groups.all()
+        )
+
+
+        if weight_groups:
+
+            y_position = ensure_space(
+                y_position,
+                (
+                    35
+                    +
+                    (
+                        len(
+                            weight_groups
+                        )
+                        *
+                        18
+                    )
+                ),
+            )
+
+
+            pdf.setFont(
+                "Helvetica-Bold",
+                10,
+            )
+
+
+            pdf.drawString(
+                LEFT + 10,
+                y_position,
+                "Participant Weight Groups",
+            )
+
+
+            y_position -= 18
+
+
+            for group in weight_groups:
+
+                pdf.setFont(
+                    "Helvetica",
+                    9,
+                )
+
+
+                pdf.drawString(
+                    LEFT + 20,
+                    y_position,
+                    (
+                        f"{group.label}: "
+                        f"{group.participant_count} "
+                        f"rider(s)"
+                    ),
+                )
+
+
+                y_position -= 17
+
+
+        # =============================================
+        # SEPARATOR
+        # =============================================
+
+        y_position -= 6
+
+
+        y_position = ensure_space(
+            y_position,
+            25,
+        )
+
+
+        pdf.setStrokeColorRGB(
+            0.85,
+            0.85,
+            0.85,
+        )
+
+
+        pdf.line(
+            LEFT,
+            y_position,
+            RIGHT,
+            y_position,
         )
 
 
@@ -10852,26 +13266,97 @@ def generate_ticket_pdf(ticket):
 
 
     # =====================================================
-    # QR
+    # PAYMENT SUMMARY
+    # =====================================================
+
+    y_position = ensure_space(
+        y_position,
+        100,
+    )
+
+
+    pdf.setFont(
+        "Helvetica-Bold",
+        13,
+    )
+
+
+    pdf.drawString(
+        LEFT,
+        y_position,
+        "Payment Summary",
+    )
+
+
+    y_position -= 24
+
+
+    y_position = draw_row(
+        "Subtotal",
+        (
+            f"INR "
+            f"{booking.subtotal}"
+        ),
+        y_position,
+    )
+
+
+    y_position = draw_row(
+        "Total Discount",
+        (
+            f"INR "
+            f"{booking.discount_amount}"
+        ),
+        y_position,
+    )
+
+
+    y_position = draw_row(
+        "Total Paid",
+        (
+            f"INR "
+            f"{booking.total_amount}"
+        ),
+        y_position,
+    )
+
+
+    # =====================================================
+    # QR CODE
     # =====================================================
 
     if ticket.qr_image:
 
         try:
 
+            qr_size = 130
+
+
             pdf.drawImage(
 
                 ticket.qr_image.path,
 
-                page_width - 210,
-                70,
+                (
+                    page_width
+                    -
+                    qr_size
+                    -
+                    55
+                ),
 
-                width=145,
-                height=145,
+                55,
 
-                preserveAspectRatio=True,
+                width=
+                    qr_size,
 
-                mask="auto",
+                height=
+                    qr_size,
+
+                preserveAspectRatio=
+                    True,
+
+                mask=
+                    "auto",
             )
 
 
@@ -10884,17 +13369,17 @@ def generate_ticket_pdf(ticket):
 
 
     # =====================================================
-    # IMPORTANT INFO
+    # IMPORTANT INFORMATION
     # =====================================================
 
     pdf.setFont(
         "Helvetica-Bold",
-        11
+        11,
     )
 
 
     pdf.drawString(
-        55,
+        LEFT,
         145,
         "Important:",
     )
@@ -10902,36 +13387,53 @@ def generate_ticket_pdf(ticket):
 
     pdf.setFont(
         "Helvetica",
-        10
+        9,
     )
 
 
     pdf.drawString(
-        55,
+        LEFT,
         126,
         (
-            "Show this QR ticket "
-            "at the Flying Fox counter."
+            "Show this QR ticket at "
+            "the Flying Fox counter."
         ),
     )
 
 
     pdf.drawString(
-        55,
+        LEFT,
         110,
         (
-            "Please arrive at least "
-            "30 minutes before your time slot."
+            "This QR ticket covers all "
+            "adventures listed in this booking."
         ),
     )
 
 
+    pdf.drawString(
+        LEFT,
+        94,
+        (
+            "Please arrive at least "
+            "30 minutes before your visit."
+        ),
+    )
+
+
+    # =====================================================
+    # SAVE PDF
+    # =====================================================
+
     pdf.showPage()
+
 
     pdf.save()
 
 
-    buffer.seek(0)
+    buffer.seek(
+        0
+    )
 
 
     ticket.pdf_ticket.save(
@@ -10949,246 +13451,771 @@ def generate_ticket_pdf(ticket):
     )
 
 
-
-
 def send_ticket_email(ticket):
     """
-    Send booking confirmation and the PDF ticket
-    to the customer's email address.
+    Send the confirmed Flying Fox booking ticket by email.
 
-    Returns True when Django successfully submits
-    the email to the SMTP server.
+    Multi-ride version:
+    - One email per booking
+    - One ticket number
+    - One visit date
+    - Lists every selected ride
+    - Lists weight groups for each ride
+    - Shows offer/discount per ride
+    - Attaches the generated PDF ticket
     """
 
-    booking = ticket.booking
+    # =====================================================
+    # BOOKING WITH ALL MULTI-RIDE DATA
+    # =====================================================
 
-    # -----------------------------------------
-    # 1. Validate customer email
-    # -----------------------------------------
+    try:
 
-    if not booking.customer_email:
-        print(
-            "EMAIL ERROR: Customer email is empty."
+        booking = (
+            Booking.objects
+            .prefetch_related(
+                "ride_items__ride",
+                "ride_items__ride_price",
+                "ride_items__offer",
+                "ride_items__weight_groups",
+            )
+            .get(
+                pk=ticket.booking_id
+            )
         )
+
+    except Booking.DoesNotExist:
+
+        print(
+            "TICKET EMAIL ERROR: "
+            "Booking does not exist."
+        )
+
         return False
 
-    # -----------------------------------------
-    # 2. Validate email settings
-    # -----------------------------------------
 
-    if not settings.EMAIL_HOST_USER:
+    # =====================================================
+    # CUSTOMER EMAIL
+    # =====================================================
+
+    customer_email = (
+        booking.customer_email
+        or
+        ""
+    ).strip()
+
+
+    if not customer_email:
+
         print(
-            "EMAIL ERROR: EMAIL_HOST_USER "
-            "is not configured."
+            "TICKET EMAIL SKIPPED: "
+            "Customer email is empty."
         )
+
         return False
 
-    if not settings.EMAIL_HOST_PASSWORD:
-        print(
-            "EMAIL ERROR: EMAIL_HOST_PASSWORD "
-            "is not configured."
-        )
-        return False
 
-    # -----------------------------------------
-    # 3. Customer-friendly IDs
-    # -----------------------------------------
+    # =====================================================
+    # RIDE ITEMS
+    # =====================================================
 
-    short_booking_id = str(
-        booking.booking_id
-    ).split("-")[0].upper()
-
-    short_ticket_id = str(
-        ticket.ticket_id
-    ).split("-")[0].upper()
-
-    # -----------------------------------------
-    # 4. Prepare email content
-    # -----------------------------------------
-
-    subject = (
-        f"Flying Fox Booking Confirmed - "
-        f"{short_booking_id}"
+    ride_items = list(
+        booking.ride_items.all()
     )
 
-    body = (
-        f"Hello {booking.customer_name},\n\n"
 
+    if not ride_items:
+
+        print(
+            "TICKET EMAIL ERROR: "
+            "Booking has no ride items."
+        )
+
+        return False
+
+
+    # =====================================================
+    # EMAIL SUBJECT
+    # =====================================================
+
+    subject = (
+        f"Flying Fox Adventure Ticket "
+        f"#{ticket.ticket_number}"
+    )
+
+
+    # =====================================================
+    # BUILD EMAIL BODY
+    # =====================================================
+
+    lines = []
+
+
+    lines.append(
+        f"Hi {booking.customer_name},"
+    )
+
+    lines.append("")
+
+
+    lines.append(
         "Your Flying Fox Adventure booking "
-        "has been confirmed successfully.\n\n"
+        "has been confirmed successfully."
+    )
 
-        "BOOKING DETAILS\n"
-        "--------------------------------\n"
+    lines.append("")
 
-        f"Booking ID: {short_booking_id}\n"
-        f"Ticket ID: {short_ticket_id}\n"
-        f"Ride: {booking.ride.name}\n"
+
+    lines.append(
+        "BOOKING DETAILS"
+    )
+
+    lines.append(
+        "----------------------------------------"
+    )
+
+
+    lines.append(
+        f"Ticket Number: "
+        f"{ticket.ticket_number}"
+    )
+
+
+    lines.append(
+        f"Booking ID: "
+        f"{booking.booking_id}"
+    )
+
+
+    lines.append(
         f"Visit Date: "
-        f"{booking.booking_date.strftime('%d %B %Y')}\n"
-        f"Time Slot: {booking.time_slot}\n"
-        f"Participants: {booking.quantity}\n"
-        f"Amount Paid: INR {booking.total_amount}\n\n"
+        f"{booking.booking_date.strftime('%d %B %Y')}"
+    )
 
-        "Your PDF ticket is attached to this email.\n\n"
 
-        "Please arrive at least 30 minutes before "
-        "your selected time slot and show the QR "
-        "ticket at the Flying Fox counter.\n\n"
+    lines.append(
+        f"Total Adventures: "
+        f"{len(ride_items)}"
+    )
 
-        "Thank you for choosing Flying Fox Adventure.\n\n"
 
-        "Regards,\n"
-        "Flying Fox Adventure\n"
+    lines.append(
+        f"Total Riders: "
+        f"{booking.quantity}"
+    )
+
+
+    lines.append("")
+
+
+    # =====================================================
+    # SELECTED ADVENTURES
+    # =====================================================
+
+    lines.append(
+        "SELECTED ADVENTURES"
+    )
+
+    lines.append(
+        "----------------------------------------"
+    )
+
+
+    for index, item in enumerate(
+        ride_items,
+        start=1,
+    ):
+
+        # =============================================
+        # RIDE
+        # =============================================
+
+        lines.append("")
+
+        lines.append(
+            f"{index}. {item.ride.name}"
+        )
+
+
+        lines.append(
+            f"   Riders: "
+            f"{item.quantity}"
+        )
+
+
+        lines.append(
+            f"   Price per rider: "
+            f"INR {item.price_per_person}"
+        )
+
+
+        lines.append(
+            f"   Subtotal: "
+            f"INR {item.subtotal}"
+        )
+
+
+        # =============================================
+        # OFFER
+        # =============================================
+
+        if item.offer:
+
+            lines.append(
+                f"   Offer: "
+                f"{item.offer.title}"
+            )
+
+
+            if (
+                item.applied_coupon_code
+            ):
+
+                lines.append(
+                    f"   Coupon: "
+                    f"{item.applied_coupon_code}"
+                )
+
+
+            lines.append(
+                f"   Discount: "
+                f"INR {item.discount_amount}"
+            )
+
+
+        # =============================================
+        # RIDE TOTAL
+        # =============================================
+
+        lines.append(
+            f"   Ride Total: "
+            f"INR {item.total_amount}"
+        )
+
+
+        # =============================================
+        # WEIGHT GROUPS
+        # =============================================
+
+        weight_groups = list(
+            item.weight_groups.all()
+        )
+
+
+        if weight_groups:
+
+            lines.append(
+                "   Participant Weight Groups:"
+            )
+
+
+            for group in weight_groups:
+
+                lines.append(
+                    (
+                        f"      - "
+                        f"{group.label}: "
+                        f"{group.participant_count} "
+                        f"rider(s)"
+                    )
+                )
+
+
+    # =====================================================
+    # PAYMENT SUMMARY
+    # =====================================================
+
+    lines.append("")
+
+    lines.append(
+        "PAYMENT SUMMARY"
+    )
+
+    lines.append(
+        "----------------------------------------"
+    )
+
+
+    lines.append(
+        f"Subtotal: "
+        f"INR {booking.subtotal}"
+    )
+
+
+    lines.append(
+        f"Total Discount: "
+        f"INR {booking.discount_amount}"
+    )
+
+
+    lines.append(
+        f"Total Paid: "
+        f"INR {booking.total_amount}"
+    )
+
+
+    lines.append("")
+
+
+    # =====================================================
+    # IMPORTANT INFORMATION
+    # =====================================================
+
+    lines.append(
+        "IMPORTANT INFORMATION"
+    )
+
+    lines.append(
+        "----------------------------------------"
+    )
+
+
+    lines.append(
+        "• Your QR ticket is valid for all "
+        "adventures listed in this booking."
+    )
+
+
+    lines.append(
+        "• Please show the QR ticket at the "
+        "Flying Fox Adventure counter."
+    )
+
+
+    lines.append(
+        "• Please arrive at least 30 minutes "
+        "before your visit."
+    )
+
+
+    lines.append(
+        "• Please follow all safety instructions "
+        "provided by our adventure staff."
+    )
+
+
+    lines.append(
+        "• Participant eligibility is subject "
+        "to the applicable safety and weight requirements."
+    )
+
+
+    lines.append("")
+
+
+    lines.append(
+        "Your PDF ticket is attached to this email."
+    )
+
+
+    lines.append("")
+
+
+    lines.append(
+        "Thank you for choosing "
+        "Flying Fox Adventure Munnar!"
+    )
+
+
+    lines.append("")
+
+
+    lines.append(
+        "Flying Fox Adventure"
+    )
+
+    lines.append(
         "Munnar, Kerala"
     )
 
-    # -----------------------------------------
-    # 5. Create email
-    # -----------------------------------------
+
+    # =====================================================
+    # FINAL BODY
+    # =====================================================
+
+    message_body = "\n".join(
+        lines
+    )
+
+
+    # =====================================================
+    # FROM EMAIL
+    # =====================================================
+
+    from_email = getattr(
+        settings,
+        "DEFAULT_FROM_EMAIL",
+        None,
+    )
+
+
+    if not from_email:
+
+        from_email = getattr(
+            settings,
+            "EMAIL_HOST_USER",
+            None,
+        )
+
+
+    if not from_email:
+
+        print(
+            "TICKET EMAIL ERROR: "
+            "DEFAULT_FROM_EMAIL / EMAIL_HOST_USER "
+            "is not configured."
+        )
+
+        return False
+
+
+    # =====================================================
+    # CREATE EMAIL
+    # =====================================================
 
     email = EmailMessage(
-        subject=subject,
-        body=body,
-        from_email=settings.DEFAULT_FROM_EMAIL,
+
+        subject=
+            subject,
+
+        body=
+            message_body,
+
+        from_email=
+            from_email,
+
         to=[
-            booking.customer_email,
+            customer_email
         ],
     )
 
-    # -----------------------------------------
-    # 6. Attach generated PDF ticket
-    # -----------------------------------------
 
-    if ticket.pdf_ticket:
+    # =====================================================
+    # ATTACH PDF TICKET
+    # =====================================================
 
-        try:
-            ticket.pdf_ticket.open("rb")
+    try:
+
+        if ticket.pdf_ticket:
+
+            # =============================================
+            # OPEN STORAGE FILE
+            #
+            # This is safer than depending only on .path
+            # and also works with remote storage later.
+            # =============================================
+
+            ticket.pdf_ticket.open(
+                "rb"
+            )
+
 
             pdf_content = (
                 ticket.pdf_ticket.read()
             )
 
+
             ticket.pdf_ticket.close()
 
+
             email.attach(
+
                 (
-                    f"flying-fox-ticket-"
-                    f"{short_ticket_id}.pdf"
+                    f"Flying-Fox-Ticket-"
+                    f"{ticket.ticket_number}.pdf"
                 ),
+
                 pdf_content,
+
                 "application/pdf",
             )
 
-        except (
-            FileNotFoundError,
-            OSError,
-            ValueError,
-        ) as error:
+
+        else:
 
             print(
-                "EMAIL PDF ATTACHMENT ERROR:",
-                error,
+                "TICKET EMAIL WARNING: "
+                "PDF ticket is not available."
             )
 
-            return False
-
-    else:
-        print(
-            "EMAIL ERROR: PDF ticket is missing."
-        )
-        return False
-
-    # -----------------------------------------
-    # 7. Send email
-    # -----------------------------------------
-
-    try:
-        sent_count = email.send(
-            fail_silently=False
-        )
-
-        if sent_count == 1:
-
-            print(
-                "\n========== TICKET EMAIL SENT =========="
-            )
-            print(
-                "TO:",
-                booking.customer_email,
-            )
-            print(
-                "BOOKING ID:",
-                booking.booking_id,
-            )
-            print(
-                "TICKET ID:",
-                ticket.ticket_id,
-            )
-            print(
-                "=======================================\n"
-            )
-
-            return True
-
-        print(
-            "EMAIL ERROR: Email backend returned:",
-            sent_count,
-        )
-
-        return False
 
     except Exception as error:
 
         print(
-            "\n========== TICKET EMAIL FAILED =========="
+            "\n========================================"
         )
+
         print(
-            "TO:",
-            booking.customer_email,
+            "TICKET EMAIL PDF ATTACH ERROR"
         )
+
         print(
-            "ERROR TYPE:",
-            type(error).__name__,
+            "TYPE:",
+            type(error).__name__
         )
+
         print(
             "ERROR:",
-            error,
+            repr(error)
         )
+
         print(
-            "=========================================\n"
+            "TICKET:",
+            ticket.ticket_number
         )
+
+        print(
+            "========================================\n"
+        )
+
+        # Do not stop the email just because
+        # the PDF attachment failed.
+
+
+    # =====================================================
+    # SEND EMAIL
+    # =====================================================
+
+    try:
+
+        sent_count = email.send(
+            fail_silently=False
+        )
+
+
+        email_sent = (
+            sent_count > 0
+        )
+
+
+        # =================================================
+        # DEBUG
+        # =================================================
+
+        print(
+            "\n========================================"
+        )
+
+        print(
+            "TICKET EMAIL RESULT"
+        )
+
+        print(
+            "TICKET:",
+            ticket.ticket_number
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "CUSTOMER:",
+            booking.customer_name
+        )
+
+        print(
+            "EMAIL:",
+            customer_email
+        )
+
+        print(
+            "RIDES:",
+            ", ".join(
+                [
+                    item.ride.name
+                    for item
+                    in ride_items
+                ]
+            )
+        )
+
+        print(
+            "RIDE COUNT:",
+            len(
+                ride_items
+            )
+        )
+
+        print(
+            "TOTAL RIDERS:",
+            booking.quantity
+        )
+
+        print(
+            "TOTAL:",
+            booking.total_amount
+        )
+
+        print(
+            "SENT:",
+            email_sent
+        )
+
+        print(
+            "========================================\n"
+        )
+
+
+        return email_sent
+
+
+    except Exception as error:
+
+        print(
+            "\n========================================"
+        )
+
+        print(
+            "TICKET EMAIL SEND ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "TICKET:",
+            ticket.ticket_number
+        )
+
+        print(
+            "BOOKING:",
+            booking.booking_id
+        )
+
+        print(
+            "EMAIL:",
+            customer_email
+        )
+
+        print(
+            "========================================\n"
+        )
+
 
         return False
 
 
+def booking_success(
+    request,
+    booking_id,
+):
 
-
-def booking_success(request, booking_id):
+    # =====================================================
+    # BOOKING
+    #
+    # Load the parent booking and all ride items.
+    # =====================================================
 
     booking = get_object_or_404(
-        Booking.objects.select_related(
-            "ride"
+
+        Booking.objects
+
+        .select_related(
+            "user",
+        )
+
+        .prefetch_related(
+            "ride_items__ride",
+            "ride_items__ride_price",
+            "ride_items__offer",
+            "ride_items__weight_groups",
         ),
-        booking_id=booking_id,
-        status="confirmed",
+
+        booking_id=
+            booking_id,
+
+        status__in=[
+            "confirmed",
+            "checked_in",
+        ],
     )
+
+
+    # =====================================================
+    # TICKET
+    # =====================================================
 
     ticket = get_object_or_404(
         Ticket,
-        booking=booking,
+        booking=
+            booking,
     )
+
+
+    # =====================================================
+    # RIDE ITEMS
+    # =====================================================
+
+    ride_items = list(
+        booking.ride_items.all()
+    )
+
+
+    # =====================================================
+    # RIDE NAMES
+    # =====================================================
+
+    ride_names = ", ".join(
+        [
+            item.ride.name
+
+            for item
+            in ride_items
+
+            if item.ride
+        ]
+    )
+
+
+    # =====================================================
+    # TOTAL RIDE COUNT
+    # =====================================================
+
+    ride_count = len(
+        ride_items
+    )
+
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
 
     return render(
         request,
         "frontend/booking_success.html",
         {
-            "booking": booking,
-            "ticket": ticket,
+            "booking":
+                booking,
+
+            "ticket":
+                ticket,
+
+            "ride_items":
+                ride_items,
+
+            "ride_names":
+                ride_names,
+
+            "ride_count":
+                ride_count,
 
             # Automatically open QR modal
-            "show_ticket_modal": True,
+            "show_ticket_modal":
+                True,
         }
     )
+
+
+
 
 # def send_ticket_sms(ticket):
 #     """
@@ -11760,213 +14787,6 @@ def download_ticket(request, ticket_id):
     )
 
 
-
-
-# =========================================================
-# VERIFY QR TICKET
-# =========================================================
-
-@permission_required(
-    "flyingfox_app.verify_ticket",
-    login_url="ticket_staff_login",
-)
-def verify_ticket(
-    request,
-    qr_token,
-):
-
-    ticket = get_object_or_404(
-
-        Ticket.objects
-        .select_related(
-            "booking",
-            "booking__ride",
-            "booking__ride_price",
-            "booking__offer",
-            "booking__payment",
-        )
-        .prefetch_related(
-            "booking__weight_groups"
-        ),
-
-        qr_token=qr_token,
-    )
-
-
-    booking = (
-        ticket.booking
-    )
-
-
-    # =====================================================
-    # VALIDITY
-    # =====================================================
-
-    is_payment_valid = (
-        hasattr(
-            booking,
-            "payment"
-        )
-        and
-        booking.payment.status
-        ==
-        "paid"
-    )
-
-
-    is_booking_valid = (
-        booking.status
-        in [
-            "confirmed",
-            "checked_in",
-        ]
-    )
-
-
-    is_valid = (
-        is_payment_valid
-        and
-        is_booking_valid
-    )
-
-
-    return render(
-        request,
-        "staff/ticket_verify.html",
-        {
-            "ticket":
-                ticket,
-
-            "booking":
-                booking,
-
-            "is_valid":
-                is_valid,
-        },
-    )
-
-
-
-
-
-# =========================================================
-# CHECK IN TICKET
-# =========================================================
-
-@permission_required(
-    "flyingfox_app.verify_ticket",
-    login_url="ticket_staff_login",
-)
-
-
-
-@permission_required(
-    "flyingfox_app.verify_ticket",
-    login_url="ticket_staff_login",
-)
-@transaction.atomic
-def ticket_check_in(request, ticket_id):
-
-    if request.method != "POST":
-        return redirect("ticket_scanner")
-
-
-    ticket = get_object_or_404(
-        Ticket.objects.select_for_update(),
-        ticket_id=ticket_id,
-    )
-
-
-    booking = get_object_or_404(
-        Booking,
-        pk=ticket.booking_id,
-    )
-
-
-    payment = (
-        Payment.objects
-        .filter(booking=booking)
-        .first()
-    )
-
-
-    if (
-        payment is None
-        or
-        payment.status != "paid"
-    ):
-
-        messages.error(
-            request,
-            "This ticket cannot be checked in because payment is not confirmed."
-        )
-
-        return redirect(
-            "verify_ticket",
-            qr_token=ticket.qr_token,
-        )
-
-
-    if booking.status not in [
-        "confirmed",
-        "checked_in",
-    ]:
-
-        messages.error(
-            request,
-            "This booking is not valid for check-in."
-        )
-
-        return redirect(
-            "verify_ticket",
-            qr_token=ticket.qr_token,
-        )
-
-
-    if ticket.is_used:
-
-        messages.warning(
-            request,
-            "This ticket has already been checked in."
-        )
-
-        return redirect(
-            "verify_ticket",
-            qr_token=ticket.qr_token,
-        )
-
-
-    ticket.is_used = True
-    ticket.checked_in_at = timezone.now()
-
-    ticket.save(
-        update_fields=[
-            "is_used",
-            "checked_in_at",
-        ]
-    )
-
-
-    booking.status = "checked_in"
-
-    booking.save(
-        update_fields=[
-            "status",
-            "updated_at",
-        ]
-    )
-
-
-    messages.success(
-        request,
-        "Ticket checked in successfully."
-    )
-
-
-    return redirect(
-        "verify_ticket",
-        qr_token=ticket.qr_token,
-    )
 
 
 
@@ -14712,541 +17532,6 @@ def frontend_offer_detail(request, slug):
 
 
 
-
-
-#participant admin crud 
-
-# @login_required(login_url="admin_login")
-# def participant_weight_range_list(request):
-
-#     ranges_qs = (
-#         ParticipantWeightRange.objects
-#         .all()
-#         .order_by(
-#             "sort_order",
-#             "min_weight",
-#         )
-#     )
-
-
-#     search = request.GET.get(
-#         "search",
-#         ""
-#     ).strip()
-
-
-#     status = request.GET.get(
-#         "status",
-#         ""
-#     ).strip()
-
-
-#     if search:
-
-#         ranges_qs = ranges_qs.filter(
-#             label__icontains=search
-#         )
-
-
-#     if status == "active":
-
-#         ranges_qs = ranges_qs.filter(
-#             is_active=True
-#         )
-
-
-#     elif status == "inactive":
-
-#         ranges_qs = ranges_qs.filter(
-#             is_active=False
-#         )
-
-
-#     paginator = Paginator(
-#         ranges_qs,
-#         15
-#     )
-
-
-#     ranges = paginator.get_page(
-#         request.GET.get("page")
-#     )
-
-
-#     return render(
-#         request,
-#         "admin_pages/participant_weight_range_list.html",
-#         {
-#             "ranges": ranges,
-#             "search": search,
-#             "selected_status": status,
-#         }
-#     )
-
-
-
-
-# @login_required(login_url="admin_login")
-# def participant_weight_range_create(request):
-
-#     if request.method == "POST":
-
-#         label = request.POST.get(
-#             "label",
-#             ""
-#         ).strip()
-
-#         min_weight_raw = request.POST.get(
-#             "min_weight",
-#             ""
-#         ).strip()
-
-#         max_weight_raw = request.POST.get(
-#             "max_weight",
-#             ""
-#         ).strip()
-
-#         sort_order_raw = request.POST.get(
-#             "sort_order",
-#             "0"
-#         ).strip()
-
-#         is_active = (
-#             request.POST.get(
-#                 "is_active"
-#             )
-#             ==
-#             "on"
-#         )
-
-
-#         # ==========================================
-#         # REQUIRED VALUES
-#         # ==========================================
-
-#         if (
-#             not min_weight_raw
-#             or
-#             not max_weight_raw
-#         ):
-
-#             messages.error(
-#                 request,
-#                 "Minimum weight and maximum weight are required."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         # ==========================================
-#         # CONVERT TO INTEGER
-#         # ==========================================
-
-#         try:
-
-#             min_weight = int(
-#                 min_weight_raw
-#             )
-
-#             max_weight = int(
-#                 max_weight_raw
-#             )
-
-#             sort_order = int(
-#                 sort_order_raw
-#                 or
-#                 0
-#             )
-
-#         except ValueError:
-
-#             messages.error(
-#                 request,
-#                 "Weight and sort order must be valid numbers."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         # ==========================================
-#         # VALIDATION
-#         # ==========================================
-
-#         if min_weight <= 0:
-
-#             messages.error(
-#                 request,
-#                 "Minimum weight must be greater than 0."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         if max_weight <= min_weight:
-
-#             messages.error(
-#                 request,
-#                 "Maximum weight must be greater than minimum weight."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         if sort_order < 0:
-
-#             sort_order = 0
-
-
-#         # ==========================================
-#         # PREVENT EXACT DUPLICATE
-#         # ==========================================
-
-#         duplicate = (
-#             ParticipantWeightRange.objects
-#             .filter(
-#                 min_weight=min_weight,
-#                 max_weight=max_weight,
-#             )
-#             .exists()
-#         )
-
-
-#         if duplicate:
-
-#             messages.error(
-#                 request,
-#                 "This participant weight range already exists."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         # ==========================================
-#         # AUTO LABEL
-#         # ==========================================
-
-#         if not label:
-
-#             label = (
-#                 f"{min_weight} - "
-#                 f"{max_weight} KG"
-#             )
-
-
-#         # ==========================================
-#         # CREATE
-#         # ==========================================
-
-#         ParticipantWeightRange.objects.create(
-#             label=label,
-#             min_weight=min_weight,
-#             max_weight=max_weight,
-#             sort_order=sort_order,
-#             is_active=is_active,
-#         )
-
-
-#         messages.success(
-#             request,
-#             "Participant weight range added successfully."
-#         )
-
-
-#         return redirect(
-#             "participant_weight_range_list"
-#         )
-
-
-#     return render(
-#         request,
-#         "admin_pages/participant_weight_range_form.html",
-#         {}
-#     )
-
-
-
-# @login_required(login_url="admin_login")
-# def participant_weight_range_update(
-#     request,
-#     pk
-# ):
-
-#     weight_range = get_object_or_404(
-#         ParticipantWeightRange,
-#         pk=pk
-#     )
-
-
-#     if request.method == "POST":
-
-#         label = request.POST.get(
-#             "label",
-#             ""
-#         ).strip()
-
-#         min_weight_raw = request.POST.get(
-#             "min_weight",
-#             ""
-#         ).strip()
-
-#         max_weight_raw = request.POST.get(
-#             "max_weight",
-#             ""
-#         ).strip()
-
-#         sort_order_raw = request.POST.get(
-#             "sort_order",
-#             "0"
-#         ).strip()
-
-#         is_active = (
-#             request.POST.get(
-#                 "is_active"
-#             )
-#             ==
-#             "on"
-#         )
-
-
-#         if (
-#             not min_weight_raw
-#             or
-#             not max_weight_raw
-#         ):
-
-#             messages.error(
-#                 request,
-#                 "Minimum weight and maximum weight are required."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "weight_range": weight_range,
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         try:
-
-#             min_weight = int(
-#                 min_weight_raw
-#             )
-
-#             max_weight = int(
-#                 max_weight_raw
-#             )
-
-#             sort_order = int(
-#                 sort_order_raw
-#                 or
-#                 0
-#             )
-
-#         except ValueError:
-
-#             messages.error(
-#                 request,
-#                 "Weight and sort order must be valid numbers."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "weight_range": weight_range,
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         if min_weight <= 0:
-
-#             messages.error(
-#                 request,
-#                 "Minimum weight must be greater than 0."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "weight_range": weight_range,
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         if max_weight <= min_weight:
-
-#             messages.error(
-#                 request,
-#                 "Maximum weight must be greater than minimum weight."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "weight_range": weight_range,
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         if sort_order < 0:
-
-#             sort_order = 0
-
-
-#         duplicate = (
-#             ParticipantWeightRange.objects
-#             .filter(
-#                 min_weight=min_weight,
-#                 max_weight=max_weight,
-#             )
-#             .exclude(
-#                 pk=weight_range.pk
-#             )
-#             .exists()
-#         )
-
-
-#         if duplicate:
-
-#             messages.error(
-#                 request,
-#                 "This participant weight range already exists."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/participant_weight_range_form.html",
-#                 {
-#                     "weight_range": weight_range,
-#                     "form_data": request.POST,
-#                 }
-#             )
-
-
-#         if not label:
-
-#             label = (
-#                 f"{min_weight} - "
-#                 f"{max_weight} KG"
-#             )
-
-
-#         weight_range.label = label
-#         weight_range.min_weight = min_weight
-#         weight_range.max_weight = max_weight
-#         weight_range.sort_order = sort_order
-#         weight_range.is_active = is_active
-
-#         weight_range.save()
-
-
-#         messages.success(
-#             request,
-#             "Participant weight range updated successfully."
-#         )
-
-
-#         return redirect(
-#             "participant_weight_range_list"
-#         )
-
-
-#     return render(
-#         request,
-#         "admin_pages/participant_weight_range_form.html",
-#         {
-#             "weight_range": weight_range,
-#         }
-#     )
-
-
-
-# @login_required(login_url="admin_login")
-# def participant_weight_range_delete(
-#     request,
-#     pk
-# ):
-
-#     weight_range = get_object_or_404(
-#         ParticipantWeightRange,
-#         pk=pk
-#     )
-
-
-#     if request.method == "POST":
-
-#         label = str(
-#             weight_range
-#         )
-
-#         try:
-
-#             weight_range.delete()
-
-#             messages.success(
-#                 request,
-#                 f'"{label}" deleted successfully.'
-#             )
-
-#         except Exception:
-
-#             messages.error(
-#                 request,
-#                 (
-#                     "This weight range cannot be deleted because "
-#                     "it may already be used by a booking. "
-#                     "You can mark it inactive instead."
-#                 )
-#             )
-
-
-#     return redirect(
-#         "participant_weight_range_list"
-#     )
-
-
-
-
-
-
 # staff view ticket 
 
 # =========================================================
@@ -15400,6 +17685,520 @@ def ticket_staff_logout(request):
 
 
 
+
+
+# =========================================================
+# VERIFY QR TICKET
+# =========================================================
+
+@permission_required(
+    "flyingfox_app.verify_ticket",
+    login_url="ticket_staff_login",
+)
+def verify_ticket(
+    request,
+    qr_token,
+):
+
+    # =====================================================
+    # LOAD TICKET + FULL MULTI-RIDE BOOKING
+    # =====================================================
+
+    ticket = get_object_or_404(
+
+        Ticket.objects
+        .select_related(
+            "booking",
+            "booking__payment",
+        )
+        .prefetch_related(
+            "booking__ride_items__ride",
+            "booking__ride_items__ride_price",
+            "booking__ride_items__offer",
+            "booking__ride_items__weight_groups",
+        ),
+
+        qr_token=qr_token,
+    )
+
+
+    booking = (
+        ticket.booking
+    )
+
+
+    # =====================================================
+    # RIDE ITEMS
+    # =====================================================
+
+    ride_items = list(
+        booking.ride_items.all()
+    )
+
+
+    # =====================================================
+    # PAYMENT VALIDITY
+    # =====================================================
+
+    is_payment_valid = (
+        hasattr(
+            booking,
+            "payment"
+        )
+        and
+        booking.payment.status
+        ==
+        "paid"
+    )
+
+
+    # =====================================================
+    # BOOKING VALIDITY
+    # =====================================================
+
+    is_booking_valid = (
+        booking.status
+        in [
+            "confirmed",
+            "checked_in",
+        ]
+    )
+
+
+    # =====================================================
+    # RIDE ITEM VALIDITY
+    # =====================================================
+
+    has_rides = bool(
+        ride_items
+    )
+
+
+    # =====================================================
+    # OVERALL VALIDITY
+    # =====================================================
+
+    is_valid = (
+        is_payment_valid
+        and
+        is_booking_valid
+        and
+        has_rides
+    )
+
+
+    # =====================================================
+    # CHECK-IN COUNTS
+    # =====================================================
+
+    total_ride_count = len(
+        ride_items
+    )
+
+
+    checked_in_ride_count = sum(
+        1
+        for item
+        in ride_items
+        if item.status
+        ==
+        "checked_in"
+    )
+
+
+    pending_ride_count = (
+        total_ride_count
+        -
+        checked_in_ride_count
+    )
+
+
+    all_rides_checked_in = (
+        total_ride_count > 0
+        and
+        checked_in_ride_count
+        ==
+        total_ride_count
+    )
+
+
+    some_rides_checked_in = (
+        checked_in_ride_count > 0
+        and
+        not all_rides_checked_in
+    )
+
+
+    # =====================================================
+    # SYNC LEGACY TICKET USED STATE
+    #
+    # Ticket is considered fully used only when all
+    # adventures have been checked in.
+    # =====================================================
+
+    if (
+        all_rides_checked_in
+        and
+        not ticket.is_used
+    ):
+
+        ticket.is_used = True
+
+        if not ticket.checked_in_at:
+
+            ticket.checked_in_at = (
+                timezone.now()
+            )
+
+        ticket.save(
+            update_fields=[
+                "is_used",
+                "checked_in_at",
+            ]
+        )
+
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+
+    return render(
+        request,
+        "staff/ticket_verify.html",
+        {
+            "ticket":
+                ticket,
+
+            "booking":
+                booking,
+
+            "ride_items":
+                ride_items,
+
+            "is_valid":
+                is_valid,
+
+            "total_ride_count":
+                total_ride_count,
+
+            "checked_in_ride_count":
+                checked_in_ride_count,
+
+            "pending_ride_count":
+                pending_ride_count,
+
+            "all_rides_checked_in":
+                all_rides_checked_in,
+
+            "some_rides_checked_in":
+                some_rides_checked_in,
+        },
+    )
+
+
+
+# =========================================================
+# CHECK IN ONE BOOKING RIDE ITEM
+# =========================================================
+
+@permission_required(
+    "flyingfox_app.verify_ticket",
+    login_url="ticket_staff_login",
+)
+@transaction.atomic
+def ticket_check_in(
+    request,
+    booking_item_id,
+):
+
+    # =====================================================
+    # POST ONLY
+    # =====================================================
+
+    if request.method != "POST":
+
+        return redirect(
+            "ticket_scanner"
+        )
+
+
+    # =====================================================
+    # LOCK RIDE ITEM
+    # =====================================================
+
+    booking_item = get_object_or_404(
+
+        BookingRideItem.objects
+        .select_for_update()
+        .select_related(
+            "booking",
+            "ride",
+        ),
+
+        pk=booking_item_id,
+    )
+
+
+    booking = (
+        booking_item.booking
+    )
+
+
+    # =====================================================
+    # LOCK TICKET
+    # =====================================================
+
+    ticket = get_object_or_404(
+
+        Ticket.objects
+        .select_for_update(),
+
+        booking=booking,
+    )
+
+
+    # =====================================================
+    # PAYMENT
+    # =====================================================
+
+    payment = (
+        Payment.objects
+        .filter(
+            booking=booking
+        )
+        .first()
+    )
+
+
+    if (
+        payment is None
+        or
+        payment.status
+        !=
+        "paid"
+    ):
+
+        messages.error(
+            request,
+            (
+                "This adventure cannot be checked in "
+                "because payment is not confirmed."
+            )
+        )
+
+        return redirect(
+            "verify_ticket",
+            qr_token=
+                ticket.qr_token,
+        )
+
+
+    # =====================================================
+    # BOOKING STATUS
+    # =====================================================
+
+    if booking.status not in [
+        "confirmed",
+        "checked_in",
+    ]:
+
+        messages.error(
+            request,
+            (
+                "This booking is not valid "
+                "for check-in."
+            )
+        )
+
+        return redirect(
+            "verify_ticket",
+            qr_token=
+                ticket.qr_token,
+        )
+
+
+    # =====================================================
+    # ALREADY CHECKED IN
+    # =====================================================
+
+    if (
+        booking_item.status
+        ==
+        "checked_in"
+    ):
+
+        messages.warning(
+            request,
+            (
+                f"{booking_item.ride.name} "
+                "has already been checked in."
+            )
+        )
+
+        return redirect(
+            "verify_ticket",
+            qr_token=
+                ticket.qr_token,
+        )
+
+
+    # =====================================================
+    # CHECK IN THIS RIDE
+    # =====================================================
+
+    booking_item.status = (
+        "checked_in"
+    )
+
+
+    booking_item.save(
+        update_fields=[
+            "status",
+        ]
+    )
+
+
+    # =====================================================
+    # CHECK ALL RIDE ITEMS
+    # =====================================================
+
+    all_booking_items = list(
+
+        BookingRideItem.objects
+        .select_for_update()
+        .filter(
+            booking=booking
+        )
+    )
+
+
+    all_checked_in = (
+        bool(
+            all_booking_items
+        )
+        and
+        all(
+            item.status
+            ==
+            "checked_in"
+
+            for item
+            in all_booking_items
+        )
+    )
+
+
+    # =====================================================
+    # ALL RIDES CHECKED IN
+    # =====================================================
+
+    if all_checked_in:
+
+        # Parent booking
+        booking.status = (
+            "checked_in"
+        )
+
+        booking.save(
+            update_fields=[
+                "status",
+                "updated_at",
+            ]
+        )
+
+
+        # Parent ticket
+        ticket.is_used = True
+
+        ticket.checked_in_at = (
+            timezone.now()
+        )
+
+        ticket.save(
+            update_fields=[
+                "is_used",
+                "checked_in_at",
+            ]
+        )
+
+
+        messages.success(
+            request,
+            (
+                f"{booking_item.ride.name} checked in. "
+                "All adventures in this ticket "
+                "are now checked in."
+            )
+        )
+
+
+    # =====================================================
+    # SOME RIDES STILL PENDING
+    # =====================================================
+
+    else:
+
+        # Keep parent booking confirmed until
+        # every ride is checked in.
+
+        if (
+            booking.status
+            ==
+            "checked_in"
+        ):
+
+            booking.status = (
+                "confirmed"
+            )
+
+            booking.save(
+                update_fields=[
+                    "status",
+                    "updated_at",
+                ]
+            )
+
+
+        # Ticket must remain usable
+        ticket.is_used = False
+
+        ticket.checked_in_at = None
+
+        ticket.save(
+            update_fields=[
+                "is_used",
+                "checked_in_at",
+            ]
+        )
+
+
+        messages.success(
+            request,
+            (
+                f"{booking_item.ride.name} "
+                "checked in successfully."
+            )
+        )
+
+
+    # =====================================================
+    # RETURN TO SAME TICKET
+    # =====================================================
+
+    return redirect(
+        "verify_ticket",
+        qr_token=
+            ticket.qr_token,
+    )
+
+
+
+
+
+
+# =========================================================
+# STAFF TICKET DASHBOARD
+# =========================================================
 # =========================================================
 # STAFF TICKET DASHBOARD
 # =========================================================
@@ -15435,6 +18234,7 @@ def ticket_staff_dashboard(request):
     )
 
 
+    # Default selected date = tomorrow
     if selected_date is None:
 
         selected_date = (
@@ -15447,29 +18247,48 @@ def ticket_staff_dashboard(request):
 
 
     # =====================================================
-    # TODAY BOOKINGS
+    # COMMON BOOKING QUERY
+    #
+    # NEW MULTI-RIDE STRUCTURE
     # =====================================================
 
-    today_bookings = (
+    base_bookings = (
         Booking.objects
+
         .filter(
-            booking_date=today,
             status__in=[
                 "confirmed",
                 "checked_in",
             ],
         )
+
         .select_related(
-            "ride",
             "payment",
             "ticket",
         )
+
         .prefetch_related(
-            "weight_groups"
+            "ride_items__ride",
+            "ride_items__ride_price",
+            "ride_items__offer",
+            "ride_items__weight_groups",
         )
+    )
+
+
+    # =====================================================
+    # TODAY BOOKINGS
+    # =====================================================
+
+    today_bookings = (
+        base_bookings
+
+        .filter(
+            booking_date=today
+        )
+
         .order_by(
-            "time_slot",
-            "created_at",
+            "created_at"
         )
     )
 
@@ -15479,25 +18298,15 @@ def ticket_staff_dashboard(request):
     # =====================================================
 
     selected_date_bookings = (
-        Booking.objects
+        base_bookings
+
         .filter(
-            booking_date=selected_date,
-            status__in=[
-                "confirmed",
-                "checked_in",
-            ],
+            booking_date=
+                selected_date
         )
-        .select_related(
-            "ride",
-            "payment",
-            "ticket",
-        )
-        .prefetch_related(
-            "weight_groups"
-        )
+
         .order_by(
-            "time_slot",
-            "created_at",
+            "created_at"
         )
     )
 
@@ -15511,6 +18320,13 @@ def ticket_staff_dashboard(request):
     )
 
 
+    # =====================================================
+    # FULLY VERIFIED TICKETS TODAY
+    #
+    # Ticket.is_used becomes True only after
+    # all BookingRideItems are checked in.
+    # =====================================================
+
     verified_today_count = (
         Ticket.objects
         .filter(
@@ -15521,17 +18337,54 @@ def ticket_staff_dashboard(request):
     )
 
 
+    # =====================================================
+    # BOOKINGS STILL HAVING AT LEAST ONE PENDING RIDE
+    # =====================================================
+
     pending_today_count = (
         today_bookings
-        .filter(
-            status="confirmed"
-        )
         .exclude(
-            ticket__is_used=True
+            ride_items__status=
+                "checked_in"
         )
+        .distinct()
         .count()
     )
 
+
+    # =====================================================
+    # IMPORTANT:
+    #
+    # The query above only finds bookings where there
+    # exists a non-checked-in relation depending on SQL
+    # behavior. Calculate it explicitly so partial
+    # check-ins are always counted correctly.
+    # =====================================================
+
+    pending_today_count = sum(
+
+        1
+
+        for booking
+        in today_bookings
+
+        if any(
+            item.status
+            !=
+            "checked_in"
+
+            for item
+            in booking.ride_items.all()
+        )
+    )
+
+
+    # =====================================================
+    # TOTAL PARTICIPANTS TODAY
+    #
+    # Parent Booking.quantity already contains the
+    # combined quantity for all ride items.
+    # =====================================================
 
     total_participants = (
         today_bookings
@@ -15549,19 +18402,85 @@ def ticket_staff_dashboard(request):
 
 
     # =====================================================
-    # RECENT VERIFIED
+    # TOTAL ADVENTURES TODAY
+    #
+    # Count BookingRideItem rows instead of bookings.
+    # =====================================================
+
+    today_adventure_count = (
+        BookingRideItem.objects
+        .filter(
+            booking__booking_date=today,
+            booking__status__in=[
+                "confirmed",
+                "checked_in",
+            ],
+        )
+        .count()
+    )
+
+
+    # =====================================================
+    # CHECKED-IN ADVENTURES TODAY
+    # =====================================================
+
+    checked_in_adventure_count = (
+        BookingRideItem.objects
+        .filter(
+            booking__booking_date=today,
+            booking__status__in=[
+                "confirmed",
+                "checked_in",
+            ],
+            status="checked_in",
+        )
+        .count()
+    )
+
+
+    # =====================================================
+    # PENDING ADVENTURES TODAY
+    # =====================================================
+
+    pending_adventure_count = (
+        BookingRideItem.objects
+        .filter(
+            booking__booking_date=today,
+            booking__status__in=[
+                "confirmed",
+                "checked_in",
+            ],
+        )
+        .exclude(
+            status="checked_in"
+        )
+        .count()
+    )
+
+
+    # =====================================================
+    # RECENT FULLY VERIFIED TICKETS
+    #
+    # This list represents tickets where all rides have
+    # been checked in.
     # =====================================================
 
     recent_verified = (
         Ticket.objects
+
         .filter(
             is_used=True,
             checked_in_at__date=today,
         )
+
         .select_related(
             "booking",
-            "booking__ride",
         )
+
+        .prefetch_related(
+            "booking__ride_items__ride",
+        )
+
         .order_by(
             "-checked_in_at"
         )[:5]
@@ -15600,14 +18519,25 @@ def ticket_staff_dashboard(request):
             "total_participants":
                 total_participants,
 
+            "today_adventure_count":
+                today_adventure_count,
+
+            "checked_in_adventure_count":
+                checked_in_adventure_count,
+
+            "pending_adventure_count":
+                pending_adventure_count,
+
             "recent_verified":
                 recent_verified,
         },
     )
 
-
 # =========================================================
 # VERIFIED TICKET HISTORY
+# =========================================================
+# =========================================================
+# VERIFIED TICKET LIST
 # =========================================================
 
 @permission_required(
@@ -15616,16 +18546,30 @@ def ticket_staff_dashboard(request):
 )
 def verified_ticket_list(request):
 
+
+    # =====================================================
+    # BASE QUERY
+    # =====================================================
+
     tickets_qs = (
         Ticket.objects
+
         .filter(
             is_used=True
         )
+
         .select_related(
             "booking",
-            "booking__ride",
             "booking__payment",
         )
+
+        .prefetch_related(
+            "booking__ride_items__ride",
+            "booking__ride_items__ride_price",
+            "booking__ride_items__offer",
+            "booking__ride_items__weight_groups",
+        )
+
         .order_by(
             "-checked_in_at"
         )
@@ -15650,12 +18594,20 @@ def verified_ticket_list(request):
         tickets_qs = (
             tickets_qs.filter(
 
+                # -----------------------------------------
+                # TICKET NUMBER
+                # -----------------------------------------
+
                 Q(
                     ticket_number__icontains=
                         search
                 )
 
                 |
+
+                # -----------------------------------------
+                # CUSTOMER NAME
+                # -----------------------------------------
 
                 Q(
                     booking__customer_name__icontains=
@@ -15664,12 +18616,20 @@ def verified_ticket_list(request):
 
                 |
 
+                # -----------------------------------------
+                # CUSTOMER PHONE
+                # -----------------------------------------
+
                 Q(
                     booking__customer_phone__icontains=
                         search
                 )
 
                 |
+
+                # -----------------------------------------
+                # BOOKING ID
+                # -----------------------------------------
 
                 Q(
                     booking__booking_id__icontains=
@@ -15678,12 +18638,18 @@ def verified_ticket_list(request):
 
                 |
 
+                # -----------------------------------------
+                # ANY RIDE IN THE BOOKING
+                # -----------------------------------------
+
                 Q(
-                    booking__ride__name__icontains=
+                    booking__ride_items__ride__name__icontains=
                         search
                 )
 
             )
+
+            .distinct()
         )
 
 
@@ -15738,6 +18704,10 @@ def verified_ticket_list(request):
     )
 
 
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+
     return render(
         request,
         "staff/verified_tickets.html",
@@ -15751,10 +18721,9 @@ def verified_ticket_list(request):
             "selected_date":
                 selected_date,
         },
-    )    
+    )
 
-
-
+    
 # =========================================================
 # QR SCANNER PAGE
 # =========================================================

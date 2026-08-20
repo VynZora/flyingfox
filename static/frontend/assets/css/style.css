@@ -30797,3 +30797,75 @@ body:has(#offcanvasNavbar.showing) .header-2 {
         max-height: none !important;
     }
 }
+
+
+
+/* book now button in mobile navbar css start */
+/* =========================================================
+   MOBILE BOOK NOW BUTTON
+========================================================= */
+
+.mobile-book-now {
+    display: none;
+}
+
+@media (max-width: 991px) {
+
+    .mobile-menu-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .mobile-book-now {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+
+        height: 42px;
+        padding: 0 14px;
+
+        border-radius: 8px;
+
+        background: #d7190f;
+        color: #ffffff;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        text-decoration: none;
+
+        white-space: nowrap;
+    }
+
+    .mobile-book-now:hover {
+        color: #ffffff;
+        background: #b9140c;
+    }
+
+    .mobile-book-now i {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .mobile-menu-right {
+        gap: 7px;
+    }
+
+    .mobile-book-now {
+        height: 38px;
+        padding: 0 10px;
+
+        font-size: 10px;
+
+        border-radius: 7px;
+    }
+
+    .mobile-book-now i {
+        font-size: 9px;
+    }
+}
+/* book now button in mobile navbar css end  */

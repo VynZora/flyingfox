@@ -124,7 +124,7 @@
             <a class="navbar-brand" href="{% url 'home' %}">
               <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="logo" />
             </a>
-            <div class="mobile-menu-right">
+            {% comment %} <div class="mobile-menu-right">
               <div class="mobile-menu-btn">
               </div>
               <button
@@ -139,7 +139,32 @@
                 <span></span>
                 <span></span>
               </button>
-            </div>
+            </div> {% endcomment %}
+
+<div class="mobile-menu-right">
+
+    <a
+        href="{% url 'bookings' %}"
+        class="mobile-book-now"
+    >
+        Book Now
+        <i class="fas fa-arrow-right"></i>
+    </a>
+
+    <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar"
+        aria-label="Toggle navigation"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+</div>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
               <div class="offcanvas-header">
                 <a href="{% url 'home' %}" class="offcanvas-brand" id="offcanvasNavbarLabel">

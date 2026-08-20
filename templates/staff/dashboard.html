@@ -253,152 +253,243 @@ Staff Dashboard | Flying Fox
 
             <div class="staff-table-scroll">
 
-                <table class="staff-table">
+    <table class="staff-table">
 
-                    <thead>
+        <thead>
 
-                        <tr>
+            <tr>
 
-                            <th>
-                                Booking
-                            </th>
+                <th>
+                    Booking
+                </th>
 
-                            <th>
-                                Customer
-                            </th>
+                <th>
+                    Customer
+                </th>
 
-                            <th>
-                                Ride
-                            </th>
+                <th>
+                    Adventures
+                </th>
 
-                            <th>
-                                Time
-                            </th>
+                <th>
+                    Riders
+                </th>
 
-                            <th>
-                                Riders
-                            </th>
+                <th>
+                    Amount
+                </th>
 
-                            <th>
-                                Amount
-                            </th>
+                <th>
+                    Check-In
+                </th>
 
-                            <th>
-                                Status
-                            </th>
+            </tr>
 
-                        </tr>
-
-                    </thead>
+        </thead>
 
 
-                    <tbody>
+        <tbody>
+
+            {% for booking in today_bookings %}
+
+                <tr>
 
 
-                        {% for booking in today_bookings %}
+                    <!-- BOOKING -->
 
-                            <tr>
+                    <td>
 
-                                <td>
+                        <strong>
+
+                            {{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+
+                        </strong>
+
+                        {% if booking.ticket %}
+
+                            <small>
+
+                                Ticket:
+                                {{ booking.ticket.ticket_number }}
+
+                            </small>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- CUSTOMER -->
+
+                    <td>
+
+                        <strong class="customer-name">
+
+                            {{ booking.customer_name }}
+
+                        </strong>
+
+                        <small>
+
+                            {{ booking.customer_phone }}
+
+                        </small>
+
+                    </td>
+
+
+                    <!-- ADVENTURES -->
+
+                    <td>
+
+                        <div class="dashboard-rides">
+
+                            {% for item in booking.ride_items.all %}
+
+                                <div class="dashboard-ride-item">
 
                                     <strong>
-
-                                        {{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
-
-                                    </strong>
-
-                                </td>
-
-
-                                <td>
-
-                                    <strong class="customer-name">
-
-                                        {{ booking.customer_name }}
-
+                                        {{ item.ride.name }}
                                     </strong>
 
                                     <small>
 
-                                        {{ booking.customer_phone }}
+                                        {{ item.quantity }}
+
+                                        rider{{ item.quantity|pluralize }}
 
                                     </small>
 
-                                </td>
 
+                                    {% if item.status == "checked_in" %}
 
-                                <td>
-                                    {{ booking.ride.name }}
-                                </td>
+                                        <span class="mini-status checked">
 
+                                            <i class="fas fa-check"></i>
 
-                                <td>
-                                    {{ booking.time_slot }}
-                                </td>
-
-
-                                <td>
-                                    {{ booking.quantity }}
-                                </td>
-
-
-                                <td>
-
-                                    <strong>
-                                        ₹{{ booking.total_amount }}
-                                    </strong>
-
-                                </td>
-
-
-                                <td>
-
-                                    {% if booking.status == "checked_in" %}
-
-                                        <span class="table-status checked">
-
-                                            Checked In
+                                            Checked
 
                                         </span>
 
                                     {% else %}
 
-                                        <span class="table-status confirmed">
+                                        <span class="mini-status pending">
 
-                                            Confirmed
+                                            Pending
 
                                         </span>
 
                                     {% endif %}
 
-                                </td>
+                                </div>
 
-                            </tr>
+                            {% empty %}
+
+                                <small>
+                                    No rides
+                                </small>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </td>
 
 
-                        {% empty %}
+                    <!-- TOTAL RIDERS -->
 
-                            <tr>
+                    <td>
 
-                                <td
-                                    colspan="7"
-                                    class="empty-row"
+                        <strong>
+
+                            {{ booking.quantity }}
+
+                        </strong>
+
+                    </td>
+
+
+                    <!-- AMOUNT -->
+
+                    <td>
+
+                        <strong>
+
+                            ₹{{ booking.total_amount }}
+
+                        </strong>
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if booking.status == "checked_in" %}
+
+                            <span class="table-status checked">
+
+                                Checked In
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="table-status confirmed">
+
+                                Confirmed
+
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if booking.ticket %}
+
+                            <small>
+
+                                <a
+                                    href="{% url 'verify_ticket' booking.ticket.qr_token %}"
+                                    class="dashboard-verify-link"
                                 >
 
-                                    No confirmed bookings for today.
+                                    Verify
 
-                                </td>
+                                </a>
 
-                            </tr>
+                            </small>
 
-                        {% endfor %}
+                        {% endif %}
+
+                    </td>
 
 
-                    </tbody>
+                </tr>
 
-                </table>
 
-            </div>
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="empty-row"
+                    >
+
+                        No confirmed bookings for today.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
 
 
         </section>
@@ -434,118 +525,236 @@ Staff Dashboard | Flying Fox
 
 
 
-            <div class="staff-table-scroll">
+           <div class="staff-table-scroll">
 
-                <table class="staff-table">
+    <table class="staff-table">
 
-                    <thead>
+        <thead>
 
-                        <tr>
+            <tr>
 
-                            <th>
-                                Booking
-                            </th>
+                <th>
+                    Booking
+                </th>
 
-                            <th>
-                                Customer
-                            </th>
+                <th>
+                    Customer
+                </th>
 
-                            <th>
-                                Ride
-                            </th>
+                <th>
+                    Adventures
+                </th>
 
-                            <th>
-                                Time
-                            </th>
+                <th>
+                    Riders
+                </th>
 
-                            <th>
-                                Riders
-                            </th>
+                <th>
+                    Amount
+                </th>
 
-                            <th>
-                                Status
-                            </th>
+                <th>
+                    Status
+                </th>
 
-                        </tr>
+            </tr>
 
-                    </thead>
-
-
-                    <tbody>
+        </thead>
 
 
-                        {% for booking in selected_date_bookings %}
+        <tbody>
 
-                            <tr>
+            {% for booking in selected_date_bookings %}
 
-                                <td>
+                <tr>
+
+
+                    <td>
+
+                        <strong>
+
+                            {{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+
+                        </strong>
+
+                        {% if booking.ticket %}
+
+                            <small>
+
+                                Ticket:
+                                {{ booking.ticket.ticket_number }}
+
+                            </small>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <strong class="customer-name">
+
+                            {{ booking.customer_name }}
+
+                        </strong>
+
+                        <small>
+
+                            {{ booking.customer_phone }}
+
+                        </small>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="dashboard-rides">
+
+                            {% for item in booking.ride_items.all %}
+
+                                <div class="dashboard-ride-item">
 
                                     <strong>
 
-                                        {{ booking.booking_id|stringformat:"s"|slice:":8"|upper }}
+                                        {{ item.ride.name }}
 
                                     </strong>
 
-                                </td>
+                                    <small>
+
+                                        {{ item.quantity }}
+
+                                        rider{{ item.quantity|pluralize }}
+
+                                    </small>
 
 
-                                <td>
-                                    {{ booking.customer_name }}
-                                </td>
+                                    {% if item.status == "checked_in" %}
+
+                                        <span class="mini-status checked">
+
+                                            <i class="fas fa-check"></i>
+
+                                            Checked
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="mini-status pending">
+
+                                            Pending
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% empty %}
+
+                                <small>
+                                    No rides
+                                </small>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </td>
 
 
-                                <td>
-                                    {{ booking.ride.name }}
-                                </td>
+                    <td>
+
+                        <strong>
+
+                            {{ booking.quantity }}
+
+                        </strong>
+
+                    </td>
 
 
-                                <td>
-                                    {{ booking.time_slot }}
-                                </td>
+                    <td>
+
+                        <strong>
+
+                            ₹{{ booking.total_amount }}
+
+                        </strong>
+
+                    </td>
 
 
-                                <td>
-                                    {{ booking.quantity }}
-                                </td>
+                    <td>
+
+                        {% if booking.status == "checked_in" %}
+
+                            <span class="table-status checked">
+
+                                Checked In
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="table-status confirmed">
+
+                                Confirmed
+
+                            </span>
+
+                        {% endif %}
 
 
-                                <td>
+                        {% if booking.ticket %}
 
-                                    <span class="table-status confirmed">
+                            <small>
 
-                                        {{ booking.get_status_display }}
-
-                                    </span>
-
-                                </td>
-
-                            </tr>
-
-
-                        {% empty %}
-
-                            <tr>
-
-                                <td
-                                    colspan="6"
-                                    class="empty-row"
+                                <a
+                                    href="{% url 'verify_ticket' booking.ticket.qr_token %}"
+                                    class="dashboard-verify-link"
                                 >
 
-                                    No bookings for
-                                    {{ selected_date|date:"d M Y" }}.
+                                    Verify Ticket
 
-                                </td>
+                                </a>
 
-                            </tr>
+                            </small>
 
-                        {% endfor %}
+                        {% endif %}
+
+                    </td>
 
 
-                    </tbody>
+                </tr>
 
-                </table>
 
-            </div>
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="empty-row"
+                    >
+
+                        No bookings for
+                        {{ selected_date|date:"d M Y" }}.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
 
 
         </section>
@@ -2162,6 +2371,140 @@ Staff Dashboard | Flying Fox
     }
 
 }
+
+
+
+
+/* =========================================================
+   MULTI-RIDE DASHBOARD
+========================================================= */
+
+.dashboard-rides {
+    display: flex;
+    min-width: 145px;
+    flex-direction: column;
+    gap: 7px;
+}
+
+
+.dashboard-ride-item {
+    position: relative;
+
+    padding:
+        8px
+        9px;
+
+    border:
+        1px solid
+        #eef0f3;
+
+    border-radius:
+        8px;
+
+    background:
+        #f9fafb;
+}
+
+
+.dashboard-ride-item > strong {
+    display: block;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+}
+
+
+.dashboard-ride-item > small {
+    display: block;
+
+    margin-top:
+        2px;
+
+    color:
+        #8f98a3;
+
+    font-size:
+        8px;
+}
+
+
+.mini-status {
+    display: inline-flex;
+
+    margin-top:
+        5px;
+
+    padding:
+        3px
+        6px;
+
+    border-radius:
+        10px;
+
+    align-items:
+        center;
+
+    gap:
+        3px;
+
+    font-size:
+        7px;
+
+    font-weight:
+        800;
+}
+
+
+.mini-status.checked {
+    color:
+        #198044;
+
+    background:
+        #e8f7ed;
+}
+
+
+.mini-status.pending {
+    color:
+        #9a6b11;
+
+    background:
+        #fff4d8;
+}
+
+
+.dashboard-verify-link {
+    display: inline-block;
+
+    margin-top:
+        6px;
+
+    color:
+        var(--ff-red);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    text-decoration:
+        none;
+}
+
+
+.dashboard-verify-link:hover {
+    text-decoration:
+        underline;
+}
+
+
 
 </style>
 

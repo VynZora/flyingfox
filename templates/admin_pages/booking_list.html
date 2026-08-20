@@ -167,11 +167,20 @@ Bookings | FlyingFox Admin
                     </td>
 
 
-                    <td>
-
-                        {{ booking.ride.name }}
-
-                    </td>
+<td class="ride-cell">
+    {% for item in booking.ride_items.all %}
+        <div class="ride-item">
+            <strong class="ride-name">
+                {{ item.ride.name }}
+            </strong>
+            <span class="ride-participants">
+                {{ item.quantity }} participant(s)
+            </span>
+        </div>
+    {% empty %}
+        <span class="text-muted">No ride</span>
+    {% endfor %}
+</td>
 
 
                     <td>

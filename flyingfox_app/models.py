@@ -656,6 +656,174 @@ class Booking(models.Model):
             f"{self.booking_id} - "
             f"{self.customer_name}"
         )
+    
+
+
+
+
+
+class BookingRideItem(models.Model):
+
+    # =====================================================
+    # PARENT BOOKING
+    # =====================================================
+
+    booking = models.ForeignKey(
+        Booking,
+        on_delete=models.CASCADE,
+        related_name="ride_items",
+    )
+
+
+    # =====================================================
+    # RIDE
+    # =====================================================
+
+    ride = models.ForeignKey(
+        Ride,
+        on_delete=models.PROTECT,
+        related_name="booking_items",
+    )
+
+
+    ride_price = models.ForeignKey(
+        RidePrice,
+        on_delete=models.PROTECT,
+        related_name="booking_items",
+    )
+
+
+    # =====================================================
+    # PARTICIPANTS
+    # =====================================================
+
+    quantity = models.PositiveIntegerField(
+        default=1,
+    )
+
+
+    # =====================================================
+    # PRICE
+    # =====================================================
+
+    price_per_person = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+
+
+    # =====================================================
+    # OFFER
+    # =====================================================
+
+    offer = models.ForeignKey(
+        "Offer",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="booking_items",
+    )
+
+
+    applied_coupon_code = models.CharField(
+        max_length=50,
+        blank=True,
+        default="",
+    )
+
+
+    discount_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("0.00"),
+    )
+
+
+    # =====================================================
+    # TOTALS
+    # =====================================================
+
+    subtotal = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("0.00"),
+    )
+
+
+    total_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("0.00"),
+    )
+
+
+    # =====================================================
+    # CHECK-IN STATUS
+    # =====================================================
+
+    STATUS_CHOICES = [
+        ("booked", "Booked"),
+        ("checked_in", "Checked In"),
+        ("completed", "Completed"),
+        ("cancelled", "Cancelled"),
+    ]
+
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="booked",
+    )
+
+
+    checked_in_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
+
+    # =====================================================
+    # TIMESTAMPS
+    # =====================================================
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+
+    class Meta:
+
+        ordering = ["id"]
+
+        constraints = [
+
+            models.UniqueConstraint(
+                fields=[
+                    "booking",
+                    "ride",
+                ],
+                name="unique_ride_per_booking",
+            )
+
+        ]
+
+
+    def __str__(self):
+
+        return (
+            f"{self.booking.booking_id} - "
+            f"{self.ride.name}"
+        )
+
+
+
+
+
 
 
 # class Booking(models.Model):
@@ -1854,23 +2022,31 @@ class Offer(models.Model):
 
 
 
-
-
 class BookingWeightGroup(models.Model):
 
     booking = models.ForeignKey(
         Booking,
         on_delete=models.CASCADE,
-        related_name="weight_groups"
+        related_name="weight_groups",
+        null=True,
+        blank=True,
+    )
+
+    booking_item = models.ForeignKey(
+        BookingRideItem,
+        on_delete=models.CASCADE,
+        related_name="weight_groups",
+        null=True,
+        blank=True,
     )
 
     range_key = models.CharField(
         max_length=20,
-        choices=WEIGHT_RANGE_CHOICES
+        choices=WEIGHT_RANGE_CHOICES,
     )
 
     participant_count = models.PositiveIntegerField(
-        default=1
+        default=1,
     )
 
     min_weight = models.PositiveIntegerField()
@@ -1880,7 +2056,7 @@ class BookingWeightGroup(models.Model):
     label = models.CharField(
         max_length=100,
         blank=True,
-        default=""
+        default="",
     )
 
     class Meta:
@@ -1889,24 +2065,37 @@ class BookingWeightGroup(models.Model):
 
             models.UniqueConstraint(
                 fields=[
-                    "booking",
+                    "booking_item",
                     "range_key",
                 ],
-                name="unique_booking_weight_range"
+                name="unique_booking_item_weight_range",
             )
 
         ]
 
     def __str__(self):
 
+        if self.booking_item:
+
+            return (
+                f"{self.booking_item.booking.booking_id} - "
+                f"{self.booking_item.ride.name} - "
+                f"{self.label or self.range_key} - "
+                f"{self.participant_count} rider(s)"
+            )
+
+        if self.booking:
+
+            return (
+                f"{self.booking.booking_id} - "
+                f"{self.label or self.range_key} - "
+                f"{self.participant_count} rider(s)"
+            )
+
         return (
-            f"{self.booking.booking_id} - "
             f"{self.label or self.range_key} - "
             f"{self.participant_count} rider(s)"
         )
-
-
-
 
 
 class Refund(models.Model):

@@ -213,6 +213,46 @@ Booking Details | FlyingFox Admin
     font-weight: 900;
 }
 
+
+
+.ride-detail-item {
+    padding: 4px 0;
+}
+
+.ride-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.ride-detail-header strong {
+    font-size: 16px;
+    color: #1f2937;
+}
+
+.weight-ride-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 10px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.price-text {
+    color: #f97316;
+}
+
+.detail-card hr {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+
+
+
  </style>
  
  {% endblock %}
@@ -273,57 +313,130 @@ Booking Details | FlyingFox Admin
 
         <!-- BOOKING -->
 
-        <div class="detail-card">
+<div class="detail-card">
 
-            <h5>
-                Booking Information
-            </h5>
+    <h5>
+        Booking Information
+    </h5>
+
+    <div class="info-row">
+        <span>Booking ID</span>
+
+        <strong>
+            {{ booking.booking_id }}
+        </strong>
+    </div>
+
+    <div class="info-row">
+        <span>Ride Date</span>
+
+        <strong>
+            {{ booking.booking_date|date:"d M Y" }}
+        </strong>
+    </div>
+
+    <div class="info-row">
+        <span>Time Slot</span>
+
+        <strong>
+            {{ booking.time_slot|default:"-" }}
+        </strong>
+    </div>
+
+    <div class="info-row">
+        <span>Total Riders</span>
+
+        <strong>
+            {{ total_participants }}
+        </strong>
+    </div>
+
+    <div class="info-row">
+        <span>Created</span>
+
+        <strong>
+            {{ booking.created_at|date:"d M Y h:i A" }}
+        </strong>
+    </div>
+
+</div>
 
 
-            <div class="info-row">
 
-                <span>Ride</span>
+<div class="detail-card mt-4">
+
+    <h5>
+        Ride Details
+    </h5>
+
+    {% for item in ride_items %}
+
+        <div class="ride-detail-item">
+
+            <div class="ride-detail-header">
 
                 <strong>
-                    {{ booking.ride.name }}
+                    {{ item.ride.name }}
                 </strong>
+
+                <span class="badge bg-primary">
+                    {{ item.quantity }}
+                    Rider{{ item.quantity|pluralize }}
+                </span>
 
             </div>
 
-
             <div class="info-row">
-
-                <span>Ride Date</span>
+                <span>Participants</span>
 
                 <strong>
-                    {{ booking.booking_date|date:"d M Y" }}
+                    {{ item.quantity }}
                 </strong>
-
             </div>
 
-
+            {% if item.ride_price %}
             <div class="info-row">
-
-                <span>Persons</span>
+                <span>Ride Price</span>
 
                 <strong>
-                    {{ booking.quantity }}
+                    {{ item.ride_price }}
                 </strong>
-
             </div>
+            {% endif %}
 
-
+            {% if item.offer %}
             <div class="info-row">
-
-                <span>Created</span>
+                <span>Offer</span>
 
                 <strong>
-                    {{ booking.created_at|date:"d M Y h:i A" }}
+                    {{ item.offer.title }}
                 </strong>
+            </div>
+            {% endif %}
 
+            <div class="info-row">
+                <span>Ride Total</span>
+
+                <strong class="price-text">
+                    ₹{{ item.total_amount }}
+                </strong>
             </div>
 
         </div>
+
+        {% if not forloop.last %}
+            <hr>
+        {% endif %}
+
+    {% empty %}
+
+        <p class="text-muted mb-0">
+            No ride items found.
+        </p>
+
+    {% endfor %}
+
+</div>
 
 
 
@@ -476,123 +589,95 @@ Booking Details | FlyingFox Admin
         Participant Weight Details
     </h5>
 
+    {% for item in ride_items %}
 
-    <div class="custom-table-container">
+        <div class="weight-ride-title">
+            {{ item.ride.name }}
+        </div>
 
-        <table class="table align-middle">
+        <div class="custom-table-container">
 
-            <thead>
+            <table class="table align-middle">
 
-                <tr>
-
-                    <th>
-                        #
-                    </th>
-
-                    <th>
-                        Weight Range
-                    </th>
-
-                    <th>
-                        Minimum Weight
-                    </th>
-
-                    <th>
-                        Maximum Weight
-                    </th>
-
-                    <th>
-                        Riders
-                    </th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                {% for group in booking.weight_groups.all %}
-
+                <thead>
                     <tr>
-
-                        <td>
-                            {{ forloop.counter }}
-                        </td>
-
-
-                        <td>
-
-                            <strong>
-
-                                {% if group.label %}
-
-                                    {{ group.label }}
-
-                                {% else %}
-
-                                    {{ group.min_weight }}
-                                    -
-                                    {{ group.max_weight }}
-                                    KG
-
-                                {% endif %}
-
-                            </strong>
-
-                        </td>
-
-
-                        <td>
-                            {{ group.min_weight }} KG
-                        </td>
-
-
-                        <td>
-                            {{ group.max_weight }} KG
-                        </td>
-
-
-                        <td>
-
-                            <span class="badge bg-primary">
-
-                                {{ group.participant_count }}
-
-                                Rider{{ group.participant_count|pluralize }}
-
-                            </span>
-
-                        </td>
-
+                        <th>#</th>
+                        <th>Weight Range</th>
+                        <th>Minimum Weight</th>
+                        <th>Maximum Weight</th>
+                        <th>Riders</th>
                     </tr>
+                </thead>
 
+                <tbody>
 
-                {% empty %}
+                    {% for group in item.weight_groups.all %}
 
-                    <tr>
+                        <tr>
 
-                        <td
-                            colspan="5"
-                            class="text-center py-4 text-muted"
-                        >
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
 
-                            No participant weight information
-                            is stored for this booking.
+                            <td>
+                                <strong>
+                                    {% if group.label %}
+                                        {{ group.label }}
+                                    {% else %}
+                                        {{ group.min_weight }} -
+                                        {{ group.max_weight }} KG
+                                    {% endif %}
+                                </strong>
+                            </td>
 
-                        </td>
+                            <td>
+                                {{ group.min_weight }} KG
+                            </td>
 
-                    </tr>
+                            <td>
+                                {{ group.max_weight }} KG
+                            </td>
 
-                {% endfor %}
+                            <td>
+                                <span class="badge bg-primary">
+                                    {{ group.participant_count }}
+                                    Rider{{ group.participant_count|pluralize }}
+                                </span>
+                            </td>
 
-            </tbody>
+                        </tr>
 
-        </table>
+                    {% empty %}
 
-    </div>
+                        <tr>
+                            <td
+                                colspan="5"
+                                class="text-center py-4 text-muted"
+                            >
+                                No participant weight information
+                                is stored for this ride.
+                            </td>
+                        </tr>
 
+                    {% endfor %}
 
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% if not forloop.last %}
+            <hr class="my-4">
+        {% endif %}
+
+    {% empty %}
+
+        <p class="text-muted mb-0">
+            No ride information found.
+        </p>
+
+    {% endfor %}
 
     <div class="participant-total-box">
 
@@ -601,7 +686,7 @@ Booking Details | FlyingFox Admin
         </span>
 
         <strong>
-            {{ booking.quantity }}
+            {{ total_participants }}
         </strong>
 
     </div>
@@ -612,28 +697,30 @@ Booking Details | FlyingFox Admin
 
     <!-- PRICE -->
 
-     <div class="detail-grid mt-4">
+<div class="detail-grid mt-4">
 
-
-        <div class="detail-card">
+<div class="detail-card">
 
     <h5>
         Price Summary
     </h5>
 
+    {% for item in ride_items %}
 
-    <div class="info-row">
+        <div class="info-row">
 
-        <span>
-            Price / Rider
-        </span>
+            <span>
+                {{ item.ride.name }}
+            </span>
 
-        <strong>
-            ₹{{ booking.price_per_person }}
-        </strong>
+            <strong>
+                {{ item.quantity }} ×
+                ₹{{ item.total_amount|default:"0" }}
+            </strong>
 
-    </div>
+        </div>
 
+    {% endfor %}
 
     <div class="info-row">
 
@@ -642,85 +729,10 @@ Booking Details | FlyingFox Admin
         </span>
 
         <strong>
-            {{ booking.quantity }}
+            {{ total_participants }}
         </strong>
 
     </div>
-
-
-    <div class="info-row">
-
-        <span>
-            Subtotal
-        </span>
-
-        <strong>
-            ₹{{ booking.subtotal }}
-        </strong>
-
-    </div>
-
-
-    {% if booking.offer %}
-
-        <div class="info-row">
-
-            <span>
-                Offer
-            </span>
-
-            <strong>
-                {{ booking.offer.title }}
-            </strong>
-
-        </div>
-
-
-        {% if booking.applied_coupon_code %}
-
-            <div class="info-row">
-
-                <span>
-                    Coupon Code
-                </span>
-
-                <strong>
-                    {{ booking.applied_coupon_code }}
-                </strong>
-
-            </div>
-
-        {% endif %}
-
-
-        <div class="info-row">
-
-            <span>
-                Discount
-            </span>
-
-            <strong class="text-success">
-                - ₹{{ booking.discount_amount }}
-            </strong>
-
-        </div>
-
-    {% else %}
-
-        <div class="info-row">
-
-            <span>
-                Offer
-            </span>
-
-            <strong>
-                No Offer
-            </strong>
-
-        </div>
-
-    {% endif %}
-
 
     <div class="info-row total-row">
 
@@ -729,7 +741,7 @@ Booking Details | FlyingFox Admin
         </span>
 
         <strong>
-            ₹{{ booking.total_amount }}
+            ₹{{ total_amount }}
         </strong>
 
     </div>
