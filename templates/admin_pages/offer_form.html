@@ -307,25 +307,43 @@
 
 
     <div class="mb-3">
+    <label class="form-label">
+        Rides <span class="text-danger">*</span>
+    </label>
 
-        <label
-            for="{{ form.ride.id_for_label }}"
-            class="form-label"
-        >
-            Ride
-        </label>
+    <div class="rides-dropdown" id="ridesDropdown">
 
-        {{ form.ride }}
+        <div class="rides-dropdown-toggle" id="ridesDropdownToggle">
+            <span id="ridesSelectedText">All rides</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
 
-        {% if form.ride.errors %}
-
-            <div class="field-error d-block">
-                {{ form.ride.errors|join:", " }}
-            </div>
-
-        {% endif %}
+        <div class="rides-dropdown-menu" id="ridesDropdownMenu">
+            <ul>
+                {% for ride in all_rides %}
+                    <li>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="rides"
+                                value="{{ ride.id }}"
+                                {% if ride in offer.rides.all %}checked{% endif %}
+                            >
+                            {{ ride.name }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
     </div>
+
+    {% if form.rides.errors %}
+        <div class="field-error d-block">
+            {{ form.rides.errors|join:", " }}
+        </div>
+    {% endif %}
+</div>
 
 </div>
 

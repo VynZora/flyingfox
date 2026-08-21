@@ -30868,4 +30868,95 @@ body:has(#offcanvasNavbar.showing) .header-2 {
         font-size: 9px;
     }
 }
+
+
+
+@media (max-width: 991px) {
+    .nav-right {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e5e5;
+    }
+    .nav-btn { width: 100%; }
+    .nav-btn .theme-btn {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border-radius: 8px;
+        background: #c31103;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .nav-btn .theme-btn:hover {
+        background: #8f0c02;
+        transform: translateY(-2px);
+    }
+    .nav-btn .theme-btn i { font-size: 16px; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 991px) {
+
+    .mobile-offcanvas-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .mobile-offcanvas-btn {
+        width: 160px;
+        height: 38px;
+        min-height: 38px;
+        padding: 7px 10px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border-radius: 3px;
+
+        font-size: 12px;
+        font-weight: 500;
+
+        box-shadow: none;
+    }
+
+    .mobile-offcanvas-btn span {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .mobile-offcanvas-btn span i {
+        font-size: 11px;
+    }
+
+    .mobile-offcanvas-btn > i {
+        font-size: 10px;
+    }
+}
 /* book now button in mobile navbar css end  */

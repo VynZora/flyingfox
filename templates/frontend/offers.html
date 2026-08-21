@@ -2681,19 +2681,22 @@ active
              APPLICABLE RIDE
         ====================================== -->
 
-        {% if offer.ride %}
+{% if offer.rides.exists %}
 
-            <div class="ff-offer-ride">
+    <div class="ff-offer-ride">
 
+        {% for ride in offer.rides.all %}
+
+            <span class="ff-offer-ride-tag">
                 <i class="fas fa-circle-check"></i>
+                {{ ride.name }}
+            </span>
 
-                <span>
-                    {{ offer.ride.name }}
-                </span>
+        {% endfor %}
 
-            </div>
+    </div>
 
-        {% endif %}
+{% endif %}
 
 
         <!-- =====================================

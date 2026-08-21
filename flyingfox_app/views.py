@@ -6222,15 +6222,15 @@ def booking_options_for_date(request):
             # =================================================
 
             offers = (
-                Offer.objects
+                 Offer.objects
                 .filter(
-                    ride=ride,
-                    is_active=True,
-                    start_date__lte=booking_date,
-                    end_date__gte=booking_date,
+                rides=ride,
+                 is_active=True,
+                start_date__lte=booking_date,
+                end_date__gte=booking_date,
                 )
-                .order_by(
-                    "-created_at"
+               .order_by(
+                 "-created_at"
                 )
             )
 
@@ -6548,10 +6548,10 @@ def _booking_user_profile(request):
     return None
 
 
-
 def _calculate_offer_discount(
     *,
     offer,
+    ride,
     booking_date,
     quantity,
     participant_subtotal,
@@ -6610,11 +6610,7 @@ def _calculate_offer_discount(
     )
 
 
-    if (
-        quantity
-        <
-        minimum_participants
-    ):
+    if quantity < minimum_participants:
 
         remaining = (
             minimum_participants
@@ -6643,11 +6639,7 @@ def _calculate_offer_discount(
     )
 
 
-    if (
-        subtotal_before_discount
-        <
-        minimum_amount
-    ):
+    if subtotal_before_discount < minimum_amount:
 
         difference = (
             minimum_amount
@@ -6663,37 +6655,6 @@ def _calculate_offer_discount(
             )
         )
 
-
-    # =====================================================
-    # GLOBAL USAGE LIMIT
-    # =====================================================
-
-    if offer.max_uses:
-
-        global_used = (
-            Booking.objects
-            .filter(
-                offer=offer,
-                status__in=
-                    SUCCESSFUL_BOOKING_STATUSES,
-            )
-            .count()
-        )
-
-
-        if (
-            global_used
-            >=
-            offer.max_uses
-        ):
-
-            return (
-                ZERO,
-                (
-                    "This offer has reached "
-                    "its maximum usage limit."
-                )
-            )
 
     # =====================================================
     # CUSTOMER HISTORY
@@ -6723,7 +6684,7 @@ def _calculate_offer_discount(
 
 
         # =================================================
-        # MAX USES PER CUSTOMER
+        # MAX USES PER CUSTOMER (SCOPED TO THIS RIDE)
         # =================================================
 
         if offer.max_uses_per_user:
@@ -6746,9 +6707,11 @@ def _calculate_offer_discount(
             if has_identity:
 
                 already_used = (
-                    identity_bookings
+                    BookingRideItem.objects
                     .filter(
-                        offer=offer
+                        booking__in=identity_bookings,
+                        offer=offer,
+                        ride=ride,
                     )
                     .count()
                 )
@@ -6764,10 +6727,11 @@ def _calculate_offer_discount(
                         ZERO,
                         (
                             f'You have already used '
-                            f'"{offer.title}". '
+                            f'"{offer.title}" on '
+                            f'"{ride.name}". '
                             f"This offer can be used only "
                             f"{offer.max_uses_per_user} "
-                            f"time(s) per customer."
+                            f"time(s) per customer for this ride."
                         )
                     )
 
@@ -6860,11 +6824,7 @@ def _calculate_offer_discount(
         )
 
 
-        if (
-            advance_days
-            <
-            required_days
-        ):
+        if advance_days < required_days:
 
             return (
                 ZERO,
@@ -7087,7 +7047,7 @@ def _calculate_offer_discount(
     )
 
 
-
+    
 def booking_review(request):
 
     ZERO = Decimal("0.00")
@@ -7845,18 +7805,16 @@ def booking_review(request):
 
 
             selected_offer = (
-                Offer.objects
-                .filter(
-                    id=offer_id,
-                    ride=ride,
-                    is_active=True,
-                    start_date__lte=
-                        booking_date,
-                    end_date__gte=
-                        booking_date,
-                )
-                .first()
-            )
+               Offer.objects
+               .filter(
+               id=offer_id,
+               rides=ride,
+               is_active=True,
+               start_date__lte=booking_date,
+               end_date__gte=booking_date,
+               )
+              .first()
+            )      
 
 
             print(
@@ -7936,6 +7894,8 @@ def booking_review(request):
 
     offer=
         selected_offer,
+    ride=
+        ride,    
 
     booking_date=
         booking_date,
@@ -8901,17 +8861,17 @@ def _validate_pending_booking_before_payment(
 
 
             selected_offer = (
-                Offer.objects
-                .filter(
-                    id=offer_id,
-                    ride=ride,
-                    is_active=True,
-                    start_date__lte=
-                        booking_date,
-                    end_date__gte=
-                        booking_date,
-                )
-                .first()
+              Offer.objects
+             .filter(
+             id=offer_id,
+             rides=ride,
+             is_active=True,
+              start_date__lte=
+              booking_date,
+              end_date__gte=
+               booking_date,
+             )
+             .first()
             )
 
 
@@ -9000,6 +8960,8 @@ def _validate_pending_booking_before_payment(
 
                 offer=
                     selected_offer,
+                ride=
+                    ride,    
 
                 booking_date=
                     booking_date,
@@ -17027,11 +16989,11 @@ def offer_list(request):
     today = timezone.localdate()
 
     offers_qs = (
-        Offer.objects
-        .select_related("ride")
-        .all()
-        .order_by("-created_at")
-    )
+    Offer.objects
+    .prefetch_related("rides")
+    .all()
+    .order_by("-created_at")
+     )
 
     search = request.GET.get(
         "search",
@@ -17055,7 +17017,7 @@ def offer_list(request):
             |
             Q(coupon_code__icontains=search)
             |
-            Q(ride__name__icontains=search)
+            Q(rides__name__icontains=search)
         )
 
 
@@ -17124,6 +17086,8 @@ def offer_list(request):
         }
     )
 
+
+
 @_admin_required
 def offer_create(request):
 
@@ -17164,8 +17128,14 @@ def offer_create(request):
             "form": form,
             "page_title": "Create Offer",
             "button_text": "Create Offer",
+            "all_rides": Ride.objects.filter(
+                is_active=True
+            ).order_by("name"),
         }
     )
+
+
+
 
 
 @_admin_required
@@ -17213,10 +17183,13 @@ def offer_update(request, slug):
         request,
         "admin_pages/offer_form.html",
         {
-            "form": form,
-            "offer": offer,
-            "page_title": "Edit Offer",
-            "button_text": "Update Offer",
+        "form": form,
+        "offer": offer,
+        "page_title": "Edit Offer",
+        "button_text": "Update Offer",
+         "all_rides": Ride.objects.filter(
+            is_active=True
+        ).order_by("name"),
         }
     )
 
@@ -17225,7 +17198,7 @@ def offer_update(request, slug):
 def offer_detail(request, slug):
 
     offer = get_object_or_404(
-        Offer.objects.select_related("ride"),
+        Offer.objects.prefetch_related("rides"),
         slug=slug
     )
 
@@ -17286,7 +17259,7 @@ def offers(request):
 
     offers_qs = (
         Offer.objects
-        .select_related("ride")
+        .prefetch_related("rides")
         .all()
         .order_by("-created_at")
     )
@@ -17325,7 +17298,7 @@ def offers(request):
             |
 
             Q(
-                ride__name__icontains=search
+                rides__name__icontains=search
             )
 
             |
@@ -17438,8 +17411,8 @@ def frontend_offer_detail(request, slug):
     # =====================================================
 
     offer = get_object_or_404(
-        Offer.objects.select_related("ride"),
-        slug=slug,
+    Offer.objects.prefetch_related("rides"),
+    slug=slug,
     )
 
     # No refresh_status() needed.
@@ -17458,7 +17431,7 @@ def frontend_offer_detail(request, slug):
 
     related_offers = (
         Offer.objects
-        .select_related("ride")
+        .prefetch_related("rides")
         .filter(
             is_active=True,
             start_date__lte=today,
@@ -17473,10 +17446,8 @@ def frontend_offer_detail(request, slug):
     # Prefer offers for the same ride
     # -----------------------------------------------------
 
-    if offer.ride:
-        same_ride_offers = related_offers.filter(
-            ride=offer.ride
-        )[:3]
+    if offer.rides.exists():
+        same_ride_offers = related_offers.filter( rides__in=offer.rides.all()).distinct()[:3]
 
         # Convert to list because we'll possibly add
         # other offers below.
@@ -17489,21 +17460,21 @@ def frontend_offer_detail(request, slug):
             existing_ids = [item.pk for item in related_offers]
 
             extra_offers = (
-                Offer.objects
-                .select_related("ride")
-                .filter(
-                    is_active=True,
-                    start_date__lte=today,
-                    end_date__gte=today,
-                )
-                .exclude(pk=offer.pk)
-                .exclude(pk__in=existing_ids)
-                .exclude(banner_image="")
-                .filter(banner_image__isnull=False)
-                .order_by("-created_at")[
-                    :3 - len(related_offers)
-                ]
-            )
+    Offer.objects
+    .prefetch_related("rides")
+    .filter(
+        is_active=True,
+        start_date__lte=today,
+        end_date__gte=today,
+    )
+    .exclude(pk=offer.pk)
+    .exclude(pk__in=existing_ids)
+    .exclude(banner_image="")
+    .filter(banner_image__isnull=False)
+    .order_by("-created_at")[
+        :3 - len(related_offers)
+    ]
+)
 
             related_offers.extend(extra_offers)
 

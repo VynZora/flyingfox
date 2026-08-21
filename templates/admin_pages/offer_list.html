@@ -323,23 +323,31 @@
                              RIDES
                         ========================================== -->
 
-                        <td>
+                       <td>
 
-{% if offer.ride %}
+    {% if offer.rides.exists %}
 
-    <span class="offer-ride-tag">
-        {{ offer.ride.name }}
-    </span>
+        <div class="offer-ride-names">
 
-{% else %}
+            {% for ride in offer.rides.all %}
 
-    <span class="text-muted">
-        No Ride
-    </span>
+                <span class="offer-ride-tag">
+                    {{ ride.name }}
+                </span>
 
-{% endif %}
+            {% endfor %}
 
-                        </td>
+        </div>
+
+    {% else %}
+
+        <span class="offer-all-rides">
+            All Rides
+        </span>
+
+    {% endif %}
+
+</td>
 
 
 

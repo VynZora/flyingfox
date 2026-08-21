@@ -572,26 +572,18 @@
 
             <div class="offer-rides-list">
 
-{% if offer.ride %}
-
-    <span class="offer-ride-badge">
-
-        <i class="fas fa-bolt"></i>
-
-        {{ offer.ride.name }}
-
-    </span>
-
+{% if offer.rides.exists %}
+    {% for ride in offer.rides.all %}
+        <span class="offer-ride-badge">
+            <i class="fas fa-bolt"></i>
+            {{ ride.name }}
+        </span>
+    {% endfor %}
 {% else %}
-
     <span class="offer-all-rides-badge">
-
         <i class="fas fa-ban"></i>
-
         No Ride Selected
-
     </span>
-
 {% endif %}
 
             </div>

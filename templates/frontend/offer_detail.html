@@ -2142,13 +2142,14 @@
 
                             </div>
 
-                            <span>
-                                 Applicable Ride
-                            </span>
-
-                            <strong>
-                                 {{ offer.ride.name }}
-                            </strong>
+                             <span>Applicable Ride{{ offer.rides.count|pluralize }}</span>
+    <strong>
+        {% if offer.rides.exists %}
+            {% for ride in offer.rides.all %}{{ ride.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        {% else %}
+            All Rides
+        {% endif %}
+    </strong>
 
                         </div>
 
@@ -2595,26 +2596,15 @@
                             <li>
 
                                 <i class="fas fa-circle-check"></i>
-
-                                <span>
-
-                                    {% if offer.ride %}
-
-                                        Choose the
-
-                                        <strong>
-                                            {{ offer.ride.name }}
-                                        </strong>
-
-                                        ride for your adventure.
-
-                                    {% else %}
-
-                                        Select your preferred Flying Fox ride.
-
-                                    {% endif %}
-
-                                </span>
+<span>
+    {% if offer.rides.exists %}
+        Choose
+        {% for ride in offer.rides.all %}<strong>{{ ride.name }}</strong>{% if not forloop.last %}, {% endif %}{% endfor %}
+        for your adventure.
+    {% else %}
+        Select your preferred Flying Fox ride.
+    {% endif %}
+</span>
 
                             </li>
 
@@ -3134,18 +3124,12 @@
 
 
                             <!-- RIDE -->
-
-                            {% if related.ride %}
-
-                                <p>
-
-                                    <i class="fas fa-check-circle"></i>
-
-                                    {{ related.ride.name }}
-
-                                </p>
-
-                            {% endif %}
+{% if related.rides.exists %}
+    <p>
+        <i class="fas fa-check-circle"></i>
+        {% for ride in related.rides.all %}{{ ride.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+    </p>
+{% endif %}
 
 
 
@@ -3461,23 +3445,14 @@
                             <div class="ff-terms-answer-inner">
 
 
-                                {% if offer.ride %}
-
-                                    This offer applies to the
-
-                                    <strong>
-                                        {{ offer.ride.name }}
-                                    </strong>
-
-                                    ride.
-
-                                {% else %}
-
-                                    This offer is not currently restricted
-                                    to a specific ride. Final eligibility
-                                    will be confirmed during booking.
-
-                                {% endif %}
+{% if offer.rides.exists %}
+    This offer applies to
+    {% for ride in offer.rides.all %}<strong>{{ ride.name }}</strong>{% if not forloop.last %}, {% endif %}{% endfor %}.
+{% else %}
+    This offer is not currently restricted
+    to a specific ride. Final eligibility
+    will be confirmed during booking.
+{% endif %}
 
 
                                 Final participation remains subject to

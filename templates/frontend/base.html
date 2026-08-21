@@ -220,6 +220,54 @@
                   </li>
 
                 </ul>
+
+
+
+                <!-- Mobile Account & Booking Buttons -->
+<div class="mobile-offcanvas-actions">
+
+    {% if request.session.user_id %}
+
+        <a
+            href="{% url 'user_dashboard' %}"
+            class="theme-btn mobile-offcanvas-btn"
+        >
+            <span>
+             
+                My Account
+            </span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+
+    {% else %}
+
+        <a
+            href="{% url 'user_signin' %}"
+            class="theme-btn mobile-offcanvas-btn"
+        >
+            <span>
+                Login
+            </span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+
+    {% endif %}
+
+
+    <a
+        href="{% url 'bookings' %}"
+        class="theme-btn mobile-offcanvas-btn mobile-booking-btn"
+    >
+        <span>
+            Book Now
+        </span>
+        <i class="fas fa-arrow-right"></i>
+    </a>
+
+</div>
+
+
+
                 <!-- nav-right -->
                 <div class="nav-right">
                   <div class="nav-btn">

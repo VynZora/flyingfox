@@ -1672,12 +1672,10 @@ class Offer(models.Model):
     # ONE RIDE  -> MANY OFFERS
     # =========================================================
 
-    ride = models.ForeignKey(
-        "Ride",
-        on_delete=models.CASCADE,
-        related_name="offers",
-        null=True,
-        blank=True
+    rides = models.ManyToManyField(
+    "Ride",
+    related_name="offers",
+    blank=True
     )
 
 
@@ -1959,9 +1957,11 @@ class Offer(models.Model):
 
     def __str__(self):
 
-        if self.ride:
-
-            return f"{self.title} - {self.ride.name}"
+        if self.rides.exists():
+            ride_names = ", ".join(
+            self.rides.values_list("name", flat=True)[:3]
+           )
+            return f"{self.title} - {ride_names}"
 
         return self.title
     

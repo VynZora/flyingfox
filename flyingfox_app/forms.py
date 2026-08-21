@@ -94,7 +94,7 @@ class OfferForm(forms.ModelForm):
 
             "offer_type",
 
-            "ride",
+            "rides",
 
             "discount_value",
             "minimum_booking_amount",
@@ -274,13 +274,13 @@ class OfferForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        self.fields["ride"].queryset = (
-            Ride.objects
-            .filter(is_active=True)
-            .order_by("name")
-        )
+        self.fields["rides"].queryset = (
+        Ride.objects
+        .filter(is_active=True)
+        .order_by("name")
+         )
 
-        self.fields["ride"].required = False
+        self.fields["rides"].required = False
 
         self.fields["maximum_discount"].required = False
         self.fields["buy_quantity"].required = False
