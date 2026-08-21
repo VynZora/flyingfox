@@ -30915,42 +30915,63 @@ body:has(#offcanvasNavbar.showing) .header-2 {
 
 
 
+/* =====================================================
+   MOBILE SIDEBAR ACTION BUTTONS
+===================================================== */
+
+.mobile-offcanvas-actions {
+    display: none !important;
+}
 
 @media (max-width: 991px) {
 
     .mobile-offcanvas-actions {
-        display: flex;
+        display: flex !important;
         flex-direction: column;
-        gap: 4px;
-        margin-top: 18px;
+        align-items: flex-start;
+        gap: 8px;
+        width: 100%;
+        margin-top: 20px;
         padding-top: 15px;
         border-top: 1px solid #eee;
     }
 
+
+    /* Both buttons */
     .mobile-offcanvas-btn {
-        width: 160px;
-        height: 38px;
-        min-height: 38px;
-        padding: 7px 10px;
+        width: 140px !important;
+        min-width: 140px !important;
+        max-width: 140px !important;
 
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        height: 38px !important;
+        min-height: 38px !important;
 
-        border-radius: 3px;
+        padding: 7px 12px !important;
 
-        font-size: 12px;
-        font-weight: 500;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
 
-        box-shadow: none;
+        box-sizing: border-box;
+
+        font-size: 12px !important;
+        line-height: 1 !important;
+
+        border-radius: 4px !important;
+
+        transition: all 0.3s ease !important;
     }
 
+
+    /* Left content */
     .mobile-offcanvas-btn span {
         display: flex;
         align-items: center;
         gap: 7px;
     }
 
+
+    /* Icons */
     .mobile-offcanvas-btn span i {
         font-size: 11px;
     }
@@ -30958,5 +30979,23 @@ body:has(#offcanvasNavbar.showing) .header-2 {
     .mobile-offcanvas-btn > i {
         font-size: 10px;
     }
+
+
+    /* Hover */
+    .mobile-offcanvas-btn:hover {
+        transform: translateY(-1px);
+        opacity: 0.9;
+    }
+
+}
+
+
+/* Desktop */
+@media (min-width: 992px) {
+
+    .mobile-offcanvas-actions {
+        display: none !important;
+    }
+
 }
 /* book now button in mobile navbar css end  */
