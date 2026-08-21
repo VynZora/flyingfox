@@ -7047,7 +7047,7 @@ def _calculate_offer_discount(
     )
 
 
-    
+
 def booking_review(request):
 
     ZERO = Decimal("0.00")
@@ -11902,21 +11902,15 @@ def booking_payment_verify(request):
             # =================================================
 
             locked_booking_items = list(
-
                 BookingRideItem.objects
-
-                .select_for_update()
-
-                .filter(
-                    booking=
-                        locked_booking
-                )
-
-                .select_related(
-                    "ride",
-                    "ride_price",
-                    "offer",
-                )
+               .select_for_update()
+               .filter(
+                booking=locked_booking
+               )
+              .select_related(
+             "ride",
+              "ride_price",
+               )
             )
 
 
