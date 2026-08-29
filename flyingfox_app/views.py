@@ -12378,8 +12378,16 @@ def generate_ticket_qr(request, ticket):
         back_color="white",
     )
 
+    # IMPORTANT:
+    # Convert QR from 1-bit grayscale to standard RGB PNG
+    qr_image = qr_image.convert("RGB")
+
     buffer = BytesIO()
-    qr_image.save(buffer, format="PNG")
+
+    qr_image.save(
+        buffer,
+        format="PNG",
+    )
 
     ticket.qr_image.save(
         f"ticket-{ticket.ticket_id}.png",
