@@ -74,12 +74,21 @@
 
  <div class="col-lg-6">
 
-    <div
-        class="about-left wow fadeInLeft"
-        data-wow-delay=".2s">
+    <div class="about-left wow fadeInLeft" data-wow-delay=".2s">
 
-        <div class="about-experience">
+    <div class="about-img ff-about-image-collage">
 
+        <!-- Main image -->
+        <div class="ff-about-image ff-about-image-main">
+            <img
+                src="{% static 'frontend/assets/img/about/img-7.jpeg' %}"
+                alt="Flying Fox Adventure"
+            >
+        </div>
+
+
+        <!-- Experience badge -->
+        <div class="about-experience ff-about-experience">
             <h4>
                 10<span>+</span>
             </h4>
@@ -87,40 +96,23 @@
             <p>
                 Years Of Adventure Experience
             </p>
-
         </div>
 
 
-        <div class="about-img ff-about-image-collage">
-
-            <!-- Main image -->
-            <div class="ff-about-image ff-about-image-main">
-
-                <img
-                    src="{% static 'frontend/assets/img/about/img-7.jpeg' %}"
-                    alt="Flying Fox Adventure"
-                >
-
-            </div>
-
-
-            <!-- Overlapping second image -->
-            <div class="ff-about-image ff-about-image-front">
-
-                <img
-                    src="{% static 'frontend/assets/img/about/img-6.jpeg' %}"
-                    alt="Flying Fox Experience"
-                >
-
-            </div>
-
-
-            <!-- Decorative dot -->
-            <span class="ff-about-image-dot"></span>
-
+        <!-- Overlapping second image -->
+        <div class="ff-about-image ff-about-image-front">
+            <img
+                src="{% static 'frontend/assets/img/about/img-6.jpeg' %}"
+                alt="Flying Fox Experience"
+            >
         </div>
+
+
+        <span class="ff-about-image-dot"></span>
 
     </div>
+
+</div>
 
 </div>
 

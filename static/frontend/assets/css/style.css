@@ -31045,5 +31045,5059 @@ body:has(#offcanvasNavbar.showing) .header-2 {
 
 }
 
+
+@media (max-width: 767px) {
+
+    .preloader {
+        overflow: hidden;
+    }
+
+    .ff-preloader-video {
+        display: block;
+
+        width: 280px;
+        height: 280px;
+
+        object-fit: cover;
+
+        border: none;
+        outline: none;
+
+        /* top | right | bottom | left */
+        clip-path: inset(2px 14px 12px 2px);
+
+        pointer-events: none;
+    }
+
+}
 /* pre loader css end  */
 
+
+
+/* about page badge issue solve start */
+/* =========================================================
+   ABOUT EXPERIENCE BADGE - COLLAGE POSITION FIX
+========================================================= */
+
+.ff-about-image-collage .ff-about-experience {
+    position: absolute;
+
+    top: 12%;
+    right: 1%;
+
+    width: 150px;
+    height: 150px;
+
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 15px;
+
+    background: var(--theme-color);
+    border: 8px solid #ffffff;
+    border-radius: 50%;
+
+    text-align: center;
+
+    z-index: 6;
+}
+
+
+.ff-about-image-collage .ff-about-experience h4 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 45px;
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+
+.ff-about-image-collage .ff-about-experience p {
+    margin-top: 7px;
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    line-height: 1.15;
+
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+
+    .ff-about-image-collage .ff-about-experience {
+        top: 3%;
+        right: -1%;
+
+        width: 105px;
+        height: 105px;
+
+        padding: 9px;
+
+        border-width: 4px;
+    }
+
+
+    .ff-about-image-collage .ff-about-experience h4 {
+        font-size: 31px;
+    }
+
+
+    .ff-about-image-collage .ff-about-experience p {
+        font-size: 11px;
+        line-height: 1.05;
+    }
+
+}
+/* about page badge css end  */
+
+
+
+/* navbar css issue solve  */
+/* =========================================================
+   FLYING FOX NAVBAR
+   FINAL RESPONSIVE ALIGNMENT FIX
+   KEEP THIS AT THE VERY END OF style.css
+========================================================= */
+
+
+/* =========================================================
+   DESKTOP
+   992px AND ABOVE
+========================================================= */
+
+@media (min-width: 992px) {
+
+    .header-2 .main-navigation .navbar > .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header-2 .main-navigation .navbar-brand {
+        margin: 0;
+        padding: 0;
+    }
+
+    .header-2 .main-navigation .mobile-menu-right {
+        display: none !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET + MOBILE
+   BELOW 992px
+========================================================= */
+
+@media (max-width: 991px) {
+
+    /* Outer navbar */
+    .header-2 .main-navigation .navbar {
+        width: 100%;
+
+        padding: 12px 12px !important;
+
+        background: transparent !important;
+    }
+
+
+    /* White rounded navbar box */
+    .header-2 .main-navigation .navbar > .container {
+        width: 100% !important;
+
+        height: 72px !important;
+        min-height: 72px !important;
+
+        margin: 0 auto !important;
+
+        padding:
+            6px
+            14px
+            6px
+            10px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: space-between !important;
+
+        flex-wrap: nowrap !important;
+
+        background: #ffffff !important;
+
+        border-radius: 50px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================
+       LOGO
+    ====================================== */
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand {
+
+        width: auto !important;
+        height: auto !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: flex-start !important;
+
+        flex: 0 1 auto !important;
+
+        line-height: 1 !important;
+
+        transform: none !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img {
+
+        display: block !important;
+
+        width: 145px !important;
+        height: auto !important;
+
+        max-width: 100% !important;
+        max-height: 58px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        object-fit: contain !important;
+    }
+
+
+    /* =====================================
+       RIGHT SIDE
+       BOOK NOW + HAMBURGER
+    ====================================== */
+
+    .header-2
+    .main-navigation
+    .mobile-menu-right {
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: flex-end !important;
+
+        align-self: center !important;
+
+        gap: 10px !important;
+
+        margin: 0 0 0 auto !important;
+        padding: 0 !important;
+
+        height: auto !important;
+
+        flex: 0 0 auto !important;
+
+        line-height: 1 !important;
+    }
+
+
+    /* =====================================
+       BOOK NOW
+    ====================================== */
+
+    .header-2
+    .main-navigation
+    .mobile-book-now {
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        gap: 6px;
+
+        height: 42px !important;
+
+        margin: 0 !important;
+
+        padding: 0 14px !important;
+
+        border: 0;
+
+        border-radius: 8px;
+
+        background: #d7190f;
+
+        color: #ffffff !important;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        line-height: 1 !important;
+
+        white-space: nowrap;
+
+        flex-shrink: 0;
+    }
+
+
+    .header-2
+    .main-navigation
+    .mobile-book-now
+    i {
+
+        margin: 0 !important;
+
+        font-size: 11px;
+
+        line-height: 1;
+    }
+
+
+    /* =====================================
+       HAMBURGER
+    ====================================== */
+
+    .header-2
+    .main-navigation
+    .navbar-toggler {
+
+        position: static !important;
+
+        width: 34px !important;
+        height: 34px !important;
+
+        margin: 0 !important;
+
+        padding: 5px !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        gap: 5px !important;
+
+        flex-shrink: 0 !important;
+
+        border: 0 !important;
+
+        background: transparent !important;
+
+        box-shadow: none !important;
+
+        transform: none !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler
+    span {
+
+        display: block !important;
+
+        width: 22px !important;
+        height: 2px !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        border: 0 !important;
+
+        border-radius: 10px;
+
+        background: #1e1e1e !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler
+    span:nth-child(2) {
+
+        width: 22px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler
+    span:nth-child(3) {
+
+        width: 22px !important;
+    }
+
+
+    /* =====================================
+       SCROLLED / FIXED NAVBAR
+       EXACT SAME ALIGNMENT
+    ====================================== */
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top {
+
+        padding:
+            8px
+            12px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    > .container {
+
+        height: 72px !important;
+        min-height: 72px !important;
+
+        padding:
+            6px
+            14px
+            6px
+            10px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand {
+
+        width: auto !important;
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+
+        width: 145px !important;
+        height: auto !important;
+
+        max-height: 58px !important;
+    }
+
+}
+
+
+/* =========================================================
+   NORMAL MOBILE
+   576px - 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .header-2 .main-navigation .navbar {
+        padding:
+            10px
+            10px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar
+    > .container {
+
+        height: 68px !important;
+        min-height: 68px !important;
+
+        padding:
+            5px
+            12px
+            5px
+            9px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img {
+
+        width: 130px !important;
+
+        max-height: 54px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .mobile-menu-right {
+
+        gap: 8px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .mobile-book-now {
+
+        height: 39px !important;
+
+        padding:
+            0
+            11px !important;
+
+        font-size: 11px;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler {
+
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler
+    span {
+
+        width: 21px !important;
+    }
+
+
+    /* Fixed navbar */
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    > .container {
+
+        height: 68px !important;
+        min-height: 68px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+
+        width: 130px !important;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   BELOW 480px
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .header-2
+    .main-navigation
+    .navbar {
+
+        padding:
+            8px
+            7px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar
+    > .container {
+
+        height: 64px !important;
+        min-height: 64px !important;
+
+        padding:
+            4px
+            10px
+            4px
+            8px !important;
+
+        align-items: center !important;
+    }
+
+
+    /* Smaller logo */
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img {
+
+        width: 115px !important;
+
+        max-height: 48px !important;
+    }
+
+
+    /* Right controls */
+
+    .header-2
+    .main-navigation
+    .mobile-menu-right {
+
+        align-items: center !important;
+
+        gap: 6px !important;
+
+        margin: 0 0 0 auto !important;
+    }
+
+
+    /* Book now */
+
+    .header-2
+    .main-navigation
+    .mobile-book-now {
+
+        height: 36px !important;
+
+        padding:
+            0
+            9px !important;
+
+        gap: 4px;
+
+        font-size: 10px;
+    }
+
+
+    .header-2
+    .main-navigation
+    .mobile-book-now
+    i {
+
+        font-size: 9px;
+    }
+
+
+    /* Hamburger */
+
+    .header-2
+    .main-navigation
+    .navbar-toggler {
+
+        width: 30px !important;
+        height: 30px !important;
+
+        padding: 4px !important;
+
+        gap: 4px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler
+    span {
+
+        width: 20px !important;
+        height: 2px !important;
+    }
+
+
+    /* Fixed */
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    > .container {
+
+        height: 64px !important;
+        min-height: 64px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+
+        width: 115px !important;
+    }
+
+}
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   BELOW 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .header-2
+    .main-navigation
+    .navbar
+    > .container {
+
+        padding-left: 7px !important;
+        padding-right: 7px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img {
+
+        width: 102px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .mobile-menu-right {
+
+        gap: 4px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .mobile-book-now {
+
+        height: 34px !important;
+
+        padding:
+            0
+            7px !important;
+
+        font-size: 9px;
+    }
+
+
+    .header-2
+    .main-navigation
+    .mobile-book-now
+    i {
+
+        display: none;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler {
+
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+
+    .header-2
+    .main-navigation
+    .navbar-toggler
+    span {
+
+        width: 18px !important;
+    }
+
+}
+
+
+
+
+
+/* =========================================================
+   FINAL NAVBAR LOGO SIZE FIX
+   KEEP THIS AS LAST CSS IN style.css
+========================================================= */
+
+
+/* Desktop */
+@media (min-width: 992px) {
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand {
+        width: 190px !important;
+        flex: 0 0 190px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+    }
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img {
+        display: block !important;
+
+        width: 190px !important;
+        max-width: none !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand {
+        width: 165px !important;
+        flex: 0 0 165px !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+    }
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img,
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+        display: block !important;
+
+        width: 165px !important;
+        max-width: none !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   481px - 767px
+========================================================= */
+
+@media (min-width: 481px) and (max-width: 767px) {
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand {
+        width: 150px !important;
+        flex: 0 0 150px !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+    }
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img,
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+        width: 150px !important;
+        max-width: none !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   361px - 480px
+   THIS INCLUDES iPhone SE 375px
+========================================================= */
+
+@media (min-width: 361px) and (max-width: 480px) {
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand {
+        width: 145px !important;
+        min-width: 145px !important;
+
+        flex: 0 0 145px !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+    }
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img,
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+        display: block !important;
+
+        width: 145px !important;
+        min-width: 145px !important;
+        max-width: none !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        object-fit: contain !important;
+
+        transform: none !important;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand {
+        width: 125px !important;
+        min-width: 125px !important;
+
+        flex: 0 0 125px !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .header-2
+    .main-navigation
+    .navbar
+    .navbar-brand
+    img,
+    .header-2
+    .main-navigation
+    .navbar.fixed-top
+    .navbar-brand
+    img {
+        width: 125px !important;
+        min-width: 125px !important;
+        max-width: none !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        transform: none !important;
+    }
+
+}
+/* navbar css issue solve end  */
+
+
+
+
+/* ctc button responsive  css start */
+/* =========================================================
+   READY TO SOAR CTA - RESPONSIVE FIX
+   KEEP AT BOTTOM OF style.css
+========================================================= */
+
+
+/* Base / Desktop */
+.cta-area .cta-wrap {
+    position: relative;
+}
+
+.cta-area .cta-content {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 680px;
+}
+
+.cta-area .cta-wrap .site-heading {
+    width: 100%;
+}
+
+.cta-area .cta-wrap .site-title {
+    margin: 0;
+
+    font-size: 45px;
+    line-height: 1.08;
+
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+.cta-area .cta-wrap .site-title span {
+    display: block;
+
+    margin-top: 5px;
+
+    line-height: 1.05;
+}
+
+
+/* Keep text above background overlay */
+.cta-area .cta-wrap > .row {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .cta-area .cta-wrap {
+        padding: 35px 30px;
+    }
+
+    .cta-area .cta-content {
+        max-width: 620px;
+    }
+
+    .cta-area .cta-wrap .site-title {
+        font-size: 38px !important;
+        line-height: 1.1 !important;
+    }
+
+    .cta-area .cta-wrap .site-title span {
+        font-size: 38px;
+        line-height: 1.05;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .cta-area .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .cta-area .cta-wrap {
+        padding: 30px 22px !important;
+
+        border-radius: 18px;
+
+        background-position: center center;
+    }
+
+
+    /* Darker mobile overlay so text stays readable */
+    .cta-area .cta-wrap::before {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(20, 35, 45, 0.92) 0%,
+                rgba(20, 35, 45, 0.80) 60%,
+                rgba(20, 35, 45, 0.55) 100%
+            );
+    }
+
+
+    .cta-area .cta-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+
+    .cta-area .cta-wrap .site-heading {
+        width: 100%;
+        max-width: 100%;
+    }
+
+
+    /* Main title */
+    .cta-area .cta-wrap .site-title {
+        width: 100%;
+
+        margin: 0 !important;
+
+        font-size: 34px !important;
+        line-height: 1.08 !important;
+
+        letter-spacing: -0.4px;
+
+        overflow-wrap: normal;
+        word-break: normal;
+    }
+
+
+    /* Beautiful Valleys Of Munnar */
+    .cta-area .cta-wrap .site-title span {
+        display: block;
+
+        margin-top: 5px;
+
+        font-size: 34px !important;
+        line-height: 1.05 !important;
+    }
+
+
+    /* Description */
+    .cta-area .cta-wrap .site-heading p {
+        max-width: 100%;
+
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+
+    /* Small top label */
+    .cta-area .cta-wrap .site-title-tagline {
+        margin-bottom: 14px;
+
+        font-size: 16px;
+        line-height: 1.35;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   iPhone SE / 375px etc.
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .cta-area .cta-wrap {
+        padding:
+            26px
+            18px !important;
+    }
+
+
+    .cta-area .cta-wrap .site-title {
+        font-size: 29px !important;
+        line-height: 1.1 !important;
+
+        letter-spacing: -0.3px;
+    }
+
+
+    .cta-area .cta-wrap .site-title span {
+        margin-top: 4px;
+
+        font-size: 29px !important;
+        line-height: 1.08 !important;
+    }
+
+
+    .cta-area .cta-wrap .site-title-tagline {
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+
+    .cta-area .cta-wrap .site-heading p {
+        margin-top: 14px !important;
+
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+
+    .cta-area .theme-btn {
+        font-size: 13px;
+
+        padding:
+            5px
+            5px
+            5px
+            16px;
+    }
+
+}
+
+/* =========================================================
+   EXTRA SMALL
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .cta-area .cta-wrap {
+        padding:
+            24px
+            15px !important;
+    }
+
+
+    .cta-area .cta-wrap .site-title {
+        font-size: 26px !important;
+        line-height: 1.1 !important;
+    }
+
+
+    .cta-area .cta-wrap .site-title span {
+        font-size: 26px !important;
+    }
+
+
+    .cta-area .cta-wrap .site-title-tagline {
+        font-size: 12px;
+    }
+
+
+    .cta-area .cta-wrap .site-heading p {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+}
+/* ctc button css end  */
+
+/* process sction css start */
+/* =========================================================
+   FLYING FOX PROCESS SECTION
+   FINAL RESPONSIVE FIX
+   KEEP AT VERY BOTTOM OF style.css
+========================================================= */
+
+
+/* =========================================================
+   BASE / DESKTOP
+========================================================= */
+
+.process-area {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+}
+
+
+.process-area .process-wrap {
+    position: relative;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+
+/* Decorative zipline image */
+
+.process-area .process-wrap .shape {
+    pointer-events: none;
+}
+
+
+.process-area .ff-process-zipline-shape {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    object-fit: contain;
+}
+
+
+/* Heading */
+
+.process-area .process-wrap .site-heading {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+    max-width: 760px;
+
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+.process-area .process-wrap .site-title {
+    max-width: 100%;
+
+    line-height: 1.08;
+
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+
+/* =========================================================
+   PROCESS CARDS
+========================================================= */
+
+.process-area .process-item {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    box-sizing: border-box;
+}
+
+
+.process-area .process-item .content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.process-area .process-item .content h4 {
+    line-height: 1.25;
+}
+
+
+.process-area .process-item .content p {
+    line-height: 1.65;
+}
+
+
+/* Images should never overflow */
+
+.process-area .process-item .img > img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .process-area .process-wrap {
+        padding:
+            210px
+            30px
+            55px !important;
+    }
+
+
+    /* Zipline artwork */
+
+    .process-area .process-wrap .shape {
+        top: 25px !important;
+
+        left: 50% !important;
+        right: auto !important;
+
+        width: calc(100% - 60px) !important;
+        max-width: 850px;
+
+        transform: translateX(-50%) !important;
+    }
+
+
+    .process-area .ff-process-zipline-shape {
+        width: 100%;
+
+        transform: none !important;
+    }
+
+
+    /* Heading */
+
+    .process-area .process-wrap .site-heading {
+        margin-top: 0 !important;
+        margin-bottom: 45px;
+
+        max-width: 650px;
+    }
+
+
+    .process-area .process-wrap .site-title {
+        font-size: 40px !important;
+        line-height: 1.08 !important;
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+   <= 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .process-area {
+        padding-right: 0;
+        padding-left: 0;
+
+        overflow: hidden;
+    }
+
+
+    .process-area > .container {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+
+    /* Main white process box */
+
+    .process-area .process-wrap {
+        padding:
+            135px
+            18px
+            40px !important;
+
+        border-radius: 24px;
+
+        overflow: hidden;
+    }
+
+
+    /* =====================================
+       DECORATIVE ZIPLINE IMAGE
+    ====================================== */
+
+    .process-area .process-wrap .shape {
+        position: absolute;
+
+        top: 20px !important;
+
+        left: 50% !important;
+        right: auto !important;
+
+        width: calc(100% - 32px) !important;
+
+        max-width: none !important;
+
+        transform: translateX(-50%) !important;
+
+        z-index: 1;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape
+    .ff-process-zipline-shape {
+
+        display: block;
+
+        width: 100% !important;
+        height: auto !important;
+
+        margin: 0 auto;
+
+        transform: none !important;
+
+        opacity: 0.22;
+    }
+
+
+    /* =====================================
+       SECTION HEADING
+    ====================================== */
+
+    .process-area .process-wrap .site-heading {
+        position: relative;
+
+        z-index: 2;
+
+        width: 100%;
+        max-width: 100%;
+
+        margin:
+            0
+            auto
+            38px !important;
+
+        padding: 0 2px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        max-width: 100%;
+
+        margin-bottom: 14px;
+
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+
+    /* This fixes your huge title */
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0;
+
+        font-size: 32px !important;
+        line-height: 1.08 !important;
+
+        letter-spacing: -0.4px;
+
+        text-align: center;
+
+        overflow-wrap: normal;
+        word-break: normal;
+    }
+
+
+    /* =====================================
+       PROCESS CARDS
+    ====================================== */
+
+    .process-area .process-item {
+
+        display: flex;
+
+        width: 100%;
+
+        align-items: flex-start;
+
+        flex-wrap: nowrap;
+
+        gap: 18px;
+
+        padding:
+            18px
+            14px !important;
+    }
+
+
+    .process-area .process-item .img {
+
+        width: 78px;
+        height: 78px;
+
+        flex:
+            0
+            0
+            78px;
+
+        line-height: 78px;
+    }
+
+
+    .process-area .process-item .img .icon {
+
+        right: -5px;
+        bottom: -12px;
+
+        width: 38px;
+        height: 38px;
+
+        line-height: 30px;
+
+        border-width: 3px;
+    }
+
+
+    .process-area
+    .process-item
+    .img
+    .icon
+    img {
+
+        width: 20px;
+        height: auto;
+    }
+
+
+    .process-area .process-item .content {
+
+        flex: 1;
+
+        min-width: 0;
+
+        padding-top: 3px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        margin-bottom: 7px;
+
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        margin-top: 0;
+
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+
+    /* Number */
+
+    .process-area
+    .process-item
+    .count {
+
+        top: 6px;
+        right: 10px;
+
+        font-size: 52px;
+        line-height: 1;
+
+        opacity: 0.18;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 480px
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .process-area > .container {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            125px
+            14px
+            35px !important;
+
+        border-radius: 22px;
+    }
+
+
+    /* Zipline graphic */
+
+    .process-area .process-wrap .shape {
+        top: 18px !important;
+
+        width: calc(100% - 24px) !important;
+    }
+
+
+    /* Tagline */
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 12px;
+
+        font-size: 13px;
+    }
+
+
+    /* Main heading */
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 28px !important;
+        line-height: 1.1 !important;
+
+        letter-spacing: -0.25px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin-bottom: 32px !important;
+    }
+
+
+    /* Cards */
+
+    .process-area .process-item {
+
+        gap: 15px;
+
+        padding:
+            16px
+            10px !important;
+    }
+
+
+    .process-area .process-item .img {
+
+        width: 70px;
+        height: 70px;
+
+        flex:
+            0
+            0
+            70px;
+    }
+
+
+    .process-area .process-item .img .icon {
+
+        width: 34px;
+        height: 34px;
+
+        bottom: -10px;
+    }
+
+
+    .process-area
+    .process-item
+    .img
+    .icon
+    img {
+
+        width: 18px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        font-size: 17px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    .process-area
+    .process-item
+    .count {
+
+        right: 5px;
+
+        font-size: 45px;
+    }
+
+}
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .process-area .process-wrap {
+        padding:
+            115px
+            11px
+            32px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 25px !important;
+        line-height: 1.1 !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        font-size: 12px;
+    }
+
+
+    .process-area .process-item {
+
+        gap: 13px;
+
+        padding:
+            15px
+            8px !important;
+    }
+
+
+    .process-area .process-item .img {
+
+        width: 64px;
+        height: 64px;
+
+        flex-basis: 64px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        font-size: 16px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        font-size: 11.5px;
+    }
+
+}
+
+/* =========================================================
+   PROCESS PATTERN + TAGLINE OVERLAP FIX
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .process-area .process-wrap {
+        padding-top: 155px !important;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 12px !important;
+
+        width: calc(100% - 40px) !important;
+
+        z-index: 1;
+    }
+
+
+    .process-area .process-wrap .site-heading {
+        position: relative;
+
+        z-index: 3;
+
+        margin-top: 10px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        position: relative;
+
+        z-index: 4;
+
+        margin-top: 8px;
+        margin-bottom: 14px;
+    }
+
+}
+
+
+
+
+/* =========================================================
+   FLYING FOX PROCESS SECTION
+   COMPLETE FINAL RESPONSIVE CSS
+   KEEP THIS AT THE VERY END OF style.css
+========================================================= */
+
+
+/* =========================================================
+   COMMON / ALL SCREEN SIZES
+========================================================= */
+
+.process-area {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+}
+
+
+.process-area > .container {
+    position: relative;
+}
+
+
+.process-area .process-wrap {
+    position: relative;
+
+    width: 100%;
+
+    margin: 0;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border-radius: 30px;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   DECORATIVE ZIPLINE PATTERN
+========================================================= */
+
+.process-area .process-wrap .shape {
+    position: absolute;
+
+    left: 50%;
+    right: auto;
+
+    transform: translateX(-50%);
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+
+.process-area
+.process-wrap
+.shape
+.ff-process-zipline-shape {
+
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-width: none;
+
+    margin: 0 auto;
+
+    opacity: 0.22;
+
+    object-fit: contain;
+
+    transform: none !important;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.process-area .process-wrap .site-heading {
+    position: relative;
+
+    z-index: 3;
+
+    width: 100%;
+    max-width: 760px;
+
+    margin-right: auto;
+    margin-left: auto;
+
+    padding: 0;
+
+    text-align: center;
+}
+
+
+.process-area
+.process-wrap
+.site-title-tagline {
+
+    position: relative;
+
+    z-index: 4;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    max-width: 100%;
+
+    white-space: normal;
+}
+
+
+.process-area
+.process-wrap
+.site-title {
+
+    position: relative;
+
+    z-index: 3;
+
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+
+    overflow-wrap: normal;
+
+    word-break: normal;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   PROCESS ITEMS
+========================================================= */
+
+.process-area .process-item {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    box-sizing: border-box;
+
+    z-index: 2;
+}
+
+
+.process-area .process-item .content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.process-area .process-item .content h4 {
+    line-height: 1.25;
+}
+
+
+.process-area .process-item .content p {
+    line-height: 1.65;
+}
+
+
+.process-area .process-item .img {
+    position: relative;
+
+    flex-shrink: 0;
+}
+
+
+.process-area .process-item .img > img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+
+.process-area .process-item .img .icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+.process-area
+.process-item
+.img
+.icon
+img {
+
+    display: block;
+
+    height: auto;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   >= 1400px
+========================================================= */
+
+@media (min-width: 1400px) {
+
+    .process-area .process-wrap {
+        padding:
+            290px
+            45px
+            65px !important;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 35px;
+
+        width: calc(100% - 100px);
+
+        max-width: 1100px;
+    }
+
+
+    .process-area .process-wrap .site-heading {
+        margin-top: 0 !important;
+        margin-bottom: 55px;
+
+        max-width: 760px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 52px !important;
+        line-height: 1.05 !important;
+    }
+
+}
+
+
+/* =========================================================
+   NORMAL DESKTOP
+   1200px - 1399px
+========================================================= */
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+
+    .process-area .process-wrap {
+        padding:
+            270px
+            35px
+            60px !important;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 30px;
+
+        width: calc(100% - 80px);
+
+        max-width: 1000px;
+    }
+
+
+    .process-area .process-wrap .site-heading {
+        margin-top: 0 !important;
+        margin-bottom: 50px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 48px !important;
+        line-height: 1.06 !important;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL DESKTOP / LAPTOP
+   992px - 1199px
+========================================================= */
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+    .process-area .process-wrap {
+        padding:
+            235px
+            30px
+            55px !important;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 28px;
+
+        width: calc(100% - 70px);
+
+        max-width: 900px;
+    }
+
+
+    .process-area .process-wrap .site-heading {
+        margin-top: 0 !important;
+        margin-bottom: 45px;
+
+        max-width: 680px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 43px !important;
+        line-height: 1.07 !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .process-area > .container {
+        padding-right: 18px;
+        padding-left: 18px;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            200px
+            28px
+            50px !important;
+
+        border-radius: 26px;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 26px !important;
+
+        width: calc(100% - 60px) !important;
+
+        max-width: 760px;
+    }
+
+
+    .process-area .process-wrap .site-heading {
+        margin:
+            0
+            auto
+            42px !important;
+
+        max-width: 620px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 14px;
+
+        font-size: 15px;
+        line-height: 1.3;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 38px !important;
+        line-height: 1.08 !important;
+    }
+
+
+    .process-area .process-item {
+        flex-wrap: nowrap;
+
+        gap: 18px;
+
+        padding: 18px 14px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 82px;
+        height: 82px;
+
+        flex:
+            0
+            0
+            82px;
+    }
+
+
+    .process-area .process-item .content h4 {
+        font-size: 19px;
+    }
+
+
+    .process-area .process-item .content p {
+        font-size: 14px;
+    }
+
+}
+
+
+/* =========================================================
+   LARGE MOBILE
+   576px - 767px
+========================================================= */
+
+@media (min-width: 576px) and (max-width: 767px) {
+
+    .process-area > .container {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            175px
+            22px
+            44px !important;
+
+        border-radius: 24px;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 24px !important;
+
+        width: calc(100% - 46px) !important;
+
+        max-width: 620px;
+    }
+
+
+    .process-area .process-wrap .site-heading {
+        margin:
+            0
+            auto
+            38px !important;
+
+        max-width: 540px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 13px;
+
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 34px !important;
+        line-height: 1.08 !important;
+
+        letter-spacing: -0.3px;
+    }
+
+
+    .process-area .process-item {
+        flex-wrap: nowrap;
+
+        gap: 17px;
+
+        padding:
+            17px
+            12px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 76px;
+        height: 76px;
+
+        flex:
+            0
+            0
+            76px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        font-size: 18px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        font-size: 13px;
+    }
+
+}
+
+
+/* =========================================================
+   NORMAL MOBILE
+   421px - 575px
+========================================================= */
+
+@media (min-width: 421px) and (max-width: 575px) {
+
+    .process-area > .container {
+        padding-right: 11px;
+        padding-left: 11px;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            160px
+            17px
+            38px !important;
+
+        border-radius: 22px;
+    }
+
+
+    /* Pattern */
+
+    .process-area .process-wrap .shape {
+        top: 22px !important;
+
+        width: calc(100% - 36px) !important;
+
+        max-width: none !important;
+    }
+
+
+    /* CRITICAL:
+       Pattern gets its own vertical area.
+       Heading starts below it.
+    */
+
+    .process-area .process-wrap .site-heading {
+        position: relative;
+
+        z-index: 3;
+
+        margin:
+            0
+            auto
+            34px !important;
+
+        max-width: 100%;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        position: relative;
+
+        z-index: 5;
+
+        margin:
+            0
+            0
+            13px !important;
+
+        font-size: 13px;
+
+        line-height: 1.3;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        margin: 0 !important;
+
+        font-size: 30px !important;
+
+        line-height: 1.09 !important;
+
+        letter-spacing: -0.3px;
+    }
+
+
+    /* Cards */
+
+    .process-area .process-item {
+        flex-wrap: nowrap;
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+        padding:
+            16px
+            10px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 70px;
+        height: 70px;
+
+        flex:
+            0
+            0
+            70px;
+    }
+
+
+    .process-area .process-item .img .icon {
+        right: -5px;
+        bottom: -9px;
+
+        width: 34px;
+        height: 34px;
+
+        line-height: normal;
+    }
+
+
+    .process-area
+    .process-item
+    .img
+    .icon
+    img {
+
+        width: 18px;
+    }
+
+
+    .process-area .process-item .content {
+        padding-top: 2px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        margin-bottom: 6px;
+
+        font-size: 17px;
+
+        line-height: 1.25;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        margin-top: 0;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+
+    .process-area .process-item .count {
+        top: 7px;
+        right: 7px;
+
+        font-size: 46px;
+
+        line-height: 1;
+
+        opacity: 0.15;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   361px - 420px
+   INCLUDING 375px IPHONE SIZE
+========================================================= */
+
+@media (min-width: 361px) and (max-width: 420px) {
+
+    .process-area > .container {
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+
+    .process-area .process-wrap {
+        /*
+         * This is the main overlap fix.
+         * Enough top area is reserved for the artwork.
+         */
+        padding:
+            155px
+            14px
+            35px !important;
+
+        border-radius: 21px;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 20px !important;
+
+        width: calc(100% - 30px) !important;
+
+        max-width: none !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape
+    .ff-process-zipline-shape {
+
+        width: 100% !important;
+
+        transform: none !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            32px !important;
+
+        padding: 0 2px;
+
+        max-width: 100%;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        position: relative;
+
+        z-index: 5;
+
+        margin:
+            0
+            0
+            12px !important;
+
+        font-size: 12px;
+
+        line-height: 1.25;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        margin: 0 !important;
+
+        font-size: 27px !important;
+
+        line-height: 1.1 !important;
+
+        letter-spacing: -0.2px;
+    }
+
+
+    /* Cards */
+
+    .process-area .process-item {
+        flex-wrap: nowrap;
+
+        gap: 14px;
+
+        padding:
+            15px
+            8px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 66px;
+        height: 66px;
+
+        flex:
+            0
+            0
+            66px;
+    }
+
+
+    .process-area .process-item .img .icon {
+        right: -4px;
+        bottom: -8px;
+
+        width: 32px;
+        height: 32px;
+    }
+
+
+    .process-area
+    .process-item
+    .img
+    .icon
+    img {
+
+        width: 17px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        margin-bottom: 5px;
+
+        font-size: 16px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        margin-top: 0;
+
+        font-size: 11.5px;
+
+        line-height: 1.55;
+    }
+
+
+    .process-area .process-item .count {
+        top: 7px;
+        right: 5px;
+
+        font-size: 42px;
+
+        line-height: 1;
+
+        opacity: 0.14;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .process-area > .container {
+        padding-right: 7px;
+        padding-left: 7px;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            145px
+            11px
+            32px !important;
+
+        border-radius: 20px;
+    }
+
+
+    .process-area .process-wrap .shape {
+        top: 18px !important;
+
+        width: calc(100% - 25px) !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            28px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 10px !important;
+
+        font-size: 11px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 24px !important;
+
+        line-height: 1.1 !important;
+
+        letter-spacing: -0.15px;
+    }
+
+
+    .process-area .process-item {
+        flex-wrap: nowrap;
+
+        gap: 12px;
+
+        padding:
+            14px
+            7px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 60px;
+        height: 60px;
+
+        flex:
+            0
+            0
+            60px;
+    }
+
+
+    .process-area .process-item .img .icon {
+        width: 30px;
+        height: 30px;
+
+        bottom: -7px;
+    }
+
+
+    .process-area
+    .process-item
+    .img
+    .icon
+    img {
+
+        width: 16px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        font-size: 15px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        font-size: 11px;
+
+        line-height: 1.55;
+    }
+
+
+    .process-area .process-item .count {
+        font-size: 38px;
+    }
+
+}
+
+
+
+
+/* =========================================================
+   FLYING FOX PROCESS SECTION
+   FINAL RESPONSIVE FIX
+   PATTERN USES NORMAL FLOW - NO OVERLAP
+========================================================= */
+
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
+.process-area {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+}
+
+
+.process-area .process-wrap {
+    position: relative;
+
+    width: 100%;
+
+    /* IMPORTANT: remove old 320 / 245 / 150 top padding */
+    padding:
+        55px
+        35px
+        60px !important;
+
+    background: #ffffff;
+
+    border-radius: 30px;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ZIPLINE PATTERN
+   IMPORTANT: NOT ABSOLUTE ANYMORE
+========================================================= */
+
+.process-area .process-wrap .shape {
+    position: relative !important;
+
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    width: 100% !important;
+    max-width: 1050px !important;
+
+    height: auto !important;
+
+    margin:
+        0
+        auto
+        28px !important;
+
+    padding: 0 !important;
+
+    transform: none !important;
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+
+
+.process-area
+.process-wrap
+.shape
+.ff-process-zipline-shape {
+
+    display: block !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    max-width: 100% !important;
+
+    margin: 0 auto !important;
+
+    opacity: 0.22;
+
+    object-fit: contain;
+
+    transform: none !important;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.process-area .process-wrap .site-heading {
+    position: relative;
+
+    width: 100%;
+    max-width: 760px;
+
+    margin:
+        0
+        auto
+        50px !important;
+
+    padding: 0 !important;
+
+    z-index: 2;
+
+    text-align: center;
+}
+
+
+.process-area
+.process-wrap
+.site-title-tagline {
+
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    max-width: 100%;
+
+    margin:
+        0
+        0
+        15px !important;
+
+    white-space: normal;
+
+    z-index: 2;
+}
+
+
+.process-area
+.process-wrap
+.site-title {
+
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0 !important;
+
+    font-size: 48px !important;
+    line-height: 1.07 !important;
+
+    text-align: center;
+
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+
+/* =========================================================
+   PROCESS CARDS
+========================================================= */
+
+.process-area .process-item {
+    position: relative;
+
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: flex-start;
+
+    gap: 22px;
+
+    padding: 15px !important;
+
+    box-sizing: border-box;
+
+    z-index: 2;
+}
+
+
+.process-area .process-item .img {
+    position: relative;
+
+    width: 90px;
+    height: 90px;
+
+    flex:
+        0
+        0
+        90px;
+}
+
+
+.process-area .process-item .img > img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+
+.process-area .process-item .content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.process-area
+.process-item
+.content
+h4 {
+
+    margin-bottom: 7px;
+
+    font-size: 20px;
+    line-height: 1.25;
+}
+
+
+.process-area
+.process-item
+.content
+p {
+
+    margin-top: 0;
+
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .process-area .process-wrap {
+        padding:
+            45px
+            28px
+            50px !important;
+
+        border-radius: 26px;
+    }
+
+
+    .process-area .process-wrap .shape {
+        max-width: 750px !important;
+
+        margin-bottom: 25px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        max-width: 620px;
+
+        margin-bottom: 42px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 38px !important;
+        line-height: 1.08 !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        font-size: 15px;
+    }
+
+
+    .process-area .process-item {
+        gap: 18px;
+
+        padding: 17px 12px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 80px;
+        height: 80px;
+
+        flex-basis: 80px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .process-area > .container {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+
+    .process-area .process-wrap {
+        /*
+         * NO LARGE PADDING-TOP.
+         * Pattern creates its own height now.
+         */
+        padding:
+            35px
+            20px
+            42px !important;
+
+        border-radius: 24px;
+    }
+
+
+    /* Pattern */
+
+    .process-area .process-wrap .shape {
+        position: relative !important;
+
+        width: 100% !important;
+
+        max-width: 620px !important;
+
+        margin:
+            0
+            auto
+            24px !important;
+
+        transform: none !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape
+    .ff-process-zipline-shape {
+
+        width: 100% !important;
+        height: auto !important;
+
+        transform: none !important;
+    }
+
+
+    /* Heading starts AFTER pattern */
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            38px !important;
+
+        max-width: 100%;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 13px !important;
+
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 32px !important;
+        line-height: 1.09 !important;
+
+        letter-spacing: -0.3px;
+    }
+
+
+    /* Cards */
+
+    .process-area .process-item {
+        flex-wrap: nowrap;
+
+        gap: 16px;
+
+        padding:
+            17px
+            10px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 72px;
+        height: 72px;
+
+        flex:
+            0
+            0
+            72px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        font-size: 18px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+
+    .process-area
+    .process-item
+    .count {
+
+        top: 6px;
+        right: 8px;
+
+        font-size: 48px;
+        line-height: 1;
+
+        opacity: 0.15;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 480px
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .process-area > .container {
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            28px
+            14px
+            35px !important;
+
+        border-radius: 21px;
+    }
+
+
+    /* Pattern now owns its actual height */
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        width: 100% !important;
+
+        margin:
+            0
+            auto
+            20px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape
+    .ff-process-zipline-shape {
+
+        width: 100% !important;
+
+        opacity: 0.22;
+    }
+
+
+    /* Tagline */
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 12px !important;
+
+        font-size: 12px;
+        line-height: 1.25;
+    }
+
+
+    /* Main heading */
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 27px !important;
+
+        line-height: 1.1 !important;
+
+        letter-spacing: -0.2px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin-bottom: 32px !important;
+    }
+
+
+    /* Cards */
+
+    .process-area .process-item {
+        gap: 14px;
+
+        padding:
+            15px
+            7px !important;
+    }
+
+
+    .process-area .process-item .img {
+        width: 65px;
+        height: 65px;
+
+        flex:
+            0
+            0
+            65px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        margin-bottom: 5px;
+
+        font-size: 16px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        margin: 0;
+
+        font-size: 11.5px;
+
+        line-height: 1.55;
+    }
+
+
+    .process-area
+    .process-item
+    .count {
+
+        right: 4px;
+
+        font-size: 42px;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .process-area .process-wrap {
+        padding:
+            24px
+            11px
+            32px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        margin-bottom: 18px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 24px !important;
+        line-height: 1.1 !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        font-size: 11px;
+    }
+
+
+    .process-area .process-item .img {
+        width: 60px;
+        height: 60px;
+
+        flex-basis: 60px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    h4 {
+
+        font-size: 15px;
+    }
+
+
+    .process-area
+    .process-item
+    .content
+    p {
+
+        font-size: 11px;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   FLYING FOX PROCESS PATTERN
+   FINAL TOP + BOTTOM EMPTY SPACE FIX
+   KEEP THIS AT THE ABSOLUTE BOTTOM OF style.css
+========================================================= */
+
+
+/* =========================================================
+   COMMON
+========================================================= */
+
+.process-area {
+    position: relative !important;
+
+    width: 100% !important;
+
+    overflow: hidden !important;
+}
+
+
+.process-area > .container {
+    position: relative;
+}
+
+
+/* Main white wrapper */
+.process-area .process-wrap {
+    position: relative !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    padding:
+        35px
+        35px
+        60px !important;
+
+    background: #ffffff;
+
+    border-radius: 30px;
+
+    box-sizing: border-box;
+
+    overflow: hidden !important;
+}
+
+
+/* =========================================================
+   PATTERN WRAPPER
+========================================================= */
+
+.process-area
+.process-wrap
+.shape {
+
+    /*
+     * IMPORTANT:
+     * Keep pattern in normal document flow.
+     */
+    position: relative !important;
+
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    display: block !important;
+
+    width: 100% !important;
+    max-width: 1100px !important;
+
+    height: auto !important;
+
+    padding: 0 !important;
+
+    overflow: visible !important;
+
+    transform: none !important;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+
+    /*
+     * Remove transparent PNG space:
+     *
+     * top    -> pulls pattern upward
+     * bottom -> pulls heading upward
+     */
+    margin:
+        -180px
+        auto
+        -165px !important;
+}
+
+
+/* Actual pattern PNG */
+.process-area
+.process-wrap
+.shape
+.ff-process-zipline-shape {
+
+    position: relative !important;
+
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    display: block !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    max-width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    opacity: 0.22;
+
+    object-fit: contain !important;
+
+    transform: none !important;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.process-area
+.process-wrap
+.site-heading {
+
+    position: relative !important;
+
+    z-index: 3;
+
+    width: 100% !important;
+    max-width: 760px !important;
+
+    /*
+     * No extra top spacing.
+     */
+    margin:
+        0
+        auto
+        48px !important;
+
+    padding: 0 !important;
+
+    text-align: center;
+}
+
+
+/* Your Adventure Journey */
+.process-area
+.process-wrap
+.site-title-tagline {
+
+    position: relative;
+
+    z-index: 4;
+
+    display: inline-flex !important;
+
+    align-items: center;
+    justify-content: center;
+
+    max-width: 100%;
+
+    margin:
+        0
+        0
+        13px !important;
+
+    padding: 0 !important;
+
+    line-height: 1.3;
+
+    white-space: normal;
+}
+
+
+/* Main title */
+.process-area
+.process-wrap
+.site-title {
+
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    font-size: 48px !important;
+    line-height: 1.07 !important;
+
+    text-align: center;
+
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+}
+
+
+/* =========================================================
+   LAPTOP
+   992px - 1199px
+========================================================= */
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+    .process-area .process-wrap {
+        padding:
+            32px
+            30px
+            55px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        max-width: 900px !important;
+
+        margin:
+            -145px
+            auto
+            -130px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin-bottom: 44px !important;
+
+        max-width: 680px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 42px !important;
+        line-height: 1.08 !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .process-area > .container {
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            28px
+            26px
+            50px !important;
+
+        border-radius: 26px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        max-width: 760px !important;
+
+        margin:
+            -115px
+            auto
+            -100px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            40px !important;
+
+        max-width: 620px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 12px !important;
+
+        font-size: 14px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 37px !important;
+
+        line-height: 1.08 !important;
+    }
+
+}
+
+
+/* =========================================================
+   LARGE MOBILE
+   576px - 767px
+========================================================= */
+
+@media (min-width: 576px) and (max-width: 767px) {
+
+    .process-area > .container {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            25px
+            20px
+            44px !important;
+
+        border-radius: 24px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        max-width: 620px !important;
+
+        margin:
+            -88px
+            auto
+            -76px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            36px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 11px !important;
+
+        font-size: 13px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 32px !important;
+
+        line-height: 1.09 !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   421px - 575px
+========================================================= */
+
+@media (min-width: 421px) and (max-width: 575px) {
+
+    .process-area > .container {
+        padding-left: 11px !important;
+        padding-right: 11px !important;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            22px
+            16px
+            38px !important;
+
+        border-radius: 22px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        /*
+         * Cancel transparent area above/below
+         * pattern on normal phones.
+         */
+        margin:
+            -70px
+            auto
+            -61px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            32px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 10px !important;
+
+        font-size: 12px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 29px !important;
+
+        line-height: 1.1 !important;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   361px - 420px
+   YOUR 375px SCREEN
+========================================================= */
+
+@media (min-width: 361px) and (max-width: 420px) {
+
+    .process-area > .container {
+        padding-left: 9px !important;
+        padding-right: 9px !important;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            20px
+            14px
+            35px !important;
+
+        border-radius: 21px;
+    }
+
+
+    /*
+     * THIS IS THE IMPORTANT 375px FIX.
+     */
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        margin:
+            -58px
+            auto
+            -50px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            30px !important;
+
+        padding: 0 !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin:
+            0
+            0
+            9px !important;
+
+        padding: 0 !important;
+
+        font-size: 12px;
+
+        line-height: 1.25;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 27px !important;
+
+        line-height: 1.1 !important;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .process-area > .container {
+        padding-left: 7px !important;
+        padding-right: 7px !important;
+    }
+
+
+    .process-area .process-wrap {
+        padding:
+            18px
+            11px
+            32px !important;
+
+        border-radius: 20px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .shape {
+
+        margin:
+            -48px
+            auto
+            -42px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-heading {
+
+        margin:
+            0
+            auto
+            28px !important;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title-tagline {
+
+        margin-bottom: 8px !important;
+
+        font-size: 11px;
+    }
+
+
+    .process-area
+    .process-wrap
+    .site-title {
+
+        font-size: 24px !important;
+
+        line-height: 1.1 !important;
+    }
+
+}
+
+
+/* process section css end  */
+
+
+
+
+
+
+/* why choose section css start */
+/* =========================================================
+   WHY CHOOSE SECTION
+   FINAL RESPONSIVE IMAGE ALIGNMENT FIX
+   KEEP AT VERY BOTTOM OF style.css
+========================================================= */
+
+
+/* =========================================================
+   BASE
+========================================================= */
+
+.choose-area {
+    position: relative;
+
+    width: 100%;
+}
+
+
+.choose-area .choose-img {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border-radius: 30px;
+
+    text-align: center !important;
+}
+
+
+.choose-area .choose-img img {
+    display: block;
+
+    width: 90%;
+    height: auto;
+
+    max-width: 100%;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    border-radius: 30px;
+
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* =========================================================
+   DESKTOP
+   >= 992px
+========================================================= */
+
+@media (min-width: 992px) {
+
+    .choose-area .choose-img {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .choose-area .choose-img img {
+        width: 90%;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .choose-area .choose-img {
+        width: 100%;
+
+        margin-top: 20px;
+
+        text-align: center !important;
+    }
+
+
+    .choose-area .choose-img img {
+        width: 88% !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        border-radius: 26px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .choose-area > .container {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+
+    .choose-area .choose-img {
+        width: 100% !important;
+
+        margin:
+            20px
+            auto
+            0 !important;
+
+        padding: 0 !important;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        text-align: center !important;
+
+        overflow: hidden;
+
+        border-radius: 24px;
+    }
+
+
+    .choose-area .choose-img img {
+        display: block !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        max-width: 100% !important;
+
+        margin:
+            0
+            auto !important;
+
+        border-radius: 24px;
+
+        object-fit: cover;
+        object-position: center;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 480px
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .choose-area > .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+
+    .choose-area .choose-img {
+        width: 100% !important;
+
+        margin-top: 18px !important;
+
+        border-radius: 20px;
+    }
+
+
+    .choose-area .choose-img img {
+        width: 100% !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        border-radius: 20px;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .choose-area > .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .choose-area .choose-img {
+        margin-top: 16px !important;
+    }
+
+
+    .choose-area .choose-img img {
+        width: 100% !important;
+
+        border-radius: 18px;
+    }
+
+}
+/* why choose css end */
+
+
+
+/* faq image issue  css start */
+/* =========================================================
+   SAFETY FAQ RIGHT IMAGE
+   FINAL RESPONSIVE FIX
+
+   DESKTOP:
+   - keep sticky
+   - keep image aligned right
+
+   TABLET / MOBILE:
+   - disable sticky
+   - center image
+   - give equal left/right spacing
+========================================================= */
+
+
+/* =========================================================
+   DESKTOP
+   992px AND ABOVE
+   KEEP EXISTING RIGHT + STICKY BEHAVIOUR
+========================================================= */
+
+@media (min-width: 992px) {
+
+    .faq-area,
+    .faq-area > .container,
+    .faq-area > .container > .row,
+    .faq-area .ff-safety-right-column {
+        overflow: visible !important;
+    }
+
+
+    .faq-area > .container > .row {
+        align-items: flex-start !important;
+    }
+
+
+    .faq-area .ff-safety-right-column {
+        position: relative !important;
+
+        align-self: stretch !important;
+    }
+
+
+    /* Keep sticky on desktop */
+    .faq-area .ff-safety-sticky {
+        position: sticky !important;
+
+        top: 125px !important;
+
+        width: 100% !important;
+
+        z-index: 2;
+    }
+
+
+    /* Keep image aligned toward right on desktop */
+    .faq-area
+    .ff-safety-sticky
+    .faq-img {
+
+        position: relative !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        text-align: right !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img {
+
+        width: 100%;
+
+        text-align: right;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img
+    img {
+
+        display: inline-block !important;
+
+        width: 74% !important;
+        height: auto !important;
+
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        border-radius: 30px;
+
+        object-fit: cover;
+    }
+
+}
+
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    /* Disable sticky */
+    .faq-area .ff-safety-sticky {
+        position: relative !important;
+
+        top: auto !important;
+
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+
+        width: 100% !important;
+
+        margin: 0 auto !important;
+
+        transform: none !important;
+    }
+
+
+    .faq-area .ff-safety-right-column {
+        width: 100% !important;
+
+        margin-top: 30px;
+
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+
+    /* Reset desktop right alignment */
+    .faq-area
+    .ff-safety-sticky
+    .faq-img {
+
+        display: block !important;
+
+        width: 100% !important;
+
+        max-width: 650px;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        text-align: center !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img {
+
+        width: 100% !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        text-align: center !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img
+    img {
+
+        display: block !important;
+
+        width: 88% !important;
+        height: auto !important;
+
+        max-width: 100% !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        border-radius: 26px;
+
+        object-fit: cover;
+        object-position: center;
+    }
+
+}
+
+
+
+/* =========================================================
+   MOBILE
+   576px - 767px
+========================================================= */
+
+@media (min-width: 576px) and (max-width: 767px) {
+
+    .faq-area > .container {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+
+    .faq-area .ff-safety-right-column {
+        width: 100% !important;
+
+        margin-top: 25px;
+
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+
+    .faq-area .ff-safety-sticky {
+        position: relative !important;
+
+        top: auto !important;
+
+        width: 100% !important;
+
+        margin: 0 auto !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img {
+
+        width: 100% !important;
+
+        max-width: 520px !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        text-align: center !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img {
+
+        width: 100% !important;
+
+        margin: 0 auto !important;
+
+        text-align: center !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img
+    img {
+
+        display: block !important;
+
+        width: 92% !important;
+        height: auto !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        border-radius: 24px;
+
+        object-fit: cover;
+        object-position: center;
+    }
+
+}
+
+
+
+/* =========================================================
+   SMALL MOBILE
+   361px - 575px
+========================================================= */
+
+@media (min-width: 361px) and (max-width: 575px) {
+
+    .faq-area > .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+
+    .faq-area .ff-safety-right-column {
+        width: 100% !important;
+
+        margin-top: 22px;
+
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+
+    /* NO sticky */
+    .faq-area .ff-safety-sticky {
+        position: relative !important;
+
+        top: auto !important;
+
+        width: 100% !important;
+
+        margin:
+            0
+            auto !important;
+
+        padding: 0 !important;
+    }
+
+
+    /* Center whole image area */
+    .faq-area
+    .ff-safety-sticky
+    .faq-img {
+
+        position: relative !important;
+
+        display: block !important;
+
+        width: 100% !important;
+
+        max-width: none !important;
+
+        margin:
+            0
+            auto !important;
+
+        padding: 0 !important;
+
+        text-align: center !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img {
+
+        display: block !important;
+
+        width: 100% !important;
+
+        margin:
+            0
+            auto !important;
+
+        padding: 0 !important;
+
+        text-align: center !important;
+    }
+
+
+    /* This is the important mobile fix */
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img
+    img {
+
+        display: block !important;
+
+        width: calc(100% - 24px) !important;
+        height: auto !important;
+
+        max-width: none !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        border-radius: 22px;
+
+        object-fit: cover;
+        object-position: center;
+    }
+
+
+    /* Keep cards centered over image */
+    .faq-area .faq-counter {
+
+        left: 50% !important;
+
+        width: 82% !important;
+
+        max-width: 280px !important;
+
+        transform: translateX(-50%) !important;
+    }
+
+}
+
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .faq-area > .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+
+    .faq-area .ff-safety-right-column {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+
+    .faq-area .ff-safety-sticky {
+        position: relative !important;
+
+        top: auto !important;
+
+        width: 100% !important;
+
+        margin: 0 auto !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img {
+
+        width: 100% !important;
+
+        margin:
+            0
+            auto !important;
+
+        text-align: center !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img {
+
+        width: 100% !important;
+
+        margin: 0 auto !important;
+    }
+
+
+    .faq-area
+    .ff-safety-sticky
+    .faq-img
+    .ani-img
+    img {
+
+        display: block !important;
+
+        width: calc(100% - 20px) !important;
+
+        height: auto !important;
+
+        margin:
+            0
+            auto !important;
+
+        border-radius: 20px;
+
+        object-fit: cover;
+        object-position: center;
+    }
+
+
+    .faq-area .faq-counter {
+
+        left: 50% !important;
+
+        width: 84% !important;
+
+        max-width: 265px !important;
+
+        transform: translateX(-50%) !important;
+    }
+
+}
+/* faq image issue css end  */
