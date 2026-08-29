@@ -251,9 +251,9 @@ Version         : 1.0
   });
 
   // preloader
-  $(window).on("load", function () {
-    $(".preloader").fadeOut("slow");
-  });
+ $(window).on("load", function () {
+   $(".preloader").delay(3000).fadeOut(500);
+ });
 
   // fun fact counter
   $(".counter").countTo();

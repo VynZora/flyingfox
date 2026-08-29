@@ -37,14 +37,27 @@ Contact Enquiry | Flying Fox Admin
     }
 
     .enquiry-card-header {
-        padding: 25px 30px;
-        border-bottom: 1px solid #e5e7eb;
+    padding: 25px 30px;
+    border-bottom: 1px solid #e5e7eb;
+
+    min-width: 0;
+    overflow: hidden;
     }
 
     .enquiry-card-header h3 {
-        margin: 0 0 8px;
-        font-weight: 700;
-    }
+    margin: 0 0 8px;
+    font-weight: 700;
+
+    /* Important for long subjects */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.4;
+
+    /* Make sure it uses available width */
+    width: 100%;
+    max-width: 100%;
+}
 
     .enquiry-date {
         color: #6b7280;
@@ -69,8 +82,11 @@ Contact Enquiry | Flying Fox Admin
     }
 
     .enquiry-field strong {
-        color: #111827;
-    }
+    color: #111827;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
 
     .enquiry-message {
         padding: 30px;
@@ -82,12 +98,18 @@ Contact Enquiry | Flying Fox Admin
     }
 
     .enquiry-message-content {
-        background: #f9fafb;
-        padding: 20px;
-        border-radius: 10px;
-        line-height: 1.8;
-        white-space: pre-line;
-    }
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+    line-height: 1.8;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
+    max-width: 100%;
+}
 
     .enquiry-actions {
         padding: 20px 30px;

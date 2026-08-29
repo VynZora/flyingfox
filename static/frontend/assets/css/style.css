@@ -30999,3 +30999,51 @@ body:has(#offcanvasNavbar.showing) .header-2 {
 
 }
 /* book now button in mobile navbar css end  */
+
+
+
+
+/* pre loader css start */
+.preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    background: #ffffff;
+}
+
+
+.ff-preloader-video {
+    display: block;
+
+    width: 300px;
+    height: 300px;
+
+    object-fit: cover;
+
+    border: none;
+    outline: none;
+
+    /* Remove video black edge */
+    clip-path: inset(0 4px 4px 0);
+
+    pointer-events: none;
+}
+
+
+@media (max-width: 576px) {
+
+    .ff-preloader-video {
+        width: 260px;
+        height: 260px;
+    }
+
+}
+
+/* pre loader css end  */
+

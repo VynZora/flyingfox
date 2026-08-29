@@ -1451,12 +1451,12 @@
 
 
 
-                            <li>
+                            {% comment %} <li>
                                 <a href="{% url 'view_contacts' %}"
                                     class="{% if request.resolver_match.url_name == 'view_contacts' %}active{% endif %}">
                                     Contact Messages
                                 </a>
-                            </li>
+                            </li> {% endcomment %}
                             {% comment %} <li>
                                 <a href="{% url 'admin_enquiry_list' %}" class="{% if request.resolver_match.url_name == 'admin_enquiry_list' %}active{% endif %}">
                                    Booking Enquiries

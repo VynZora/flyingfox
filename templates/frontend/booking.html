@@ -4914,28 +4914,12 @@ body.ff-message-open {
 
                                 </div>
 
-                                <div class="ff-date-lock-note">
+                                {% comment %} <div class="ff-date-lock-note">
                                     <i class="fas fa-circle-info"></i>
                                     <span>
                                         You will not be asked to select the date again when you add another ride.
                                     </span>
-                                </div>
-
-                                <div class="ff-date-time-action">
-
-                                    <button
-                                        type="button"
-                                        class="ff-premium-continue"
-                                        id="dateContinue"
-                                    >
-                                        Continue to Rides
-
-                                        <span>
-                                            <i class="fas fa-arrow-right"></i>
-                                        </span>
-                                    </button>
-
-                                </div>
+                                </div> {% endcomment %}
 
                             </div>
 
@@ -5991,7 +5975,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
-            dateContinue.disabled = true;
+            if (dateContinue) {
+                 dateContinue.disabled = true;
+                }
 
             const url =
                 `{% url 'booking_options_for_date' %}?date=${encodeURIComponent(bookingDate.value)}`;
@@ -6067,70 +6053,73 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
         }
         finally {
-            dateContinue.disabled = false;
+           if (dateContinue) {
+                dateContinue.disabled = false;
+            }
         }
     }
 
-    dateContinue?.addEventListener(
-        "click",
-        loadBookingOptionsForDate
-    );
-
     bookingDate?.addEventListener(
-        "change",
-        function () {
+    "change",
+    async function () {
 
-            if (
-                bookingState.items.length
-                &&
-                bookingState.bookingDate
-                &&
-                bookingState.bookingDate !== bookingDate.value
-            ) {
-                bookingState.items = [];
-                renderSelectedAdventures();
+        if (
+            bookingState.items.length
+            &&
+            bookingState.bookingDate
+            &&
+            bookingState.bookingDate !== bookingDate.value
+        ) {
+            bookingState.items = [];
+            renderSelectedAdventures();
 
-                showBookingMessage(
-                    "Your selected adventures were cleared because the visit date changed. Please add the rides again for the new date.",
-                    "info",
-                    "Visit Date Updated"
-                );
-            }
-
-            bookingState.bookingDate = bookingDate.value || "";
-
-            dateSelectedText.textContent =
-                formatDate(bookingState.bookingDate);
-
-            resetCurrentRideBuilder(false);
-
-            currentRideOffers = [];
-
-            if (rideList) {
-                rideList.innerHTML = `
-                    <div class="ff-empty">
-                        Click Continue to load rides available for this date.
-                    </div>
-                `;
-            }
-
-            lockPanel(
-                ridePanel,
-                ridePanelButton
+            showBookingMessage(
+                "Your selected adventures were cleared because the visit date changed. Please add the rides again for the new date.",
+                "info",
+                "Visit Date Updated"
             );
-
-            lockPanel(
-                offerPanel,
-                offerPanelButton
-            );
-
-            lockPanel(
-                participantPanel,
-                participantPanelButton
-            );
-
-            updateBookingSummary();
         }
+
+        bookingState.bookingDate = bookingDate.value || "";
+
+        dateSelectedText.textContent =
+            formatDate(bookingState.bookingDate);
+
+        resetCurrentRideBuilder(false);
+
+        currentRideOffers = [];
+
+        if (rideList) {
+            rideList.innerHTML = `
+                <div class="ff-empty">
+                    Loading available rides...
+                </div>
+            `;
+        }
+
+        lockPanel(
+            ridePanel,
+            ridePanelButton
+        );
+
+        lockPanel(
+            offerPanel,
+            offerPanelButton
+        );
+
+        lockPanel(
+            participantPanel,
+            participantPanelButton
+        );
+
+        updateBookingSummary();
+
+        // Auto-continue: fetch rides and open the ride panel
+        // as soon as a valid date is picked.
+        if (bookingDate.value) {
+            await loadBookingOptionsForDate();
+        }
+    }
     );
 
     /* =========================================================
@@ -8265,7 +8254,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    addCurrentRide?.addEventListener(
+    {% comment %} addCurrentRide?.addEventListener(
         "click",
         function () {
 
@@ -8311,7 +8300,75 @@ document.addEventListener("DOMContentLoaded", function () {
                 block: "start"
             });
         }
-    );
+    ); {% endcomment %}
+
+    addCurrentRide?.addEventListener(
+    "click",
+    function () {
+
+        const item =
+            buildCurrentRideItem();
+
+        if (!item) {
+            return;
+        }
+
+        if (
+            rideAlreadyAdded(
+                item.rideId
+            )
+        ) {
+            showError(
+                "This ride has already been added."
+            );
+
+            return;
+        }
+
+
+        // -----------------------------------------
+        // ADD RIDE DIRECTLY
+        // -----------------------------------------
+
+        bookingState.items.push(
+            item
+        );
+
+
+        // -----------------------------------------
+        // UPDATE SELECTED RIDES
+        // -----------------------------------------
+
+        renderSelectedAdventures();
+
+
+        // -----------------------------------------
+        // RESET CURRENT RIDE BUILDER
+        // -----------------------------------------
+
+        resetCurrentRideBuilder(
+            false
+        );
+
+
+        // -----------------------------------------
+        // UPDATE BOOKING SUMMARY
+        // -----------------------------------------
+
+        updateBookingSummary();
+
+
+        // -----------------------------------------
+        // SCROLL TO SELECTED ADVENTURES
+        // -----------------------------------------
+
+        selectedAdventures.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+);
 
     /* =========================================================
        SELECTED ADVENTURES

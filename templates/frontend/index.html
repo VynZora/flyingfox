@@ -751,7 +751,7 @@
     <div class="ff-superman-feature-row">
       <div class="ff-superman-feature-image wow fadeInLeft">
         <img
-          src="{% static 'frontend/assets/img/superman/img-1.jpg' %}"
+          src="{% static 'frontend/assets/img/superman/img-4.webp' %}"
           alt="Superman Zipline Flying Fox Adventure Munnar"
         />
         <span class="ff-superman-image-badge">
@@ -791,7 +791,16 @@
             <i class="fas fa-indian-rupee-sign"></i>
             <div>
               <small>Price</small>
-              <strong>₹2,400 / Person</strong>
+              <strong>{% if superman_price %}
+
+                ₹{{ superman_price.price|floatformat:0 }}
+                / Person
+
+            {% else %}
+
+              ₹2,400/ Person
+
+            {% endif %}</strong>
             </div>
           </div>
         </div>
@@ -872,7 +881,7 @@
     <div class="ff-superman-feature-row">
       <div class="ff-superman-feature-image wow fadeInLeft">
         <img
-          src="{% static 'frontend/assets/img/superman/img-3.jpg' %}"
+          src="{% static 'frontend/assets/img/superman/img-5.png' %}"
           alt="Superman Zipline Photography and Videography"
         />
         <span class="ff-superman-image-badge">
@@ -920,9 +929,24 @@
             <span>Premium Adventure Experience</span>
           </div>
           <strong>
-            ₹2,400
-            <small>/ person</small>
-          </strong>
+
+        {% if superman_price %}
+
+            ₹{{ superman_price.price|floatformat:0 }}
+
+            <small>
+                / person
+            </small>
+
+        {% else %}
+
+            <small>
+                Contact for Price
+            </small>
+
+        {% endif %}
+
+    </strong>
         </div>
 
         <a href="{% url 'bookings' %}" class="ff-superman-feature-btn">
@@ -2542,7 +2566,7 @@
     <div
       class="cta-wrap ng-mt"
       style="
-        background-image: url({% static 'frontend/assets/img/cta/01.webp' %});
+        background-image: url({% static 'frontend/assets/img/home/forest.webp' %});
       "
     >
       <div class="row align-items-center">
@@ -2971,7 +2995,7 @@
           <div class="faq-img">
             <div class="ani-img">
               <img
-                src="{% static 'frontend/assets/img/faq/01.webp' %}"
+                src="{% static 'frontend/assets/img/home/img-7.webp' %}"
                 alt="Flying Fox Adventure Munnar Safety Instructions"
               />
             </div>

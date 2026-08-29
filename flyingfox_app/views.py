@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.db.models.functions import Lower
+from django.db.models.functions import Lower, TruncDate, TruncMonth
 from django.db.models import Q, Count, Sum
 from django.db import transaction
 from django.contrib.auth.hashers import make_password, check_password
@@ -26,6 +26,7 @@ from django.core.validators import validate_email
 from datetime import datetime, time
 
 import razorpay
+import requests
 
 
 from .chatbot.engine import process_message
@@ -69,6 +70,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 from django.views.decorators.http import require_POST
+from .utils import send_otp, verify_otp,send_ticket_whatsapp
+
 
 from django.views.decorators.http import (
     require_GET,
@@ -254,69 +257,298 @@ def admin_logout(request):
 
 
 
-# @_admin_required
-# def admin_dashboard(request):
-#     today = timezone.localdate()
-
-#     stats = {
-#         "total_rides": Ride.objects.count(),
-#         "total_bookings": Booking.objects.count(),
-#         "confirmed_bookings": Booking.objects.filter(
-#             status="confirmed"
-#         ).count(),
-#         "cancelled_bookings": Booking.objects.filter(
-#             status="cancelled"
-#         ).count(),
-#         "today_bookings": Booking.objects.filter(
-#             created_at__date=today
-#         ).count(),
-#         "total_coupons": Coupon.objects.count(),
-#     }
-
-#     recent_bookings = (
-#         Booking.objects
-#         .select_related(
-#             "timeslot",
-#             "timeslot__ride"
-#         )
-#         .order_by("-created_at")[:5]
-#     )
-
-#     return render(
-#         request,
-#         "admin_pages/dashboard.html",
-#         {
-#             "stats": stats,
-#             "recent_bookings": recent_bookings,
-#         }
-#     )
-
 
 
 @_admin_required
 def admin_dashboard(request):
 
-    stats = {
-        "total_bookings": 0,
-        "confirmed_bookings": 0,
-        "cancelled_bookings": 0,
-        "today_bookings": 0,
-        "total_coupons": 0,
+    today = timezone.localdate()
+
+    # ============================================================
+    # BASIC COUNTS
+    # ============================================================
+
+    total_bookings = Booking.objects.count()
+
+    today_bookings = Booking.objects.filter(
+        booking_date=today
+    ).count()
+
+    confirmed_bookings = Booking.objects.filter(
+        status="confirmed"
+    ).count()
+
+    payment_pending = Booking.objects.filter(
+        status="payment_pending"
+    ).count()
+
+    cancelled_bookings = Booking.objects.filter(
+        status="cancelled"
+    ).count()
+
+    active_rides = Ride.objects.filter(
+        is_active=True
+    ).count()
+
+    total_coupons = Coupon.objects.count()
+
+
+    # ============================================================
+    # REVENUE
+    #
+    # Only count successfully paid payments.
+    # ============================================================
+
+    revenue_data = Payment.objects.filter(
+        status="paid"
+    ).aggregate(
+        total=Sum("amount")
+    )
+
+    total_revenue = revenue_data["total"] or 0
+
+
+    # ============================================================
+    # TODAY'S REVENUE
+    # ============================================================
+
+    today_revenue_data = Payment.objects.filter(
+        status="paid",
+        paid_at__date=today
+    ).aggregate(
+        total=Sum("amount")
+    )
+
+    today_revenue = today_revenue_data["total"] or 0
+
+
+    # ============================================================
+    # LAST 6 MONTHS
+    # ============================================================
+
+    month_labels = []
+    booking_counts = []
+    revenue_counts = []
+
+    year = today.year
+    month = today.month
+
+    for i in range(5, -1, -1):
+
+        current_month = month - i
+        current_year = year
+
+        while current_month <= 0:
+            current_month += 12
+            current_year -= 1
+
+        month_start = date(
+            current_year,
+            current_month,
+            1
+        )
+
+        if current_month == 12:
+            next_month = date(
+                current_year + 1,
+                1,
+                1
+            )
+        else:
+            next_month = date(
+                current_year,
+                current_month + 1,
+                1
+            )
+
+
+        # --------------------------------------------------------
+        # Label
+        # --------------------------------------------------------
+
+        month_labels.append(
+            month_start.strftime("%b")
+        )
+
+
+        # --------------------------------------------------------
+        # Bookings
+        # --------------------------------------------------------
+
+        monthly_bookings = Booking.objects.filter(
+            created_at__date__gte=month_start,
+            created_at__date__lt=next_month
+        ).count()
+
+        booking_counts.append(
+            monthly_bookings
+        )
+
+
+        # --------------------------------------------------------
+        # Revenue
+        # --------------------------------------------------------
+
+        monthly_revenue = Payment.objects.filter(
+            status="paid",
+            paid_at__date__gte=month_start,
+            paid_at__date__lt=next_month
+        ).aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+
+        revenue_counts.append(
+            float(monthly_revenue)
+        )
+
+
+    # ============================================================
+    # BOOKING STATUS CHART
+    # ============================================================
+
+    status_labels = [
+    "Confirmed",
+    "Payment Pending",
+    "Cancelled",
+    "Checked In",
+    "Refunded",
+     ]
+
+    status_values = [
+       Booking.objects.filter(
+        status="confirmed"
+    ).count(),
+
+       Booking.objects.filter(
+        status="payment_pending"
+    ).count(),
+
+       Booking.objects.filter(
+        status="cancelled"
+    ).count(),
+
+        Booking.objects.filter(
+        status="checked_in"
+    ).count(),
+
+        Booking.objects.filter(
+        status="refunded"
+    ).count(),
+    ] 
+
+
+    # ============================================================
+    # TODAY'S BOOKINGS
+    # ============================================================
+
+    today_bookings_list = (
+        Booking.objects
+        .filter(
+            booking_date=today
+        )
+        .select_related(
+            "ride",
+            "ride_price",
+            "user",
+        )
+        .order_by(
+            "time_slot",
+            "-created_at"
+        )[:8]
+    )
+
+
+    # ============================================================
+    # RECENT BOOKINGS
+    # ============================================================
+
+    recent_bookings = (
+        Booking.objects
+        .select_related(
+            "ride",
+            "user",
+        )
+        .order_by(
+            "-created_at"
+        )[:8]
+    )
+
+
+    # ============================================================
+    # RECENT PAYMENTS
+    # ============================================================
+
+    recent_payments = (
+        Payment.objects
+        .select_related(
+            "booking",
+            "booking__ride",
+        )
+        .order_by(
+            "-created_at"
+        )[:8]
+    )
+
+
+    # ============================================================
+    # CONTEXT
+    # ============================================================
+
+    context = {
+
+        # -----------------------------
+        # Stats
+        # -----------------------------
+
+        "stats": {
+            "total_bookings": total_bookings,
+            "today_bookings": today_bookings,
+            "confirmed_bookings": confirmed_bookings,
+            "payment_pending": payment_pending,
+            "cancelled_bookings": cancelled_bookings,
+            "active_rides": active_rides,
+            "total_coupons": total_coupons,
+            "total_revenue": total_revenue,
+            "today_revenue": today_revenue,
+        },
+
+
+        # -----------------------------
+        # Chart data
+        # -----------------------------
+
+        "month_labels": month_labels,
+
+        "booking_counts": booking_counts,
+
+        "revenue_counts": revenue_counts,
+
+        "status_labels": status_labels,
+
+        "status_values": status_values,
+
+
+        # -----------------------------
+        # Lists
+        # -----------------------------
+
+        "today_bookings": today_bookings_list,
+
+        "recent_bookings": recent_bookings,
+
+        "recent_payments": recent_payments,
+
     }
 
-    recent_bookings = []
 
     return render(
         request,
         "admin_pages/dashboard.html",
-        {
-            "stats": stats,
-            "recent_bookings": recent_bookings,
-        }
+        context
     )
 
 
-
+    
 # ==========================================
 # GALLERY CATEGORY CRUD
 # ==========================================
@@ -3992,48 +4224,27 @@ def user_signin(request):
     if request.session.get("user_id"):
         return redirect("user_dashboard")
 
-
-    # =====================================================
-    # DEFAULT VALUES
-    # =====================================================
-
     selected_country = "IN"
     phone = ""
-
-
-    # =====================================================
-    # POST
-    # =====================================================
 
     if request.method == "POST":
 
         selected_country = (
-            request.POST.get(
-                "country",
-                "IN"
-            )
+            request.POST.get("country", "IN")
             .strip()
             .upper()
         )
 
-
         phone = (
-            request.POST.get(
-                "phone",
-                ""
-            )
+            request.POST.get("phone", "")
             .strip()
         )
 
+        # ---------------------------------------------
+        # COUNTRY
+        # ---------------------------------------------
 
-        # =================================================
-        # VALIDATE COUNTRY
-        # =================================================
-
-        country = LOGIN_COUNTRIES.get(
-            selected_country
-        )
-
+        country = LOGIN_COUNTRIES.get(selected_country)
 
         if not country:
 
@@ -4052,32 +4263,20 @@ def user_signin(request):
                 }
             )
 
-
-        # =================================================
-        # CLEAN LOCAL PHONE NUMBER
-        # =================================================
+        # ---------------------------------------------
+        # CLEAN PHONE
+        # ---------------------------------------------
 
         phone = "".join(
-            char
-            for char in phone
+            char for char in phone
             if char.isdigit()
         )
 
-
-        # Remove leading 0
-        #
-        # Example UK:
-        # 07911123456
-        #
-        # becomes:
-        # 7911123456
-
         phone = phone.lstrip("0")
 
-
-        # =================================================
+        # ---------------------------------------------
         # VALIDATE PHONE
-        # =================================================
+        # ---------------------------------------------
 
         if not phone:
 
@@ -4096,20 +4295,11 @@ def user_signin(request):
                 }
             )
 
-
-        min_length = country[
-            "min_length"
-        ]
-
-        max_length = country[
-            "max_length"
-        ]
-
+        min_length = country["min_length"]
+        max_length = country["max_length"]
 
         if not (
-            min_length
-            <= len(phone)
-            <= max_length
+            min_length <= len(phone) <= max_length
         ):
 
             if min_length == max_length:
@@ -4127,7 +4317,6 @@ def user_signin(request):
                     f"for {country['name']}."
                 )
 
-
             messages.error(
                 request,
                 error_message
@@ -4143,130 +4332,105 @@ def user_signin(request):
                 }
             )
 
-
-        # =================================================
-        # BUILD COMPLETE INTERNATIONAL NUMBER
-        # =================================================
+        # ---------------------------------------------
+        # FULL INTERNATIONAL PHONE
+        # ---------------------------------------------
 
         full_phone = (
-            country["dial_code"]
-            +
-            phone
+            country["dial_code"] + phone
         )
 
+        # ---------------------------------------------
+        # FIND OR CREATE USER PROFILE
+        # ---------------------------------------------
 
-        # Example:
-        #
-        # India:
-        # +919633390345
-        #
-        # UAE:
-        # +971501234567
+        profile, created = UserProfile.objects.get_or_create(
+            phone=full_phone
+        )
 
+        # ---------------------------------------------
+        # SEND OTP BY SMS
+        # ---------------------------------------------
 
-        # =================================================
-        # GENERATE OTP
-        # =================================================
+        try:
 
-        otp = str(
-            secrets.randbelow(
-                900000
+            otp_record, response = send_otp(
+                full_phone
             )
-            +
-            100000
+
+        except Exception as e:
+
+            print("OTP ERROR:", e)
+
+            messages.error(
+                request,
+                "Unable to send OTP. Please try again."
+            )
+
+            return render(
+                request,
+                "authenticate/signin.html",
+                {
+                    "phone": phone,
+                    "countries": LOGIN_COUNTRIES,
+                    "selected_country": selected_country,
+                }
+            )
+
+        # ---------------------------------------------
+        # SAVE LOGIN SESSION
+        # ---------------------------------------------
+
+        request.session["login_phone"] = full_phone
+
+        request.session["login_local_phone"] = phone
+
+        request.session["login_country"] = selected_country
+
+        request.session["login_country_code"] = (
+            country["dial_code"]
         )
 
+        request.session["login_profile_id"] = profile.id
 
-        # =================================================
-        # SAVE LOGIN DATA
-        # =================================================
+        request.session["login_otp_verified"] = False
 
-        request.session[
-            "login_phone"
-        ] = full_phone
+        # ---------------------------------------------
+        # MESSAGE
+        # ---------------------------------------------
 
+        if created:
 
-        request.session[
-            "login_local_phone"
-        ] = phone
+            messages.success(
+                request,
+                "Your account has been created. "
+                "An OTP has been sent to your mobile."
+            )
 
+        else:
 
-        request.session[
-            "login_country"
-        ] = selected_country
-
-
-        request.session[
-            "login_country_code"
-        ] = country["dial_code"]
-
-
-        request.session[
-            "login_otp"
-        ] = otp
-
-
-        request.session[
-            "login_otp_created_at"
-        ] = int(
-            timezone.now().timestamp()
-        )
-
-
-        request.session[
-            "login_otp_verified"
-        ] = False
-
-
-        # =================================================
-        # DEVELOPMENT OTP
-        # =================================================
-
-        print(
-            "===================================="
-        )
-
-        print(
-            f"COUNTRY: {country['name']}"
-        )
-
-        print(
-            f"PHONE: {full_phone}"
-        )
-
-        print(
-            f"LOGIN OTP: {otp}"
-        )
-
-        print(
-            "===================================="
-        )
-
+            messages.success(
+                request,
+                "OTP has been sent to your mobile number."
+            )
 
         return redirect(
             "verify_login_otp"
         )
 
-
-    # =====================================================
+    # ---------------------------------------------
     # GET
-    # =====================================================
+    # ---------------------------------------------
 
     phone = (
-        request.GET.get(
-            "phone",
-            ""
-        )
+        request.GET.get("phone", "")
         .strip()
     )
 
-
     phone = "".join(
-        char
-        for char in phone
+        char for char in phone
         if char.isdigit()
     )
-
 
     return render(
         request,
@@ -4280,241 +4444,7 @@ def user_signin(request):
 
 
 
-
-# def verify_login_otp(request):
-
-#     # ==========================================
-#     # GET PHONE FROM SESSION
-#     # ==========================================
-
-#     phone = request.session.get(
-#         "login_phone"
-#     )
-
-
-#     # User came here without requesting OTP
-#     if not phone:
-
-#         messages.error(
-#             request,
-#             "Please enter your mobile number first."
-#         )
-
-#         return redirect(
-#             "user_signin"
-#         )
-
-
-#     if request.method == "POST":
-
-#         # ==========================================
-#         # GET 6 OTP BOXES
-#         # ==========================================
-
-#         otp_1 = request.POST.get(
-#             "otp_1",
-#             ""
-#         )
-
-#         otp_2 = request.POST.get(
-#             "otp_2",
-#             ""
-#         )
-
-#         otp_3 = request.POST.get(
-#             "otp_3",
-#             ""
-#         )
-
-#         otp_4 = request.POST.get(
-#             "otp_4",
-#             ""
-#         )
-
-#         otp_5 = request.POST.get(
-#             "otp_5",
-#             ""
-#         )
-
-#         otp_6 = request.POST.get(
-#             "otp_6",
-#             ""
-#         )
-
-
-#         entered_otp = (
-#             otp_1
-#             + otp_2
-#             + otp_3
-#             + otp_4
-#             + otp_5
-#             + otp_6
-#         )
-
-
-#         stored_otp = request.session.get(
-#             "login_otp"
-#         )
-
-
-#         otp_created_at = request.session.get(
-#             "login_otp_created_at"
-#         )
-
-
-#         # ==========================================
-#         # CHECK OTP EXISTS
-#         # ==========================================
-
-#         if not stored_otp:
-
-#             messages.error(
-#                 request,
-#                 "OTP session expired. Please request a new OTP."
-#             )
-
-#             return redirect(
-#                 "user_signin"
-#             )
-
-
-#         # ==========================================
-#         # CHECK EXPIRY
-#         # 5 MINUTES = 300 SECONDS
-#         # ==========================================
-
-#         if (
-#     not otp_created_at
-#     or
-#     int(timezone.now().timestamp())
-#     - int(otp_created_at)
-#     > 300
-#       ):
-
-#           request.session.pop(
-#         "login_otp",
-#         None
-#     )
-
-#           request.session.pop(
-#         "login_otp_created_at",
-#         None
-#     )
-
-#           messages.error(
-#         request,
-#         "OTP expired. Please request a new OTP."
-#     )
-
-#           return redirect(
-#         "user_signin"
-#     )
-
-
-#         # ==========================================
-#         # VALIDATE OTP
-#         # ==========================================
-
-#         if entered_otp != stored_otp:
-
-#             messages.error(
-#                 request,
-#                 "Invalid OTP. Please try again."
-#             )
-
-#             return render(
-#                 request,
-#                 "authenticate/verify_otp.html",
-#                 {
-#                     "phone": phone
-#                 }
-#             )
-
-
-#         # ==========================================
-#         # OTP SUCCESS
-#         # ==========================================
-
-#         request.session[
-#             "login_otp_verified"
-#         ] = True
-
-
-#         # ==========================================
-#         # FIND / CREATE USER
-#         # ==========================================
-
-#         try:
-
-#             user = UserProfile.objects.get(
-#                 phone=phone
-#             )
-
-#         except UserProfile.DoesNotExist:
-
-#             user = UserProfile.objects.create(
-#                 phone=phone
-#             )
-
-
-#         # ==========================================
-#         # LOGIN USER USING YOUR SESSION SYSTEM
-#         # ==========================================
-
-#         request.session[
-#             "user_id"
-#         ] = user.id
-
-
-#         request.session[
-#             "user_name"
-#         ] = (
-#             getattr(
-#                 user,
-#                 "full_name",
-#                 ""
-#             )
-#             or "Flying Fox User"
-#         )
-
-
-#         # ==========================================
-#         # REMOVE OTP SESSION
-#         # ==========================================
-
-#         request.session.pop(
-#             "login_otp",
-#             None
-#         )
-
-#         request.session.pop(
-#             "login_otp_created_at",
-#             None
-#         )
-
-
-#         messages.success(
-#             request,
-#             "Mobile number verified successfully."
-#         )
-
-
-#         return redirect(
-#             "user_dashboard"
-#         )
-
-
-#     return render(
-#         request,
-#         "authenticate/verify_otp.html",
-#         {
-#             "phone": phone
-#         }
-#     )
-
-
-
-
+       
 def verify_login_otp(request):
 
     # =====================================================
@@ -4534,27 +4464,49 @@ def verify_login_otp(request):
 
 
     # =====================================================
-    # TEMPORARY TEST OTP
-    # REMOVE THIS WHEN SMS OTP IS WORKING
-    # =====================================================
-
-    TEST_OTP = "123456"
-
-
-    # =====================================================
     # POST - VERIFY OTP
     # =====================================================
 
     if request.method == "POST":
 
+        # -------------------------------------------------
         # Get OTP from 6 input boxes
-        otp_1 = request.POST.get("otp_1", "").strip()
-        otp_2 = request.POST.get("otp_2", "").strip()
-        otp_3 = request.POST.get("otp_3", "").strip()
-        otp_4 = request.POST.get("otp_4", "").strip()
-        otp_5 = request.POST.get("otp_5", "").strip()
-        otp_6 = request.POST.get("otp_6", "").strip()
+        # -------------------------------------------------
 
+        otp_1 = request.POST.get(
+            "otp_1",
+            ""
+        ).strip()
+
+        otp_2 = request.POST.get(
+            "otp_2",
+            ""
+        ).strip()
+
+        otp_3 = request.POST.get(
+            "otp_3",
+            ""
+        ).strip()
+
+        otp_4 = request.POST.get(
+            "otp_4",
+            ""
+        ).strip()
+
+        otp_5 = request.POST.get(
+            "otp_5",
+            ""
+        ).strip()
+
+        otp_6 = request.POST.get(
+            "otp_6",
+            ""
+        ).strip()
+
+
+        # -------------------------------------------------
+        # Combine OTP
+        # -------------------------------------------------
 
         entered_otp = (
             otp_1
@@ -4566,11 +4518,14 @@ def verify_login_otp(request):
         )
 
 
-        # =================================================
-        # CHECK ALL 6 DIGITS ENTERED
-        # =================================================
+        # -------------------------------------------------
+        # Validate OTP format
+        # -------------------------------------------------
 
-        if len(entered_otp) != 6 or not entered_otp.isdigit():
+        if (
+            len(entered_otp) != 6
+            or not entered_otp.isdigit()
+        ):
 
             messages.error(
                 request,
@@ -4586,15 +4541,25 @@ def verify_login_otp(request):
             )
 
 
-        # =================================================
-        # TEMPORARY OTP VALIDATION
-        # =================================================
+        # -------------------------------------------------
+        # Verify OTP from OTPVerification model
+        # -------------------------------------------------
 
-        if entered_otp != TEST_OTP:
+        success, message = verify_otp(
+            phone,
+            entered_otp
+        )
+
+
+        # -------------------------------------------------
+        # Invalid / expired / too many attempts
+        # -------------------------------------------------
+
+        if not success:
 
             messages.error(
                 request,
-                "Invalid OTP. For testing, use 123456."
+                message
             )
 
             return render(
@@ -4610,11 +4575,13 @@ def verify_login_otp(request):
         # OTP VERIFIED
         # =================================================
 
-        request.session["login_otp_verified"] = True
+        request.session[
+            "login_otp_verified"
+        ] = True
 
 
         # =================================================
-        # FIND OR CREATE USER
+        # FIND OR CREATE USER PROFILE
         # =================================================
 
         user, created = UserProfile.objects.get_or_create(
@@ -4622,49 +4589,69 @@ def verify_login_otp(request):
         )
 
 
-        # Mark mobile number as verified
-        if hasattr(user, "phone_verified"):
+        # =================================================
+        # MARK PHONE VERIFIED
+        # =================================================
 
-            if not user.phone_verified:
+        if not user.phone_verified:
 
-                user.phone_verified = True
+            user.phone_verified = True
 
-                user.save(
-                    update_fields=[
-                        "phone_verified"
-                    ]
-                )
+            user.save(
+                update_fields=[
+                    "phone_verified"
+                ]
+            )
 
 
         # =================================================
-        # LOGIN USER
+        # CREATE LOGIN SESSION
         # =================================================
 
-        request.session["user_id"] = user.id
+        request.session[
+            "user_id"
+        ] = user.id
 
-        request.session["user_name"] = (
-            getattr(user, "full_name", "")
+        request.session[
+            "user_name"
+        ] = (
+            user.full_name
             or "Flying Fox User"
         )
 
 
         # =================================================
-        # CLEAN OTP SESSION
+        # CLEAN LOGIN SESSION DATA
         # =================================================
 
         request.session.pop(
-            "login_otp",
+            "login_phone",
             None
         )
 
         request.session.pop(
-            "login_otp_created_at",
+            "login_local_phone",
+            None
+        )
+
+        request.session.pop(
+            "login_country",
+            None
+        )
+
+        request.session.pop(
+            "login_country_code",
+            None
+        )
+
+        request.session.pop(
+            "login_otp_verified",
             None
         )
 
 
         # =================================================
-        # SUCCESS MESSAGE
+        # SUCCESS
         # =================================================
 
         messages.success(
@@ -4674,7 +4661,7 @@ def verify_login_otp(request):
 
 
         # =================================================
-        # REDIRECT TO USER DASHBOARD
+        # DASHBOARD
         # =================================================
 
         return redirect(
@@ -4683,7 +4670,7 @@ def verify_login_otp(request):
 
 
     # =====================================================
-    # GET REQUEST
+    # GET
     # =====================================================
 
     return render(
@@ -4696,263 +4683,15 @@ def verify_login_otp(request):
 
 
 
-
-
-from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
-
-from .models import UserProfile
-
-
-# def user_dashboard(request):
-
-#     # =====================================================
-#     # CHECK USER LOGIN
-#     # =====================================================
-
-#     user_id = request.session.get("user_id")
-
-#     if not user_id:
-
-#         messages.error(
-#             request,
-#             "Please login to access your account."
-#         )
-
-#         return redirect(
-#             "user_signin"
-#         )
-
-
-#     # =====================================================
-#     # GET LOGGED-IN USER PROFILE
-#     # =====================================================
-
-#     profile = get_object_or_404(
-#         UserProfile,
-#         id=user_id
-#     )
-
-
-#     # =====================================================
-#     # SAVE / UPDATE PROFILE
-#     # =====================================================
-
-#     if request.method == "POST":
-
-#         # -------------------------------------------------
-#         # GET FORM VALUES
-#         # -------------------------------------------------
-
-#         full_name = request.POST.get(
-#             "full_name",
-#             ""
-#         ).strip()
-
-#         email = request.POST.get(
-#             "email",
-#             ""
-#         ).strip()
-
-#         gender = request.POST.get(
-#             "gender",
-#             ""
-#         ).strip()
-
-#         date_of_birth = request.POST.get(
-#             "date_of_birth",
-#             ""
-#         ).strip()
-
-#         address = request.POST.get(
-#             "address",
-#             ""
-#         ).strip()
-
-#         pincode = request.POST.get(
-#             "pincode",
-#             ""
-#         ).strip()
-
-#         region = request.POST.get(
-#             "region",
-#             ""
-#         ).strip()
-
-
-#         # =================================================
-#         # VALIDATE FULL NAME
-#         # =================================================
-
-#         if not full_name:
-
-#             messages.error(
-#                 request,
-#                 "Please enter your full name."
-#             )
-
-#             return render(
-#                 request,
-#                 "authenticate/user_dashboard.html",
-#                 {
-#                     "profile": profile
-#                 }
-#             )
-
-
-#         # =================================================
-#         # VALIDATE EMAIL
-#         # =================================================
-
-#         if email:
-
-#             email_exists = (
-#                 UserProfile.objects
-#                 .filter(email__iexact=email)
-#                 .exclude(id=profile.id)
-#                 .exists()
-#             )
-
-#             if email_exists:
-
-#                 messages.error(
-#                     request,
-#                     "This email address is already used by another account."
-#                 )
-
-#                 return render(
-#                     request,
-#                     "authenticate/user_dashboard.html",
-#                     {
-#                         "profile": profile
-#                     }
-#                 )
-
-
-#         # =================================================
-#         # VALIDATE PIN CODE
-#         # =================================================
-
-#         if pincode:
-
-#             if (
-#                 not pincode.isdigit()
-#                 or len(pincode) != 6
-#             ):
-
-#                 messages.error(
-#                     request,
-#                     "Please enter a valid 6-digit PIN code."
-#                 )
-
-#                 return render(
-#                     request,
-#                     "authenticate/user_dashboard.html",
-#                     {
-#                         "profile": profile
-#                     }
-#                 )
-
-
-#         # =================================================
-#         # UPDATE PROFILE
-#         # =================================================
-
-#         profile.full_name = full_name
-
-#         profile.email = (
-#             email
-#             if email
-#             else None
-#         )
-
-#         profile.gender = gender
-
-#         profile.address = address
-
-#         profile.pincode = pincode
-
-#         profile.region = region
-
-
-#         # =================================================
-#         # DATE OF BIRTH
-#         # =================================================
-
-#         if date_of_birth:
-
-#             profile.date_of_birth = date_of_birth
-
-#         else:
-
-#             profile.date_of_birth = None
-
-
-#         # =================================================
-#         # COMMUNICATION SETTINGS
-#         # =================================================
-
-#         profile.whatsapp_updates = (
-#             request.POST.get("whatsapp_updates")
-#             == "on"
-#         )
-
-#         profile.email_updates = (
-#             request.POST.get("email_updates")
-#             == "on"
-#         )
-
-
-#         # =================================================
-#         # SAVE
-#         # =================================================
-
-#         profile.save()
-
-
-#         # =================================================
-#         # UPDATE SESSION NAME
-#         # =================================================
-
-#         request.session["user_name"] = (
-#             profile.full_name
-#             or "Flying Fox User"
-#         )
-
-
-#         messages.success(
-#             request,
-#             "Your profile has been updated successfully."
-#         )
-
-
-#         return redirect(
-#             "user_dashboard"
-#         )
-
-
-#     # =====================================================
-#     # GET REQUEST
-#     # =====================================================
-
-#     return render(
-#         request,
-#         "authenticate/user_dashboard.html",
-#         {
-#             "profile": profile
-#         }
-#     )
-
-
-
-
-
 def resend_login_otp(request):
+
+    # =====================================================
+    # GET PHONE FROM SESSION
+    # =====================================================
 
     phone = request.session.get(
         "login_phone"
     )
-
 
     if not phone:
 
@@ -4966,56 +4705,57 @@ def resend_login_otp(request):
         )
 
 
-    otp = str(
-        secrets.randbelow(
-            900000
-        ) + 100000
-    )
+    # =====================================================
+    # ONLY ALLOW POST
+    # =====================================================
+
+    if request.method != "POST":
+
+        return redirect(
+            "verify_login_otp"
+        )
 
 
-    request.session[
-        "login_otp"
-    ] = otp
+    # =====================================================
+    # SEND NEW OTP
+    # =====================================================
+
+    try:
+
+        otp_record, response = send_otp(
+            phone
+        )
+
+    except Exception as e:
+
+        print(
+            "RESEND OTP ERROR:",
+            e
+        )
+
+        messages.error(
+            request,
+            "Unable to send OTP. Please try again."
+        )
+
+        return redirect(
+            "verify_login_otp"
+        )
 
 
-    request.session[
-        "login_otp_created_at"
-    ] = int(
-        time.time()
-    )
-
-
-    # ==========================================
-    # LOCAL TESTING
-    # ==========================================
-
-    print(
-        "===================================="
-    )
-
-    print(
-        f"RESENT OTP FOR {phone}: {otp}"
-    )
-
-    print(
-        "===================================="
-    )
-
-
-    # Later:
-    # send_otp_sms(phone, otp)
-
+    # =====================================================
+    # SUCCESS
+    # =====================================================
 
     messages.success(
         request,
-        "A new OTP has been sent."
+        "A new OTP has been sent to your mobile number."
     )
 
 
     return redirect(
         "verify_login_otp"
     )
-
 
 
 def user_logout(request):
@@ -5676,6 +5416,41 @@ def home(request):
 )
 
 
+   # =========================================
+# SUPERMAN RIDE
+# =========================================
+
+    superman_ride = (
+        Ride.objects
+       .filter(
+        slug="super-man",
+        is_active=True,
+       )
+       .first()
+    )
+
+
+# =========================================
+# SUPERMAN CURRENT PRICE
+# =========================================
+
+    superman_price = None
+
+    if superman_ride:
+
+      superman_price = (
+        RidePrice.objects
+        .filter(
+            ride=superman_ride,
+            is_active=True,
+            start_date__lte=today,
+            end_date__gte=today,
+        )
+        .order_by("price")
+        .first()
+    )
+
+
     # -----------------------------------------
     # TESTIMONIALS
     # -----------------------------------------
@@ -5727,6 +5502,9 @@ def home(request):
             "testimonials": testimonials,
             "blogs": blogs,
             "active_offers": active_offers,
+             # Superman
+            "superman_ride": superman_ride,
+            "superman_price": superman_price,
         },
     )
 
@@ -14172,141 +13950,6 @@ def booking_success(
 
 
 
-
-# def send_ticket_sms(ticket):
-#     """
-#     Send booking and ticket information by SMS.
-
-#     Returns True when the SMS provider accepts
-#     the message request. Returns False on failure.
-#     """
-
-#     booking = ticket.booking
-
-#     # -----------------------------------------
-#     # 1. Check customer phone
-#     # -----------------------------------------
-
-#     if not booking.customer_phone:
-#         print("SMS ERROR: Customer phone is empty.")
-#         return False
-
-#     # -----------------------------------------
-#     # 2. Check Twilio settings
-#     # -----------------------------------------
-
-#     if not settings.TWILIO_ACCOUNT_SID:
-#         print(
-#             "SMS ERROR: TWILIO_ACCOUNT_SID "
-#             "is not configured."
-#         )
-#         return False
-
-#     if not settings.TWILIO_AUTH_TOKEN:
-#         print(
-#             "SMS ERROR: TWILIO_AUTH_TOKEN "
-#             "is not configured."
-#         )
-#         return False
-
-#     if not settings.TWILIO_PHONE_NUMBER:
-#         print(
-#             "SMS ERROR: TWILIO_PHONE_NUMBER "
-#             "is not configured."
-#         )
-#         return False
-
-#     # -----------------------------------------
-#     # 3. Clean customer phone number
-#     # -----------------------------------------
-
-#     phone = (
-#         booking.customer_phone
-#         .replace(" ", "")
-#         .replace("-", "")
-#         .replace("(", "")
-#         .replace(")", "")
-#     )
-
-#     # Convert an Indian 10-digit number:
-#     # 9876543210 -> +919876543210
-#     if len(phone) == 10 and phone.isdigit():
-#         phone = f"+91{phone}"
-
-#     # Convert 91xxxxxxxxxx:
-#     # 919876543210 -> +919876543210
-#     elif (
-#         len(phone) == 12
-#         and phone.startswith("91")
-#         and phone.isdigit()
-#     ):
-#         phone = f"+{phone}"
-
-#     # Reject invalid numbers
-#     elif not phone.startswith("+"):
-#         print(
-#             "SMS ERROR: Invalid phone number:",
-#             phone,
-#         )
-#         return False
-
-#     # -----------------------------------------
-#     # 4. Create SMS content
-#     # -----------------------------------------
-
-#     message_body = (
-#         "Flying Fox booking confirmed. "
-#         f"Booking ID: {booking.booking_id}. "
-#         f"Ticket ID: {ticket.ticket_id}. "
-#         f"Ride: {booking.ride.name}. "
-#         f"Date: "
-#         f"{booking.booking_date.strftime('%d-%m-%Y')}. "
-#         f"Time: {booking.time_slot}. "
-#         "Please show your QR ticket at the venue."
-#     )
-
-#     # -----------------------------------------
-#     # 5. Send SMS using Twilio
-#     # -----------------------------------------
-
-#     try:
-#         client = Client(
-#             settings.TWILIO_ACCOUNT_SID,
-#             settings.TWILIO_AUTH_TOKEN,
-#         )
-
-#         message = client.messages.create(
-#             body=message_body,
-#             from_=settings.TWILIO_PHONE_NUMBER,
-#             to=phone,
-#         )
-
-#         print("\n========== SMS REQUEST ACCEPTED ==========")
-#         print("TO:", phone)
-#         print("MESSAGE SID:", message.sid)
-#         print("INITIAL STATUS:", message.status)
-#         print("==========================================\n")
-
-#         return True
-
-#     except TwilioRestException as error:
-#         print("\n============ TWILIO SMS FAILED ============")
-#         print("TO:", phone)
-#         print("ERROR CODE:", error.code)
-#         print("ERROR MESSAGE:", error.msg)
-#         print("===========================================\n")
-
-#         return False
-
-#     except Exception as error:
-#         print("\n========== UNEXPECTED SMS ERROR ==========")
-#         print("TO:", phone)
-#         print("ERROR:", error)
-#         print("==========================================\n")
-
-#         return False
-    
-
 def send_ticket_sms(ticket):
     """
     Send Twilio's predefined trial order-confirmation SMS.
@@ -14512,202 +14155,6 @@ def send_ticket_sms(ticket):
 
         return False
 
-
-
-
-
-def send_ticket_whatsapp(request, ticket):
-    """
-    Send Twilio's predefined WhatsApp trial template.
-
-    This currently sends only the predefined trial
-    confirmation message. It does not send dynamic
-    booking details or the QR/PDF ticket yet.
-
-    Returns True when Twilio accepts the request.
-    Returns False when sending fails.
-    """
-
-    booking = ticket.booking
-
-    # ==========================================
-    # 1. Validate customer phone number
-    # ==========================================
-
-    if not booking.customer_phone:
-        print(
-            "WHATSAPP ERROR: Customer phone is empty."
-        )
-        return False
-
-    # ==========================================
-    # 2. Read Twilio configuration
-    # ==========================================
-
-    account_sid = getattr(
-        settings,
-        "TWILIO_ACCOUNT_SID",
-        "",
-    )
-
-    auth_token = getattr(
-        settings,
-        "TWILIO_AUTH_TOKEN",
-        "",
-    )
-
-    whatsapp_from = getattr(
-        settings,
-        "TWILIO_WHATSAPP_FROM",
-        "",
-    )
-
-    content_sid = getattr(
-        settings,
-        "TWILIO_WHATSAPP_CONTENT_SID",
-        "",
-    )
-
-    if not account_sid:
-        print(
-            "WHATSAPP ERROR: TWILIO_ACCOUNT_SID "
-            "is missing."
-        )
-        return False
-
-    if not auth_token:
-        print(
-            "WHATSAPP ERROR: TWILIO_AUTH_TOKEN "
-            "is missing."
-        )
-        return False
-
-    if not whatsapp_from:
-        print(
-            "WHATSAPP ERROR: TWILIO_WHATSAPP_FROM "
-            "is missing."
-        )
-        return False
-
-    if not content_sid:
-        print(
-            "WHATSAPP ERROR: "
-            "TWILIO_WHATSAPP_CONTENT_SID "
-            "is missing."
-        )
-        return False
-
-    # ==========================================
-    # 3. Format the recipient phone number
-    # ==========================================
-
-    phone = (
-        booking.customer_phone
-        .strip()
-        .replace(" ", "")
-        .replace("-", "")
-        .replace("(", "")
-        .replace(")", "")
-    )
-
-    # 9633390345 -> +919633390345
-    if len(phone) == 10 and phone.isdigit():
-        phone = f"+91{phone}"
-
-    # 919633390345 -> +919633390345
-    elif (
-        len(phone) == 12
-        and phone.startswith("91")
-        and phone.isdigit()
-    ):
-        phone = f"+{phone}"
-
-    # Already +919633390345
-    elif (
-        len(phone) == 13
-        and phone.startswith("+91")
-        and phone[1:].isdigit()
-    ):
-        pass
-
-    else:
-        print(
-            "WHATSAPP ERROR: Invalid phone number:",
-            phone,
-        )
-
-        return False
-
-    whatsapp_to = f"whatsapp:{phone}"
-
-    # ==========================================
-    # 4. Send Twilio predefined content template
-    # ==========================================
-
-    try:
-        client = Client(
-            account_sid,
-            auth_token,
-        )
-
-        message = client.messages.create(
-            to=whatsapp_to,
-            from_=whatsapp_from,
-            content_sid=content_sid,
-        )
-
-        print(
-            "\n====== WHATSAPP REQUEST ACCEPTED ======"
-        )
-        print("TO:", whatsapp_to)
-        print("FROM:", whatsapp_from)
-        print("CONTENT SID:", content_sid)
-        print("MESSAGE SID:", message.sid)
-        print("INITIAL STATUS:", message.status)
-        print(
-            "========================================\n"
-        )
-
-        return True
-
-    except TwilioRestException as error:
-
-         print(
-        "\n========== WHATSAPP FAILED =========="
-    )
-         print("TO:", whatsapp_to)
-         print("FROM:", whatsapp_from)
-         print(
-        "ERROR CODE:",
-        getattr(error, "code", ""),
-    )
-         print(
-        "ERROR MESSAGE:",
-        getattr(error, "msg", str(error)),
-    )
-         print(
-        "ERROR STATUS:",
-        getattr(error, "status", ""),
-    )
-         print(
-        "=======================================\n"
-    )
-
-         return False
-
-    except Exception as error:
-
-        print(
-            "\n===== UNEXPECTED WHATSAPP ERROR ====="
-        )
-        print("TO:", whatsapp_to)
-        print("ERROR TYPE:", type(error).__name__)
-        print("ERROR:", error)
-        print(
-            "======================================\n"
-        )
-
-        return False
 
 
 def download_ticket(request, ticket_id):

@@ -1,613 +1,2856 @@
 {% extends "admin_pages/base.html" %}
+
 {% load static %}
 
-{% block title %}Admin Dashboard | WorldByArk{% endblock %}
+{% block title %}
+Admin Dashboard | Flying Fox
+{% endblock %}
+
 
 {% block content %}
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
+<div class="ff-dashboard">
 
-<div class="dashboard-wrap">
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
 
-    <div class="stats-grid">
+    <div class="ff-page-header">
 
-        <div class="stat-card stat-green">
-            <div class="stat-top">
-                <span class="stat-label">Blogs / News</span>
-                <div class="stat-icon"><i class="icofont-read-book"></i></div>
-            </div>
-            <div class="stat-value">{{ stats.total_blogs }}</div>
-            <div class="stat-footer">
-                <span class="pill pill-green">{{ stats.blogs_this_month }} this month</span>
-            </div>
+        <div>
+            <h1>Dashboard</h1>
+
+            <p>
+                Here's what's happening with your bookings today.
+            </p>
         </div>
 
-        <div class="stat-card stat-blue">
-            <div class="stat-top">
-                <span class="stat-label">Gallery Images</span>
-                <div class="stat-icon"><i class="icofont-picture"></i></div>
-            </div>
-            <div class="stat-value">{{ stats.total_gallery }}</div>
-            <div class="stat-footer">Total Uploaded</div>
-        </div>
+        <div class="ff-date-box">
+            <i class="icofont-calendar"></i>
 
-        <div class="stat-card stat-purple">
-            <div class="stat-top">
-                <span class="stat-label">Destinations</span>
-                <div class="stat-icon"><i class="icofont-location-pin"></i></div>
-            </div>
-            <div class="stat-value">{{ stats.total_destinations }}</div>
-            <div class="stat-footer">Total Listings</div>
-        </div>
-
-        <div class="stat-card stat-orange">
-            <div class="stat-top">
-                <span class="stat-label">Contact Messages</span>
-                <div class="stat-icon"><i class="icofont-envelope"></i></div>
-            </div>
-            <div class="stat-value">{{ stats.total_contacts }}</div>
-            <div class="stat-footer">Total Received</div>
-        </div>
-
-        <div class="stat-card stat-primary">
-            <div class="stat-top">
-                <span class="stat-label">Tour Packages</span>
-                <div class="stat-icon"><i class="icofont-package"></i></div>
-            </div>
-            <div class="stat-value">{{ stats.total_packages }}</div>
-            <div class="stat-footer">Total Active</div>
+            <span>
+                {% now "d M Y" %}
+            </span>
         </div>
 
     </div>
 
-    <!-- Charts -->
-    <div class="charts-row">
 
-        <div class="chart-card chart-wide">
-            <div class="card-header">
-                <span class="card-title">Activity Over Time (Last 6 Months)</span>
+    <!-- =====================================================
+         STAT CARDS
+    ====================================================== -->
+
+    <div class="ff-stats-grid">
+
+
+        <!-- TOTAL BOOKINGS -->
+
+        <div class="ff-stat-card">
+
+            <div class="ff-stat-icon blue">
+                <i class="icofont-ticket"></i>
             </div>
-            <div class="chart-body">
-                <canvas id="projectsChart"></canvas>
+
+            <div class="ff-stat-content">
+
+                <span class="ff-stat-label">
+                    Total Bookings
+                </span>
+
+                <strong>
+                    {{ stats.total_bookings }}
+                </strong>
+
+                <small>
+                    All time bookings
+                </small>
+
             </div>
+
         </div>
 
-        <div class="chart-card chart-narrow">
-            <div class="card-header">
-                <span class="card-title">Gallery By Category</span>
+
+        <!-- TODAY BOOKINGS -->
+
+        <div class="ff-stat-card">
+
+            <div class="ff-stat-icon green">
+                <i class="icofont-calendar"></i>
             </div>
-            <div class="chart-body">
-                <canvas id="servicesChart"></canvas>
+
+            <div class="ff-stat-content">
+
+                <span class="ff-stat-label">
+                    Today's Bookings
+                </span>
+
+                <strong>
+                    {{ stats.today_bookings }}
+                </strong>
+
+                <small>
+                    Scheduled for today
+                </small>
+
             </div>
+
+        </div>
+
+
+        <!-- REVENUE -->
+
+        <div class="ff-stat-card">
+
+            <div class="ff-stat-icon purple">
+                <i class="icofont-rupee"></i>
+            </div>
+
+            <div class="ff-stat-content">
+
+                <span class="ff-stat-label">
+                    Total Revenue
+                </span>
+
+                <strong>
+                    ₹{{ stats.total_revenue|floatformat:0 }}
+                </strong>
+
+                <small>
+                    Successfully paid
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONFIRMED -->
+
+        <div class="ff-stat-card">
+
+            <div class="ff-stat-icon green">
+                <i class="icofont-check-circled"></i>
+            </div>
+
+            <div class="ff-stat-content">
+
+                <span class="ff-stat-label">
+                    Confirmed
+                </span>
+
+                <strong>
+                    {{ stats.confirmed_bookings }}
+                </strong>
+
+                <small>
+                    Ready for ride
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT PENDING -->
+
+        <div class="ff-stat-card">
+
+            <div class="ff-stat-icon orange">
+                <i class="icofont-warning"></i>
+            </div>
+
+            <div class="ff-stat-content">
+
+                <span class="ff-stat-label">
+                    Payment Pending
+                </span>
+
+                <strong>
+                    {{ stats.payment_pending }}
+                </strong>
+
+                <small>
+                    Awaiting payment
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE RIDES -->
+
+        <div class="ff-stat-card">
+
+            <div class="ff-stat-icon indigo">
+                <i class="icofont-airplane-alt"></i>
+            </div>
+
+            <div class="ff-stat-content">
+
+                <span class="ff-stat-label">
+                    Active Rides
+                </span>
+
+                <strong>
+                    {{ stats.active_rides }}
+                </strong>
+
+                <small>
+                    Currently active
+                </small>
+
+            </div>
+
         </div>
 
     </div>
 
-    <!-- Recent Projects & Packages Side-by-Side -->
-    {% comment %} <div class="data-row">
-        <!-- Recent Blogs -->
-        <div class="data-card">
-            <div class="card-header">
-                <span class="card-title">Recent Blogs</span>
-                <a href="{% url 'admin_blog_list' %}" class="view-all-link">View All →</a>
+
+
+    <!-- =====================================================
+         CHARTS
+    ====================================================== -->
+
+    <!-- =========================================================
+     CHARTS
+========================================================= -->
+
+<div class="ff-chart-grid">
+
+    <!-- =====================================================
+         BOOKING OVERVIEW
+    ====================================================== -->
+
+    <div class="ff-card ff-chart-card">
+
+        <div class="ff-card-header">
+
+            <div>
+                <h2>Booking Overview</h2>
+
+                <p>
+                    Bookings and revenue over the last 6 months
+                </p>
             </div>
-            <ul class="feed-list">
-                {% for blog in recent_blogs %}
-                <li class="feed-item">
-                    <div class="feed-avatar feed-avatar-green">
-                        <i class="icofont-read-book"></i>
-                    </div>
-                    <div class="feed-content">
-                        <p class="feed-name">{{ blog.title }}</p>
-                        <p class="feed-meta">
-                            {{ blog.created_at|date:"M d, Y" }}
-                        </p>
-                    </div>
-                </li>
-                {% empty %}
-                <li class="feed-empty">No blogs added yet.</li>
-                {% endfor %}
-            </ul>
+
+            <div class="ff-chart-actions">
+
+                <select class="ff-chart-select" id="overviewRange">
+                    <option value="6">Last 6 Months</option>
+                    <option value="12">Last 12 Months</option>
+                </select>
+
+                <select class="ff-chart-select" id="overviewType">
+                    <option value="monthly">Monthly</option>
+                </select>
+
+            </div>
+
         </div>
 
-        <!-- Recent Camping Packages -->
-        {% comment %} <div class="data-card">
-            <div class="card-header">
-                <span class="card-title">Recent Packages</span>
-                <a href="{% url 'admin_package_list' %}" class="view-all-link">View All →</a>
+
+        <div class="ff-chart-body">
+
+            <div class="ff-chart-wrapper">
+
+                <canvas id="bookingOverviewChart"></canvas>
+
             </div>
-            <ul class="feed-list">
-                {% for package in recent_packages %}
-                <li class="feed-item">
-                    <div class="feed-avatar feed-avatar-primary">
-                        <i class="icofont-tent"></i>
-                    </div>
-                    <div class="feed-content">
-                        <p class="feed-name">{{ package.name }}</p>
-                        <p class="feed-sub">{{ package.normal_price|default:"0.00" }}</p>
-                        <p class="feed-meta">
-                            <i class="icofont-clock-time"></i> {{ package.created_at|timesince }} ago
-                        </p>
-                    </div>
-                </li>
-                {% empty %}
-                <li class="feed-empty">No tour packages yet.</li>
-                {% endfor %}
-            </ul>
+
         </div>
+
     </div>
 
-    <!-- Inquiries + Contacts side by side -->
-    <div class="data-row">
 
-        <div class="data-card">
-            <div class="card-header">
-                <span class="card-title">Recent Destinations</span>
-                <a href="{% url 'admin_destination_list' %}" class="view-all-link">View All →</a>
+    <!-- =====================================================
+         BOOKING STATUS
+    ====================================================== -->
+
+    <div class="ff-card ff-chart-card">
+
+        <div class="ff-card-header">
+
+            <div>
+                <h2>Booking Status</h2>
+
+                <p>
+                    Current booking distribution
+                </p>
             </div>
-            <ul class="feed-list">
-                {% for destination in recent_destinations %}
-                <li class="feed-item">
-                    <div class="feed-avatar feed-avatar-purple">
-                        <i class="icofont-location-pin"></i>
-                    </div>
-                    <div class="feed-content">
-                        <p class="feed-name">{{ destination.name }}</p>
-                        <p class="feed-sub">{{ destination.location|default:"Location TBD" }}</p>
-                        <p class="feed-meta">
-                            {{ destination.created_at|timesince }} ago
-                        </p>
-                    </div>
-                </li>
-                {% empty %}
-                <li class="feed-empty">No destinations added yet.</li>
-                {% endfor %}
-            </ul>
+
+            <div>
+
+                <select class="ff-chart-select" id="statusRange">
+
+                    <option value="all">
+                        All Time
+                    </option>
+
+                </select>
+
+            </div>
+
         </div>
 
-        <div class="data-card">
-            <div class="card-header">
-                <span class="card-title">Recent Contact Messages</span>
-                <a href="{% url 'view_contacts' %}" class="view-all-link">View All →</a>
+
+        <div class="ff-status-body">
+
+            <div class="ff-doughnut-wrapper">
+
+                <canvas id="bookingStatusChart"></canvas>
+
+                <div class="ff-doughnut-center">
+
+                    <strong id="statusTotal">
+                        0
+                    </strong>
+
+                    <span>
+                        Total
+                    </span>
+
+                </div>
+
             </div>
-            <ul class="feed-list">
-                {% for contact in recent_contacts %}
-                <li class="feed-item">
-                    <div class="feed-avatar feed-avatar-orange">
-                        <i class="icofont-envelope"></i>
-                    </div>
-                    <div class="feed-content">
-                        <p class="feed-name">{{ contact.first_name }} {{ contact.last_name }}</p>
-                        <p class="feed-sub">{{ contact.message|truncatewords:10 }}</p>
-                        <p class="feed-meta">
-                            <i class="icofont-phone"></i> {{ contact.phone }} &nbsp;·&nbsp; {{ contact.created_at|timesince }} ago
-                        </p>
-                    </div>
-                </li>
-                {% empty %}
-                <li class="feed-empty">No contact messages yet.</li>
-                {% endfor %}
-            </ul>
+
+
+            <div class="ff-status-legend" id="bookingStatusLegend">
+                <!-- Generated by JavaScript -->
+            </div>
+
         </div>
 
-    </div> {% endcomment %}
+    </div>
 
 </div>
 
+
+
+    <!-- =====================================================
+         TODAY'S BOOKINGS
+    ====================================================== -->
+
+    <div class="ff-card ff-bookings-card">
+
+        <div class="ff-card-header">
+
+            <div>
+
+                <h2>
+                    Today's Bookings
+                </h2>
+
+                <p>
+                    Bookings scheduled for today
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'booking_list' %}"
+                class="ff-view-all"
+            >
+                View All
+                <i class="icofont-arrow-right"></i>
+            </a>
+
+        </div>
+
+
+        <div class="ff-table-wrapper">
+
+            <table class="ff-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Booking
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Ride
+                        </th>
+
+                        <th>
+                            Time
+                        </th>
+
+                        <th>
+                            Participants
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for booking in today_bookings %}
+
+                    <tr>
+
+                        <td>
+
+                            <span class="ff-booking-id">
+                                #{{ booking.booking_id|truncatechars:13 }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="ff-customer">
+
+                                <div class="ff-avatar">
+                                    {{ booking.customer_name|first|upper }}
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        {{ booking.customer_name }}
+                                    </strong>
+
+                                    <small>
+                                        {{ booking.customer_phone }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="ff-ride-name">
+                                {{ booking.ride.name }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="ff-time">
+                                {{ booking.time_slot }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="ff-participants">
+                                {{ booking.quantity }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="ff-amount">
+                                ₹{{ booking.total_amount|floatformat:0 }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if booking.status == "confirmed" %}
+
+                                <span class="ff-status confirmed">
+                                    Confirmed
+                                </span>
+
+                            {% elif booking.status == "payment_pending" %}
+
+                                <span class="ff-status pending">
+                                    Payment Pending
+                                </span>
+
+                            {% elif booking.status == "cancelled" %}
+
+                                <span class="ff-status cancelled">
+                                    Cancelled
+                                </span>
+
+                            {% elif booking.status == "checked_in" %}
+
+                                <span class="ff-status checked">
+                                    Checked In
+                                </span>
+
+                            {% else %}
+
+                                <span class="ff-status default">
+                                    {{ booking.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="ff-empty"
+                        >
+
+                            <div class="ff-empty-icon">
+                                <i class="icofont-calendar"></i>
+                            </div>
+
+                            <strong>
+                                No bookings today
+                            </strong>
+
+                            <span>
+                                There are no bookings scheduled for today.
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         RECENT BOOKINGS + PAYMENTS
+    ====================================================== -->
+
+    <div class="ff-bottom-grid">
+
+
+        <!-- RECENT BOOKINGS -->
+
+        <div class="ff-card">
+
+            <div class="ff-card-header">
+
+                <div>
+
+                    <h2>
+                        Recent Bookings
+                    </h2>
+
+                    <p>
+                        Latest booking activity
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'booking_list' %}"
+                    class="ff-view-all"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="ff-list">
+
+                {% for booking in recent_bookings %}
+
+                <div class="ff-list-item">
+
+                    <div class="ff-list-icon blue">
+                        <i class="icofont-ticket"></i>
+                    </div>
+
+                    <div class="ff-list-content">
+
+                        <strong>
+                            {{ booking.customer_name }}
+                        </strong>
+
+                        <span>
+                            {{ booking.ride.name }}
+                        </span>
+
+                    </div>
+
+                    <div class="ff-list-right">
+
+                        <strong>
+                            ₹{{ booking.total_amount|floatformat:0 }}
+                        </strong>
+
+                        <small>
+                            {{ booking.created_at|timesince }} ago
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                {% empty %}
+
+                <div class="ff-list-empty">
+                    No bookings yet.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RECENT PAYMENTS -->
+
+        <div class="ff-card">
+
+            <div class="ff-card-header">
+
+                <div>
+
+                    <h2>
+                        Recent Payments
+                    </h2>
+
+                    <p>
+                        Latest payment activity
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="ff-list">
+
+                {% for payment in recent_payments %}
+
+                <div class="ff-list-item">
+
+                    <div class="ff-list-icon green">
+                        <i class="icofont-rupee"></i>
+                    </div>
+
+                    <div class="ff-list-content">
+
+                        <strong>
+                            {{ payment.booking.customer_name }}
+                        </strong>
+
+                        <span>
+                            {{ payment.booking.ride.name }}
+                        </span>
+
+                    </div>
+
+                    <div class="ff-list-right">
+
+                        <strong>
+                            ₹{{ payment.amount|floatformat:0 }}
+                        </strong>
+
+                        {% if payment.status == "paid" %}
+
+                            <small class="payment-success">
+                                Paid
+                            </small>
+
+                        {% elif payment.status == "failed" %}
+
+                            <small class="payment-failed">
+                                Failed
+                            </small>
+
+                        {% else %}
+
+                            <small>
+                                {{ payment.get_status_display }}
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                {% empty %}
+
+                <div class="ff-list-empty">
+                    No payments yet.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CHART DATA
+========================================================= -->
+
+{{ month_labels|json_script:"month-labels-data" }}
+
+{{ booking_counts|json_script:"booking-counts-data" }}
+
+{{ revenue_counts|json_script:"revenue-counts-data" }}
+
+{{ status_labels|json_script:"status-labels-data" }}
+
+{{ status_values|json_script:"status-values-data" }}
+
+
+<!-- =========================================================
+     CHART.JS
+========================================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        new Chart(document.getElementById('projectsChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: [{% for lbl in month_labels %}'{{ lbl }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
-        datasets: [{
-            label: 'Blogs / News',
-            data: {{ blogs_counts| safe }},
-        backgroundColor: 'rgba(34, 197, 94, 0.08)',
-        borderColor: '#22c55e',
-        borderWidth: 2.5,
-        tension: 0.4,
-        fill: true,
-        pointRadius: 5,
-        pointBackgroundColor: '#fff',
-        pointBorderColor: '#22c55e',
-        pointBorderWidth: 2
+    /* =========================================================
+       READ DJANGO JSON DATA
+    ========================================================= */
+
+    function getJsonScript(id) {
+
+        const element = document.getElementById(id);
+
+        if (!element) {
+            console.error("Missing JSON element:", id);
+            return [];
+        }
+
+        try {
+            return JSON.parse(element.textContent);
+        } catch (error) {
+            console.error(
+                "Failed to parse JSON:",
+                id,
+                error
+            );
+
+            return [];
+        }
+    }
+
+
+    const monthLabels =
+        getJsonScript("month-labels-data");
+
+    const bookingCounts =
+        getJsonScript("booking-counts-data");
+
+    const revenueCounts =
+        getJsonScript("revenue-counts-data");
+
+    const statusLabels =
+        getJsonScript("status-labels-data");
+
+    const statusValues =
+        getJsonScript("status-values-data");
+
+
+    console.log("DASHBOARD CHART DATA", {
+        monthLabels,
+        bookingCounts,
+        revenueCounts,
+        statusLabels,
+        statusValues
+    });
+
+
+    /* =========================================================
+       BOOKING OVERVIEW
+    ========================================================= */
+
+    const overviewCanvas =
+        document.getElementById(
+            "bookingOverviewChart"
+        );
+
+
+    if (overviewCanvas) {
+
+        const overviewCtx =
+            overviewCanvas.getContext("2d");
+
+
+        /*
+         * Make sure numeric values are actually numbers.
+         */
+
+        const bookingData =
+            Array.isArray(bookingCounts)
+                ? bookingCounts.map(Number)
+                : [];
+
+
+        const revenueData =
+            Array.isArray(revenueCounts)
+                ? revenueCounts.map(Number)
+                : [];
+
+
+        /*
+         * Only create the chart if we have labels.
+         */
+
+        if (monthLabels.length > 0) {
+
+            new Chart(
+                overviewCtx,
+                {
+
+                    type: "line",
+
+                    data: {
+
+                        labels: monthLabels,
+
+                        datasets: [
+
+                            {
+                                label: "Bookings",
+
+                                data: bookingData,
+
+                                borderColor: "#2563eb",
+
+                                backgroundColor:
+                                    "rgba(37, 99, 235, 0.10)",
+
+                                borderWidth: 2,
+
+                                pointRadius: 3,
+
+                                pointHoverRadius: 5,
+
+                                tension: 0.35,
+
+                                fill: true,
+
+                                yAxisID: "y"
+                            },
+
+                            {
+                                label: "Revenue",
+
+                                data: revenueData,
+
+                                borderColor: "#7c3aed",
+
+                                backgroundColor:
+                                    "rgba(124, 58, 237, 0.06)",
+
+                                borderWidth: 2,
+
+                                pointRadius: 3,
+
+                                pointHoverRadius: 5,
+
+                                tension: 0.35,
+
+                                fill: false,
+
+                                yAxisID: "revenue"
+                            }
+
+                        ]
+
+                    },
+
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        interaction: {
+
+                            mode: "index",
+
+                            intersect: false
+
+                        },
+
+
+                        plugins: {
+
+                            legend: {
+
+                                display: true,
+
+                                position: "top",
+
+                                align: "end",
+
+                                labels: {
+
+                                    usePointStyle: true,
+
+                                    boxWidth: 8,
+
+                                    padding: 15,
+
+                                    font: {
+                                        size: 10
+                                    }
+
+                                }
+
+                            },
+
+
+                            tooltip: {
+
+                                backgroundColor: "#0f172a",
+
+                                titleColor: "#ffffff",
+
+                                bodyColor: "#ffffff",
+
+                                padding: 10,
+
+                                cornerRadius: 8,
+
+                                callbacks: {
+
+                                    label: function(context) {
+
+                                        const value =
+                                            Number(
+                                                context.raw || 0
+                                            );
+
+
+                                        if (
+                                            context.dataset
+                                                .label === "Revenue"
+                                        ) {
+
+                                            return (
+                                                " Revenue: ₹" +
+                                                value.toLocaleString(
+                                                    "en-IN"
+                                                )
+                                            );
+
+                                        }
+
+
+                                        return (
+                                            " Bookings: " +
+                                            value.toLocaleString(
+                                                "en-IN"
+                                            )
+                                        );
+
+                                    }
+
+                                }
+
+                            }
+
+                        },
+
+
+                        scales: {
+
+                            x: {
+
+                                grid: {
+
+                                    display: false
+
+                                },
+
+                                ticks: {
+
+                                    color: "#94a3b8",
+
+                                    font: {
+                                        size: 10
+                                    }
+
+                                }
+
+                            },
+
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                grid: {
+
+                                    color:
+                                        "#f1f5f9"
+
+                                },
+
+                                ticks: {
+
+                                    color: "#94a3b8",
+
+                                    font: {
+                                        size: 10
+                                    },
+
+                                    precision: 0
+
+                                },
+
+                                title: {
+
+                                    display: false
+
+                                }
+
+                            },
+
+
+                            revenue: {
+
+                                beginAtZero: true,
+
+                                position: "right",
+
+                                grid: {
+
+                                    drawOnChartArea: false
+
+                                },
+
+                                ticks: {
+
+                                    color: "#94a3b8",
+
+                                    font: {
+                                        size: 10
+                                    },
+
+                                    callback: function(value) {
+
+                                        return "₹" +
+                                            Number(value)
+                                                .toLocaleString(
+                                                    "en-IN"
+                                                );
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+        } else {
+
+            console.warn(
+                "No booking overview data available."
+            );
+
+        }
+
+    } else {
+
+        console.error(
+            "Booking overview canvas not found."
+        );
+
+    }
+
+
+
+    /* =========================================================
+       BOOKING STATUS
+    ========================================================= */
+
+    const statusCanvas =
+        document.getElementById(
+            "bookingStatusChart"
+        );
+
+
+    const legend =
+        document.getElementById(
+            "bookingStatusLegend"
+        );
+
+
+    const totalElement =
+        document.getElementById(
+            "statusTotal"
+        );
+
+
+    if (!statusCanvas) {
+
+        console.error(
+            "Booking status canvas not found."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Normalize status data.
+     */
+
+    const normalizedStatusLabels =
+        Array.isArray(statusLabels)
+            ? statusLabels
+            : [];
+
+
+    const normalizedStatusValues =
+        Array.isArray(statusValues)
+            ? statusValues.map(function(value) {
+
+                const number = Number(value);
+
+                return Number.isFinite(number)
+                    ? number
+                    : 0;
+
+            })
+            : [];
+
+
+    /*
+     * Keep labels and values aligned.
+     */
+
+    const statusCount =
+        Math.min(
+            normalizedStatusLabels.length,
+            normalizedStatusValues.length
+        );
+
+
+    const finalStatusLabels =
+        normalizedStatusLabels.slice(
+            0,
+            statusCount
+        );
+
+
+    const finalStatusValues =
+        normalizedStatusValues.slice(
+            0,
+            statusCount
+        );
+
+
+    console.log(
+        "STATUS LABELS:",
+        finalStatusLabels
+    );
+
+
+    console.log(
+        "STATUS VALUES:",
+        finalStatusValues
+    );
+
+
+    /* =========================================================
+       STATUS COLORS
+    ========================================================= */
+
+    const statusColors = [
+
+        "#22c55e",
+        "#f59e0b",
+        "#3b82f6",
+        "#ef4444",
+        "#8b5cf6",
+        "#64748b",
+        "#06b6d4",
+        "#ec4899"
+
+    ];
+
+
+    /* =========================================================
+       TOTAL
+    ========================================================= */
+
+    const totalStatus =
+        finalStatusValues.reduce(
+            function(total, value) {
+
+                return total + value;
+
             },
+            0
+        );
+
+
+    if (totalElement) {
+
+        totalElement.textContent =
+            totalStatus.toLocaleString(
+                "en-IN"
+            );
+
+    }
+
+
+    /* =========================================================
+       EMPTY STATUS DATA
+    ========================================================= */
+
+    if (
+        finalStatusLabels.length === 0 ||
+        finalStatusValues.length === 0 ||
+        totalStatus === 0
+    ) {
+
+        console.warn(
+            "No booking status data available."
+        );
+
+
+        if (legend) {
+
+            legend.innerHTML = `
+                <div class="ff-list-empty">
+                    No booking status data available.
+                </div>
+            `;
+
+        }
+
+
+        return;
+
+    }
+
+
+    /* =========================================================
+       CREATE STATUS DOUGHNUT
+    ========================================================= */
+
+    new Chart(
+        statusCanvas,
         {
-            label: 'Contact Messages',
-            data: {{ contacts_counts| safe }},
-        backgroundColor: 'rgba(245, 158, 11, 0.08)',
-        borderColor: '#f59e0b',
-        borderWidth: 2.5,
-        tension: 0.4,
-        fill: true,
-        pointRadius: 5,
-        pointBackgroundColor: '#fff',
-        pointBorderColor: '#f59e0b',
-        pointBorderWidth: 2
-            }]
-        },
-        options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: true, position: 'top' },
-            tooltip: { mode: 'index', intersect: false }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: { stepSize: 1, color: '#9ca3af' },
-                grid: { color: '#f3f4f6' },
-                border: { color: 'transparent' }
-            },
-            x: {
-                ticks: { color: '#9ca3af' },
-                grid: { display: false },
-                border: { color: '#f3f4f6' }
-            }
-        }
-    }
-    });
 
-    new Chart(document.getElementById('servicesChart').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-            labels: [{% for lbl in service_labels %}'{{ lbl|safe }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
-        datasets: [{
-            data: {{ service_counts| safe }},
-        backgroundColor: ['#22c55e', '#3b82f6', '#a855f7', '#f59e0b', '#ef4444', '#6b7280'],
-        borderWidth: 3,
-        borderColor: '#fff'
-            }]
-        },
-        options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '72%',
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: { boxWidth: 10, padding: 16, usePointStyle: true, color: '#6b7280', font: { size: 12 } }
+            type: "doughnut",
+
+
+            data: {
+
+                labels: finalStatusLabels,
+
+                datasets: [
+
+                    {
+
+                        data: finalStatusValues,
+
+                        backgroundColor:
+                            finalStatusLabels.map(
+                                function(_, index) {
+
+                                    return statusColors[
+                                        index %
+                                        statusColors.length
+                                    ];
+
+                                }
+                            ),
+
+                        borderColor: "#ffffff",
+
+                        borderWidth: 3,
+
+                        hoverOffset: 5
+
+                    }
+
+                ]
+
+            },
+
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+
+                animation: {
+
+                    duration: 500
+
+                },
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    },
+
+
+                    tooltip: {
+
+                        backgroundColor:
+                            "#0f172a",
+
+                        titleColor:
+                            "#ffffff",
+
+                        bodyColor:
+                            "#ffffff",
+
+                        padding: 10,
+
+                        cornerRadius: 8,
+
+
+                        callbacks: {
+
+                            label:
+                                function(context) {
+
+                                    const value =
+                                        Number(
+                                            context.raw || 0
+                                        );
+
+
+                                    const percentage =
+                                        totalStatus > 0
+                                            ? (
+                                                value /
+                                                totalStatus *
+                                                100
+                                            ).toFixed(1)
+                                            : "0.0";
+
+
+                                    return (
+                                        " " +
+                                        context.label +
+                                        ": " +
+                                        value.toLocaleString(
+                                            "en-IN"
+                                        ) +
+                                        " (" +
+                                        percentage +
+                                        "%)"
+                                    );
+
+                                }
+
+                        }
+
+                    }
+
+                }
+
             }
+
         }
+    );
+
+
+    /* =========================================================
+       CUSTOM STATUS LEGEND
+    ========================================================= */
+
+    if (!legend) {
+
+        return;
+
     }
-    });
+
+
+    legend.innerHTML = "";
+
+
+    finalStatusLabels.forEach(
+        function(label, index) {
+
+            const value =
+                finalStatusValues[index] || 0;
+
+
+            const percentage =
+                totalStatus > 0
+                    ? (
+                        value /
+                        totalStatus *
+                        100
+                    ).toFixed(1)
+                    : "0.0";
+
+
+            const item =
+                document.createElement("div");
+
+
+            item.className =
+                "ff-status-item";
+
+
+            const color =
+                statusColors[
+                    index %
+                    statusColors.length
+                ];
+
+
+            item.innerHTML = `
+
+                <span
+                    class="ff-status-dot"
+                    style="background-color: ${color};"
+                ></span>
+
+                <span
+                    class="ff-status-name"
+                    title="${label}"
+                >
+                    ${label}
+                </span>
+
+                <span
+                    class="ff-status-count"
+                >
+                    ${value.toLocaleString("en-IN")}
+                </span>
+
+                <span
+                    class="ff-status-percent"
+                >
+                    (${percentage}%)
+                </span>
+
+            `;
+
+
+            legend.appendChild(item);
+
+        }
+    );
+
 });
 </script>
 
+
+
 <style>
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+
+.ff-dashboard {
+
+    width: 100%;
+
+    max-width: 1500px;
+
+    margin: 0 auto;
+
+    padding: 28px 32px 50px;
+
+    font-family:
+        "Plus Jakarta Sans",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color: #111827;
+
+}
+
+
+
+/* ============================================================
+   PAGE HEADER
+============================================================ */
+
+.ff-page-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 24px;
+
+}
+
+
+.ff-page-header h1 {
+
+    margin: 0;
+
+    font-size: 26px;
+
+    font-weight: 750;
+
+    letter-spacing: -0.5px;
+
+}
+
+
+.ff-page-header p {
+
+    margin: 6px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+}
+
+
+.ff-date-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 10px 14px;
+
+    border: 1px solid #e2e8f0;
+
+    background: #ffffff;
+
+    border-radius: 10px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+}
+
+
+.ff-date-box i {
+
+    color: #2563eb;
+
+    font-size: 16px;
+
+}
+
+
+
+/* ============================================================
+   STAT GRID
+============================================================ */
+
+.ff-stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.ff-stat-card {
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 13px;
+
+    min-width: 0;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+
+}
+
+
+.ff-stat-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.07);
+
+}
+
+
+.ff-stat-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+}
+
+
+.ff-stat-icon.blue {
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+}
+
+
+.ff-stat-icon.green {
+
+    background: #ecfdf5;
+
+    color: #10b981;
+
+}
+
+
+.ff-stat-icon.purple {
+
+    background: #f5f3ff;
+
+    color: #7c3aed;
+
+}
+
+
+.ff-stat-icon.orange {
+
+    background: #fff7ed;
+
+    color: #f97316;
+
+}
+
+
+.ff-stat-icon.indigo {
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+}
+
+
+.ff-stat-content {
+
+    min-width: 0;
+
+}
+
+
+.ff-stat-label {
+
+    display: block;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.55px;
+
+    white-space: nowrap;
+
+}
+
+
+.ff-stat-content strong {
+
+    display: block;
+
+    margin-top: 6px;
+
+    font-size: 23px;
+
+    line-height: 1.1;
+
+    font-weight: 750;
+
+    color: #0f172a;
+
+    white-space: nowrap;
+
+}
+
+
+.ff-stat-content small {
+
+    display: block;
+
+    margin-top: 6px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+}
+
+
+
+/* ============================================================
+   CARDS
+============================================================ */
+
+.ff-card {
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+}
+
+
+.ff-card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 17px 20px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+}
+
+
+.ff-card-header h2 {
+
+    margin: 0;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+}
+
+
+.ff-card-header p {
+
+    margin: 4px 0 0;
+
+    font-size: 11px;
+
+    color: #94a3b8;
+
+}
+
+
+.ff-view-all {
+
+    color: #2563eb;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+.ff-view-all:hover {
+
+    text-decoration: underline;
+
+}
+
+
+
+/* ============================================================
+   CHARTS
+============================================================ */
+
+.ff-chart-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(390px, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+
+}
+
+
+/* ============================================================
+   CHART CARD
+============================================================ */
+
+.ff-chart-card {
+
+    height: 380px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+
+}
+
+
+/* ============================================================
+   CHART HEADER
+============================================================ */
+
+.ff-chart-card .ff-card-header {
+
+    flex-shrink: 0;
+
+}
+
+
+/* ============================================================
+   CHART ACTIONS
+============================================================ */
+
+.ff-chart-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+.ff-chart-select {
+
+    height: 34px;
+
+    padding: 0 10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    outline: none;
+
+    cursor: pointer;
+
+}
+
+
+.ff-chart-select:hover {
+
+    border-color: #cbd5e1;
+
+}
+
+
+.ff-chart-select:focus {
+
+    border-color: #93c5fd;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+
+}
+
+
+/* ============================================================
+   BOOKING OVERVIEW BODY
+============================================================ */
+
+.ff-chart-body {
+
+    flex: 1;
+
+    min-height: 0;
+
+    padding: 18px 20px 18px 14px;
+
+}
+
+
+.ff-chart-wrapper {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 0;
+
+}
+
+
+.ff-chart-wrapper canvas {
+
+    display: block;
+
+    width: 100% !important;
+
+    height: 100% !important;
+
+}
+
+
+/* ============================================================
+   BOOKING STATUS
+============================================================ */
+
+.ff-status-body {
+
+    flex: 1;
+
+    min-height: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 22px;
+
+    padding: 16px 20px 20px;
+
+}
+
+
+/* ============================================================
+   DOUGHNUT
+============================================================ */
+
+.ff-doughnut-wrapper {
+
+    position: relative;
+
+    width: 220px;
+
+    height: 220px;
+
+    flex-shrink: 0;
+
+}
+
+
+.ff-doughnut-wrapper canvas {
+
+    width: 100% !important;
+
+    height: 100% !important;
+
+}
+
+
+/* ============================================================
+   DOUGHNUT CENTER
+============================================================ */
+
+.ff-doughnut-center {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+
+    pointer-events: none;
+
+}
+
+
+.ff-doughnut-center strong {
+
+    display: block;
+
+    font-size: 26px;
+
+    line-height: 1;
+
+    font-weight: 750;
+
+    color: #0f172a;
+
+}
+
+
+.ff-doughnut-center span {
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 10px;
+
+    color: #94a3b8;
+
+    font-weight: 600;
+
+}
+
+
+/* ============================================================
+   STATUS LEGEND
+============================================================ */
+
+.ff-status-legend {
+
+    flex: 1;
+
+    min-width: 150px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+
+.ff-status-item {
+
+    display: grid;
+
+    grid-template-columns: 10px minmax(0, 1fr) auto auto;
+
+    align-items: center;
+
+    column-gap: 8px;
+
+}
+
+
+.ff-status-dot {
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+}
+
+
+.ff-status-name {
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #475569;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.ff-status-count {
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #334155;
+
+}
+
+
+.ff-status-percent {
+
+    min-width: 42px;
+
+    text-align: right;
+
+    font-size: 10px;
+
+    color: #94a3b8;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE CHARTS
+============================================================ */
+
+@media (max-width: 1200px) {
+
+    .ff-chart-grid {
+
+        grid-template-columns: 1fr;
+
     }
 
-    .dashboard-wrap {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        padding: 28px 32px;
-        background: #f7f8fc;
-        min-height: 100vh;
-        display: flex;
+}
+
+
+@media (max-width: 700px) {
+
+    .ff-chart-card {
+
+        height: 360px;
+
+    }
+
+
+    .ff-chart-actions {
+
+        display: none;
+
+    }
+
+
+    .ff-status-body {
+
+        gap: 10px;
+
+    }
+
+
+    .ff-doughnut-wrapper {
+
+        width: 180px;
+
+        height: 180px;
+
+    }
+
+
+    .ff-status-legend {
+
+        min-width: 120px;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .ff-status-body {
+
         flex-direction: column;
-        gap: 18px;
-    }
 
-    /* Stats */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 18px;
-    }
-
-    .stat-card {
-        background: white;
-        border-radius: 14px;
-        padding: 22px 24px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-        border-top: 3px solid transparent;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
-    }
-
-    .stat-green {
-        border-top-color: #22c55e;
-    }
-
-    .stat-blue {
-        border-top-color: #3b82f6;
-    }
-
-    .stat-purple {
-        border-top-color: #a855f7;
-    }
-
-    .stat-orange {
-        border-top-color: #f59e0b;
-    }
-
-    .stat-primary {
-        border-top-color: #4f46e5;
-    }
-
-    .stat-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 14px;
-    }
-
-    .stat-label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.7px;
-        color: #9ca3af;
-    }
-
-    .stat-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 9px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-    }
-
-    .stat-green .stat-icon {
-        background: #f0fdf4;
-        color: #22c55e;
-    }
-
-    .stat-blue .stat-icon {
-        background: #eff6ff;
-        color: #3b82f6;
-    }
-
-    .stat-purple .stat-icon {
-        background: #faf5ff;
-        color: #a855f7;
-    }
-
-    .stat-orange .stat-icon {
-        background: #fffbeb;
-        color: #f59e0b;
-    }
-
-    .stat-primary .stat-icon {
-        background: #eef2ff;
-        color: #4f46e5;
-    }
-
-    .stat-value {
-        font-size: 30px;
-        font-weight: 800;
-        color: #111827;
-        letter-spacing: -1px;
-        line-height: 1;
-        margin-bottom: 8px;
-    }
-
-    .stat-footer {
-        font-size: 12px;
-        color: #9ca3af;
-        font-weight: 500;
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .pill {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 2px 9px;
-        border-radius: 20px;
-    }
-
-    .pill-green {
-        background: #f0fdf4;
-        color: #16a34a;
-    }
-
-    /* Charts */
-    .charts-row {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 18px;
-    }
-
-    .chart-card {
-        background: white;
-        border-radius: 14px;
-        padding: 22px 24px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-        height: 340px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .chart-body {
-        flex: 1;
-        position: relative;
-        min-height: 0;
-    }
-
-    /* Data cards */
-    .data-card {
-        background: white;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-    }
-
-    .data-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-    }
-
-    /* Card header */
-    .card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 18px 22px;
-        border-bottom: 1px solid #f3f4f6;
-    }
-
-    .card-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #111827;
-    }
-
-    .card-badge {
-        font-size: 11px;
-        font-weight: 600;
-        background: #f0fdf4;
-        color: #22c55e;
-        padding: 3px 10px;
-        border-radius: 20px;
-    }
-
-    .view-all-link {
-        font-size: 13px;
-        font-weight: 600;
-        color: #3b82f6;
-        text-decoration: none;
-    }
-
-    .view-all-link:hover {
-        opacity: 0.75;
-    }
-
-    /* Feed */
-    .feed-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        max-height: 320px;
         overflow-y: auto;
+
     }
 
-    .feed-item {
-        display: flex;
-        gap: 14px;
-        padding: 14px 22px;
-        border-bottom: 1px solid #f9fafb;
+
+    .ff-doughnut-wrapper {
+
+        width: 180px;
+
+        height: 180px;
+
+    }
+
+}
+
+
+
+/* ============================================================
+   BOOKINGS TABLE
+============================================================ */
+
+.ff-bookings-card {
+
+    margin-bottom: 18px;
+
+}
+
+
+.ff-table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+}
+
+
+.ff-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+.ff-table th {
+
+    padding: 12px 18px;
+
+    text-align: left;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    white-space: nowrap;
+
+}
+
+
+.ff-table td {
+
+    padding: 13px 18px;
+
+    border-top: 1px solid #f1f5f9;
+
+    vertical-align: middle;
+
+    font-size: 12px;
+
+    color: #475569;
+
+}
+
+
+.ff-table tbody tr:hover {
+
+    background: #fafcff;
+
+}
+
+
+.ff-booking-id {
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+}
+
+
+.ff-customer {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.ff-avatar {
+
+    width: 32px;
+
+    height: 32px;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+.ff-customer strong {
+
+    display: block;
+
+    color: #0f172a;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+}
+
+
+.ff-customer small {
+
+    display: block;
+
+    margin-top: 2px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+}
+
+
+.ff-ride-name {
+
+    font-weight: 600;
+
+    color: #334155;
+
+}
+
+
+.ff-time {
+
+    white-space: nowrap;
+
+}
+
+
+.ff-participants {
+
+    font-weight: 700;
+
+    color: #334155;
+
+}
+
+
+.ff-amount {
+
+    color: #0f172a;
+
+    white-space: nowrap;
+
+}
+
+
+.ff-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+.ff-status.confirmed {
+
+    background: #ecfdf5;
+
+    color: #059669;
+
+}
+
+
+.ff-status.pending {
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+}
+
+
+.ff-status.cancelled {
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+}
+
+
+.ff-status.checked {
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+}
+
+
+.ff-status.default {
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+}
+
+
+
+/* ============================================================
+   EMPTY
+============================================================ */
+
+.ff-empty {
+
+    text-align: center;
+
+    padding: 45px 20px !important;
+
+}
+
+
+.ff-empty-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    margin: 0 auto 10px;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+    color: #94a3b8;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+}
+
+
+.ff-empty strong {
+
+    display: block;
+
+    color: #475569;
+
+    font-size: 13px;
+
+}
+
+
+.ff-empty span {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+}
+
+
+
+/* ============================================================
+   BOTTOM
+============================================================ */
+
+.ff-bottom-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+
+}
+
+
+.ff-list {
+
+    max-height: 360px;
+
+    overflow-y: auto;
+
+}
+
+
+.ff-list-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px 18px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+}
+
+
+.ff-list-item:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.ff-list-icon {
+
+    width: 34px;
+
+    height: 34px;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+.ff-list-icon.blue {
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+}
+
+
+.ff-list-icon.green {
+
+    background: #ecfdf5;
+
+    color: #10b981;
+
+}
+
+
+.ff-list-content {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+
+.ff-list-content strong {
+
+    display: block;
+
+    color: #334155;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.ff-list-content span {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.ff-list-right {
+
+    text-align: right;
+
+    flex-shrink: 0;
+
+}
+
+
+.ff-list-right strong {
+
+    display: block;
+
+    color: #0f172a;
+
+    font-size: 12px;
+
+}
+
+
+.ff-list-right small {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+}
+
+
+.payment-success {
+
+    color: #059669 !important;
+
+}
+
+
+.payment-failed {
+
+    color: #dc2626 !important;
+
+}
+
+
+.ff-list-empty {
+
+    padding: 35px 20px;
+
+    text-align: center;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+}
+
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 1300px) {
+
+    .ff-stats-grid {
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+    }
+
+}
+
+
+@media (max-width: 1000px) {
+
+    .ff-chart-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .ff-chart-card {
+
+        height: 350px;
+
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .ff-bottom-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .ff-dashboard {
+
+        padding: 18px 14px 40px;
+
+    }
+
+
+    .ff-page-header {
+
         align-items: flex-start;
-        transition: background 0.15s;
+
     }
 
-    .feed-item:last-child {
-        border-bottom: none;
+
+    .ff-date-box {
+
+        display: none;
+
     }
 
-    .feed-item:hover {
-        background: #fafafa;
+
+    .ff-stats-grid {
+
+        grid-template-columns: 1fr;
+
     }
 
-    .feed-avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        font-size: 1rem;
+
+    .ff-chart-card {
+
+        height: 320px;
+
     }
 
-    .feed-avatar-green {
-        background: #f0fdf4;
-        color: #22c55e;
-    }
+}
 
-    .feed-avatar-purple {
-        background: #faf5ff;
-        color: #a855f7;
-    }
-
-    .feed-avatar-orange {
-        background: #fffbeb;
-        color: #f59e0b;
-    }
-
-    .feed-avatar-primary {
-        background: #eef2ff;
-        color: #4f46e5;
-    }
-
-    .feed-content {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .feed-name {
-        font-size: 14px;
-        font-weight: 600;
-        color: #111827;
-        margin: 0 0 2px;
-    }
-
-    .feed-sub {
-        font-size: 13px;
-        color: #3b82f6;
-        font-weight: 500;
-        margin: 0 0 3px;
-    }
-
-    .feed-meta {
-        font-size: 11px;
-        color: #9ca3af;
-        margin: 0;
-    }
-
-    .feed-empty {
-        padding: 24px 22px;
-        color: #9ca3af;
-        font-size: 14px;
-    }
-
-    /* Responsive */
-    @media (max-width: 1100px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .charts-row {
-            grid-template-columns: 1fr;
-        }
-
-        .chart-card {
-            height: 300px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .data-row {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 640px) {
-        .dashboard-wrap {
-            padding: 16px;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-    }
 </style>
+
 
 {% endblock %}

@@ -274,11 +274,15 @@ class OfferForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
+            # Hide unsupported offer types from admin
+        self.fields["offer_type"].choices = [
+        choice
+        for choice in self.fields["offer_type"].choices
+        if choice[0] != "birthday"
+        ]
+
         self.fields["rides"].queryset = (
-        Ride.objects
-        .filter(is_active=True)
-        .order_by("name")
-         )
+        Ride.objects.filter(is_active=True).order_by("name"))
 
         self.fields["rides"].required = False
 

@@ -822,139 +822,6 @@ class BookingRideItem(models.Model):
 
 
 
-
-
-
-
-# class Booking(models.Model):
-
-#     STATUS_CHOICES = [
-#         ("pending", "Pending"),
-#         ("confirmed", "Confirmed"),
-#         ("cancelled", "Cancelled"),
-#         ("checked_in", "Checked In"),
-#         ("refunded", "Refunded"),
-#     ]
-
-#     booking_id = models.UUIDField(
-#         default=uuid.uuid4,
-#         unique=True,
-#         editable=False
-#     )
-
-#     user = models.ForeignKey(
-#         UserProfile,
-#         on_delete=models.PROTECT,
-#         related_name="bookings"
-#     )
-
-#     ride = models.ForeignKey(
-#         Ride,
-#         on_delete=models.PROTECT,
-#         related_name="bookings"
-#     )
-
-#     ride_price = models.ForeignKey(
-#         RidePrice,
-#         on_delete=models.PROTECT,
-#         related_name="bookings"
-#     )
-
-#     booking_date = models.DateField()
-
-#     quantity = models.PositiveIntegerField(
-#         default=1
-#     )
-
-#     price_per_person = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     coupon = models.ForeignKey(
-#     "Coupon",
-#     on_delete=models.SET_NULL,
-#     blank=True,
-#     null=True,
-#     related_name="bookings"
-#     )
-
-#     discount_amount = models.DecimalField(
-#     max_digits=10,
-#     decimal_places=2,
-#     default=0
-#     )
-
-#     subtotal = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     total_amount = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     status = models.CharField(
-#         max_length=20,
-#         choices=STATUS_CHOICES,
-#         default="pending"
-#     )
-
-#     created_at = models.DateTimeField(
-#         auto_now_add=True
-#     )
-
-#     updated_at = models.DateTimeField(
-#         auto_now=True
-#     )
-
-#     class Meta:
-#         ordering = ["-created_at"]
-
-#     def __str__(self):
-#         return f"{self.booking_id} - {self.user.full_name}"    
-
-
-# class BookingPerson(models.Model):
-
-#     booking = models.ForeignKey(
-#         Booking,
-#         on_delete=models.CASCADE,
-#         related_name="participants"
-#     )
-
-#     full_name = models.CharField(
-#         max_length=150
-#     )
-
-#     age = models.PositiveIntegerField(
-#         blank=True,
-#         null=True
-#     )
-
-#     weight = models.DecimalField(
-#         max_digits=6,
-#         decimal_places=2,
-#         blank=True,
-#         null=True
-#     )
-
-#     phone = models.CharField(
-#         max_length=20,
-#         blank=True
-#     )
-
-#     created_at = models.DateTimeField(
-#         auto_now_add=True
-#     )
-
-#     def __str__(self):
-#         return (
-#             f"{self.full_name} - "
-#             f"{self.booking.booking_id}"
-#         )
-
     
 class Payment(models.Model):
 
@@ -2252,4 +2119,100 @@ class Refund(models.Model):
         return (
             f"{self.refund_id} - "
             f"{self.booking.booking_id}"
-        )    
+        )  
+
+
+
+class OTPVerification(models.Model):
+
+    # =====================================================
+    # PHONE NUMBER
+    # =====================================================
+
+    phone = models.CharField(
+        max_length=20,
+        db_index=True
+    )
+
+
+    # =====================================================
+    # OTP
+    # =====================================================
+
+    otp = models.CharField(
+        max_length=6
+    )
+
+
+    # =====================================================
+    # VERIFICATION STATUS
+    # =====================================================
+
+    is_verified = models.BooleanField(
+        default=False
+    )
+
+
+    # =====================================================
+    # EXPIRATION
+    # =====================================================
+
+    expires_at = models.DateTimeField()
+
+
+    # =====================================================
+    # TIMESTAMP
+    # =====================================================
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+
+    # =====================================================
+    # VERIFIED TIMESTAMP
+    # =====================================================
+
+    verified_at = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+
+    class Meta:
+
+        ordering = ["-created_at"]
+
+        indexes = [
+            models.Index(
+                fields=[
+                    "phone",
+                    "is_verified"
+                ]
+            ),
+        ]
+
+
+    def __str__(self):
+
+        return f"{self.phone} - {self.otp}"
+    phone_number = models.CharField(max_length=20)
+
+    otp = models.CharField(max_length=6)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    expires_at = models.DateTimeField()
+
+    is_verified = models.BooleanField(default=False)
+
+    attempts = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def is_expired(self):
+        return timezone.now() >= self.expires_at
+
+    def __str__(self):
+        return f"{self.phone_number} - OTP Verification"      

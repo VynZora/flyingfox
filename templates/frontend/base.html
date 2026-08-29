@@ -60,12 +60,36 @@
 
   <body class="h-bg">
     <!-- preloader -->
-    <div class="preloader">
+    {% comment %} <div class="preloader">
       <div class="loader-ripple">
         <div></div>
         <div></div>
       </div>
-    </div>
+    </div> {% endcomment %}
+
+<!-- preloader -->
+<div class="preloader">
+
+    <video
+        class="ff-preloader-video"
+        autoplay
+        muted
+        loop
+        playsinline
+    >
+        <source
+            src="{% static 'frontend/assets/video/fox-preloader.webm' %}"
+            type="video/webm"
+        >
+
+        <source
+            src="{% static 'frontend/assets/video/fox-preloader.mp4' %}"
+            type="video/mp4"
+        >
+    </video>
+
+</div>
+<!-- preloader end -->
     <!-- preloader end -->
 
     <!-- header area -->
@@ -233,7 +257,6 @@
             class="theme-btn mobile-offcanvas-btn"
         >
             <span>
-             
                 My Account
             </span>
             <i class="fas fa-arrow-right"></i>
