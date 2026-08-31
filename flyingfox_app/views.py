@@ -12442,24 +12442,34 @@ def generate_ticket_qr(request, ticket):
         save=False,
     )
 
+
+
 def generate_whatsapp_ticket_image(ticket):
     """
-    Generate the final Flying Fox Adventure WhatsApp ticket.
+    Generate horizontal Flying Fox Adventure WhatsApp ticket.
 
-    Static design:
-        static/frontend/assets/img/ticket/
-        flying_fox_ticket_background.png
+    STATIC BACKGROUND:
+        - Flying Fox logo
+        - BOOKING CONFIRMED
+        - Mountains / trees
+        - Zipline artwork
+        - EVENT TICKET
+        - Empty QR border/frame
+        - Show QR at check-in
+        - SAFE / FUN / MEMORABLE
+        - Bottom four features
 
-    Dynamic content:
+    DYNAMIC PYTHON CONTENT:
+        - Booking information card
         - Guest name
         - Ticket number
         - Visit date
         - Total participants
         - Booking ID
         - Total amount
-        - All booked adventures
-        - Participants for each adventure
-        - Real verification QR code
+        - Adventures table
+        - Participant counts
+        - Actual QR code
     """
 
     # =====================================================
@@ -12515,12 +12525,12 @@ def generate_whatsapp_ticket_image(ticket):
         .convert("RGB")
     )
 
-    # -----------------------------------------------------
-    # NORMALIZE SIZE
-    # -----------------------------------------------------
+    # =====================================================
+    # FINAL IMAGE SIZE
+    # =====================================================
 
-    width = 1080
-    height = 1620
+    width = 1600
+    height = 900
 
     image = image.resize(
         (
@@ -12530,7 +12540,9 @@ def generate_whatsapp_ticket_image(ticket):
         Image.Resampling.LANCZOS,
     )
 
-    draw = ImageDraw.Draw(image)
+    draw = ImageDraw.Draw(
+        image
+    )
 
     # =====================================================
     # FONT LOADER
@@ -12572,7 +12584,7 @@ def generate_whatsapp_ticket_image(ticket):
             )
 
         # -------------------------------------------------
-        # WINDOWS DEVELOPMENT
+        # WINDOWS
         # -------------------------------------------------
 
         if bold:
@@ -12588,7 +12600,7 @@ def generate_whatsapp_ticket_image(ticket):
             )
 
         # -------------------------------------------------
-        # UBUNTU PRODUCTION
+        # UBUNTU
         # -------------------------------------------------
 
         if bold:
@@ -12606,12 +12618,14 @@ def generate_whatsapp_ticket_image(ticket):
             )
 
         # -------------------------------------------------
-        # LOAD FIRST AVAILABLE FONT
+        # LOAD FIRST AVAILABLE
         # -------------------------------------------------
 
         for font_path in possible_fonts:
 
-            if os.path.exists(font_path):
+            if os.path.exists(
+                font_path
+            ):
 
                 return ImageFont.truetype(
                     font_path,
@@ -12624,43 +12638,28 @@ def generate_whatsapp_ticket_image(ticket):
         )
 
     # =====================================================
-    # MAIN FONTS
+    # STATIC FONTS
     # =====================================================
 
     font_label = load_font(
-        22,
+        16,
         bold=False,
     )
 
-    font_value = load_font(
-        32,
-        bold=True,
-    )
-
-    font_value_small = load_font(
-        26,
-        bold=True,
-    )
-
-    font_amount = load_font(
-        34,
-        bold=True,
-    )
-
     font_table_header = load_font(
-        22,
+        16,
         bold=True,
     )
 
     # =====================================================
-    # TEXT FITTING HELPER
+    # TEXT FITTING
     # =====================================================
 
     def fit_font(
         text,
         max_width,
-        start_size=32,
-        minimum_size=17,
+        start_size=24,
+        minimum_size=11,
         bold=True,
     ):
 
@@ -12704,12 +12703,10 @@ def generate_whatsapp_ticket_image(ticket):
         )
 
     # =====================================================
-    # SAFE VALUE HELPER
+    # SAFE TEXT
     # =====================================================
 
-    def safe_text(
-        value,
-    ):
+    def safe_text(value):
 
         if value is None:
             return ""
@@ -12730,9 +12727,9 @@ def generate_whatsapp_ticket_image(ticket):
         ticket.ticket_number
     )
 
-    # -----------------------------------------------------
-    # Optional visual prefix
-    # -----------------------------------------------------
+    # =====================================================
+    # DISPLAY TICKET NUMBER
+    # =====================================================
 
     if (
         ticket_number
@@ -12752,16 +12749,14 @@ def generate_whatsapp_ticket_image(ticket):
             ticket_number
         )
 
-    # -----------------------------------------------------
-    # BOOKING ID
-    # -----------------------------------------------------
+    # =====================================================
+    # COMPACT BOOKING ID
+    # =====================================================
 
     full_booking_id = safe_text(
         booking.booking_id
     )
 
-    # Show a compact booking reference on image.
-    # Full UUID remains safely stored in database.
     if full_booking_id:
 
         compact_booking_id = (
@@ -12776,9 +12771,9 @@ def generate_whatsapp_ticket_image(ticket):
 
         compact_booking_id = ""
 
-    # -----------------------------------------------------
+    # =====================================================
     # VISIT DATE
-    # -----------------------------------------------------
+    # =====================================================
 
     if booking.booking_date:
 
@@ -12792,9 +12787,9 @@ def generate_whatsapp_ticket_image(ticket):
 
         visit_date = ""
 
-    # -----------------------------------------------------
-    # AMOUNT
-    # -----------------------------------------------------
+    # =====================================================
+    # TOTAL AMOUNT
+    # =====================================================
 
     total_amount = (
         booking.total_amount
@@ -12836,16 +12831,22 @@ def generate_whatsapp_ticket_image(ticket):
 
     ]
 
+    ride_count = len(
+        valid_ride_items
+    )
+
     # =====================================================
     # TOTAL PARTICIPANTS
     # =====================================================
 
     total_participants = sum(
+
         int(
             item.quantity
             or
             0
         )
+
         for item
         in valid_ride_items
     )
@@ -12862,18 +12863,30 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # DYNAMIC CUSTOMER INFORMATION CARD
+    # =====================================================
+    # COMPACT BOOKING INFORMATION CARD
+    # =====================================================
+    # =====================================================
+    #
+    # Previously card was much taller.
+    #
+    # New:
+    #
+    # Y 285 -> 510
+    #
+    # This gives more space to rides while protecting
+    # bottom static feature icons.
     # =====================================================
 
-    info_left = 55
-    info_right = width - 55
+    info_left = 70
+    info_right = 1090
 
-    info_top = 500
-    info_bottom = 825
+    info_top = 285
+    info_bottom = 510
 
-    # -----------------------------------------------------
+    # =====================================================
     # CARD
-    # -----------------------------------------------------
+    # =====================================================
 
     draw.rounded_rectangle(
         (
@@ -12882,68 +12895,76 @@ def generate_whatsapp_ticket_image(ticket):
             info_right,
             info_bottom,
         ),
-        radius=28,
+        radius=20,
         fill=WHITE,
         outline=LIGHT_GRAY,
         width=2,
     )
 
-    # -----------------------------------------------------
+    # =====================================================
     # CENTER DIVIDER
-    # -----------------------------------------------------
+    # =====================================================
 
-    center_x = width // 2
+    center_x = 585
 
     draw.line(
         (
             center_x,
-            info_top + 25,
+            info_top + 16,
             center_x,
-            info_bottom - 25,
+            info_bottom - 16,
         ),
         fill=DIVIDER,
-        width=2,
+        width=1,
     )
 
-    # -----------------------------------------------------
+    # =====================================================
     # HORIZONTAL DIVIDERS
+    # =====================================================
+
+    first_divider_y = 358
+    second_divider_y = 432
+
+    draw.line(
+        (
+            info_left + 30,
+            first_divider_y,
+            info_right - 30,
+            first_divider_y,
+        ),
+        fill=DIVIDER,
+        width=1,
+    )
+
+    draw.line(
+        (
+            info_left + 30,
+            second_divider_y,
+            info_right - 30,
+            second_divider_y,
+        ),
+        fill=DIVIDER,
+        width=1,
+    )
+
+    # =====================================================
+    # COLUMN X POSITIONS
+    # =====================================================
+
+    left_x = 165
+    right_x = 680
+
+    # =====================================================
+    # ROW 1
+    # GUEST / TICKET
+    # =====================================================
+
+    row1_label_y = 296
+    row1_value_y = 321
+
     # -----------------------------------------------------
-
-    draw.line(
-        (
-            info_left + 35,
-            605,
-            info_right - 35,
-            605,
-        ),
-        fill=DIVIDER,
-        width=2,
-    )
-
-    draw.line(
-        (
-            info_left + 35,
-            710,
-            info_right - 35,
-            710,
-        ),
-        fill=DIVIDER,
-        width=2,
-    )
-
-    # =====================================================
-    # INFORMATION COORDINATES
-    # =====================================================
-
-    left_x = 120
-    right_x = 590
-
-    # =====================================================
-    # ROW 1 — GUEST / TICKET
-    # =====================================================
-
-    row1_label_y = 525
-    row1_value_y = 560
+    # Guest
+    # -----------------------------------------------------
 
     draw.text(
         (
@@ -12957,9 +12978,9 @@ def generate_whatsapp_ticket_image(ticket):
 
     guest_font = fit_font(
         customer_name,
-        max_width=350,
-        start_size=32,
-        minimum_size=19,
+        max_width=340,
+        start_size=23,
+        minimum_size=14,
         bold=True,
     )
 
@@ -12974,6 +12995,8 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # -----------------------------------------------------
+    # Ticket
+    # -----------------------------------------------------
 
     draw.text(
         (
@@ -12987,9 +13010,9 @@ def generate_whatsapp_ticket_image(ticket):
 
     ticket_font = fit_font(
         display_ticket_number,
-        max_width=350,
-        start_size=32,
-        minimum_size=19,
+        max_width=330,
+        start_size=23,
+        minimum_size=14,
         bold=True,
     )
 
@@ -13004,11 +13027,16 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # ROW 2 — DATE / PARTICIPANTS
+    # ROW 2
+    # DATE / PARTICIPANTS
     # =====================================================
 
-    row2_label_y = 630
-    row2_value_y = 665
+    row2_label_y = 370
+    row2_value_y = 395
+
+    # -----------------------------------------------------
+    # Visit date
+    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13022,9 +13050,9 @@ def generate_whatsapp_ticket_image(ticket):
 
     visit_font = fit_font(
         visit_date,
-        max_width=350,
-        start_size=27,
-        minimum_size=18,
+        max_width=340,
+        start_size=21,
+        minimum_size=13,
         bold=True,
     )
 
@@ -13039,6 +13067,8 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # -----------------------------------------------------
+    # Participants
+    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13052,9 +13082,9 @@ def generate_whatsapp_ticket_image(ticket):
 
     participant_font = fit_font(
         total_participant_text,
-        max_width=350,
-        start_size=27,
-        minimum_size=18,
+        max_width=330,
+        start_size=21,
+        minimum_size=13,
         bold=True,
     )
 
@@ -13069,11 +13099,16 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # ROW 3 — BOOKING ID / AMOUNT
+    # ROW 3
+    # BOOKING / AMOUNT
     # =====================================================
 
-    row3_label_y = 735
-    row3_value_y = 770
+    row3_label_y = 444
+    row3_value_y = 469
+
+    # -----------------------------------------------------
+    # Booking ID
+    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13087,9 +13122,9 @@ def generate_whatsapp_ticket_image(ticket):
 
     booking_font = fit_font(
         compact_booking_id,
-        max_width=350,
-        start_size=28,
-        minimum_size=18,
+        max_width=340,
+        start_size=21,
+        minimum_size=13,
         bold=True,
     )
 
@@ -13104,6 +13139,8 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # -----------------------------------------------------
+    # Amount
+    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13117,9 +13154,9 @@ def generate_whatsapp_ticket_image(ticket):
 
     amount_font = fit_font(
         amount_text,
-        max_width=350,
-        start_size=34,
-        minimum_size=20,
+        max_width=330,
+        start_size=24,
+        minimum_size=14,
         bold=True,
     )
 
@@ -13134,58 +13171,115 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # DYNAMIC RIDES TABLE
+    # =====================================================
+    # COMPACT DYNAMIC RIDES TABLE
+    # =====================================================
+    # =====================================================
+    #
+    # Starts immediately after booking card.
+    #
+    # IMPORTANT:
+    # Static footer icons begin around y=720.
+    #
+    # Therefore table MUST finish before y=690.
     # =====================================================
 
-    rides_top = (
-        info_bottom
-        +
-        25
-    )
+    rides_top = 525
 
-    # -----------------------------------------------------
-    # Number of rides
-    # -----------------------------------------------------
+    rides_max_bottom = 690
 
-    ride_count = len(
-        valid_ride_items
-    )
+    # =====================================================
+    # HEADER
+    # =====================================================
 
-    # At least one row so box doesn't collapse
+    table_header_height = 31
+
+    table_bottom_padding = 4
+
     displayed_row_count = max(
         ride_count,
         1,
     )
 
     # =====================================================
-    # DYNAMIC ROW HEIGHT
-    #
-    # More rides = slightly smaller rows.
+    # SPACE AVAILABLE FOR ROWS
     # =====================================================
 
-    if ride_count <= 3:
+    available_rows_height = (
+        rides_max_bottom
+        -
+        rides_top
+        -
+        table_header_height
+        -
+        table_bottom_padding
+    )
 
-        ride_row_height = 52
-        ride_font_size = 25
-        participant_font_size = 23
+    # =====================================================
+    # AUTOMATIC ROW HEIGHT
+    # =====================================================
 
-    elif ride_count <= 5:
+    if displayed_row_count:
 
-        ride_row_height = 43
-        ride_font_size = 22
-        participant_font_size = 20
+        ride_row_height = (
+            available_rows_height
+            //
+            displayed_row_count
+        )
 
     else:
 
-        ride_row_height = 36
-        ride_font_size = 19
-        participant_font_size = 18
+        ride_row_height = (
+            available_rows_height
+        )
 
-    table_header_height = 52
+    # Don't make 1-2 ride rows unnecessarily huge.
+    ride_row_height = min(
+        ride_row_height,
+        34,
+    )
 
-    table_bottom_padding = 12
+    # =====================================================
+    # FONT SIZES BASED ON ROW HEIGHT / RIDE COUNT
+    # =====================================================
 
-    rides_height = (
+    if ride_count <= 2:
+
+        ride_font_size = 18
+        quantity_font_size = 17
+
+    elif ride_count == 3:
+
+        ride_font_size = 16
+        quantity_font_size = 15
+
+    elif ride_count == 4:
+
+        ride_font_size = 14
+        quantity_font_size = 14
+
+    elif ride_count == 5:
+
+        ride_font_size = 13
+        quantity_font_size = 13
+
+    elif ride_count == 6:
+
+        ride_font_size = 12
+        quantity_font_size = 12
+
+    else:
+
+        ride_font_size = 11
+        quantity_font_size = 11
+
+    # =====================================================
+    # TABLE BOTTOM
+    # =====================================================
+
+    rides_bottom = (
+        rides_top
+        +
         table_header_height
         +
         (
@@ -13197,10 +13291,10 @@ def generate_whatsapp_ticket_image(ticket):
         table_bottom_padding
     )
 
-    rides_bottom = (
-        rides_top
-        +
-        rides_height
+    # Absolute protection against footer overlap.
+    rides_bottom = min(
+        rides_bottom,
+        rides_max_bottom,
     )
 
     # =====================================================
@@ -13209,82 +13303,90 @@ def generate_whatsapp_ticket_image(ticket):
 
     draw.rounded_rectangle(
         (
-            55,
+            70,
             rides_top,
-            width - 55,
+            1090,
             rides_bottom,
         ),
-        radius=20,
+        radius=14,
         fill=WHITE,
         outline=RED,
         width=2,
     )
 
     # =====================================================
-    # TABLE HEADER
+    # RED TABLE HEADER
     # =====================================================
 
     draw.rounded_rectangle(
         (
-            55,
+            70,
             rides_top,
-            width - 55,
+            1090,
             rides_top + table_header_height,
         ),
-        radius=20,
+        radius=14,
         fill=RED,
     )
 
-    # Remove rounded effect from lower header corners
+    # -----------------------------------------------------
+    # Make lower header corners square
+    # -----------------------------------------------------
+
     draw.rectangle(
         (
-            55,
-            rides_top + 23,
-            width - 55,
+            70,
+            rides_top + 14,
+            1090,
             rides_top + table_header_height,
         ),
         fill=RED,
     )
 
-    # -----------------------------------------------------
-    # Column divider
-    # -----------------------------------------------------
+    # =====================================================
+    # COLUMN DIVIDER
+    # =====================================================
 
-    table_divider_x = 700
+    table_divider_x = 675
 
     draw.line(
         (
             table_divider_x,
             rides_top + table_header_height,
             table_divider_x,
-            rides_bottom - 10,
+            rides_bottom - 4,
         ),
         fill=DIVIDER,
-        width=2,
+        width=1,
     )
 
-    # -----------------------------------------------------
-    # Header text
-    # -----------------------------------------------------
+    # =====================================================
+    # TABLE HEADER
+    # =====================================================
+
+    compact_header_font = load_font(
+        15,
+        bold=True,
+    )
 
     draw.text(
         (
             115,
-            rides_top + 13,
+            rides_top + 5,
         ),
         "ADVENTURE(S) BOOKED",
         fill=WHITE,
-        font=font_table_header,
+        font=compact_header_font,
     )
 
     draw.text(
         (
-            735,
-            rides_top + 13,
+            710,
+            rides_top + 5,
         ),
         "PARTICIPANTS",
         fill=WHITE,
-        font=font_table_header,
+        font=compact_header_font,
     )
 
     # =====================================================
@@ -13296,7 +13398,7 @@ def generate_whatsapp_ticket_image(ticket):
         +
         table_header_height
         +
-        10
+        3
     )
 
     if valid_ride_items:
@@ -13304,6 +13406,10 @@ def generate_whatsapp_ticket_image(ticket):
         for index, item in enumerate(
             valid_ride_items
         ):
+
+            # =================================================
+            # RIDE DATA
+            # =================================================
 
             ride_name = safe_text(
                 item.ride.name
@@ -13315,53 +13421,70 @@ def generate_whatsapp_ticket_image(ticket):
                 0
             )
 
-            word = (
+            quantity_word = (
                 "Participant"
                 if quantity == 1
                 else "Participants"
             )
 
             quantity_text = (
-                f"{quantity} {word}"
+                f"{quantity} "
+                f"{quantity_word}"
             )
 
-            # ---------------------------------------------
+            # =================================================
             # BULLET
-            # ---------------------------------------------
+            # =================================================
 
-            bullet_size = 13
+            if ride_count <= 3:
+
+                bullet_size = 8
+
+            else:
+
+                bullet_size = 6
 
             bullet_y = (
                 row_y
                 +
-                10
+                max(
+                    2,
+                    (
+                        ride_row_height
+                        -
+                        bullet_size
+                    )
+                    // 2
+                    -
+                    2
+                )
             )
 
             draw.ellipse(
                 (
-                    112,
+                    110,
                     bullet_y,
-                    112 + bullet_size,
+                    110 + bullet_size,
                     bullet_y + bullet_size,
                 ),
                 fill=RED,
             )
 
-            # ---------------------------------------------
+            # =================================================
             # RIDE NAME FONT
-            # ---------------------------------------------
+            # =================================================
 
             ride_font = fit_font(
                 ride_name,
-                max_width=500,
+                max_width=490,
                 start_size=ride_font_size,
-                minimum_size=15,
+                minimum_size=10,
                 bold=True,
             )
 
             draw.text(
                 (
-                    150,
+                    145,
                     row_y,
                 ),
                 ride_name,
@@ -13369,21 +13492,21 @@ def generate_whatsapp_ticket_image(ticket):
                 font=ride_font,
             )
 
-            # ---------------------------------------------
-            # PARTICIPANTS
-            # ---------------------------------------------
+            # =================================================
+            # PARTICIPANT FONT
+            # =================================================
 
             quantity_font = fit_font(
                 quantity_text,
-                max_width=260,
-                start_size=participant_font_size,
-                minimum_size=15,
+                max_width=300,
+                start_size=quantity_font_size,
+                minimum_size=10,
                 bold=False,
             )
 
             draw.text(
                 (
-                    735,
+                    710,
                     row_y,
                 ),
                 quantity_text,
@@ -13391,18 +13514,14 @@ def generate_whatsapp_ticket_image(ticket):
                 font=quantity_font,
             )
 
-            # ---------------------------------------------
-            # ROW DIVIDER
-            # ---------------------------------------------
+            # =================================================
+            # DIVIDER BETWEEN RIDE ROWS
+            # =================================================
 
             if (
                 index
                 <
-                len(
-                    valid_ride_items
-                )
-                -
-                1
+                len(valid_ride_items) - 1
             ):
 
                 divider_y = (
@@ -13410,19 +13529,25 @@ def generate_whatsapp_ticket_image(ticket):
                     +
                     ride_row_height
                     -
-                    6
+                    3
                 )
 
-                draw.line(
-                    (
-                        95,
-                        divider_y,
-                        width - 95,
-                        divider_y,
-                    ),
-                    fill=DIVIDER,
-                    width=2,
-                )
+                if (
+                    divider_y
+                    <
+                    rides_max_bottom
+                ):
+
+                    draw.line(
+                        (
+                            95,
+                            divider_y,
+                            1060,
+                            divider_y,
+                        ),
+                        fill=DIVIDER,
+                        width=1,
+                    )
 
             row_y += (
                 ride_row_height
@@ -13430,20 +13555,33 @@ def generate_whatsapp_ticket_image(ticket):
 
     else:
 
+        empty_font = load_font(
+            15,
+            bold=False,
+        )
+
         draw.text(
             (
-                150,
+                145,
                 row_y,
             ),
             "No adventure details available",
             fill=GRAY,
-            font=font_value_small,
+            font=empty_font,
         )
 
     # =====================================================
+    # =====================================================
     # QR CODE
+    # =====================================================
+    # =====================================================
     #
-    # Keep around the fixed "Show this QR" background area.
+    # IMPORTANT:
+    #
+    # The red QR border already exists in the static
+    # background.
+    #
+    # Do NOT draw another rectangle around QR.
     # =====================================================
 
     if not ticket.qr_image:
@@ -13452,20 +13590,30 @@ def generate_whatsapp_ticket_image(ticket):
             "Ticket QR image does not exist."
         )
 
+    qr_path = (
+        ticket.qr_image.path
+    )
+
+    if not os.path.exists(
+        qr_path
+    ):
+
+        raise FileNotFoundError(
+            f"Ticket QR file not found: {qr_path}"
+        )
+
     qr = (
         Image.open(
-            ticket.qr_image.path
+            qr_path
         )
-        .convert(
-            "RGB"
-        )
+        .convert("RGB")
     )
 
     # =====================================================
     # QR SIZE
     # =====================================================
 
-    qr_size = 195
+    qr_size = 230
 
     qr = qr.resize(
         (
@@ -13477,48 +13625,17 @@ def generate_whatsapp_ticket_image(ticket):
 
     # =====================================================
     # QR POSITION
+    #
+    # Existing static frame is on right side.
     # =====================================================
 
-    # Prefer placing after rides table
-    dynamic_qr_y = (
-        rides_bottom
-        +
-        25
-    )
-
-    # QR should not start too high
-    qr_y = max(
-        dynamic_qr_y,
-        1100,
-    )
-
-    qr_x = (
-        width
-        -
-        qr_size
-    ) // 2
-
-    qr_padding = 13
+    qr_x = 1285
+    qr_y = 220
 
     # =====================================================
-    # QR FRAME
-    # =====================================================
-
-    draw.rounded_rectangle(
-        (
-            qr_x - qr_padding,
-            qr_y - qr_padding,
-            qr_x + qr_size + qr_padding,
-            qr_y + qr_size + qr_padding,
-        ),
-        radius=18,
-        fill=WHITE,
-        outline=RED,
-        width=3,
-    )
-
-    # =====================================================
-    # PASTE QR
+    # PASTE QR ONLY
+    #
+    # NO draw.rounded_rectangle() here.
     # =====================================================
 
     image.paste(
@@ -13530,32 +13647,7 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # SAFETY CHECK
-    #
-    # Prevent unexpectedly huge ride lists from reaching
-    # decorative footer area unnoticed.
-    # =====================================================
-
-    qr_bottom = (
-        qr_y
-        +
-        qr_size
-        +
-        qr_padding
-    )
-
-    footer_safe_limit = 1340
-
-    if qr_bottom > footer_safe_limit:
-
-        print(
-            "WHATSAPP TICKET WARNING: "
-            "Dynamic content is close to footer. "
-            f"Ride count: {ride_count}"
-        )
-
-    # =====================================================
-    # SAVE FINAL WHATSAPP IMAGE
+    # SAVE FINAL PNG
     # =====================================================
 
     buffer = BytesIO()
@@ -13569,6 +13661,10 @@ def generate_whatsapp_ticket_image(ticket):
     buffer.seek(
         0
     )
+
+    # =====================================================
+    # OUTPUT FILE NAME
+    # =====================================================
 
     filename = (
         f"whatsapp-ticket-"
@@ -13598,7 +13694,7 @@ def generate_whatsapp_ticket_image(ticket):
             )
 
     # =====================================================
-    # SAVE NEW IMAGE
+    # SAVE IMAGE TO TICKET
     # =====================================================
 
     ticket.whatsapp_ticket_image.save(
@@ -13624,7 +13720,7 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     print(
-        "WHATSAPP TICKET IMAGE GENERATED"
+        "HORIZONTAL WHATSAPP TICKET GENERATED"
     )
 
     print(
@@ -13648,6 +13744,31 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     print(
+        "BOOKING CARD:",
+        info_top,
+        "->",
+        info_bottom,
+    )
+
+    print(
+        "RIDES TABLE:",
+        rides_top,
+        "->",
+        rides_bottom,
+    )
+
+    print(
+        "FOOTER PROTECTION:",
+        rides_max_bottom,
+    )
+
+    print(
+        "QR:",
+        f"{qr_x},{qr_y}",
+        f"{qr_size}x{qr_size}",
+    )
+
+    print(
         "IMAGE:",
         ticket.whatsapp_ticket_image.name,
     )
@@ -13657,6 +13778,8 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     return True
+
+
 
 
 def generate_ticket_pdf(ticket):
