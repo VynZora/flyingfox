@@ -2128,36 +2128,45 @@ class Refund(models.Model):
         )  
 
 
-
 class OTPVerification(models.Model):
 
     # =====================================================
     # PHONE NUMBER
     # =====================================================
 
-    phone = models.CharField(
+    phone_number = models.CharField(
         max_length=20,
-        db_index=True
+        db_index=True,
     )
-
 
     # =====================================================
     # OTP
     # =====================================================
 
     otp = models.CharField(
-        max_length=6
+        max_length=6,
     )
 
-
     # =====================================================
-    # VERIFICATION STATUS
+    # VERIFICATION
     # =====================================================
 
     is_verified = models.BooleanField(
-        default=False
+        default=False,
     )
 
+    verified_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
+    # =====================================================
+    # ATTEMPTS
+    # =====================================================
+
+    attempts = models.PositiveIntegerField(
+        default=0,
+    )
 
     # =====================================================
     # EXPIRATION
@@ -2165,60 +2174,41 @@ class OTPVerification(models.Model):
 
     expires_at = models.DateTimeField()
 
-
     # =====================================================
-    # TIMESTAMP
+    # CREATED
     # =====================================================
 
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
-
-
-    # =====================================================
-    # VERIFIED TIMESTAMP
-    # =====================================================
-
-    verified_at = models.DateTimeField(
-        blank=True,
-        null=True
-    )
-
 
     class Meta:
 
-        ordering = ["-created_at"]
+        ordering = [
+            "-created_at",
+        ]
 
         indexes = [
             models.Index(
                 fields=[
-                    "phone",
-                    "is_verified"
-                ]
+                    "phone_number",
+                    "is_verified",
+                ],
+                name="otp_phone_verified_idx",
             ),
         ]
 
-
-    def __str__(self):
-
-        return f"{self.phone} - {self.otp}"
-    phone_number = models.CharField(max_length=20)
-
-    otp = models.CharField(max_length=6)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    expires_at = models.DateTimeField()
-
-    is_verified = models.BooleanField(default=False)
-
-    attempts = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        ordering = ["-created_at"]
-
     def is_expired(self):
-        return timezone.now() >= self.expires_at
+
+        return (
+            timezone.now()
+            >=
+            self.expires_at
+        )
 
     def __str__(self):
-        return f"{self.phone_number} - OTP Verification"      
+
+        return (
+            f"{self.phone_number} "
+            f"- OTP Verification"
+        )

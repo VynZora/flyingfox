@@ -5,22 +5,102 @@ from django.utils import timezone
 import requests
 from django.conf import settings
 
-from flyingfox import settings
 
 from .models import Booking, OTPVerification
 from .services.telinfy import send_otp_sms
 
 
+
+# =========================================================
+# GENERATE OTP
+# =========================================================
+
 def generate_otp():
+
     return str(
-        secrets.randbelow(900000) + 100000
+        secrets.randbelow(
+            900000
+        )
+        +
+        100000
     )
+
+
+# =========================================================
+# SEND OTP
+# =========================================================
+
+# def send_otp(
+#     phone_number,):
+
+#     phone_number = str(
+#         phone_number
+#     ).strip()
+
+#     # Generate 6-digit OTP
+#     otp = generate_otp()
+
+#     # Expire previous OTPs
+#     OTPVerification.objects.filter(
+#         phone_number=phone_number,
+#         is_verified=False,
+#     ).update(
+#         expires_at=timezone.now()
+#     )
+
+#     # Create new OTP
+#     otp_verification = (
+#         OTPVerification.objects.create(
+#             phone_number=phone_number,
+#             otp=otp,
+#             expires_at=(
+#                 timezone.now()
+#                 +
+#                 timedelta(
+#                     minutes=5
+#                 )
+#             ),
+#         )
+#     )
+
+#     # =====================================================
+#     # TELINFY SMS
+#     # =====================================================
+
+#     try:
+
+#         response = send_otp_sms(
+#             phone_number,
+#             otp,
+#         )
+
+#     except Exception:
+
+#         # SMS failed.
+#         # Remove OTP so it cannot be verified
+#         # despite never reaching the customer.
+
+#         otp_verification.delete()
+
+#         raise
+
+#     return (
+#         otp_verification,
+#         response,
+#     )
+
 
 
 def send_otp(phone_number):
 
-    # Generate OTP
-    otp = generate_otp()
+    phone_number = str(phone_number).strip()
+
+    # =====================================================
+    # TEMPORARY FIXED OTP
+    # Remove this once Telinfy SMS is ready.
+    # =====================================================
+
+    otp = "123456"
 
     # Expire previous unused OTPs
     OTPVerification.objects.filter(
@@ -30,31 +110,41 @@ def send_otp(phone_number):
         expires_at=timezone.now()
     )
 
-    # Create new OTP
+    # Save the temporary OTP
     otp_verification = OTPVerification.objects.create(
         phone_number=phone_number,
         otp=otp,
-        expires_at=timezone.now() + timedelta(minutes=5),
+        expires_at=(
+            timezone.now()
+            + timedelta(minutes=5)
+        ),
     )
 
-    # Send OTP through Telinfy SMS
-    try:
+    # =====================================================
+    # TEMPORARILY DO NOT SEND SMS
+    # =====================================================
 
-        response = send_otp_sms(
-            phone_number,
-            otp
-        )
-
-    except Exception:
-
-        otp_verification.delete()
-
-        raise
+    response = {
+        "success": True,
+        "message": "Temporary OTP mode",
+    }
 
     return otp_verification, response
 
 
-def verify_otp(phone_number, entered_otp):
+
+# =========================================================
+# VERIFY OTP
+# =========================================================
+
+def verify_otp(
+    phone_number,
+    entered_otp,
+):
+
+    entered_otp = str(
+        entered_otp
+    ).strip()
 
     otp_record = (
         OTPVerification.objects
@@ -62,7 +152,9 @@ def verify_otp(phone_number, entered_otp):
             phone_number=phone_number,
             is_verified=False,
         )
-        .order_by("-created_at")
+        .order_by(
+            "-created_at"
+        )
         .first()
     )
 
@@ -71,15 +163,17 @@ def verify_otp(phone_number, entered_otp):
 
         return (
             False,
-            "No OTP found. Please request a new OTP."
+            "No OTP found. "
+            "Please request a new OTP.",
         )
 
     # Expired
-    if timezone.now() > otp_record.expires_at:
+    if timezone.now() >= otp_record.expires_at:
 
         return (
             False,
-            "OTP has expired. Please request a new OTP."
+            "OTP has expired. "
+            "Please request a new OTP.",
         )
 
     # Too many attempts
@@ -87,360 +181,46 @@ def verify_otp(phone_number, entered_otp):
 
         return (
             False,
-            "Too many incorrect attempts. Please request a new OTP."
+            "Too many incorrect attempts. "
+            "Please request a new OTP.",
         )
 
     # Wrong OTP
-    if otp_record.otp != str(entered_otp):
+    if otp_record.otp != entered_otp:
 
         otp_record.attempts += 1
 
         otp_record.save(
-            update_fields=["attempts"]
+            update_fields=[
+                "attempts",
+            ]
         )
 
         return (
             False,
-            "Invalid OTP."
+            "Invalid OTP.",
         )
 
-    # Correct OTP
+    # Correct
     otp_record.is_verified = True
 
+    otp_record.verified_at = (
+        timezone.now()
+    )
+
     otp_record.save(
-        update_fields=["is_verified"]
+        update_fields=[
+            "is_verified",
+            "verified_at",
+        ]
     )
 
     return (
         True,
-        "OTP verified successfully."
+        "OTP verified successfully.",
     )
 
 
-
-
-
-
-
-# def send_ticket_whatsapp(request, ticket):
-#     """
-#     Send booking confirmation through Telinfy WhatsApp API.
-
-#     Template:
-#         booking_confirmations_v2
-
-#     Variables:
-#         {{1}} Customer name
-#         {{2}} Ticket number
-#         {{3}} Booking ID
-#         {{4}} Visit date
-#         {{5}} Ride summary
-#         {{6}} Total riders
-#         {{7}} Total amount
-#     """
-
-#     # =====================================================
-#     # BOOKING
-#     # =====================================================
-
-#     booking = (
-#         Booking.objects
-#         .prefetch_related(
-#             "ride_items__ride",
-#             "ride_items__weight_groups",
-#         )
-#         .get(pk=ticket.booking.pk)
-#     )
-
-#     # =====================================================
-#     # CUSTOMER PHONE
-#     # =====================================================
-
-#     if not booking.customer_phone:
-#         print("WHATSAPP ERROR: Customer phone is empty.")
-#         return False
-
-#     phone = (
-#         booking.customer_phone
-#         .strip()
-#         .replace(" ", "")
-#         .replace("-", "")
-#         .replace("(", "")
-#         .replace(")", "")
-#     )
-
-#     # 9633390345 -> 919633390345
-#     if len(phone) == 10 and phone.isdigit():
-#         phone = f"91{phone}"
-
-#     # 919633390345
-#     elif len(phone) == 12 and phone.startswith("91") and phone.isdigit():
-#         pass
-
-#     # +919633390345 -> 919633390345
-#     elif len(phone) == 13 and phone.startswith("+91") and phone[1:].isdigit():
-#         phone = phone[1:]
-
-#     else:
-#         print("WHATSAPP ERROR: Invalid phone number:", phone)
-#         return False
-
-#     # IMPORTANT:
-#     # Telinfy API accepts the phone with +91.
-#     telinfy_phone = f"+{phone}"
-
-#     # =====================================================
-#     # TELINFY API KEY
-#     # =====================================================
-
-#     api_key = getattr(
-#         settings,
-#         "TELINFY_API_KEY",
-#         "",
-#     )
-
-#     if not api_key:
-#         print("WHATSAPP ERROR: TELINFY_API_KEY is missing.")
-#         return False
-
-#     # =====================================================
-#     # RIDE SUMMARY
-#     # =====================================================
-
-#     ride_lines = []
-
-#     for item in booking.ride_items.all():
-
-#         if not item.ride:
-#             continue
-
-#         ride_lines.append(
-#             f"{item.ride.name} - {item.quantity} rider(s)"
-#         )
-
-#     ride_summary = ", ".join(ride_lines)
-
-#     if not ride_summary:
-#         ride_summary = (
-#             "Adventure details are included "
-#             "in your PDF ticket."
-#         )
-
-#     # =====================================================
-#     # TEMPLATE VALUES
-#     # =====================================================
-
-#     customer_name = (
-#         booking.customer_name
-#         or ""
-#     )
-
-#     ticket_number = (
-#         ticket.ticket_number
-#         or ""
-#     )
-
-#     booking_id_value = str(
-#         booking.booking_id
-#     )
-
-#     visit_date = (
-#         booking.booking_date.strftime("%d-%m-%Y")
-#         if booking.booking_date
-#         else ""
-#     )
-
-#     total_riders = str(
-#         booking.quantity
-#     )
-
-#     total_amount = str(
-#         booking.total_amount
-#     )
-
-#     # =====================================================
-#     # TELINFY OFFICIAL TEMPLATE API
-#     # =====================================================
-
-#     url = (
-#     "https://hub.telinfy.com/unified/developer/"
-#     "api/v1/whatsapp/campaigns/send"
-#     )
-
-#     # =====================================================
-#     # HEADERS
-#     # =====================================================
-
-#     headers = {
-#          "x-api-key": api_key,
-#          "Content-Type": "application/json",
-#     }
-
-#     # =====================================================
-#     # PAYLOAD
-#     # =====================================================
-#     payload = {
-#     "phoneNumber": telinfy_phone,
-
-#     "template": {
-#         "name": "booking_confirmations_v2",
-
-#         "language": {
-#             "code": "en",
-#         },
-
-#         "components": [
-#             {
-#                 "type": "body",
-
-#                 "parameters": [
-#                     {
-#                         "type": "text",
-#                         "text": str(customer_name),
-#                     },
-#                     {
-#                         "type": "text",
-#                         "text": str(ticket_number),
-#                     },
-#                     {
-#                         "type": "text",
-#                         "text": str(booking_id_value),
-#                     },
-#                     {
-#                         "type": "text",
-#                         "text": str(visit_date),
-#                     },
-#                     {
-#                         "type": "text",
-#                         "text": str(ride_summary),
-#                     },
-#                     {
-#                         "type": "text",
-#                         "text": str(total_riders),
-#                     },
-#                     {
-#                         "type": "text",
-#                         "text": str(total_amount),
-#                     },
-#                 ],
-#             }
-#         ],
-#     },
-# }
-# # =====================================================
-# # DEBUG
-# # =====================================================
-
-#     print("\n========================================")
-#     print("TELINFY WHATSAPP REQUEST")
-#     print("========================================")
-#     print("URL:", url)
-#     print("TO:", telinfy_phone)
-#     print("TEMPLATE:", "booking_confirmations_v2")
-#     print("LANGUAGE:", "en")
-
-#     parameters = payload["template"]["components"][0]["parameters"]
-
-#     print("PARAMETER COUNT:", len(parameters))
-#     print("PARAMETERS:")
-
-#     for index, parameter in enumerate(
-#         parameters,
-#         start=1,
-#         ):
-#         print(
-#            f"  {{{{{index}}}}}:",
-#            parameter["text"],
-#         )
-
-#     print("========================================")
-
-#     # =====================================================
-#     # SEND
-#     # =====================================================
-
-#     try:
-
-#         response = requests.post(
-#             url,
-#             headers=headers,
-#             json=payload,
-#             timeout=30,
-#         )
-
-#         print("\n========================================")
-#         print("TELINFY WHATSAPP RESULT")
-#         print("========================================")
-#         print("HTTP STATUS:", response.status_code)
-#         print("RESPONSE:", response.text)
-#         print("========================================\n")
-
-#         # =================================================
-#         # PARSE RESPONSE
-#         # =================================================
-
-#         try:
-#             response_data = response.json()
-#         except ValueError:
-#             response_data = {}
-
-#         # =================================================
-#         # SUCCESS
-#         # =================================================
-
-#         if (
-#             response.ok
-#             and response_data.get("success") is True
-#         ):
-
-#             ticket.whatsapp_sent = True
-
-#             ticket.save(
-#                 update_fields=[
-#                     "whatsapp_sent"
-#                 ]
-#             )
-
-#             print(
-#                 "WHATSAPP ACCEPTED BY TELINFY"
-#             )
-
-#             print(
-#                 "RECORD ID:",
-#                 response_data.get("data", {}).get(
-#                     "recordId"
-#                 )
-#             )
-
-#             print(
-#                 "QUEUE STATUS:",
-#                 response_data.get("data", {}).get(
-#                     "queueStatus"
-#                 )
-#             )
-
-#             return True
-
-#         # =================================================
-#         # FAILED
-#         # =================================================
-
-#         print(
-#             "WHATSAPP SEND FAILED"
-#         )
-
-#         return False
-
-#     except requests.RequestException as error:
-
-#         print("\n========================================")
-#         print("TELINFY WHATSAPP REQUEST ERROR")
-#         print("========================================")
-#         print("TYPE:", type(error).__name__)
-#         print("ERROR:", repr(error))
-#         print("========================================\n")
-
-#         return False
 
 
 

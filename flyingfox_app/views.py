@@ -20695,48 +20695,60 @@ def refund_approve(
     # RAZORPAY ALREADY PROCESSED
     # =====================================================
 
+    # =====================================================
+# FIRST SAVE RAZORPAY RESPONSE
+# =====================================================
+
+    refund.razorpay_refund_id = (
+    razorpay_refund_id
+    )
+
+    refund.gateway_status = (
+    gateway_status
+    )
+
+
     if gateway_status == "processed":
 
-        refund.status = "processed"
+    # Keep it processing temporarily.
+    # mark_refund_processed() will perform the complete
+    # finalization in one place.
 
-        refund.processed_at = (
-            timezone.now()
-        )
+        refund.status = "processing"
 
-
-        # Booking is now cancelled
-        booking.status = "cancelled"
-
-        booking.save(
-            update_fields=[
-                "status",
-                "updated_at",
-            ]
-        )
-
-
-        # Because customer receives 90%,
-        # this is technically a partial refund.
-        payment.status = "partially_refunded"
-
-        payment.save(
-            update_fields=[
-                "status",
-                "updated_at",
-            ]
-        )
-
-
-    # =====================================================
-    # RAZORPAY ACCEPTED BUT STILL PROCESSING
-    # =====================================================
 
     else:
 
         refund.status = "processing"
 
 
-    refund.save()
+    refund.save(
+       update_fields=[
+        "razorpay_refund_id",
+        "gateway_status",
+        "status",
+        "updated_at",
+       ]
+    )
+
+
+# =====================================================
+# RAZORPAY ALREADY COMPLETED THE REFUND
+# =====================================================
+
+    if gateway_status == "processed":
+
+        mark_refund_processed(
+           razorpay_refund_id=
+            razorpay_refund_id,
+
+            gateway_status=
+            gateway_status,
+        )
+
+
+    # Refresh because helper changed status
+        refund.refresh_from_db()
 
 
     # =====================================================
@@ -20773,197 +20785,692 @@ def refund_approve(
 
 
 
+import json
+import hmac
+import hashlib
+
+from decimal import Decimal, ROUND_HALF_UP
+
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
+from flyingfox_app.models import Refund
+
 
 @csrf_exempt
 @require_POST
-def razorpay_refund_webhook(
-    request,
-):
+def razorpay_refund_webhook(request):
 
     # =====================================================
     # RAW BODY
     #
     # IMPORTANT:
-    # Razorpay requires raw bytes for signature checking.
+    # Signature must be verified using the ORIGINAL
+    # unmodified request body.
     # =====================================================
 
     raw_body = request.body
 
 
-    signature = (
+    # =====================================================
+    # RAZORPAY SIGNATURE
+    # =====================================================
+
+    received_signature = (
         request.headers.get(
             "X-Razorpay-Signature",
-            ""
+            "",
         )
-    )
-
-
-    webhook_secret = getattr(
-        settings,
-        "RAZORPAY_WEBHOOK_SECRET",
+        or
         ""
     )
 
 
-    if (
-        not signature
-        or
-        not webhook_secret
-    ):
+    if not received_signature:
 
-        return HttpResponse(
-            "Invalid webhook configuration",
+        print(
+            "RAZORPAY REFUND WEBHOOK: "
+            "Missing X-Razorpay-Signature"
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Webhook signature missing.",
+            },
             status=400,
+        )
+
+
+    # =====================================================
+    # WEBHOOK SECRET
+    # =====================================================
+
+    webhook_secret = getattr(
+        settings,
+        "RAZORPAY_REFUND_WEBHOOK_SECRET",
+        "",
+    )
+
+
+    if not webhook_secret:
+
+        print(
+            "RAZORPAY REFUND WEBHOOK: "
+            "Webhook secret is not configured."
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Webhook is not configured.",
+            },
+            status=500,
         )
 
 
     # =====================================================
     # VERIFY SIGNATURE
+    #
+    # Razorpay:
+    # HMAC SHA256(raw request body, webhook secret)
     # =====================================================
 
-    client = razorpay.Client(
-        auth=(
-            settings.RAZORPAY_KEY_ID,
-            settings.RAZORPAY_KEY_SECRET,
+    expected_signature = hmac.new(
+        webhook_secret.encode("utf-8"),
+        raw_body,
+        hashlib.sha256,
+    ).hexdigest()
+
+
+    if not hmac.compare_digest(
+        expected_signature,
+        received_signature,
+    ):
+
+        print(
+            "RAZORPAY REFUND WEBHOOK: "
+            "Invalid signature."
         )
-    )
 
-
-    try:
-
-        client.utility.verify_webhook_signature(
-            raw_body,
-            signature,
-            webhook_secret,
-        )
-
-    except Exception:
-
-        return HttpResponse(
-            "Invalid signature",
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Invalid webhook signature.",
+            },
             status=400,
         )
 
 
     # =====================================================
-    # PARSE ONLY AFTER SIGNATURE VERIFICATION
+    # PARSE JSON ONLY AFTER SIGNATURE VERIFICATION
     # =====================================================
 
     try:
 
         payload = json.loads(
-            raw_body.decode(
-                "utf-8"
-            )
+            raw_body.decode("utf-8")
         )
 
-    except Exception:
+    except (
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+    ) as error:
 
-        return HttpResponse(
-            "Invalid JSON",
+        print(
+            "RAZORPAY REFUND WEBHOOK JSON ERROR:",
+            repr(error),
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Invalid JSON payload.",
+            },
             status=400,
         )
 
 
-    event = payload.get(
-        "event",
+    # =====================================================
+    # EVENT
+    # =====================================================
+
+    event = (
+        payload.get(
+            "event",
+            "",
+        )
+        or
         ""
     )
 
 
-    refund_entity = (
-        payload
-        .get(
-            "payload",
-            {}
-        )
-        .get(
-            "refund",
-            {}
-        )
-        .get(
-            "entity",
-            {}
-        )
+    print(
+        "============================================="
+    )
+    print(
+        "RAZORPAY REFUND WEBHOOK RECEIVED"
+    )
+    print(
+        "EVENT:",
+        event,
     )
 
 
-    razorpay_refund_id = (
-        refund_entity.get(
-            "id",
-            ""
+    # =====================================================
+    # WE ONLY CARE ABOUT REFUND EVENTS
+    # =====================================================
+
+    supported_events = {
+        "refund.created",
+        "refund.processed",
+        "refund.failed",
+        "refund.speed_changed",
+    }
+
+
+    if event not in supported_events:
+
+        print(
+            "IGNORED EVENT:",
+            event,
         )
-    )
 
-
-    if not razorpay_refund_id:
-
-        return HttpResponse(
-            "OK",
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Event ignored.",
+            },
             status=200,
         )
 
 
     # =====================================================
-    # PROCESSED
+    # REFUND ENTITY
+    # =====================================================
+
+    refund_entity = (
+        payload
+        .get(
+            "payload",
+            {},
+        )
+        .get(
+            "refund",
+            {},
+        )
+        .get(
+            "entity",
+            {},
+        )
+    )
+
+
+    if not refund_entity:
+
+        print(
+            "RAZORPAY REFUND WEBHOOK: "
+            "Refund entity missing."
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Refund entity missing.",
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # RAZORPAY DATA
+    # =====================================================
+
+    razorpay_refund_id = (
+        refund_entity.get(
+            "id",
+            "",
+        )
+        or
+        ""
+    )
+
+
+    razorpay_payment_id = (
+        refund_entity.get(
+            "payment_id",
+            "",
+        )
+        or
+        ""
+    )
+
+
+    gateway_status = (
+        refund_entity.get(
+            "status",
+            "",
+        )
+        or
+        ""
+    )
+
+
+    amount_paise = (
+        refund_entity.get(
+            "amount",
+            0,
+        )
+        or
+        0
+    )
+
+
+    # =====================================================
+    # NOTES
+    #
+    # We added refund_id when creating the Razorpay refund.
+    # This gives us a very useful fallback.
+    # =====================================================
+
+    notes = (
+        refund_entity.get(
+            "notes",
+            {},
+        )
+        or
+        {}
+    )
+
+
+    local_refund_id = (
+        notes.get(
+            "refund_id",
+            "",
+        )
+        or
+        ""
+    )
+
+
+    # =====================================================
+    # ARN
+    # =====================================================
+
+    acquirer_data = (
+        refund_entity.get(
+            "acquirer_data",
+            {},
+        )
+        or
+        {}
+    )
+
+
+    arn = (
+        acquirer_data.get(
+            "arn",
+            "",
+        )
+        or
+        ""
+    )
+
+
+    print(
+        "RAZORPAY REFUND ID:",
+        razorpay_refund_id,
+    )
+
+    print(
+        "RAZORPAY PAYMENT ID:",
+        razorpay_payment_id,
+    )
+
+    print(
+        "GATEWAY STATUS:",
+        gateway_status,
+    )
+
+    print(
+        "LOCAL REFUND ID:",
+        local_refund_id,
+    )
+
+
+    # =====================================================
+    # PAYMENT/REFUND ID REQUIRED
+    # =====================================================
+
+    if not razorpay_refund_id:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Razorpay refund ID missing.",
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # FIND LOCAL REFUND
+    #
+    # First try Razorpay refund ID.
+    #
+    # IMPORTANT:
+    # There is a tiny race condition where Razorpay could
+    # send the webhook before refund_approve() has saved
+    # razorpay_refund_id locally.
+    #
+    # Therefore we fall back to our UUID stored in notes.
+    # =====================================================
+
+    refund = (
+        Refund.objects
+        .select_related(
+            "booking",
+            "payment",
+        )
+        .filter(
+            razorpay_refund_id=
+                razorpay_refund_id
+        )
+        .first()
+    )
+
+
+    if (
+        not refund
+        and
+        local_refund_id
+    ):
+
+        refund = (
+            Refund.objects
+            .select_related(
+                "booking",
+                "payment",
+            )
+            .filter(
+                refund_id=
+                    local_refund_id
+            )
+            .first()
+        )
+
+
+    # =====================================================
+    # UNKNOWN REFUND
+    # =====================================================
+
+    if not refund:
+
+        print(
+            "RAZORPAY REFUND WEBHOOK: "
+            "Local refund not found.",
+            razorpay_refund_id,
+        )
+
+        # Signature is valid, but this refund does not
+        # belong to a local refund record we can identify.
+        #
+        # Return 200 so Razorpay does not repeatedly retry
+        # an event that we cannot use.
+
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Refund not found locally.",
+            },
+            status=200,
+        )
+
+
+    # =====================================================
+    # SAVE RAZORPAY REFUND ID IF WEBHOOK ARRIVED FIRST
+    # =====================================================
+
+    if not refund.razorpay_refund_id:
+
+        refund.razorpay_refund_id = (
+            razorpay_refund_id
+        )
+
+        refund.save(
+            update_fields=[
+                "razorpay_refund_id",
+                "updated_at",
+            ]
+        )
+
+
+    # =====================================================
+    # SECURITY / DATA CONSISTENCY CHECK:
+    # PAYMENT ID
+    # =====================================================
+
+    expected_payment_id = (
+        refund.razorpay_payment_id
+        or
+        refund.payment.gateway_payment_id
+        or
+        ""
+    )
+
+
+    if (
+        expected_payment_id
+        and
+        razorpay_payment_id
+        and
+        expected_payment_id
+        !=
+        razorpay_payment_id
+    ):
+
+        print(
+            "RAZORPAY REFUND PAYMENT ID MISMATCH"
+        )
+
+        print(
+            "LOCAL:",
+            expected_payment_id,
+        )
+
+        print(
+            "RAZORPAY:",
+            razorpay_payment_id,
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Payment ID mismatch.",
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # AMOUNT CHECK
+    # =====================================================
+
+    expected_amount_paise = int(
+        (
+            Decimal(
+                str(
+                    refund.refund_amount
+                )
+            )
+            *
+            Decimal("100")
+        ).quantize(
+            Decimal("1"),
+            rounding=ROUND_HALF_UP,
+        )
+    )
+
+
+    if (
+        amount_paise
+        and
+        int(amount_paise)
+        !=
+        expected_amount_paise
+    ):
+
+        print(
+            "RAZORPAY REFUND AMOUNT MISMATCH"
+        )
+
+        print(
+            "LOCAL:",
+            expected_amount_paise,
+        )
+
+        print(
+            "RAZORPAY:",
+            amount_paise,
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Refund amount mismatch.",
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # REFUND PROCESSED
     # =====================================================
 
     if event == "refund.processed":
 
-        acquirer_data = (
-            refund_entity.get(
-                "acquirer_data",
-                {}
-            )
-            or
-            {}
-        )
-
-
-        arn = (
-            acquirer_data.get(
-                "arn",
-                ""
-            )
-            or
-            ""
-        )
-
-
-        mark_refund_processed(
+        result = mark_refund_processed(
             razorpay_refund_id=
                 razorpay_refund_id,
 
             gateway_status=
-                refund_entity.get(
-                    "status",
-                    "processed"
-                ),
+                gateway_status
+                or
+                "processed",
 
             arn=
                 arn,
         )
 
 
+        if not result:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "Refund could not be "
+                        "processed locally."
+                    ),
+                },
+                status=500,
+            )
+
+
+        print(
+            "REFUND MARKED PROCESSED:",
+            refund.refund_id,
+        )
+
+
     # =====================================================
-    # FAILED
+    # REFUND FAILED
     # =====================================================
 
     elif event == "refund.failed":
 
-        mark_refund_failed(
+        result = mark_refund_failed(
             razorpay_refund_id=
                 razorpay_refund_id,
 
             gateway_status=
-                refund_entity.get(
-                    "status",
-                    "failed"
-                ),
+                gateway_status
+                or
+                "failed",
         )
 
 
-    return HttpResponse(
-        "OK",
+        if not result:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "Refund failure could not "
+                        "be recorded locally."
+                    ),
+                },
+                status=500,
+            )
+
+
+        print(
+            "REFUND MARKED FAILED:",
+            refund.refund_id,
+        )
+
+
+    # =====================================================
+    # CREATED / SPEED CHANGED
+    # =====================================================
+
+    else:
+
+        if (
+            refund.status
+            not in [
+                "processed",
+                "failed",
+            ]
+        ):
+
+            refund.status = (
+                "processing"
+            )
+
+            refund.gateway_status = (
+                gateway_status
+            )
+
+            if arn:
+
+                refund.arn = arn
+
+
+            refund.save(
+                update_fields=[
+                    "status",
+                    "gateway_status",
+                    "arn",
+                    "updated_at",
+                ]
+            )
+
+
+    print(
+        "WEBHOOK COMPLETED"
+    )
+
+    print(
+        "============================================="
+    )
+
+
+    return JsonResponse(
+        {
+            "success": True,
+        },
         status=200,
-    )    
+    )

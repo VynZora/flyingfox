@@ -36101,3 +36101,99 @@ p {
 
 }
 /* faq image issue css end  */
+
+
+
+
+
+
+
+
+
+
+
+/* pre loader css start */
+/* ============================
+   FINAL PRELOADER CSS
+============================ */
+
+.preloader {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: #fff !important;
+    overflow: hidden !important;
+
+    z-index: 2147483647 !important;
+}
+
+.ff-preloader-video {
+    display: block !important;
+
+    width: 160px !important;
+    height: 160px !important;
+
+    max-width: 160px !important;
+    max-height: 160px !important;
+
+    object-fit: contain !important;
+
+    clip-path: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    transform: none !important;
+
+    pointer-events: none !important;
+}
+
+
+/* =========================
+   PRELOADER VIDEO SIZE
+========================= */
+/* =========================================
+   FINAL PRELOADER VIDEO SIZE
+========================================= */
+
+/* Desktop */
+.ff-preloader-video {
+    width: 350px !important;
+    height: 350px !important;
+    max-width: none !important;
+    max-height: none !important;
+
+    object-fit: contain !important;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+    .ff-preloader-video {
+        width: 300px !important;
+        height: 300px !important;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .ff-preloader-video {
+        width: 280px !important;
+        height: 280px !important;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    .ff-preloader-video {
+        width: 250px !important;
+        height: 250px !important;
+    }
+}
+/* pre loader css end  */
