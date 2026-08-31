@@ -1,0 +1,2867 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% block title %}
+Terms & Conditions | Flying Fox Adventure
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   FLYING FOX LEGAL PAGES
+========================================================= */
+
+.ff-legal-page {
+    position: relative;
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.ff-legal-hero {
+    position: relative;
+    min-height: 390px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 170px 20px 80px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25, 25, 25, 0.94),
+            rgba(195, 17, 3, 0.88)
+        );
+}
+
+
+.ff-legal-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 420px;
+    height: 420px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    top: -200px;
+    right: -100px;
+}
+
+
+.ff-legal-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    left: -80px;
+    bottom: -130px;
+}
+
+
+.ff-legal-hero-content {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+
+    max-width: 850px;
+
+    margin: auto;
+}
+
+
+.ff-legal-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 18px;
+
+    margin-bottom: 20px;
+
+    border-radius: 30px;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.ff-legal-tag i {
+    color: #ffffff;
+}
+
+
+.ff-legal-hero h1 {
+    color: #ffffff;
+
+    font-size: 52px;
+    line-height: 1.15;
+
+    font-weight: 800;
+
+    margin-bottom: 18px;
+}
+
+
+.ff-legal-breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    font-size: 15px;
+}
+
+
+.ff-legal-breadcrumb a {
+    color: #ffffff;
+    transition: 0.3s;
+}
+
+
+.ff-legal-breadcrumb a:hover {
+    opacity: 0.75;
+}
+
+
+.ff-legal-breadcrumb i {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   MAIN LEGAL SECTION
+========================================================= */
+
+.ff-legal-section {
+    padding: 100px 0 110px;
+}
+
+
+.ff-legal-wrapper {
+    position: relative;
+}
+
+
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
+
+.ff-legal-sidebar {
+    position: sticky;
+    top: 120px;
+
+    padding: 28px;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.06);
+}
+
+
+.ff-legal-sidebar-title {
+    font-size: 20px;
+    font-weight: 800;
+
+    margin-bottom: 20px;
+
+    color: #191919;
+}
+
+
+.ff-legal-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.ff-legal-sidebar ul li {
+    margin-bottom: 6px;
+}
+
+
+.ff-legal-sidebar ul li:last-child {
+    margin-bottom: 0;
+}
+
+
+.ff-legal-sidebar ul li a {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 13px;
+
+    border-radius: 10px;
+
+    color: #555555;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+
+.ff-legal-sidebar ul li a i {
+    font-size: 11px;
+    color: #c31103;
+}
+
+
+.ff-legal-sidebar ul li a:hover {
+    background: rgba(195, 17, 3, 0.07);
+    color: #c31103;
+
+    padding-left: 17px;
+}
+
+
+/* =========================================================
+   CONTENT AREA
+========================================================= */
+
+.ff-legal-content {
+    padding-left: 20px;
+}
+
+
+.ff-legal-intro {
+    padding: 30px;
+
+    margin-bottom: 30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(195, 17, 3, 0.06),
+            rgba(195, 17, 3, 0.01)
+        );
+
+    border-left: 4px solid #c31103;
+
+    border-radius: 0 16px 16px 0;
+}
+
+
+.ff-legal-intro p {
+    margin-bottom: 10px;
+
+    color: #555555;
+
+    line-height: 1.8;
+}
+
+
+.ff-legal-intro p:last-child {
+    margin-bottom: 0;
+}
+
+
+.ff-legal-date {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 22px;
+
+    color: #777777;
+
+    font-size: 14px;
+}
+
+
+.ff-legal-date i {
+    color: #c31103;
+}
+
+
+/* =========================================================
+   LEGAL ITEM
+========================================================= */
+
+.ff-legal-item {
+    position: relative;
+
+    padding: 32px;
+
+    margin-bottom: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 18px;
+
+    transition: all 0.3s ease;
+}
+
+
+.ff-legal-item:hover {
+    border-color: rgba(195, 17, 3, 0.2);
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.05);
+
+    transform: translateY(-2px);
+}
+
+
+.ff-legal-item-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+}
+
+
+.ff-legal-number {
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(195, 17, 3, 0.08);
+
+    color: #c31103;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+.ff-legal-item h2 {
+    margin: 0;
+
+    color: #191919;
+
+    font-size: 23px;
+    font-weight: 800;
+}
+
+
+.ff-legal-item h5 {
+    margin-top: 22px;
+    margin-bottom: 10px;
+
+    color: #191919;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+.ff-legal-item p {
+    color: #616161;
+
+    font-size: 15px;
+    line-height: 1.85;
+
+    margin-bottom: 14px;
+}
+
+
+.ff-legal-item p:last-child {
+    margin-bottom: 0;
+}
+
+
+.ff-legal-item ul {
+    padding-left: 0;
+
+    margin: 15px 0 15px;
+
+    list-style: none;
+}
+
+
+.ff-legal-item ul li {
+    position: relative;
+
+    padding-left: 29px;
+
+    margin-bottom: 10px;
+
+    color: #616161;
+
+    line-height: 1.7;
+}
+
+
+.ff-legal-item ul li::before {
+    content: "\f00c";
+
+    font-family: "Font Awesome 6 Pro";
+
+    position: absolute;
+
+    left: 0;
+    top: 2px;
+
+    color: #c31103;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   IMPORTANT NOTE
+========================================================= */
+
+.ff-legal-note {
+    padding: 20px 22px;
+    margin: 20px 0;
+
+    background: rgba(195, 17, 3, 0.05);
+
+    border-left: 3px solid #c31103;
+
+    border-radius: 0 12px 12px 0;
+}
+
+
+.ff-legal-note p {
+    margin: 0;
+}
+
+
+/* =========================================================
+   CONTACT BOX
+========================================================= */
+
+.ff-legal-contact {
+    margin-top: 35px;
+
+    padding: 38px;
+
+    border-radius: 20px;
+
+    background: #191919;
+
+    color: #ffffff;
+}
+
+
+.ff-legal-contact h3 {
+    color: #ffffff;
+
+    font-size: 28px;
+    font-weight: 800;
+
+    margin-bottom: 12px;
+}
+
+
+.ff-legal-contact > p {
+    color: rgba(255, 255, 255, 0.7);
+
+    margin-bottom: 25px;
+}
+
+
+.ff-legal-contact-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 15px;
+}
+
+
+.ff-legal-contact-item {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px 16px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    color: #ffffff;
+}
+
+
+.ff-legal-contact-item i {
+    color: #ff3929;
+}
+
+
+.ff-legal-contact-item a {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-legal-sidebar {
+        position: relative;
+        top: auto;
+
+        margin-bottom: 35px;
+    }
+
+    .ff-legal-content {
+        padding-left: 0;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .ff-legal-section {
+        padding: 70px 0 80px;
+    }
+
+    .ff-legal-item {
+        padding: 23px 20px;
+    }
+
+    .ff-legal-item-heading {
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .ff-legal-number {
+        width: 42px;
+        height: 42px;
+
+        min-width: 42px;
+    }
+
+    .ff-legal-item h2 {
+        font-size: 20px;
+    }
+
+    .ff-legal-intro {
+        padding: 23px 20px;
+    }
+
+    .ff-legal-contact {
+        padding: 28px 22px;
+    }
+
+    .ff-legal-contact-list {
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     BREADCRUMB / HERO
+========================================================= -->
+
+<div class="site-breadcrumb ff-about-math-hero">
+
+    <canvas id="ffMathPattern"></canvas>
+
+    <div class="container">
+
+        <div class="ff-about-hero-content">
+
+            <h3 class="breadcrumb-title">
+                Terms & Conditions
+            </h3>
+
+            <ul class="breadcrumb-menu">
+
+                <li>
+                    <a href="{% url 'home' %}">
+                        Home
+                    </a>
+                </li>
+
+                <li class="active">
+                    Terms & Conditions
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TERMS SECTION
+========================================================= -->
+
+<section class="ff-legal-section">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+
+            <!-- =====================================================
+                 LEFT SIDEBAR
+            ====================================================== -->
+
+            <div class="col-lg-3">
+
+                <aside class="ff-legal-sidebar">
+
+                    <h4 class="ff-legal-sidebar-title">
+                        On This Page
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="#acceptance">
+                                <i class="far fa-angle-right"></i>
+                                Acceptance of Terms
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#booking">
+                                <i class="far fa-angle-right"></i>
+                                Booking & Confirmation
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#payment">
+                                <i class="far fa-angle-right"></i>
+                                Pricing & Payment
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#eligibility">
+                                <i class="far fa-angle-right"></i>
+                                Participant Eligibility
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#safety">
+                                <i class="far fa-angle-right"></i>
+                                Safety Rules
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#risk">
+                                <i class="far fa-angle-right"></i>
+                                Adventure Activity Risk
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#arrival">
+                                <i class="far fa-angle-right"></i>
+                                Arrival & Ticket Validity
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#cancellation">
+                                <i class="far fa-angle-right"></i>
+                                Cancellation
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#rescheduling">
+                                <i class="far fa-angle-right"></i>
+                                Rescheduling
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#noshow">
+                                <i class="far fa-angle-right"></i>
+                                No Show & Late Arrival
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#operator-cancellation">
+                                <i class="far fa-angle-right"></i>
+                                Cancellation by Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#refund">
+                                <i class="far fa-angle-right"></i>
+                                Refund Processing
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#weather">
+                                <i class="far fa-angle-right"></i>
+                                Weather & Operations
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#belongings">
+                                <i class="far fa-angle-right"></i>
+                                Personal Belongings
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#communications">
+                                <i class="far fa-angle-right"></i>
+                                Communications
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#privacy">
+                                <i class="far fa-angle-right"></i>
+                                Privacy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#liability">
+                                <i class="far fa-angle-right"></i>
+                                Liability
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#contact">
+                                <i class="far fa-angle-right"></i>
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </aside>
+
+            </div>
+
+
+
+            <!-- =====================================================
+                 RIGHT CONTENT
+            ====================================================== -->
+
+            <div class="col-lg-9">
+
+                <div class="ff-legal-content">
+
+
+                    <div class="ff-legal-date">
+
+                        <i class="far fa-calendar-alt"></i>
+
+                        Last Updated:
+                        August 31, 2026
+
+                    </div>
+
+
+                    <div class="ff-legal-intro">
+
+                        <p>
+                            <strong>Flying Fox Adventure</strong> provides adventure
+                            activities and online booking services.
+                        </p>
+
+                        <p>
+                            These Terms & Conditions apply to the use of our website,
+                            booking services, tickets and participation in activities
+                            offered by Flying Fox Adventure.
+                        </p>
+
+                        <p>
+                            By completing a booking, you confirm that you have read,
+                            understood and agreed to these Terms & Conditions and our
+                            Privacy Policy.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         01
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="acceptance"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                01
+                            </span>
+
+                            <h2>
+                                Acceptance of Terms
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            By accessing our website, making a booking or participating
+                            in an activity offered by Flying Fox Adventure, you agree
+                            to comply with these Terms & Conditions.
+                        </p>
+
+                        <p>
+                            If you make a booking on behalf of other participants,
+                            you are responsible for providing accurate information
+                            and for making the applicable booking requirements,
+                            activity rules and safety information available to them.
+                        </p>
+
+                        <p>
+                            You should not complete a booking if you do not agree
+                            with these Terms & Conditions.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         02
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="booking"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                02
+                            </span>
+
+                            <h2>
+                                Booking & Confirmation
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Customers must provide complete and accurate information
+                            when making a booking.
+                        </p>
+
+                        <p>
+                            A booking may include one or more activities or rides and
+                            one or more participants.
+                        </p>
+
+                        <p>
+                            A booking will normally be treated as confirmed after
+                            successful payment verification and generation of the
+                            booking confirmation or digital ticket.
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                Customers must check their booking date, time,
+                                selected activities and participant information.
+                            </li>
+
+                            <li>
+                                Incorrect information should be reported to
+                                Flying Fox Adventure as soon as possible.
+                            </li>
+
+                            <li>
+                                A booking reference, QR code or digital ticket may be
+                                required when arriving at the activity location.
+                            </li>
+
+                            <li>
+                                Customers are responsible for keeping their booking
+                                confirmation and ticket secure.
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         03
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="payment"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                03
+                            </span>
+
+                            <h2>
+                                Pricing & Payment
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Prices displayed during the booking process will apply
+                            to the selected activities, participants and booking
+                            options, subject to any applicable taxes, charges,
+                            discounts or promotional conditions.
+                        </p>
+
+                        <p>
+                            Online payments may be processed through third-party
+                            payment service providers.
+                        </p>
+
+                        <p>
+                            A payment attempt does not by itself guarantee that a
+                            booking has been confirmed. Customers should verify that
+                            they receive a valid booking confirmation or ticket.
+                        </p>
+
+                        <p>
+                            Where a payment has been successfully received but a
+                            technical issue prevents immediate confirmation,
+                            customers should contact Flying Fox Adventure before
+                            attempting another payment.
+                        </p>
+
+                        <p>
+                            Flying Fox Adventure reserves the right to correct an
+                            obvious pricing or technical error before providing the
+                            booked service, subject to applicable law.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         04
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="eligibility"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                04
+                            </span>
+
+                            <h2>
+                                Participant Information & Eligibility
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Different activities may have specific participation
+                            requirements based on safety, equipment or operational
+                            conditions.
+                        </p>
+
+                        <p>
+                            Customers are responsible for providing accurate
+                            participant information requested during booking or
+                            before participation.
+                        </p>
+
+                        <p>
+                            Depending on the selected activity, participation
+                            requirements may include:
+                        </p>
+
+                        <ul>
+
+                            <li>Age requirements</li>
+                            <li>Weight requirements</li>
+                            <li>Height requirements</li>
+                            <li>Suitable clothing or footwear</li>
+                            <li>Use of required safety equipment</li>
+                            <li>Other activity-specific safety requirements</li>
+
+                        </ul>
+
+                        <p>
+                            Flying Fox Adventure may refuse participation where a
+                            participant does not meet the applicable safety or
+                            eligibility requirements.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         05
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="safety"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                05
+                            </span>
+
+                            <h2>
+                                Safety Rules & Customer Responsibilities
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Safety is an essential condition of participation in
+                            Flying Fox Adventure activities.
+                        </p>
+
+                        <p>
+                            Participants must:
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                Follow all instructions provided by instructors,
+                                operators and authorized staff.
+                            </li>
+
+                            <li>
+                                Wear and use required safety equipment correctly.
+                            </li>
+
+                            <li>
+                                Avoid interfering with ropes, harnesses, safety
+                                equipment or operational systems unless instructed.
+                            </li>
+
+                            <li>
+                                Behave responsibly and avoid actions that may place
+                                themselves, staff or other participants at risk.
+                            </li>
+
+                            <li>
+                                Inform staff about any relevant issue that may affect
+                                their ability to safely participate when such
+                                information is reasonably required.
+                            </li>
+
+                            <li>
+                                Not participate while under the influence of alcohol,
+                                prohibited substances or anything that may impair
+                                safe participation.
+                            </li>
+
+                        </ul>
+
+                        <p>
+                            Flying Fox Adventure may refuse, suspend or terminate a
+                            participant's activity where staff reasonably believe
+                            that continuing participation could create a safety risk.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         06
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="risk"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                06
+                            </span>
+
+                            <h2>
+                                Adventure Activities & Acknowledgement of Risk
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox and other adventure activities involve
+                            physical activity and may involve inherent risks even
+                            when reasonable safety procedures are followed.
+                        </p>
+
+                        <p>
+                            Participants are required to follow safety instructions,
+                            use safety equipment correctly and participate only when
+                            they meet the applicable activity requirements.
+                        </p>
+
+                        <p>
+                            Nothing in these Terms is intended to exclude or limit
+                            any responsibility or liability that cannot lawfully be
+                            excluded under applicable law.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         07
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="arrival"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                07
+                            </span>
+
+                            <h2>
+                                Arrival & Ticket Validity
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Customers should arrive with sufficient time to complete
+                            any required verification, preparation or safety briefing.
+                        </p>
+
+                        <div class="ff-legal-note">
+
+                            <p>
+                                <strong>Ticket Validity:</strong>
+                                A customer's ticket is valid for
+                                <strong>3 hours from the booked ride time.</strong>
+                            </p>
+
+                        </div>
+
+                        <p>
+                            For example, if the booked ride time is
+                            <strong>10:00 AM</strong>, the ticket will remain valid
+                            until <strong>1:00 PM</strong>.
+                        </p>
+
+                        <p>
+                            Participation during this period remains subject to
+                            operational conditions, safety requirements and
+                            applicable slot availability.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         08
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="cancellation"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                08
+                            </span>
+
+                            <h2>
+                                Cancellation Policy
+                            </h2>
+
+                        </div>
+
+                        <h5>
+                            Cancellation Within 24 Hours of Booking Confirmation
+                        </h5>
+
+                        <p>
+                            If a cancellation request is submitted within
+                            <strong>24 hours from the booking confirmation</strong>,
+                            an eligible refund will be processed after deducting
+                            applicable payment gateway charges, taxes and processing
+                            charges where applicable.
+                        </p>
+
+                        <h5>
+                            Cancellation After 24 Hours of Booking Confirmation
+                        </h5>
+
+                        <p>
+                            If a cancellation request is submitted after 24 hours
+                            from booking confirmation:
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                No refund will be provided.
+                            </li>
+
+                            <li>
+                                Rescheduling may be considered subject to slot
+                                availability and management approval.
+                            </li>
+
+                        </ul>
+
+                        <p>
+                            Cancellation requests submitted after the scheduled ride
+                            time will not be accepted.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         09
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="rescheduling"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                09
+                            </span>
+
+                            <h2>
+                                Rescheduling Policy
+                            </h2>
+
+                        </div>
+
+                        <ul>
+
+                            <li>
+                                Each booking is eligible for
+                                <strong>one-time rescheduling only.</strong>
+                            </li>
+
+                            <li>
+                                Rescheduling requests must be submitted at least
+                                <strong>24 hours before the scheduled ride time.</strong>
+                            </li>
+
+                            <li>
+                                The new date and time will be confirmed based on
+                                available slots.
+                            </li>
+
+                            <li>
+                                Once a booking has been rescheduled, any further
+                                cancellation will be non-refundable.
+                            </li>
+
+                            <li>
+                                A rescheduled booking cannot normally be rescheduled
+                                again.
+                            </li>
+
+                        </ul>
+
+                        <p>
+                            If the customer does not attend the rescheduled ride,
+                            the booking will be treated as a No Show.
+                        </p>
+
+                        <p>
+                            In that case:
+                        </p>
+
+                        <ul>
+
+                            <li>No refund will be provided.</li>
+                            <li>Further rescheduling will not be allowed.</li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         10
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="noshow"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                10
+                            </span>
+
+                            <h2>
+                                No Show, Late Arrival & Non-Participation
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            If a customer does not arrive within the permitted
+                            3-hour ticket validity period, the booking will be
+                            considered a <strong>No Show</strong>.
+                        </p>
+
+                        <p>
+                            No Show bookings:
+                        </p>
+
+                        <ul>
+
+                            <li>Are non-refundable.</li>
+                            <li>Cannot be rescheduled.</li>
+
+                        </ul>
+
+                        <p>
+                            If a customer arrives at the location but voluntarily
+                            chooses not to participate in the booked activity,
+                            no refund will be provided.
+                        </p>
+
+                        <p>
+                            Customers arriving after the allowed ticket validity
+                            period may be accommodated only where slots and
+                            operational conditions allow and where management
+                            approves the request.
+                        </p>
+
+                        <p>
+                            Accommodation after the permitted validity period does
+                            not create an entitlement to a refund.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         11
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="operator-cancellation"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                11
+                            </span>
+
+                            <h2>
+                                Cancellation or Postponement by Flying Fox Adventure
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox Adventure reserves the right to cancel,
+                            delay, suspend or postpone an activity when reasonably
+                            necessary because of:
+                        </p>
+
+                        <ul>
+
+                            <li>Adverse weather conditions</li>
+                            <li>Heavy rain</li>
+                            <li>Strong winds</li>
+                            <li>Lightning</li>
+                            <li>Technical issues</li>
+                            <li>Equipment or operational concerns</li>
+                            <li>Safety concerns</li>
+                            <li>Other unforeseen circumstances</li>
+
+                        </ul>
+
+                        <p>
+                            Where Flying Fox Adventure cancels an activity and the
+                            customer cannot participate as booked, the customer may
+                            be offered:
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                One free rescheduling, or
+                            </li>
+
+                            <li>
+                                A refund of the eligible booking amount, subject to
+                                applicable non-refundable payment gateway or
+                                processing charges where permitted.
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         12
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="refund"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                12
+                            </span>
+
+                            <h2>
+                                Refund Processing
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Approved refunds will normally be returned to the
+                            original payment method used for the booking.
+                        </p>
+
+                        <p>
+                            Refund processing generally takes
+                            <strong>5–10 business days</strong>, depending on the
+                            customer's bank, card issuer or payment service provider.
+                        </p>
+
+                        <p>
+                            Applicable payment gateway charges, taxes and processing
+                            charges may be deducted where permitted and where those
+                            charges are non-refundable.
+                        </p>
+
+                        <p>
+                            Processing time after a refund has been initiated may be
+                            controlled by the customer's bank or payment provider
+                            and may be outside the direct control of
+                            Flying Fox Adventure.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         13
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="weather"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                13
+                            </span>
+
+                            <h2>
+                                Weather & Operational Conditions
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Adventure activities may depend on suitable weather,
+                            equipment availability and safe operating conditions.
+                        </p>
+
+                        <p>
+                            Weather conditions may change before or during an
+                            activity. Flying Fox Adventure may temporarily suspend,
+                            delay or modify an activity where staff reasonably
+                            consider conditions unsuitable or unsafe.
+                        </p>
+
+                        <p>
+                            A temporary operational or weather delay will not
+                            automatically be treated as a cancellation where the
+                            activity can reasonably and safely resume.
+                        </p>
+
+                        <p>
+                            Decisions relating to safe operation will be made by
+                            authorized Flying Fox Adventure staff.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         14
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="belongings"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                14
+                            </span>
+
+                            <h2>
+                                Personal Belongings
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Customers are responsible for personal belongings brought
+                            to the activity location, subject to applicable law.
+                        </p>
+
+                        <p>
+                            Participants may be asked to remove or secure items such
+                            as:
+                        </p>
+
+                        <ul>
+
+                            <li>Mobile phones</li>
+                            <li>Cameras</li>
+                            <li>Jewellery</li>
+                            <li>Loose accessories</li>
+                            <li>Bags</li>
+                            <li>Other items that may interfere with safety equipment</li>
+
+                        </ul>
+
+                        <p>
+                            Customers should follow staff instructions regarding
+                            storage or use of personal items during an activity.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         15
+                    ====================================================== -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                15
+                            </span>
+
+                            <h2>
+                                Children & Minors
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Where an activity permits participation by minors,
+                            bookings should be completed or authorized by a parent,
+                            legal guardian or responsible adult where required.
+                        </p>
+
+                        <p>
+                            A parent, guardian or responsible adult making a booking
+                            for a minor is responsible for ensuring that the
+                            participant meets applicable activity requirements.
+                        </p>
+
+                        <p>
+                            Flying Fox Adventure may request appropriate confirmation
+                            or authorization before permitting a minor to participate.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         16
+                    ====================================================== -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                16
+                            </span>
+
+                            <h2>
+                                Website Use & Intellectual Property
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Website content including branding, logos, graphics,
+                            photographs, text, layouts and original materials may be
+                            protected by intellectual property rights.
+                        </p>
+
+                        <p>
+                            Users must not reproduce, commercially exploit or
+                            distribute protected Flying Fox Adventure content without
+                            authorization except where permitted by applicable law.
+                        </p>
+
+                        <p>
+                            Users must not attempt to interfere with, damage, misuse
+                            or gain unauthorized access to the website, booking
+                            system, servers or related systems.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         17
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="communications"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                17
+                            </span>
+
+                            <h2>
+                                Electronic Communications
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox Adventure may communicate important
+                            booking-related information through available channels
+                            such as:
+                        </p>
+
+                        <ul>
+
+                            <li>Email</li>
+                            <li>Telephone</li>
+                            <li>SMS</li>
+                            <li>WhatsApp</li>
+
+                        </ul>
+
+                        <p>
+                            These communications may include:
+                        </p>
+
+                        <ul>
+
+                            <li>Booking confirmations</li>
+                            <li>Payment updates</li>
+                            <li>Digital tickets</li>
+                            <li>QR tickets</li>
+                            <li>Booking reminders</li>
+                            <li>Rescheduling information</li>
+                            <li>Cancellation information</li>
+                            <li>Important operational updates</li>
+
+                        </ul>
+
+                        <p>
+                            Customers are responsible for providing correct contact
+                            details during booking.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         18
+                    ====================================================== -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                18
+                            </span>
+
+                            <h2>
+                                Third-Party Services
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox Adventure may use independent service
+                            providers to support website and booking functionality.
+                        </p>
+
+                        <p>
+                            These may include providers for:
+                        </p>
+
+                        <ul>
+
+                            <li>Payment processing</li>
+                            <li>Website hosting</li>
+                            <li>Email delivery</li>
+                            <li>WhatsApp or messaging communication</li>
+                            <li>Analytics</li>
+                            <li>Technical services</li>
+
+                        </ul>
+
+                        <p>
+                            Third-party services may be governed by their own terms,
+                            privacy policies and service conditions.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         19
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="privacy"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                19
+                            </span>
+
+                            <h2>
+                                Privacy & Personal Information
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Personal information collected through our website,
+                            booking process and customer communications will be
+                            handled according to our Privacy Policy.
+                        </p>
+
+                        <p>
+                            Customers should review the Flying Fox Adventure Privacy
+                            Policy for information about:
+                        </p>
+
+                        <ul>
+
+                            <li>Information we collect</li>
+                            <li>How booking information is used</li>
+                            <li>Payment information</li>
+                            <li>WhatsApp and communication services</li>
+                            <li>Cookies</li>
+                            <li>Information sharing</li>
+                            <li>Data security</li>
+                            <li>Data retention</li>
+                            <li>Privacy rights</li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         20
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-item"
+                        id="liability"
+                    >
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                20
+                            </span>
+
+                            <h2>
+                                Limitation of Liability
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox Adventure will take reasonable steps to
+                            provide booked services and operate activities with
+                            appropriate safety procedures.
+                        </p>
+
+                        <p>
+                            To the extent permitted by applicable law,
+                            Flying Fox Adventure will not be responsible for losses
+                            arising solely from circumstances outside its reasonable
+                            control, including certain interruptions caused by
+                            third-party systems, communication networks or payment
+                            providers.
+                        </p>
+
+                        <p>
+                            Customers remain responsible for complying with safety
+                            instructions and providing accurate booking and
+                            participant information.
+                        </p>
+
+                        <p>
+                            Nothing in these Terms excludes or restricts any legal
+                            right, responsibility or liability that cannot lawfully
+                            be excluded or restricted.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         21
+                    ====================================================== -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                21
+                            </span>
+
+                            <h2>
+                                Events Beyond Our Reasonable Control
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox Adventure may not be able to provide or
+                            complete an activity because of circumstances reasonably
+                            outside our control.
+                        </p>
+
+                        <p>
+                            These circumstances may include:
+                        </p>
+
+                        <ul>
+
+                            <li>Extreme or unsafe weather</li>
+                            <li>Natural disasters</li>
+                            <li>Government restrictions</li>
+                            <li>Emergency situations</li>
+                            <li>Power or communication failures</li>
+                            <li>Major technical failures</li>
+                            <li>Other unavoidable or extraordinary events</li>
+
+                        </ul>
+
+                        <p>
+                            Where reasonably possible, Flying Fox Adventure will
+                            communicate significant changes affecting confirmed
+                            bookings.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         22
+                    ====================================================== -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                22
+                            </span>
+
+                            <h2>
+                                Changes to These Terms
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Flying Fox Adventure may update these Terms & Conditions
+                            when our services, booking process, operational
+                            requirements or applicable legal requirements change.
+                        </p>
+
+                        <p>
+                            The latest version will be published on this page with
+                            an updated revision date.
+                        </p>
+
+                        <p>
+                            Terms applicable to a booking will be interpreted subject
+                            to applicable law and the circumstances of that booking.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         23
+                    ====================================================== -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                23
+                            </span>
+
+                            <h2>
+                                Governing Law & Disputes
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            These Terms & Conditions will be governed by applicable
+                            laws of India.
+                        </p>
+
+                        <p>
+                            Where a dispute arises, customers are encouraged to
+                            contact Flying Fox Adventure first so that we can attempt
+                            to resolve the matter directly.
+                        </p>
+
+                        <p>
+                            Any dispute that cannot be resolved directly will be
+                            subject to the applicable legal procedures and competent
+                            courts having jurisdiction under Indian law.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         24
+                    ====================================================== -->
+
+                    <div class="ff-legal-item">
+
+                        <div class="ff-legal-item-heading">
+
+                            <span class="ff-legal-number">
+                                24
+                            </span>
+
+                            <h2>
+                                Policy Acceptance
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            By completing a booking with Flying Fox Adventure, the
+                            customer confirms that they have read, understood and
+                            agreed to these Terms & Conditions.
+                        </p>
+
+                        <p>
+                            These Terms include the applicable cancellation,
+                            rescheduling, no-show, ticket-validity and refund rules
+                            described on this page.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- =====================================================
+                         CONTACT
+                    ====================================================== -->
+
+                    <div
+                        class="ff-legal-contact"
+                        id="contact"
+                    >
+
+                        <h3>
+                            Questions About These Terms?
+                        </h3>
+
+                        <p>
+                            Contact Flying Fox Adventure if you have questions about
+                            bookings, cancellations, rescheduling, refunds or these
+                            Terms & Conditions.
+                        </p>
+
+                        <div class="ff-legal-contact-list">
+
+
+                            <div class="ff-legal-contact-item">
+
+                                <i class="far fa-phone"></i>
+
+                                <a href="tel:+917907219198">
+                                    +91 7907219198
+                                </a>
+
+                            </div>
+
+
+                            <div class="ff-legal-contact-item">
+
+                                <i class="far fa-envelope"></i>
+
+                                <a href="mailto:adventureflyingfox@gmail.com">
+                                    adventureflyingfox@gmail.com
+                                </a>
+
+                            </div>
+
+
+                            <div class="ff-legal-contact-item">
+
+                                <i class="far fa-location-dot"></i>
+
+                                <span>
+                                    Thekkumkanam, Kerala
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("ffMathPattern");
+
+    if (!canvas) {
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+
+    /* =========================================================
+       SETTINGS
+    ========================================================= */
+
+    const SETTINGS = {
+
+        patternScale: 1.55,
+
+        circleOpacity: 0.18,
+        diamondOpacity: 0.15,
+        rectangleOpacity: 0.12,
+        radialOpacity: 0.14,
+        diagonalOpacity: 0.11,
+        fanOpacity: 0.11,
+        crossOpacity: 0.10,
+
+        circleWidth: 0.95,
+        diamondWidth: 0.90,
+        rectangleWidth: 0.85,
+        radialWidth: 0.80,
+        diagonalWidth: 0.75,
+        fanWidth: 0.75,
+        crossWidth: 0.70
+    };
+
+
+    /* =========================================================
+       RESIZE CANVAS
+    ========================================================= */
+
+    function resizeCanvas() {
+
+        const parent = canvas.parentElement;
+
+        width = parent.clientWidth;
+        height = parent.clientHeight;
+
+        dpr = Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+
+        ctx.setTransform(
+            dpr,
+            0,
+            0,
+            dpr,
+            0,
+            0
+        );
+
+        drawPattern();
+    }
+
+
+    /* =========================================================
+       BASIC LINE
+    ========================================================= */
+
+    function drawLine(
+        x1,
+        y1,
+        x2,
+        y2,
+        opacity = 0.12,
+        lineWidth = 0.8
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+
+        ctx.strokeStyle =
+            `rgba(255,255,255,${opacity})`;
+
+        ctx.lineWidth = lineWidth;
+
+        ctx.stroke();
+    }
+
+
+    /* =========================================================
+       CONCENTRIC CIRCLES
+    ========================================================= */
+
+    function drawConcentricCircles(
+        cx,
+        cy,
+        maxRadius,
+        count,
+        opacity = SETTINGS.circleOpacity
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const radius =
+                (maxRadius / count) * i;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                cx,
+                cy,
+                radius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.strokeStyle =
+                `rgba(255,255,255,${opacity})`;
+
+            ctx.lineWidth =
+                SETTINGS.circleWidth;
+
+            ctx.stroke();
+        }
+    }
+
+
+    /* =========================================================
+       DIAMOND RINGS
+    ========================================================= */
+
+    function drawDiamondRings(
+        cx,
+        cy,
+        maxSize,
+        count
+    ) {
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= count; i++) {
+
+            const size =
+                (maxSize / count) * i;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.diamondOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.diamondWidth;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       RECTANGLE RINGS
+    ========================================================= */
+
+    function drawRectangularRings(
+        cx,
+        cy,
+        maxWidth,
+        maxHeight,
+        count
+    ) {
+
+        for (let i = 1; i <= count; i++) {
+
+            const ratio =
+                i / count;
+
+            const currentWidth =
+                maxWidth * ratio;
+
+            const currentHeight =
+                maxHeight * ratio;
+
+            ctx.strokeStyle =
+                `rgba(
+                    255,
+                    255,
+                    255,
+                    ${SETTINGS.rectangleOpacity}
+                )`;
+
+            ctx.lineWidth =
+                SETTINGS.rectangleWidth;
+
+            ctx.strokeRect(
+                cx - currentWidth / 2,
+                cy - currentHeight / 2,
+                currentWidth,
+                currentHeight
+            );
+        }
+    }
+
+
+    /* =========================================================
+       RADIAL SPOKES
+    ========================================================= */
+
+    function drawRadialSystem(
+        cx,
+        cy,
+        radius,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const angle =
+                (Math.PI * 2 / count) * i;
+
+            const startRadius =
+                radius * 0.14;
+
+            const startX =
+                cx +
+                Math.cos(angle) *
+                startRadius;
+
+            const startY =
+                cy +
+                Math.sin(angle) *
+                startRadius;
+
+            const endX =
+                cx +
+                Math.cos(angle) *
+                radius;
+
+            const endY =
+                cy +
+                Math.sin(angle) *
+                radius;
+
+            drawLine(
+                startX,
+                startY,
+                endX,
+                endY,
+                SETTINGS.radialOpacity,
+                SETTINGS.radialWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       DIAGONAL LINES
+    ========================================================= */
+
+    function drawDiagonalLines() {
+
+        const spacing = 105;
+
+        const extra =
+            Math.max(width, height) * 1.5;
+
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                -height * 0.30,
+
+                x + height * 1.75,
+                height * 1.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+
+
+        for (
+            let x = -extra;
+            x < width + extra;
+            x += spacing
+        ) {
+
+            drawLine(
+                x,
+                height * 1.30,
+
+                x + height * 1.75,
+                -height * 0.30,
+
+                SETTINGS.diagonalOpacity,
+                SETTINGS.diagonalWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       FAN
+    ========================================================= */
+
+    function drawFan(
+        originX,
+        originY,
+        targetX,
+        targetY,
+        spread,
+        count
+    ) {
+
+        for (let i = 0; i < count; i++) {
+
+            const offset =
+                (
+                    i -
+                    (count - 1) / 2
+                ) * spread;
+
+            drawLine(
+                originX,
+                originY + offset,
+
+                targetX,
+                targetY - offset,
+
+                SETTINGS.fanOpacity,
+                SETTINGS.fanWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       CENTER CROSS
+    ========================================================= */
+
+    function drawCenterCrossLines(
+        cx,
+        cy
+    ) {
+
+        const spacing = 52;
+
+        const count = 12;
+
+        for (
+            let i = -count;
+            i <= count;
+            i++
+        ) {
+
+            const offset =
+                i * spacing;
+
+
+            drawLine(
+                -width * 0.10,
+                cy + offset,
+
+                width * 1.10,
+                cy - offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+
+
+            drawLine(
+                -width * 0.10,
+                cy - offset,
+
+                width * 1.10,
+                cy + offset,
+
+                SETTINGS.crossOpacity,
+                SETTINGS.crossWidth
+            );
+        }
+    }
+
+
+    /* =========================================================
+       SIDE CIRCLES
+    ========================================================= */
+
+    function drawSideCircles() {
+
+        const sideRadius =
+            Math.max(
+                height * 0.48,
+                width * 0.10
+            );
+
+
+        drawConcentricCircles(
+            width * 0.02,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        drawConcentricCircles(
+            width * 0.98,
+            height * 0.37,
+            sideRadius,
+            16,
+            0.13
+        );
+
+
+        drawConcentricCircles(
+            width * 0.08,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+
+
+        drawConcentricCircles(
+            width * 0.92,
+            height * 0.96,
+            sideRadius * 0.85,
+            13,
+            0.12
+        );
+    }
+
+
+    /* =========================================================
+       OUTER DIAMONDS
+    ========================================================= */
+
+    function drawOuterDiamonds(
+        cx,
+        cy
+    ) {
+
+        const maxSize =
+            Math.max(
+                width * 1.15,
+                height * 2.3
+            );
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(Math.PI / 4);
+
+        for (let i = 1; i <= 16; i++) {
+
+            const ratio =
+                i / 16;
+
+            const size =
+                maxSize * ratio;
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.075)";
+
+            ctx.lineWidth = 0.75;
+
+            ctx.strokeRect(
+                -size / 2,
+                -size / 2,
+                size,
+                size
+            );
+        }
+
+        ctx.restore();
+    }
+
+
+    /* =========================================================
+       HORIZONTAL GEOMETRY
+    ========================================================= */
+
+    function drawHorizontalGeometry(
+        cx,
+        cy
+    ) {
+
+        const lineCount = 11;
+
+        const spacing = 42;
+
+        for (
+            let i = -lineCount;
+            i <= lineCount;
+            i++
+        ) {
+
+            const y =
+                cy + i * spacing;
+
+            drawLine(
+                0,
+                y,
+                width,
+                y,
+                0.055,
+                0.6
+            );
+        }
+    }
+
+
+    /* =========================================================
+       MAIN PATTERN
+    ========================================================= */
+
+    function drawPattern() {
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        const cx =
+            width / 2;
+
+        const cy =
+            height * 0.58;
+
+
+        const mainRadius =
+            Math.max(
+                height * 0.62,
+                width * 0.22
+            ) * SETTINGS.patternScale;
+
+
+        drawDiagonalLines();
+
+
+        drawOuterDiamonds(
+            cx,
+            cy
+        );
+
+
+        drawSideCircles();
+
+
+        drawFan(
+            -width * 0.05,
+            height * 0.20,
+
+            width * 1.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        drawFan(
+            width * 1.05,
+            height * 0.20,
+
+            -width * 0.05,
+            height * 0.80,
+
+            38,
+            18
+        );
+
+
+        drawHorizontalGeometry(
+            cx,
+            cy
+        );
+
+
+        drawCenterCrossLines(
+            cx,
+            cy
+        );
+
+
+        drawConcentricCircles(
+            cx,
+            cy,
+            mainRadius,
+            34,
+            SETTINGS.circleOpacity
+        );
+
+
+        drawDiamondRings(
+            cx,
+            cy,
+            mainRadius * 2.15,
+            28
+        );
+
+
+        drawRectangularRings(
+            cx,
+            cy,
+
+            mainRadius * 2.65,
+            mainRadius * 1.50,
+
+            16
+        );
+
+
+        drawRadialSystem(
+            cx,
+            cy,
+            mainRadius * 1.08,
+            64
+        );
+    }
+
+
+    /* =========================================================
+       INITIALIZE
+    ========================================================= */
+
+    resizeCanvas();
+
+
+    let resizeTimer;
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            clearTimeout(
+                resizeTimer
+            );
+
+            resizeTimer =
+                setTimeout(
+                    resizeCanvas,
+                    120
+                );
+        }
+    );
+
+});
+
+</script>
+
+{% endblock %}

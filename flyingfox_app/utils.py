@@ -445,14 +445,13 @@ def verify_otp(phone_number, entered_otp):
 
 
 
-
 def send_ticket_whatsapp(request, ticket):
     """
-    Send booking confirmation with QR code image
-    through Telinfy WhatsApp API.
+    Send booking confirmation with the complete generated
+    Flying Fox WhatsApp ticket image through Telinfy.
 
     Template header:
-        IMAGE -> ticket QR code
+        IMAGE -> complete WhatsApp ticket image
 
     Body variables:
         {{1}} Customer name
@@ -474,7 +473,9 @@ def send_ticket_whatsapp(request, ticket):
             "ride_items__ride",
             "ride_items__weight_groups",
         )
-        .get(pk=ticket.booking.pk)
+        .get(
+            pk=ticket.booking.pk
+        )
     )
 
     # =====================================================
@@ -482,9 +483,12 @@ def send_ticket_whatsapp(request, ticket):
     # =====================================================
 
     if not booking.customer_phone:
+
         print(
-            "WHATSAPP ERROR: Customer phone is empty."
+            "WHATSAPP ERROR: "
+            "Customer phone is empty."
         )
+
         return False
 
     phone = (
@@ -496,12 +500,16 @@ def send_ticket_whatsapp(request, ticket):
         .replace(")", "")
     )
 
-    # -----------------------------------------------------
+    # =====================================================
     # NORMALIZE PHONE
-    # -----------------------------------------------------
+    # =====================================================
 
     # 9633390345 -> 919633390345
-    if len(phone) == 10 and phone.isdigit():
+    if (
+        len(phone) == 10
+        and phone.isdigit()
+    ):
+
         phone = f"91{phone}"
 
     # 919633390345
@@ -510,6 +518,7 @@ def send_ticket_whatsapp(request, ticket):
         and phone.startswith("91")
         and phone.isdigit()
     ):
+
         pass
 
     # +919633390345 -> 919633390345
@@ -518,16 +527,22 @@ def send_ticket_whatsapp(request, ticket):
         and phone.startswith("+91")
         and phone[1:].isdigit()
     ):
+
         phone = phone[1:]
 
     else:
+
         print(
-            "WHATSAPP ERROR: Invalid phone number:",
+            "WHATSAPP ERROR: "
+            "Invalid phone number:",
             phone,
         )
+
         return False
 
-    telinfy_phone = f"+{phone}"
+    telinfy_phone = (
+        f"+{phone}"
+    )
 
     # =====================================================
     # TELINFY SETTINGS
@@ -558,68 +573,77 @@ def send_ticket_whatsapp(request, ticket):
     )
 
     if not api_key:
+
         print(
             "WHATSAPP ERROR: "
             "TELINFY_API_KEY is missing."
         )
+
         return False
 
     # =====================================================
-    # CHECK QR IMAGE
+    # CHECK COMPLETE WHATSAPP TICKET IMAGE
     # =====================================================
 
-    if not ticket.qr_image:
+    if not ticket.whatsapp_ticket_image:
+
         print(
             "WHATSAPP ERROR: "
-            "Ticket QR image is missing."
+            "WhatsApp ticket image is missing."
         )
+
         return False
 
-    if not ticket.qr_image.name:
+    if not ticket.whatsapp_ticket_image.name:
+
         print(
             "WHATSAPP ERROR: "
-            "Ticket QR image has no file name."
+            "WhatsApp ticket image has no file name."
         )
+
         return False
 
     # =====================================================
-    # BUILD PUBLIC QR URL
+    # BUILD PUBLIC TICKET IMAGE URL
     # =====================================================
 
     try:
 
-        qr_relative_url = ticket.qr_image.url
+        ticket_image_relative_url = (
+            ticket.whatsapp_ticket_image.url
+        )
 
         public_base_url = getattr(
-          settings,
-          "PUBLIC_BASE_URL",
-          "",
+            settings,
+            "PUBLIC_BASE_URL",
+            "",
         )
 
         if not public_base_url:
 
-           print(
-            "WHATSAPP ERROR: "
-            "PUBLIC_BASE_URL is missing."
+            print(
+                "WHATSAPP ERROR: "
+                "PUBLIC_BASE_URL is missing."
             )
 
-           return False
+            return False
 
-        qr_url = (
-          f"{public_base_url.rstrip('/')}"
-          f"{qr_relative_url}"
+        ticket_image_url = (
+            f"{public_base_url.rstrip('/')}"
+            f"{ticket_image_relative_url}"
         )
 
     except Exception as error:
 
         print(
-         "WHATSAPP ERROR: "
-        "Unable to build QR URL."
+            "WHATSAPP ERROR: "
+            "Unable to build public "
+            "ticket image URL."
         )
 
         print(
-        "ERROR:",
-        repr(error),
+            "ERROR:",
+            repr(error),
         )
 
         return False
@@ -629,19 +653,23 @@ def send_ticket_whatsapp(request, ticket):
     # =====================================================
 
     if (
-        "localhost" in qr_url.lower()
-        or "127.0.0.1" in qr_url
+        "localhost"
+        in ticket_image_url.lower()
+        or
+        "127.0.0.1"
+        in ticket_image_url
     ):
 
         print(
             "WHATSAPP ERROR: "
-            "QR URL is localhost and cannot "
-            "be downloaded by Telinfy/WhatsApp."
+            "Ticket image URL is localhost "
+            "and cannot be downloaded by "
+            "Telinfy/WhatsApp."
         )
 
         print(
-            "QR URL:",
-            qr_url,
+            "TICKET IMAGE URL:",
+            ticket_image_url,
         )
 
         return False
@@ -657,20 +685,34 @@ def send_ticket_whatsapp(request, ticket):
         if not item.ride:
             continue
 
-        ride_lines.append(
-            f"{item.ride.name} - "
-            f"{item.quantity} rider(s)"
+        quantity = (
+            item.quantity
+            or
+            0
         )
 
-    ride_summary = ", ".join(
-        ride_lines
+        participant_word = (
+            "participant"
+            if quantity == 1
+            else "participants"
+        )
+
+        ride_lines.append(
+            f"{item.ride.name} - "
+            f"{quantity} {participant_word}"
+        )
+
+    ride_summary = (
+        ", ".join(
+            ride_lines
+        )
     )
 
     if not ride_summary:
 
         ride_summary = (
             "Adventure details are included "
-            "in your PDF ticket."
+            "in your ticket."
         )
 
     # =====================================================
@@ -679,16 +721,20 @@ def send_ticket_whatsapp(request, ticket):
 
     customer_name = (
         booking.customer_name
-        or ""
+        or
+        ""
     )
 
     ticket_number = str(
         ticket.ticket_number
-        or ""
+        or
+        ""
     )
 
     booking_id_value = str(
         booking.booking_id
+        or
+        ""
     )
 
     visit_date = (
@@ -699,12 +745,33 @@ def send_ticket_whatsapp(request, ticket):
         else ""
     )
 
-    total_riders = str(
-        booking.quantity
+    # =====================================================
+    # TOTAL RIDERS
+    # =====================================================
+
+    total_riders_value = sum(
+        int(
+            item.quantity
+            or
+            0
+        )
+        for item
+        in booking.ride_items.all()
+        if item.ride
     )
+
+    total_riders = str(
+        total_riders_value
+    )
+
+    # =====================================================
+    # TOTAL AMOUNT
+    # =====================================================
 
     total_amount = str(
         booking.total_amount
+        or
+        ""
     )
 
     # =====================================================
@@ -732,31 +799,45 @@ def send_ticket_whatsapp(request, ticket):
     body_parameters = [
         {
             "type": "text",
-            "text": str(customer_name),
+            "text": str(
+                customer_name
+            ),
         },
         {
             "type": "text",
-            "text": str(ticket_number),
+            "text": str(
+                ticket_number
+            ),
         },
         {
             "type": "text",
-            "text": str(booking_id_value),
+            "text": str(
+                booking_id_value
+            ),
         },
         {
             "type": "text",
-            "text": str(visit_date),
+            "text": str(
+                visit_date
+            ),
         },
         {
             "type": "text",
-            "text": str(ride_summary),
+            "text": str(
+                ride_summary
+            ),
         },
         {
             "type": "text",
-            "text": str(total_riders),
+            "text": str(
+                total_riders
+            ),
         },
         {
             "type": "text",
-            "text": str(total_amount),
+            "text": str(
+                total_amount
+            ),
         },
     ]
 
@@ -788,7 +869,7 @@ def send_ticket_whatsapp(request, ticket):
                             "type": "image",
 
                             "image": {
-                                "link": qr_url,
+                                "link": ticket_image_url,
                             },
                         }
                     ],
@@ -800,7 +881,9 @@ def send_ticket_whatsapp(request, ticket):
 
                 {
                     "type": "body",
-                    "parameters": body_parameters,
+
+                    "parameters":
+                        body_parameters,
                 },
             ],
         },
@@ -813,9 +896,11 @@ def send_ticket_whatsapp(request, ticket):
     print(
         "\n========================================"
     )
+
     print(
-        "TELINFY WHATSAPP QR REQUEST"
+        "TELINFY WHATSAPP TICKET REQUEST"
     )
+
     print(
         "========================================"
     )
@@ -841,18 +926,20 @@ def send_ticket_whatsapp(request, ticket):
     )
 
     print(
-        "QR FILE:",
-        ticket.qr_image.name,
+        "TICKET IMAGE FILE:",
+        ticket.whatsapp_ticket_image.name,
     )
 
     print(
-        "QR URL:",
-        qr_url,
+        "TICKET IMAGE URL:",
+        ticket_image_url,
     )
 
     print(
         "BODY PARAMETER COUNT:",
-        len(body_parameters),
+        len(
+            body_parameters
+        ),
     )
 
     print(
@@ -863,6 +950,7 @@ def send_ticket_whatsapp(request, ticket):
         body_parameters,
         start=1,
     ):
+
         print(
             f"  {{{{{index}}}}}:",
             parameter["text"],
@@ -892,9 +980,11 @@ def send_ticket_whatsapp(request, ticket):
         print(
             "\n========================================"
         )
+
         print(
-            "TELINFY WHATSAPP QR RESULT"
+            "TELINFY WHATSAPP TICKET RESULT"
         )
+
         print(
             "========================================"
         )
@@ -918,11 +1008,13 @@ def send_ticket_whatsapp(request, ticket):
         # =================================================
 
         try:
+
             response_data = (
                 response.json()
             )
 
         except ValueError:
+
             response_data = {}
 
         # =================================================
@@ -931,10 +1023,20 @@ def send_ticket_whatsapp(request, ticket):
 
         if (
             response.ok
-            and response_data.get(
+            and
+            response_data.get(
                 "success"
             ) is True
         ):
+
+            data = (
+                response_data.get(
+                    "data",
+                    {}
+                )
+                or
+                {}
+            )
 
             ticket.whatsapp_sent = True
 
@@ -944,16 +1046,8 @@ def send_ticket_whatsapp(request, ticket):
                 ]
             )
 
-            data = (
-                response_data.get(
-                    "data",
-                    {}
-                )
-                or {}
-            )
-
             print(
-                "WHATSAPP QR ACCEPTED "
+                "WHATSAPP TICKET ACCEPTED "
                 "BY TELINFY"
             )
 
@@ -978,6 +1072,13 @@ def send_ticket_whatsapp(request, ticket):
                 ),
             )
 
+            print(
+                "TEMPLATE:",
+                data.get(
+                    "templateName"
+                ),
+            )
+
             return True
 
         # =================================================
@@ -985,7 +1086,7 @@ def send_ticket_whatsapp(request, ticket):
         # =================================================
 
         print(
-            "WHATSAPP QR SEND FAILED"
+            "WHATSAPP TICKET SEND FAILED"
         )
 
         print(
@@ -1009,10 +1110,12 @@ def send_ticket_whatsapp(request, ticket):
         print(
             "\n========================================"
         )
+
         print(
-            "TELINFY WHATSAPP QR "
+            "TELINFY WHATSAPP TICKET "
             "REQUEST ERROR"
         )
+
         print(
             "========================================"
         )

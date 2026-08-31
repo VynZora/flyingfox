@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import secrets
 
@@ -19,6 +20,7 @@ from django.utils.dateparse import parse_date
 from datetime import date
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from io import BytesIO
+from PIL import Image, ImageDraw, ImageFont
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -11975,6 +11977,51 @@ def booking_payment_verify(request):
         )
 
 
+# =====================================================
+# 21. GENERATE WHATSAPP TICKET IMAGE
+# =====================================================
+
+    try:
+
+       if not ticket.whatsapp_ticket_image:
+
+        generate_whatsapp_ticket_image(
+            ticket
+        )
+
+        ticket.refresh_from_db()
+
+    except Exception as error:
+
+        print(
+        "\n========================================"
+       )
+
+        print(
+        "WHATSAPP TICKET IMAGE GENERATION ERROR"
+       )
+
+        print(
+        "TYPE:",
+        type(error).__name__
+        )
+
+        print(
+        "ERROR:",
+        repr(error)
+      )
+
+        print(
+        "BOOKING:",
+        booking.booking_id
+    )
+
+        print(
+        "========================================\n"
+    )
+
+
+
     # =====================================================
     # 21. GENERATE PDF
     #
@@ -12395,6 +12442,1221 @@ def generate_ticket_qr(request, ticket):
         save=False,
     )
 
+def generate_whatsapp_ticket_image(ticket):
+    """
+    Generate the final Flying Fox Adventure WhatsApp ticket.
+
+    Static design:
+        static/frontend/assets/img/ticket/
+        flying_fox_ticket_background.png
+
+    Dynamic content:
+        - Guest name
+        - Ticket number
+        - Visit date
+        - Total participants
+        - Booking ID
+        - Total amount
+        - All booked adventures
+        - Participants for each adventure
+        - Real verification QR code
+    """
+
+    # =====================================================
+    # BOOKING
+    # =====================================================
+
+    booking = (
+        Booking.objects
+        .prefetch_related(
+            "ride_items__ride",
+        )
+        .get(
+            pk=ticket.booking_id
+        )
+    )
+
+    # =====================================================
+    # COLORS
+    # =====================================================
+
+    RED = "#D71920"
+    DARK = "#111111"
+    GRAY = "#555555"
+    LIGHT_GRAY = "#DDDDDD"
+    DIVIDER = "#D8D8D8"
+    WHITE = "#FFFFFF"
+
+    # =====================================================
+    # BACKGROUND
+    # =====================================================
+
+    background_path = os.path.join(
+        settings.BASE_DIR,
+        "static",
+        "frontend",
+        "assets",
+        "img",
+        "ticket",
+        "flying_fox_ticket_background.png",
+    )
+
+    if not os.path.exists(background_path):
+
+        raise FileNotFoundError(
+            "WhatsApp ticket background not found: "
+            f"{background_path}"
+        )
+
+    image = (
+        Image.open(
+            background_path
+        )
+        .convert("RGB")
+    )
+
+    # -----------------------------------------------------
+    # NORMALIZE SIZE
+    # -----------------------------------------------------
+
+    width = 1080
+    height = 1620
+
+    image = image.resize(
+        (
+            width,
+            height,
+        ),
+        Image.Resampling.LANCZOS,
+    )
+
+    draw = ImageDraw.Draw(image)
+
+    # =====================================================
+    # FONT LOADER
+    # =====================================================
+
+    def load_font(
+        size,
+        bold=False,
+    ):
+
+        possible_fonts = []
+
+        # -------------------------------------------------
+        # PROJECT FONT
+        # -------------------------------------------------
+
+        if bold:
+
+            possible_fonts.append(
+                os.path.join(
+                    settings.BASE_DIR,
+                    "static",
+                    "ticket",
+                    "fonts",
+                    "DejaVuSans-Bold.ttf",
+                )
+            )
+
+        else:
+
+            possible_fonts.append(
+                os.path.join(
+                    settings.BASE_DIR,
+                    "static",
+                    "ticket",
+                    "fonts",
+                    "DejaVuSans.ttf",
+                )
+            )
+
+        # -------------------------------------------------
+        # WINDOWS DEVELOPMENT
+        # -------------------------------------------------
+
+        if bold:
+
+            possible_fonts.append(
+                r"C:\Windows\Fonts\arialbd.ttf"
+            )
+
+        else:
+
+            possible_fonts.append(
+                r"C:\Windows\Fonts\arial.ttf"
+            )
+
+        # -------------------------------------------------
+        # UBUNTU PRODUCTION
+        # -------------------------------------------------
+
+        if bold:
+
+            possible_fonts.append(
+                "/usr/share/fonts/truetype/"
+                "dejavu/DejaVuSans-Bold.ttf"
+            )
+
+        else:
+
+            possible_fonts.append(
+                "/usr/share/fonts/truetype/"
+                "dejavu/DejaVuSans.ttf"
+            )
+
+        # -------------------------------------------------
+        # LOAD FIRST AVAILABLE FONT
+        # -------------------------------------------------
+
+        for font_path in possible_fonts:
+
+            if os.path.exists(font_path):
+
+                return ImageFont.truetype(
+                    font_path,
+                    size,
+                )
+
+        raise FileNotFoundError(
+            "No suitable font was found for "
+            "WhatsApp ticket generation."
+        )
+
+    # =====================================================
+    # MAIN FONTS
+    # =====================================================
+
+    font_label = load_font(
+        22,
+        bold=False,
+    )
+
+    font_value = load_font(
+        32,
+        bold=True,
+    )
+
+    font_value_small = load_font(
+        26,
+        bold=True,
+    )
+
+    font_amount = load_font(
+        34,
+        bold=True,
+    )
+
+    font_table_header = load_font(
+        22,
+        bold=True,
+    )
+
+    # =====================================================
+    # TEXT FITTING HELPER
+    # =====================================================
+
+    def fit_font(
+        text,
+        max_width,
+        start_size=32,
+        minimum_size=17,
+        bold=True,
+    ):
+
+        text = str(
+            text or ""
+        )
+
+        size = start_size
+
+        while size >= minimum_size:
+
+            font = load_font(
+                size,
+                bold=bold,
+            )
+
+            bbox = draw.textbbox(
+                (
+                    0,
+                    0,
+                ),
+                text,
+                font=font,
+            )
+
+            text_width = (
+                bbox[2]
+                -
+                bbox[0]
+            )
+
+            if text_width <= max_width:
+
+                return font
+
+            size -= 1
+
+        return load_font(
+            minimum_size,
+            bold=bold,
+        )
+
+    # =====================================================
+    # SAFE VALUE HELPER
+    # =====================================================
+
+    def safe_text(
+        value,
+    ):
+
+        if value is None:
+            return ""
+
+        return str(
+            value
+        ).strip()
+
+    # =====================================================
+    # BOOKING DATA
+    # =====================================================
+
+    customer_name = safe_text(
+        booking.customer_name
+    )
+
+    ticket_number = safe_text(
+        ticket.ticket_number
+    )
+
+    # -----------------------------------------------------
+    # Optional visual prefix
+    # -----------------------------------------------------
+
+    if (
+        ticket_number
+        and
+        not ticket_number.upper().startswith(
+            "TKT-"
+        )
+    ):
+
+        display_ticket_number = (
+            f"TKT-{ticket_number}"
+        )
+
+    else:
+
+        display_ticket_number = (
+            ticket_number
+        )
+
+    # -----------------------------------------------------
+    # BOOKING ID
+    # -----------------------------------------------------
+
+    full_booking_id = safe_text(
+        booking.booking_id
+    )
+
+    # Show a compact booking reference on image.
+    # Full UUID remains safely stored in database.
+    if full_booking_id:
+
+        compact_booking_id = (
+            "FFX-"
+            +
+            full_booking_id[
+                :8
+            ].upper()
+        )
+
+    else:
+
+        compact_booking_id = ""
+
+    # -----------------------------------------------------
+    # VISIT DATE
+    # -----------------------------------------------------
+
+    if booking.booking_date:
+
+        visit_date = (
+            booking.booking_date.strftime(
+                "%d %B %Y"
+            )
+        )
+
+    else:
+
+        visit_date = ""
+
+    # -----------------------------------------------------
+    # AMOUNT
+    # -----------------------------------------------------
+
+    total_amount = (
+        booking.total_amount
+        or
+        0
+    )
+
+    try:
+
+        amount_text = (
+            f"Rs. "
+            f"{float(total_amount):,.2f}"
+        )
+
+    except (
+        TypeError,
+        ValueError,
+    ):
+
+        amount_text = (
+            f"Rs. {total_amount}"
+        )
+
+    # =====================================================
+    # RIDES
+    # =====================================================
+
+    ride_items = list(
+        booking.ride_items.all()
+    )
+
+    valid_ride_items = [
+
+        item
+
+        for item in ride_items
+
+        if item.ride
+
+    ]
+
+    # =====================================================
+    # TOTAL PARTICIPANTS
+    # =====================================================
+
+    total_participants = sum(
+        int(
+            item.quantity
+            or
+            0
+        )
+        for item
+        in valid_ride_items
+    )
+
+    participant_word = (
+        "Participant"
+        if total_participants == 1
+        else "Participants"
+    )
+
+    total_participant_text = (
+        f"{total_participants} "
+        f"{participant_word}"
+    )
+
+    # =====================================================
+    # DYNAMIC CUSTOMER INFORMATION CARD
+    # =====================================================
+
+    info_left = 55
+    info_right = width - 55
+
+    info_top = 500
+    info_bottom = 825
+
+    # -----------------------------------------------------
+    # CARD
+    # -----------------------------------------------------
+
+    draw.rounded_rectangle(
+        (
+            info_left,
+            info_top,
+            info_right,
+            info_bottom,
+        ),
+        radius=28,
+        fill=WHITE,
+        outline=LIGHT_GRAY,
+        width=2,
+    )
+
+    # -----------------------------------------------------
+    # CENTER DIVIDER
+    # -----------------------------------------------------
+
+    center_x = width // 2
+
+    draw.line(
+        (
+            center_x,
+            info_top + 25,
+            center_x,
+            info_bottom - 25,
+        ),
+        fill=DIVIDER,
+        width=2,
+    )
+
+    # -----------------------------------------------------
+    # HORIZONTAL DIVIDERS
+    # -----------------------------------------------------
+
+    draw.line(
+        (
+            info_left + 35,
+            605,
+            info_right - 35,
+            605,
+        ),
+        fill=DIVIDER,
+        width=2,
+    )
+
+    draw.line(
+        (
+            info_left + 35,
+            710,
+            info_right - 35,
+            710,
+        ),
+        fill=DIVIDER,
+        width=2,
+    )
+
+    # =====================================================
+    # INFORMATION COORDINATES
+    # =====================================================
+
+    left_x = 120
+    right_x = 590
+
+    # =====================================================
+    # ROW 1 — GUEST / TICKET
+    # =====================================================
+
+    row1_label_y = 525
+    row1_value_y = 560
+
+    draw.text(
+        (
+            left_x,
+            row1_label_y,
+        ),
+        "GUEST NAME",
+        fill=GRAY,
+        font=font_label,
+    )
+
+    guest_font = fit_font(
+        customer_name,
+        max_width=350,
+        start_size=32,
+        minimum_size=19,
+        bold=True,
+    )
+
+    draw.text(
+        (
+            left_x,
+            row1_value_y,
+        ),
+        customer_name,
+        fill=DARK,
+        font=guest_font,
+    )
+
+    # -----------------------------------------------------
+
+    draw.text(
+        (
+            right_x,
+            row1_label_y,
+        ),
+        "TICKET NO.",
+        fill=GRAY,
+        font=font_label,
+    )
+
+    ticket_font = fit_font(
+        display_ticket_number,
+        max_width=350,
+        start_size=32,
+        minimum_size=19,
+        bold=True,
+    )
+
+    draw.text(
+        (
+            right_x,
+            row1_value_y,
+        ),
+        display_ticket_number,
+        fill=DARK,
+        font=ticket_font,
+    )
+
+    # =====================================================
+    # ROW 2 — DATE / PARTICIPANTS
+    # =====================================================
+
+    row2_label_y = 630
+    row2_value_y = 665
+
+    draw.text(
+        (
+            left_x,
+            row2_label_y,
+        ),
+        "VISIT DATE",
+        fill=GRAY,
+        font=font_label,
+    )
+
+    visit_font = fit_font(
+        visit_date,
+        max_width=350,
+        start_size=27,
+        minimum_size=18,
+        bold=True,
+    )
+
+    draw.text(
+        (
+            left_x,
+            row2_value_y,
+        ),
+        visit_date,
+        fill=DARK,
+        font=visit_font,
+    )
+
+    # -----------------------------------------------------
+
+    draw.text(
+        (
+            right_x,
+            row2_label_y,
+        ),
+        "TOTAL PARTICIPANTS",
+        fill=GRAY,
+        font=font_label,
+    )
+
+    participant_font = fit_font(
+        total_participant_text,
+        max_width=350,
+        start_size=27,
+        minimum_size=18,
+        bold=True,
+    )
+
+    draw.text(
+        (
+            right_x,
+            row2_value_y,
+        ),
+        total_participant_text,
+        fill=DARK,
+        font=participant_font,
+    )
+
+    # =====================================================
+    # ROW 3 — BOOKING ID / AMOUNT
+    # =====================================================
+
+    row3_label_y = 735
+    row3_value_y = 770
+
+    draw.text(
+        (
+            left_x,
+            row3_label_y,
+        ),
+        "BOOKING ID",
+        fill=GRAY,
+        font=font_label,
+    )
+
+    booking_font = fit_font(
+        compact_booking_id,
+        max_width=350,
+        start_size=28,
+        minimum_size=18,
+        bold=True,
+    )
+
+    draw.text(
+        (
+            left_x,
+            row3_value_y,
+        ),
+        compact_booking_id,
+        fill=DARK,
+        font=booking_font,
+    )
+
+    # -----------------------------------------------------
+
+    draw.text(
+        (
+            right_x,
+            row3_label_y,
+        ),
+        "TOTAL AMOUNT",
+        fill=GRAY,
+        font=font_label,
+    )
+
+    amount_font = fit_font(
+        amount_text,
+        max_width=350,
+        start_size=34,
+        minimum_size=20,
+        bold=True,
+    )
+
+    draw.text(
+        (
+            right_x,
+            row3_value_y,
+        ),
+        amount_text,
+        fill=RED,
+        font=amount_font,
+    )
+
+    # =====================================================
+    # DYNAMIC RIDES TABLE
+    # =====================================================
+
+    rides_top = (
+        info_bottom
+        +
+        25
+    )
+
+    # -----------------------------------------------------
+    # Number of rides
+    # -----------------------------------------------------
+
+    ride_count = len(
+        valid_ride_items
+    )
+
+    # At least one row so box doesn't collapse
+    displayed_row_count = max(
+        ride_count,
+        1,
+    )
+
+    # =====================================================
+    # DYNAMIC ROW HEIGHT
+    #
+    # More rides = slightly smaller rows.
+    # =====================================================
+
+    if ride_count <= 3:
+
+        ride_row_height = 52
+        ride_font_size = 25
+        participant_font_size = 23
+
+    elif ride_count <= 5:
+
+        ride_row_height = 43
+        ride_font_size = 22
+        participant_font_size = 20
+
+    else:
+
+        ride_row_height = 36
+        ride_font_size = 19
+        participant_font_size = 18
+
+    table_header_height = 52
+
+    table_bottom_padding = 12
+
+    rides_height = (
+        table_header_height
+        +
+        (
+            displayed_row_count
+            *
+            ride_row_height
+        )
+        +
+        table_bottom_padding
+    )
+
+    rides_bottom = (
+        rides_top
+        +
+        rides_height
+    )
+
+    # =====================================================
+    # TABLE BODY
+    # =====================================================
+
+    draw.rounded_rectangle(
+        (
+            55,
+            rides_top,
+            width - 55,
+            rides_bottom,
+        ),
+        radius=20,
+        fill=WHITE,
+        outline=RED,
+        width=2,
+    )
+
+    # =====================================================
+    # TABLE HEADER
+    # =====================================================
+
+    draw.rounded_rectangle(
+        (
+            55,
+            rides_top,
+            width - 55,
+            rides_top + table_header_height,
+        ),
+        radius=20,
+        fill=RED,
+    )
+
+    # Remove rounded effect from lower header corners
+    draw.rectangle(
+        (
+            55,
+            rides_top + 23,
+            width - 55,
+            rides_top + table_header_height,
+        ),
+        fill=RED,
+    )
+
+    # -----------------------------------------------------
+    # Column divider
+    # -----------------------------------------------------
+
+    table_divider_x = 700
+
+    draw.line(
+        (
+            table_divider_x,
+            rides_top + table_header_height,
+            table_divider_x,
+            rides_bottom - 10,
+        ),
+        fill=DIVIDER,
+        width=2,
+    )
+
+    # -----------------------------------------------------
+    # Header text
+    # -----------------------------------------------------
+
+    draw.text(
+        (
+            115,
+            rides_top + 13,
+        ),
+        "ADVENTURE(S) BOOKED",
+        fill=WHITE,
+        font=font_table_header,
+    )
+
+    draw.text(
+        (
+            735,
+            rides_top + 13,
+        ),
+        "PARTICIPANTS",
+        fill=WHITE,
+        font=font_table_header,
+    )
+
+    # =====================================================
+    # RIDE ROWS
+    # =====================================================
+
+    row_y = (
+        rides_top
+        +
+        table_header_height
+        +
+        10
+    )
+
+    if valid_ride_items:
+
+        for index, item in enumerate(
+            valid_ride_items
+        ):
+
+            ride_name = safe_text(
+                item.ride.name
+            )
+
+            quantity = int(
+                item.quantity
+                or
+                0
+            )
+
+            word = (
+                "Participant"
+                if quantity == 1
+                else "Participants"
+            )
+
+            quantity_text = (
+                f"{quantity} {word}"
+            )
+
+            # ---------------------------------------------
+            # BULLET
+            # ---------------------------------------------
+
+            bullet_size = 13
+
+            bullet_y = (
+                row_y
+                +
+                10
+            )
+
+            draw.ellipse(
+                (
+                    112,
+                    bullet_y,
+                    112 + bullet_size,
+                    bullet_y + bullet_size,
+                ),
+                fill=RED,
+            )
+
+            # ---------------------------------------------
+            # RIDE NAME FONT
+            # ---------------------------------------------
+
+            ride_font = fit_font(
+                ride_name,
+                max_width=500,
+                start_size=ride_font_size,
+                minimum_size=15,
+                bold=True,
+            )
+
+            draw.text(
+                (
+                    150,
+                    row_y,
+                ),
+                ride_name,
+                fill=DARK,
+                font=ride_font,
+            )
+
+            # ---------------------------------------------
+            # PARTICIPANTS
+            # ---------------------------------------------
+
+            quantity_font = fit_font(
+                quantity_text,
+                max_width=260,
+                start_size=participant_font_size,
+                minimum_size=15,
+                bold=False,
+            )
+
+            draw.text(
+                (
+                    735,
+                    row_y,
+                ),
+                quantity_text,
+                fill=DARK,
+                font=quantity_font,
+            )
+
+            # ---------------------------------------------
+            # ROW DIVIDER
+            # ---------------------------------------------
+
+            if (
+                index
+                <
+                len(
+                    valid_ride_items
+                )
+                -
+                1
+            ):
+
+                divider_y = (
+                    row_y
+                    +
+                    ride_row_height
+                    -
+                    6
+                )
+
+                draw.line(
+                    (
+                        95,
+                        divider_y,
+                        width - 95,
+                        divider_y,
+                    ),
+                    fill=DIVIDER,
+                    width=2,
+                )
+
+            row_y += (
+                ride_row_height
+            )
+
+    else:
+
+        draw.text(
+            (
+                150,
+                row_y,
+            ),
+            "No adventure details available",
+            fill=GRAY,
+            font=font_value_small,
+        )
+
+    # =====================================================
+    # QR CODE
+    #
+    # Keep around the fixed "Show this QR" background area.
+    # =====================================================
+
+    if not ticket.qr_image:
+
+        raise ValueError(
+            "Ticket QR image does not exist."
+        )
+
+    qr = (
+        Image.open(
+            ticket.qr_image.path
+        )
+        .convert(
+            "RGB"
+        )
+    )
+
+    # =====================================================
+    # QR SIZE
+    # =====================================================
+
+    qr_size = 195
+
+    qr = qr.resize(
+        (
+            qr_size,
+            qr_size,
+        ),
+        Image.Resampling.NEAREST,
+    )
+
+    # =====================================================
+    # QR POSITION
+    # =====================================================
+
+    # Prefer placing after rides table
+    dynamic_qr_y = (
+        rides_bottom
+        +
+        25
+    )
+
+    # QR should not start too high
+    qr_y = max(
+        dynamic_qr_y,
+        1100,
+    )
+
+    qr_x = (
+        width
+        -
+        qr_size
+    ) // 2
+
+    qr_padding = 13
+
+    # =====================================================
+    # QR FRAME
+    # =====================================================
+
+    draw.rounded_rectangle(
+        (
+            qr_x - qr_padding,
+            qr_y - qr_padding,
+            qr_x + qr_size + qr_padding,
+            qr_y + qr_size + qr_padding,
+        ),
+        radius=18,
+        fill=WHITE,
+        outline=RED,
+        width=3,
+    )
+
+    # =====================================================
+    # PASTE QR
+    # =====================================================
+
+    image.paste(
+        qr,
+        (
+            qr_x,
+            qr_y,
+        ),
+    )
+
+    # =====================================================
+    # SAFETY CHECK
+    #
+    # Prevent unexpectedly huge ride lists from reaching
+    # decorative footer area unnoticed.
+    # =====================================================
+
+    qr_bottom = (
+        qr_y
+        +
+        qr_size
+        +
+        qr_padding
+    )
+
+    footer_safe_limit = 1340
+
+    if qr_bottom > footer_safe_limit:
+
+        print(
+            "WHATSAPP TICKET WARNING: "
+            "Dynamic content is close to footer. "
+            f"Ride count: {ride_count}"
+        )
+
+    # =====================================================
+    # SAVE FINAL WHATSAPP IMAGE
+    # =====================================================
+
+    buffer = BytesIO()
+
+    image.save(
+        buffer,
+        format="PNG",
+        optimize=False,
+    )
+
+    buffer.seek(
+        0
+    )
+
+    filename = (
+        f"whatsapp-ticket-"
+        f"{ticket.ticket_id}.png"
+    )
+
+    # =====================================================
+    # DELETE OLD GENERATED IMAGE
+    # =====================================================
+
+    if ticket.whatsapp_ticket_image:
+
+        try:
+
+            ticket.whatsapp_ticket_image.delete(
+                save=False
+            )
+
+        except Exception as delete_error:
+
+            print(
+                "OLD WHATSAPP TICKET "
+                "DELETE ERROR:",
+                repr(
+                    delete_error
+                ),
+            )
+
+    # =====================================================
+    # SAVE NEW IMAGE
+    # =====================================================
+
+    ticket.whatsapp_ticket_image.save(
+        filename,
+        ContentFile(
+            buffer.getvalue()
+        ),
+        save=False,
+    )
+
+    ticket.save(
+        update_fields=[
+            "whatsapp_ticket_image",
+        ]
+    )
+
+    # =====================================================
+    # DEBUG
+    # =====================================================
+
+    print(
+        "\n========================================"
+    )
+
+    print(
+        "WHATSAPP TICKET IMAGE GENERATED"
+    )
+
+    print(
+        "BOOKING:",
+        booking.booking_id,
+    )
+
+    print(
+        "TICKET:",
+        ticket.ticket_number,
+    )
+
+    print(
+        "RIDES:",
+        ride_count,
+    )
+
+    print(
+        "TOTAL PARTICIPANTS:",
+        total_participants,
+    )
+
+    print(
+        "IMAGE:",
+        ticket.whatsapp_ticket_image.name,
+    )
+
+    print(
+        "========================================\n"
+    )
+
+    return True
 
 
 def generate_ticket_pdf(ticket):

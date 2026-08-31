@@ -951,6 +951,12 @@ class Ticket(models.Model):
         null=True
     )
 
+    whatsapp_ticket_image = models.ImageField(
+        upload_to="tickets/whatsapp/",
+        blank=True,
+        null=True,
+    )
+
 
     pdf_ticket = models.FileField(
         upload_to="tickets/pdf/",
