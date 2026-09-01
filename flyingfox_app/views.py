@@ -16694,7 +16694,7 @@ def generate_whatsapp_ticket_image(ticket):
 
     filename = (
         f"whatsapp-ticket-"
-        f"{ticket.ticket_id}.png"
+        f"{ticket.ticket_id}.jpg"
     )
 
     # =====================================================
