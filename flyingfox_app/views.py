@@ -16676,15 +16676,17 @@ def generate_whatsapp_ticket_image(ticket):
 
     buffer = BytesIO()
 
-    image.save(
-        buffer,
-        format="PNG",
-        optimize=False,
-    )
+    if image.mode != "RGB":
+       image = image.convert("RGB")
 
-    buffer.seek(
-        0
-    )
+    image.save(
+    buffer,
+    format="JPEG",
+    quality=90,
+    optimize=True,
+)
+
+    buffer.seek(0)
 
     # =====================================================
     # OUTPUT FILE NAME
