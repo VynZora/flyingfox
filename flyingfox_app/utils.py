@@ -557,20 +557,28 @@ def send_ticket_whatsapp(request, ticket):
     # =====================================================
     # FINAL {{5}} VALUE
     # =====================================================
-
-    ride_summary = (
-        "\n".join(
-            ride_lines
-        )
-        .strip()
+    ride_summary = " | ".join(
+        line.strip()
+        for line in ride_lines
+        if line and line.strip()
     )
 
-    if not ride_summary:
-
-        ride_summary = (
-            "Adventure details are included "
-            "in your ticket."
+    ride_summary = (
+          ride_summary
+          .replace("\n", " ")
+          .replace("\r", " ")
+          .replace("\t", " ")
+          .strip()
         )
+
+    while "  " in ride_summary:
+         ride_summary = ride_summary.replace("  ", " ")
+
+    if not ride_summary:
+        ride_summary = (
+        "Adventure details are included "
+        "in your ticket."
+    )
 
     # =====================================================
     # TEMPLATE VALUES
