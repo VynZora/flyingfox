@@ -2230,6 +2230,644 @@
     }
 }
         {% comment %}  {% endcomment %}
+
+
+
+        {% comment %} terms and condition css start {% endcomment %}
+/* =========================================================
+   TERMS & CONDITIONS RIGHT SIDE DRAWER
+========================================================= */
+
+.ff-terms-modal {
+    position: fixed;
+    inset: 0;
+
+    visibility: hidden;
+    opacity: 0;
+
+    z-index: 9999999;
+
+    transition:
+        visibility 0.35s ease,
+        opacity 0.35s ease;
+}
+
+
+/* OPEN STATE */
+.ff-terms-modal.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/* =========================================================
+   BACKDROP
+========================================================= */
+
+.ff-terms-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.64);
+
+    opacity: 0;
+
+    transition: opacity 0.35s ease;
+}
+
+
+.ff-terms-modal.active .ff-terms-backdrop {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   RIGHT DRAWER
+========================================================= */
+
+.ff-terms-drawer {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    width: min(520px, 100%);
+    height: 100%;
+
+    background: #ffffff;
+
+    box-shadow:
+        -20px
+        0
+        60px
+        rgba(0, 0, 0, 0.18);
+
+    transform: translateX(100%);
+
+    transition:
+        transform
+        0.38s
+        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+.ff-terms-modal.active .ff-terms-drawer {
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.ff-terms-header {
+    display: flex;
+
+    flex: 0 0 auto;
+
+    min-height: 150px;
+
+    padding:
+        32px
+        36px
+        25px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-bottom: 1px solid #eeeeee;
+
+    background: #ffffff;
+}
+
+
+.ff-terms-brand img {
+    display: block;
+
+    width: auto;
+    max-width: 135px;
+    max-height: 72px;
+
+    object-fit: contain;
+}
+
+
+/* CLOSE BUTTON */
+
+.ff-terms-close {
+    display: flex;
+
+    flex:
+        0
+        0
+        58px;
+
+    width: 58px;
+    height: 58px;
+
+    border: 0;
+    border-radius: 50%;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    cursor: pointer;
+
+    font-size: 23px;
+
+    box-shadow:
+        0
+        14px
+        35px
+        rgba(195, 17, 3, 0.20);
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.ff-terms-close:hover {
+    background: var(--ff-red-dark);
+
+    transform: rotate(90deg);
+}
+
+
+/* =========================================================
+   SCROLLABLE CONTENT
+========================================================= */
+
+.ff-terms-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    padding:
+        35px
+        38px
+        40px;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        #9a9a9a
+        transparent;
+}
+
+
+.ff-terms-content::-webkit-scrollbar {
+    width: 7px;
+}
+
+
+.ff-terms-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.ff-terms-content::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background: #9a9a9a;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.ff-terms-title-area {
+    margin-bottom: 30px;
+}
+
+
+.ff-terms-eyebrow {
+    display: inline-block;
+
+    margin-bottom: 8px;
+
+    color: var(--ff-red);
+
+    font-size: 10px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.ff-terms-title-area h2 {
+    margin:
+        0
+        0
+        10px;
+
+    color: var(--ff-dark);
+
+    font-size: 28px;
+    font-weight: 900;
+
+    line-height: 1.2;
+}
+
+
+.ff-terms-title-area p {
+    margin: 0;
+
+    color: var(--ff-text);
+
+    font-size: 13px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   TERMS SECTIONS
+========================================================= */
+
+.ff-terms-section {
+    display: grid;
+
+    grid-template-columns:
+        46px
+        minmax(0, 1fr);
+
+    padding:
+        23px
+        0;
+
+    border-bottom:
+        1px
+        solid
+        #eceef1;
+
+    gap: 15px;
+}
+
+
+.ff-terms-section:first-of-type {
+    padding-top: 5px;
+}
+
+
+.ff-terms-section-icon {
+    display: flex;
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 13px;
+
+    align-items: center;
+    justify-content: center;
+
+    color: var(--ff-red);
+
+    background: var(--ff-red-light);
+
+    font-size: 16px;
+}
+
+
+.ff-terms-section h3 {
+    margin:
+        3px
+        0
+        8px;
+
+    color: var(--ff-dark);
+
+    font-size: 16px;
+    font-weight: 900;
+}
+
+
+.ff-terms-section p {
+    margin: 0;
+
+    color: var(--ff-text);
+
+    font-size: 12px;
+
+    line-height: 1.75;
+}
+
+
+.ff-terms-section ul {
+    margin:
+        12px
+        0
+        0;
+
+    padding-left: 19px;
+}
+
+
+.ff-terms-section li {
+    margin-bottom: 7px;
+
+    color: var(--ff-text);
+
+    font-size: 12px;
+
+    line-height: 1.65;
+}
+
+
+.ff-terms-section li::marker {
+    color: var(--ff-red);
+}
+
+
+/* =========================================================
+   NOTICE
+========================================================= */
+
+.ff-terms-notice {
+    display: flex;
+
+    margin-top: 27px;
+
+    padding: 17px;
+
+    border:
+        1px
+        solid
+        rgba(195, 17, 3, 0.14);
+
+    border-radius: 14px;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    background: var(--ff-red-light);
+}
+
+
+.ff-terms-notice > i {
+    margin-top: 3px;
+
+    flex-shrink: 0;
+
+    color: var(--ff-red);
+
+    font-size: 17px;
+}
+
+
+.ff-terms-notice p {
+    margin: 0;
+
+    color: #505966;
+
+    font-size: 11px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.ff-terms-footer {
+    flex: 0 0 auto;
+
+    padding:
+        18px
+        38px
+        22px;
+
+    border-top:
+        1px
+        solid
+        #e8eaed;
+
+    background: #ffffff;
+}
+
+
+.ff-terms-accept {
+    display: flex;
+
+    width: 100%;
+    min-height: 54px;
+
+    border: 0;
+    border-radius: 28px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    cursor: pointer;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.ff-terms-accept:hover {
+    background: var(--ff-red-dark);
+
+    transform: translateY(-1px);
+}
+
+
+/* Don't allow page behind modal to scroll */
+body.ff-terms-open {
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 575px) {
+
+    .ff-terms-drawer {
+        width: 100%;
+    }
+
+
+    .ff-terms-header {
+        min-height: 105px;
+
+        padding:
+            20px
+            20px;
+    }
+
+
+    .ff-terms-brand img {
+        max-width: 115px;
+        max-height: 55px;
+    }
+
+
+    .ff-terms-close {
+        flex-basis: 48px;
+
+        width: 48px;
+        height: 48px;
+
+        font-size: 19px;
+    }
+
+
+    .ff-terms-content {
+        padding:
+            26px
+            21px
+            30px;
+    }
+
+
+    .ff-terms-title-area h2 {
+        font-size: 23px;
+    }
+
+
+    .ff-terms-section {
+        grid-template-columns:
+            40px
+            minmax(0, 1fr);
+
+        gap: 12px;
+    }
+
+
+    .ff-terms-section-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    .ff-terms-section h3 {
+        font-size: 14px;
+    }
+
+
+    .ff-terms-footer {
+        padding:
+            15px
+            20px
+            18px;
+    }
+
+}
+        {% comment %} terms and condition css end  {% endcomment %}
+
+
+
+{% comment %} otp verificatio css start {% endcomment %}
+.ff-otp-send-button,
+.ff-otp-verify-button {
+
+    display: inline-flex;
+
+    min-height: 44px;
+
+    padding:
+        10px
+        18px;
+
+    border: 0;
+
+    border-radius: 24px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: #ffffff;
+
+    background: var(--ff-red);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.ff-otp-send-button:hover,
+.ff-otp-verify-button:hover {
+
+    background:
+        var(--ff-red-dark);
+}
+
+
+.ff-otp-send-button:disabled,
+.ff-otp-verify-button:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+#bookingOtpInputWrap {
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+
+#bookingOtpInput {
+
+    flex: 1;
+}
+
+
+.ff-booking-otp-success {
+
+    color: var(--ff-green);
+
+    font-weight: 700;
+}
+
+
+.ff-booking-otp-error {
+
+    color: var(--ff-red);
+
+    font-weight: 700;
+}
+{% comment %} otp verification css end {% endcomment %}
+
+
 </style>
 
 </head>
@@ -2408,6 +3046,123 @@
                                             <strong>₹{{ item.subtotal }}</strong>
                                         </div>
                                     </div>
+
+
+
+
+
+<!-- =====================================================
+     RIDE SCHEDULE / TIME SLOT
+====================================================== -->
+
+{% if item.selected_start %}
+
+    <div class="ff-weight-review-section">
+
+        <!-- HEADING -->
+        <div class="ff-weight-review-heading">
+
+            <span>
+                <i class="fas fa-clock"></i>
+            </span>
+
+            <div>
+
+                <strong>
+                    Scheduled Ride Time
+                </strong>
+
+                <small>
+                    {{ item.ride_name }}
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- SLOT ALLOCATION -->
+        {% if item.slot_allocations %}
+
+            <div class="ff-weight-review-list">
+
+                {% for slot in item.slot_allocations %}
+
+                    <div class="ff-weight-review-row">
+
+                        <span>
+
+                            <i
+                                class="fas fa-clock"
+                                style="
+                                    margin-right: 6px;
+                                    color: var(--ff-red);
+                                "
+                            ></i>
+
+                            {{ slot.start_label }}
+                            -
+                            {{ slot.end_label }}
+
+                        </span>
+
+
+                        <strong>
+
+                            {{ slot.participant_count }}
+
+                            Rider{{ slot.participant_count|pluralize }}
+
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <!-- TOTAL -->
+                <div class="ff-weight-review-total">
+
+                    <span>
+                        Total Scheduled Riders
+                    </span>
+
+                    <strong>
+
+                        {{ item.quantity }}
+
+                        Rider{{ item.quantity|pluralize }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <!-- FALLBACK -->
+            <div class="ff-weight-review-list">
+
+                <div class="ff-weight-review-row">
+
+                    <span>
+                        Start Time
+                    </span>
+
+                    <strong>
+                        {{ item.selected_start_label }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endif %}
 
 
                                     <!-- PARTICIPANT WEIGHT DETAILS -->
@@ -2732,11 +3487,84 @@
 
 
 
+<!-- =====================================
+     MOBILE OTP VERIFICATION
+====================================== -->
+
+<div
+    class="ff-field"
+    id="bookingOtpSection">
+
+    <label>
+        Verify Mobile Number *
+    </label>
+
+
+    <button
+        type="button"
+        id="sendBookingOtpButton"
+        class="ff-otp-send-button"
+    >
+        <i class="fas fa-paper-plane"></i>
+        Send OTP
+    </button>
+
+
+    <div
+        id="bookingOtpInputWrap"
+        style="
+            display: flex;
+            margin-top: 12px;
+            gap: 10px;
+        "
+    >
+
+       <input
+    type="text"
+    id="bookingOtpInput"
+    maxlength="6"
+    inputmode="numeric"
+    pattern="[0-9]{6}"
+    placeholder="Enter 6-digit OTP"
+    autocomplete="one-time-code"
+>
+
+
+        <button
+            type="button"
+            id="verifyBookingOtpButton"
+            class="ff-otp-verify-button"
+        >
+            Verify OTP
+        </button>
+
+    </div>
+
+
+    <div
+        id="bookingOtpMessage"
+        style="
+            margin-top: 8px;
+            font-size: 11px;
+        "
+    ></div>
+
+
+    <input
+        type="hidden"
+        id="bookingPhoneVerified"
+        value="0"
+    >
+
+</div>
+
+
+
                             <!-- =================================
                                  PIN CODE
                             ================================== -->
 
-                            <div class="ff-field">
+                            {% comment %} <div class="ff-field">
 
                                 <label for="billingPincode">
 
@@ -2758,7 +3586,7 @@
                                     required
                                 >
 
-                            </div>
+                            </div> {% endcomment %}
 
 
 
@@ -2781,8 +3609,8 @@
 
                                     I agree to the
 
-                                    <a href="#">
-                                        Terms &amp; Conditions
+                                    <a href="#" id="ffTermsOpen">
+                                     Terms &amp; Conditions
                                     </a>
 
                                     and booking policies.
@@ -2880,6 +3708,279 @@
 
 
 
+
+<!-- =========================================================
+     TERMS & CONDITIONS SIDE DRAWER
+========================================================= -->
+
+<div
+    class="ff-terms-modal"
+    id="ffTermsModal"
+    aria-hidden="true"
+>
+
+    <!-- DARK BACKDROP -->
+    <div
+        class="ff-terms-backdrop"
+        id="ffTermsBackdrop"
+    ></div>
+
+
+    <!-- RIGHT SIDE PANEL -->
+    <aside
+        class="ff-terms-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ffTermsTitle"
+    >
+
+        <!-- HEADER -->
+        <div class="ff-terms-header">
+
+            <div class="ff-terms-brand">
+
+                <!-- Change this logo path if required -->
+                <img
+                    src="{% static 'frontend/assets/img/logo/logo.png' %}"
+                    alt="Flying Fox Adventure"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                class="ff-terms-close"
+                id="ffTermsClose"
+                aria-label="Close Terms and Conditions"
+            >
+                <i class="fas fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <!-- SCROLLABLE CONTENT -->
+        <div class="ff-terms-content">
+
+            <div class="ff-terms-title-area">
+
+                <span class="ff-terms-eyebrow">
+                    Flying Fox Adventure
+                </span>
+
+                <h2 id="ffTermsTitle">
+                    Terms &amp; Conditions
+                </h2>
+
+                <p>
+                    Please read these terms carefully before confirming
+                    your Flying Fox Adventure booking.
+                </p>
+
+            </div>
+
+
+            <!-- 01 -->
+            <section class="ff-terms-section">
+
+                <div class="ff-terms-section-icon">
+                    <i class="fas fa-ticket"></i>
+                </div>
+
+                <div>
+                    <h3>1. Booking &amp; Confirmation</h3>
+
+                    <p>
+                        All bookings are subject to availability. Your
+                        booking will be considered confirmed only after
+                        successful payment and receipt of booking
+                        confirmation from Flying Fox Adventure.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- 02 -->
+            <section class="ff-terms-section">
+
+                <div class="ff-terms-section-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+
+                <div>
+                    <h3>2. Participant Requirements</h3>
+
+                    <p>
+                        Participants must satisfy all applicable age,
+                        weight, health and safety requirements for the
+                        selected adventure activity.
+                    </p>
+
+                    <ul>
+                        <li>
+                            Participants must provide accurate information
+                            during booking.
+                        </li>
+
+                        <li>
+                            Weight restrictions applicable to individual
+                            rides must be followed.
+                        </li>
+
+                        <li>
+                            The adventure team may refuse participation
+                            where safety requirements are not satisfied.
+                        </li>
+                    </ul>
+                </div>
+
+            </section>
+
+
+            <!-- 03 -->
+            <section class="ff-terms-section">
+
+                <div class="ff-terms-section-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+
+                <div>
+                    <h3>3. Safety Instructions</h3>
+
+                    <p>
+                        Every participant must follow instructions given
+                        by Flying Fox Adventure guides and safety
+                        personnel. Safety equipment provided for an
+                        activity must be used as instructed.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- 04 -->
+            <section class="ff-terms-section">
+
+                <div class="ff-terms-section-icon">
+                    <i class="fas fa-calendar-xmark"></i>
+                </div>
+
+                <div>
+                    <h3>4. Cancellation &amp; Rescheduling</h3>
+
+                    <p>
+                        Cancellation, refund and rescheduling eligibility
+                        will be determined according to the applicable
+                        booking policy and circumstances of the booking.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- 05 -->
+            <section class="ff-terms-section">
+
+                <div class="ff-terms-section-icon">
+                    <i class="fas fa-cloud-rain"></i>
+                </div>
+
+                <div>
+                    <h3>5. Weather Conditions</h3>
+
+                    <p>
+                        Adventure activities may be delayed, rescheduled
+                        or cancelled due to unsafe weather, operational
+                        conditions or circumstances beyond our control.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- 06 -->
+            <section class="ff-terms-section">
+
+                <div class="ff-terms-section-icon">
+                    <i class="fas fa-triangle-exclamation"></i>
+                </div>
+
+                <div>
+                    <h3>6. Risk Acknowledgement</h3>
+
+                    <p>
+                        Adventure activities involve inherent risks.
+                        Participants are expected to understand the nature
+                        of the selected activity and comply with all
+                        safety procedures.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- 07 -->
+            <section class="ff-terms-section">
+
+                <div class="ff-terms-section-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+
+                <div>
+                    <h3>7. Payments</h3>
+
+                    <p>
+                        All applicable charges must be paid using the
+                        payment methods provided during checkout. Prices
+                        and applicable promotional discounts will be
+                        displayed before final payment.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- BOTTOM NOTE -->
+            <div class="ff-terms-notice">
+
+                <i class="fas fa-circle-info"></i>
+
+                <p>
+                    By selecting the Terms &amp; Conditions checkbox
+                    and continuing with payment, you confirm that you
+                    have read and agreed to these terms and the applicable
+                    booking policies.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FIXED BOTTOM BUTTON -->
+        <div class="ff-terms-footer">
+
+            <button
+                type="button"
+                class="ff-terms-accept"
+                id="ffTermsAccept"
+            >
+                <i class="fas fa-check"></i>
+                I Understand
+            </button>
+
+        </div>
+
+    </aside>
+
+</div>
+
+
+
+
+
 <!-- =========================================================
      RAZORPAY CHECKOUT
 ========================================================= -->
@@ -2953,11 +4054,6 @@ const bookingErrorBackdrop =
             );
 
 
-        const pincodeInput =
-            document.getElementById(
-                "billingPincode"
-            );
-
 
 
        
@@ -3028,22 +4124,6 @@ if (phoneInput) {
 }
 
 
-
-        /* =====================================================
-           PINCODE - NUMBERS ONLY
-        ====================================================== */
-
-        pincodeInput?.addEventListener(
-            "input",
-            function () {
-
-                this.value =
-                    this.value
-                        .replace(/\D/g, "")
-                        .slice(0, 6);
-
-            }
-        );
 
 
 
@@ -3410,6 +4490,26 @@ if (phoneFullInput) {
 }
 
 
+
+/* =============================================
+   REQUIRE MOBILE OTP VERIFICATION
+============================================= */
+
+if (
+    !bookingPhoneVerified
+    ||
+    bookingPhoneVerified.value !== "1"
+) {
+
+    setBookingOtpMessage(
+        "Please verify your mobile number before payment."
+    );
+
+    return;
+}
+
+
+
 /* REMOVE ERROR */
 
 if (phoneError) {
@@ -3443,26 +4543,7 @@ if (phoneError) {
 
 
 
-                /* =============================================
-                   PINCODE VALIDATION
-                ============================================== */
-
-                if (
-                    !/^[0-9]{6}$/.test(
-                        pincodeInput?.value || ""
-                    )
-                ) {
-
-                    alert(
-                        "Please enter a valid 6-digit PIN code."
-                    );
-
-
-                    pincodeInput?.focus();
-
-                    return;
-
-                }
+               
 
 
 
@@ -3908,12 +4989,6 @@ if (phoneError) {
         );
 
 
-    }
-);
-
-
-
-
 
 
 
@@ -3932,6 +5007,437 @@ function syncReviewCardHeight() {
 syncReviewCardHeight();
 window.addEventListener('load', syncReviewCardHeight);
 window.addEventListener('resize', syncReviewCardHeight);
+
+
+
+
+
+
+
+
+
+
+{% comment %} send otp js start {% endcomment %}
+
+const sendBookingOtpButton =
+    document.getElementById(
+        "sendBookingOtpButton"
+    );
+
+const verifyBookingOtpButton =
+    document.getElementById(
+        "verifyBookingOtpButton"
+    );
+
+const bookingOtpInputWrap =
+    document.getElementById(
+        "bookingOtpInputWrap"
+    );
+
+const bookingOtpInput =
+    document.getElementById(
+        "bookingOtpInput"
+    );
+
+const bookingOtpMessage =
+    document.getElementById(
+        "bookingOtpMessage"
+    );
+
+const bookingPhoneVerified =
+    document.getElementById(
+        "bookingPhoneVerified"
+    );
+
+
+function setBookingOtpMessage(
+    message,
+    success = false
+) {
+
+    if (!bookingOtpMessage) {
+        return;
+    }
+
+    bookingOtpMessage.textContent =
+        message;
+
+    bookingOtpMessage.className =
+        success
+            ? "ff-booking-otp-success"
+            : "ff-booking-otp-error";
+}
+
+  
+
+
+
+sendBookingOtpButton?.addEventListener(
+    "click",
+    async function () {
+
+        if (!phoneIti) {
+
+            setBookingOtpMessage(
+                "Phone validation is not ready."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            await phoneIti.promise;
+
+        }
+        catch (error) {
+
+            setBookingOtpMessage(
+                "Phone validation could not be loaded."
+            );
+
+            return;
+        }
+
+
+        if (!phoneIti.isValidNumber()) {
+
+            setBookingOtpMessage(
+                "Please enter a valid mobile number."
+            );
+
+            return;
+        }
+
+
+        const phoneNumber =
+            phoneIti.getNumber();
+
+
+        sendBookingOtpButton.disabled =
+            true;
+
+        sendBookingOtpButton.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Sending OTP';
+
+
+        try {
+
+            const csrfToken =
+                billingForm.querySelector(
+                    "[name=csrfmiddlewaretoken]"
+                ).value;
+
+
+            const response =
+                await fetch(
+                    "{% url 'booking_send_otp' %}",
+                    {
+                        method:
+                            "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
+
+                            "X-CSRFToken":
+                                csrfToken,
+
+                            "X-Requested-With":
+                                "XMLHttpRequest",
+                        },
+
+                        credentials:
+                            "same-origin",
+
+                        body:
+                            new URLSearchParams(
+                                {
+                                    phone_number:
+                                        phoneNumber,
+                                }
+                            ),
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+               response.ok
+                &&
+                data.success
+                ) {
+
+    bookingPhoneVerified.value =
+        "0";
+
+
+    bookingOtpInput.disabled =
+        false;
+
+    bookingOtpInput.readOnly =
+        false;
+
+    bookingOtpInput.value =
+        "";
+
+
+    verifyBookingOtpButton.disabled =
+        false;
+
+
+    setBookingOtpMessage(
+        "OTP sent. Please enter the 6-digit code.",
+        true
+    );
+
+
+    bookingOtpInput.focus();
+}
+            else {
+
+                setBookingOtpMessage(
+                    data.message
+                    ||
+                    "Unable to send OTP."
+                );
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+            setBookingOtpMessage(
+                "Unable to send OTP. Please try again."
+            );
+
+        }
+        finally {
+
+            sendBookingOtpButton.disabled =
+                false;
+
+            sendBookingOtpButton.innerHTML =
+                '<i class="fas fa-paper-plane"></i> Resend OTP';
+        }
+    }
+);
+
+
+
+verifyBookingOtpButton?.addEventListener(
+    "click",
+    async function () {
+
+        const otp =
+            (
+                bookingOtpInput?.value
+                ||
+                ""
+            ).trim();
+
+
+        if (
+            !/^[0-9]{6}$/.test(
+                otp
+            )
+        ) {
+
+            setBookingOtpMessage(
+                "Please enter the 6-digit OTP."
+            );
+
+            bookingOtpInput?.focus();
+
+            return;
+        }
+
+
+        if (!phoneIti) {
+
+            setBookingOtpMessage(
+                "Phone validation is not ready."
+            );
+
+            return;
+        }
+
+
+        const phoneNumber =
+            phoneIti.getNumber();
+
+
+        verifyBookingOtpButton.disabled =
+            true;
+
+        verifyBookingOtpButton.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Verifying';
+
+
+        try {
+
+            const csrfToken =
+                billingForm.querySelector(
+                    "[name=csrfmiddlewaretoken]"
+                ).value;
+
+
+            const response =
+                await fetch(
+                    "{% url 'booking_verify_otp' %}",
+                    {
+                        method:
+                            "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
+
+                            "X-CSRFToken":
+                                csrfToken,
+
+                            "X-Requested-With":
+                                "XMLHttpRequest",
+                        },
+
+                        credentials:
+                            "same-origin",
+
+                        body:
+                            new URLSearchParams(
+                                {
+                                    phone_number:
+                                        phoneNumber,
+
+                                    otp:
+                                        otp,
+                                }
+                            ),
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                response.ok
+                &&
+                data.success
+            ) {
+
+                bookingPhoneVerified.value =
+                    "1";
+
+                bookingOtpInput.readOnly =
+                    true;
+
+                verifyBookingOtpButton.disabled =
+                    true;
+
+                sendBookingOtpButton.disabled =
+                    true;
+
+                setBookingOtpMessage(
+                    "✓ Mobile number verified",
+                    true
+                );
+
+            }
+            else {
+
+                bookingPhoneVerified.value =
+                    "0";
+
+                setBookingOtpMessage(
+                    data.message
+                    ||
+                    "OTP verification failed."
+                );
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+            bookingPhoneVerified.value =
+                "0";
+
+            setBookingOtpMessage(
+                "Unable to verify OTP. Please try again."
+            );
+
+        }
+        finally {
+
+            if (
+                bookingPhoneVerified.value
+                !==
+                "1"
+            ) {
+
+                verifyBookingOtpButton.disabled =
+                    false;
+
+                verifyBookingOtpButton.innerHTML =
+                    "Verify OTP";
+            }
+        }
+    }
+);
+
+
+phoneInput?.addEventListener(
+    "input",
+    function () {
+
+        bookingPhoneVerified.value =
+            "0";
+
+        bookingOtpInput.value =
+            "";
+
+        bookingOtpInput.readOnly =
+            false;
+
+        verifyBookingOtpButton.disabled =
+            false;
+
+        verifyBookingOtpButton.innerHTML =
+            "Verify OTP";
+
+        sendBookingOtpButton.disabled =
+            false;
+
+        sendBookingOtpButton.innerHTML =
+            '<i class="fas fa-paper-plane"></i> Send OTP';
+
+        setBookingOtpMessage(
+            "Send OTP to verify this mobile number."
+        );
+    }
+);
+
+
+
+    }
+);
+
+
+
+
+{% comment %} send otp js end  {% endcomment %}
 
 </script>
 
@@ -4108,6 +5614,172 @@ window.addEventListener('resize', syncReviewCardHeight);
     </div>
 
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const termsModal =
+        document.getElementById("ffTermsModal");
+
+    const termsOpen =
+        document.getElementById("ffTermsOpen");
+
+    const termsClose =
+        document.getElementById("ffTermsClose");
+
+    const termsBackdrop =
+        document.getElementById("ffTermsBackdrop");
+
+    const termsAccept =
+        document.getElementById("ffTermsAccept");
+
+
+    /* =========================================
+       OPEN MODAL
+    ========================================= */
+
+    function openTermsModal() {
+
+        if (!termsModal) {
+            return;
+        }
+
+        termsModal.classList.add("active");
+
+        termsModal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.classList.add(
+            "ff-terms-open"
+        );
+
+        setTimeout(function () {
+
+            if (termsClose) {
+                termsClose.focus();
+            }
+
+        }, 350);
+    }
+
+
+    /* =========================================
+       CLOSE MODAL
+    ========================================= */
+
+    function closeTermsModal() {
+
+        if (!termsModal) {
+            return;
+        }
+
+        termsModal.classList.remove("active");
+
+        termsModal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.classList.remove(
+            "ff-terms-open"
+        );
+    }
+
+
+    /* =========================================
+       TERMS LINK
+    ========================================= */
+
+    if (termsOpen) {
+
+        termsOpen.addEventListener(
+            "click",
+            function (event) {
+
+                /*
+                 * Important:
+                 * prevents "#" navigation AND prevents
+                 * the surrounding label from accidentally
+                 * toggling the checkbox.
+                 */
+                event.preventDefault();
+                event.stopPropagation();
+
+                openTermsModal();
+            }
+        );
+
+    }
+
+
+    /* =========================================
+       CLOSE BUTTON
+    ========================================= */
+
+    if (termsClose) {
+
+        termsClose.addEventListener(
+            "click",
+            closeTermsModal
+        );
+
+    }
+
+
+    /* =========================================
+       CLICK DARK BACKDROP
+    ========================================= */
+
+    if (termsBackdrop) {
+
+        termsBackdrop.addEventListener(
+            "click",
+            closeTermsModal
+        );
+
+    }
+
+
+    /* =========================================
+       I UNDERSTAND BUTTON
+    ========================================= */
+
+    if (termsAccept) {
+
+        termsAccept.addEventListener(
+            "click",
+            closeTermsModal
+        );
+
+    }
+
+
+    /* =========================================
+       ESC KEY
+    ========================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                termsModal &&
+                termsModal.classList.contains("active")
+            ) {
+
+                closeTermsModal();
+
+            }
+
+        }
+    );
+
+});
+</script>
 
 </body>
 

@@ -354,6 +354,25 @@ class Ride(models.Model):
         help_text="Example: 30 Minutes / 1 Hour"
     )
 
+    # =====================================================
+    # SLOT SETTINGS
+    # =====================================================
+
+    capacity_per_slot = models.PositiveIntegerField(
+        default=15,
+        help_text=(
+            "Maximum number of participants allowed "
+            "in one time slot for this ride."
+        ),
+    )
+
+    slot_duration_minutes = models.PositiveIntegerField(
+        default=60,
+        help_text=(
+            "Duration of one booking slot in minutes."
+        ),
+    )
+
     safety_notes = models.TextField(
         blank=True
     )
@@ -567,7 +586,9 @@ class Booking(models.Model):
     booking_date = models.DateField()
 
     time_slot = models.CharField(
-        max_length=50,
+    max_length=50,
+    blank=True,
+    default="",
     )
 
     # =====================================================
@@ -822,7 +843,137 @@ class BookingRideItem(models.Model):
 
 
 
-    
+
+class BookingRideSlot(models.Model):
+
+    STATUS_CHOICES = [
+
+        (
+            "held",
+            "Held",
+        ),
+
+        (
+            "confirmed",
+            "Confirmed",
+        ),
+
+        (
+            "cancelled",
+            "Cancelled",
+        ),
+
+        (
+            "expired",
+            "Expired",
+        ),
+    ]
+
+    # =====================================================
+    # BOOKING RIDE
+    # =====================================================
+
+    booking_item = models.ForeignKey(
+        BookingRideItem,
+        on_delete=models.CASCADE,
+        related_name="allocated_slots",
+    )
+
+    # =====================================================
+    # SLOT TIME
+    # =====================================================
+
+    slot_start_time = models.TimeField()
+
+    slot_end_time = models.TimeField()
+
+    # =====================================================
+    # PARTICIPANTS
+    # =====================================================
+
+    participant_count = models.PositiveIntegerField()
+
+    # =====================================================
+    # STATUS
+    # =====================================================
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="held",
+        db_index=True,
+    )
+
+    # =====================================================
+    # PAYMENT HOLD EXPIRY
+    # =====================================================
+
+    hold_expires_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    # =====================================================
+    # TIMESTAMPS
+    # =====================================================
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+
+        ordering = [
+            "slot_start_time",
+        ]
+
+        constraints = [
+
+            models.UniqueConstraint(
+                fields=[
+                    "booking_item",
+                    "slot_start_time",
+                ],
+                name="unique_booking_item_start_slot",
+            ),
+
+            models.CheckConstraint(
+                condition=models.Q(
+                    participant_count__gt=0
+                ),
+                name="booking_ride_slot_participants_gt_0",
+            ),
+        ]
+
+        indexes = [
+
+            models.Index(
+                fields=[
+                    "slot_start_time",
+                    "status",
+                ],
+                name="booking_slot_status_idx",
+            ),
+
+        ]
+
+    def __str__(self):
+
+        return (
+            f"{self.booking_item.booking.booking_id} - "
+            f"{self.booking_item.ride.name} - "
+            f"{self.slot_start_time} to "
+            f"{self.slot_end_time} - "
+            f"{self.participant_count} rider(s)"
+        )
+
+
+
+
 class Payment(models.Model):
 
     STATUS_CHOICES = [

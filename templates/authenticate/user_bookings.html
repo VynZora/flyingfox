@@ -80,19 +80,6 @@ My Bookings | Flying Fox
                             <div>
 
                                 <span>
-                                    Ride
-                                </span>
-
-                                <strong>
-                                    {{ booking.ride.name }}
-                                </strong>
-
-                            </div>
-
-
-                            <div>
-
-                                <span>
                                     Visit Date
                                 </span>
 
@@ -106,11 +93,11 @@ My Bookings | Flying Fox
                             <div>
 
                                 <span>
-                                    Time Slot
+                                    Adventures
                                 </span>
 
                                 <strong>
-                                    {{ booking.time_slot }}
+                                    {{ booking.display_ride_items|length }}
                                 </strong>
 
                             </div>
@@ -145,6 +132,66 @@ My Bookings | Flying Fox
                         </div>
 
 
+                        {% if booking.display_ride_items %}
+
+                            <div class="ff-booking-rides">
+
+                                {% for item in booking.display_ride_items %}
+
+                                    <div class="ff-booking-ride-card">
+
+                                        <div class="ff-booking-ride-head">
+
+                                            <strong>
+                                                {{ item.ride.name }}
+                                            </strong>
+
+                                            <span>
+                                                {{ item.quantity }}
+                                                rider{{ item.quantity|pluralize }}
+                                            </span>
+
+                                        </div>
+
+
+                                        {% if item.display_slots %}
+
+                                            <div class="ff-booking-slot-list">
+
+                                                {% for slot in item.display_slots %}
+
+                                                    <div class="ff-booking-slot-row">
+
+                                                        <span>
+                                                            <i class="far fa-clock"></i>
+
+                                                            {{ slot.slot_start_time|time:"h:i A" }}
+                                                            -
+                                                            {{ slot.slot_end_time|time:"h:i A" }}
+                                                        </span>
+
+                                                        <strong>
+                                                            {{ slot.participant_count }}
+                                                            rider{{ slot.participant_count|pluralize }}
+                                                        </strong>
+
+                                                    </div>
+
+                                                {% endfor %}
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
                        <!-- =====================================================
      BOOKING ACTIONS
 ====================================================== -->
@@ -154,7 +201,7 @@ My Bookings | Flying Fox
 
     <!-- DOWNLOAD TICKET -->
 
-    {% if booking.ticket %}
+    {% if booking.ticket and booking.status != "cancelled" %}
 
         <a
             class="ff-booking-action-primary"
@@ -172,10 +219,38 @@ My Bookings | Flying Fox
 
 
     <!-- =================================================
+         CANCELLED BOOKING
+    ================================================== -->
+
+    {% if booking.status == "cancelled" %}
+
+        <div class="ff-booking-cancelled-notice">
+
+            <i class="fas fa-ban"></i>
+
+            <span>
+                Booking Cancelled
+            </span>
+
+            {% if booking.latest_refund and booking.latest_refund.status == "processed" %}
+
+                <strong>
+                    Refund Processed
+                    {% if booking.latest_refund.refund_amount %}
+                        · ₹{{ booking.latest_refund.refund_amount }}
+                    {% endif %}
+                </strong>
+
+            {% endif %}
+
+        </div>
+
+
+    <!-- =================================================
          EXISTING REFUND REQUEST
     ================================================== -->
 
-    {% if booking.latest_refund %}
+    {% elif booking.latest_refund %}
 
         <div class="
             ff-refund-status
@@ -769,6 +844,101 @@ My Bookings | Flying Fox
 }
 
 
+
+
+/* =====================================================
+   MULTI-RIDE BOOKING SCHEDULE
+===================================================== */
+
+.ff-booking-rides {
+    display: grid;
+    gap: 10px;
+    margin: 2px 0 18px;
+}
+
+.ff-booking-ride-card {
+    padding: 14px;
+    border: 1px solid #eef0f2;
+    border-radius: 14px;
+    background: #fafbfc;
+}
+
+.ff-booking-ride-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.ff-booking-ride-head strong {
+    color: var(--ff-dark);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.ff-booking-ride-head > span {
+    color: var(--ff-red);
+    font-size: 10px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.ff-booking-slot-list {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e8eaed;
+}
+
+.ff-booking-slot-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 10px;
+}
+
+.ff-booking-slot-row span {
+    color: var(--ff-text);
+}
+
+.ff-booking-slot-row i {
+    margin-right: 5px;
+    color: var(--ff-red);
+}
+
+.ff-booking-slot-row strong {
+    color: var(--ff-dark);
+    font-size: 10px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.ff-booking-cancelled-notice {
+    display: inline-flex;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 22px;
+    align-items: center;
+    gap: 7px;
+    color: #b0180e;
+    background: #ffedeb;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.ff-booking-cancelled-notice strong {
+    color: #107532;
+}
+
+@media (max-width: 600px) {
+    .ff-booking-ride-head,
+    .ff-booking-slot-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
 
 
 /* =====================================================

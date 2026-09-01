@@ -1098,6 +1098,182 @@
             }
         }
 
+
+
+
+
+
+
+
+
+
+        /* =================================================
+   RIDE SCHEDULE
+================================================== */
+
+.ff-ride-schedule {
+
+    margin-top:
+        18px;
+
+    padding:
+        16px;
+
+    border:
+        1px solid #f2d0cc;
+
+    border-radius:
+        14px;
+
+    background:
+        #fff8f7;
+
+}
+
+
+.ff-ride-schedule-title {
+
+    display:
+        flex;
+
+    margin-bottom:
+        12px;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+
+}
+
+
+.ff-ride-schedule-title i {
+
+    color:
+        var(--ff-red);
+
+}
+
+
+.ff-ride-schedule-row {
+
+    display:
+        flex;
+
+    padding:
+        9px 0;
+
+    border-bottom:
+        1px solid #f1dddd;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+}
+
+
+.ff-ride-schedule-time {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        13px;
+
+}
+
+
+.ff-ride-schedule-time i {
+
+    color:
+        var(--ff-red);
+
+}
+
+
+.ff-ride-schedule-riders {
+
+    color:
+        var(--ff-red);
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.ff-ride-schedule-total {
+
+    display:
+        flex;
+
+    padding-top:
+        11px;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        12px;
+
+}
+
+
+.ff-ride-schedule-total strong {
+
+    color:
+        var(--ff-red);
+
+}
+
+
+
+
+
+
+
+
+
     </style>
 
 </head>
@@ -1304,6 +1480,84 @@
 
 
                     </div>
+
+
+
+
+                    <!-- =====================================
+     SCHEDULED RIDE TIME
+====================================== -->
+
+{% if item.confirmed_slots %}
+
+    <div class="ff-ride-schedule">
+
+        <div class="ff-ride-schedule-title">
+
+            <i class="fas fa-clock"></i>
+
+            Scheduled Ride Time
+
+        </div>
+
+
+        {% for slot in item.confirmed_slots %}
+
+            <div class="ff-ride-schedule-row">
+
+                <div class="ff-ride-schedule-time">
+
+                    <i class="far fa-clock"></i>
+
+                    <strong>
+
+                        {{ slot.slot_start_time|time:"h:i A" }}
+
+                        -
+
+                        {{ slot.slot_end_time|time:"h:i A" }}
+
+                    </strong>
+
+                </div>
+
+
+                <span class="ff-ride-schedule-riders">
+
+                    {{ slot.participant_count }}
+
+                    Rider{{ slot.participant_count|pluralize }}
+
+                </span>
+
+            </div>
+
+        {% endfor %}
+
+
+        <div class="ff-ride-schedule-total">
+
+            <span>
+                Total Scheduled Riders
+            </span>
+
+            <strong>
+
+                {{ item.quantity }}
+
+                Rider{{ item.quantity|pluralize }}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+
+
+
 
 
                     <!-- =====================================
@@ -1605,28 +1859,91 @@
                 <div class="ff-modal-rides">
 
 
-                    {% for item in ride_items %}
+                   {% for item in ride_items %}
 
-                        <div class="ff-modal-ride">
+    <div
+        class="ff-modal-ride"
+        style="
+            display: block;
+            text-align: left;
+        "
+    >
+
+        <div
+            style="
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+            "
+        >
+
+            <strong>
+                {{ item.ride.name }}
+            </strong>
 
 
-                            <strong>
-                                {{ item.ride.name }}
-                            </strong>
+            <span>
+
+                {{ item.quantity }}
+
+                rider{{ item.quantity|pluralize }}
+
+            </span>
+
+        </div>
 
 
-                            <span>
+        {% if item.confirmed_slots %}
 
-                                {{ item.quantity }}
+            <div
+                style="
+                    margin-top: 8px;
+                    font-size: 12px;
+                "
+            >
 
-                                rider{{ item.quantity|pluralize }}
+                {% for slot in item.confirmed_slots %}
 
-                            </span>
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: space-between;
+                            padding: 4px 0;
+                        "
+                    >
+
+                        <span>
+
+                            <i class="far fa-clock"></i>
+
+                            {{ slot.slot_start_time|time:"h:i A" }}
+
+                            -
+
+                            {{ slot.slot_end_time|time:"h:i A" }}
+
+                        </span>
 
 
-                        </div>
+                        <strong>
 
-                    {% endfor %}
+                            {{ slot.participant_count }}
+
+                            rider{{ slot.participant_count|pluralize }}
+
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endfor %}
 
 
                 </div>

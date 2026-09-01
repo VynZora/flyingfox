@@ -370,17 +370,6 @@ Transaction Details | FlyingFox Admin
             </div>
 
 
-            <div class="info-row">
-
-                <span>
-                    Time Slot
-                </span>
-
-                <strong>
-                    {{ booking.time_slot }}
-                </strong>
-
-            </div>
 
 
 <div class="info-row">
@@ -411,6 +400,264 @@ Transaction Details | FlyingFox Admin
 
 
     </div>
+
+
+
+
+
+    <!-- =====================================================
+     RIDE SCHEDULE
+===================================================== -->
+
+<div class="detail-card mt-4">
+
+    <h5>
+
+        Ride Schedule
+
+    </h5>
+
+
+    {% for item in ride_items %}
+
+
+        <div class="transaction-detail-ride">
+
+
+            <!-- =========================================
+                 RIDE HEADER
+            ========================================== -->
+
+            <div class="transaction-detail-ride-header">
+
+                <div>
+
+                    <strong>
+
+                        {{ item.ride.name }}
+
+                    </strong>
+
+
+                    <small>
+
+                        {{ item.quantity }}
+
+                        rider{{ item.quantity|pluralize }}
+
+                        ·
+
+                        Capacity:
+
+                        {{ item.ride.capacity_per_slot }}
+
+                        / slot
+
+                    </small>
+
+                </div>
+
+
+                <span class="badge bg-primary">
+
+                    {{ item.admin_allocated_riders }}
+
+                    Allocated
+
+                </span>
+
+            </div>
+
+
+            <!-- =========================================
+                 SLOT SCHEDULE
+            ========================================== -->
+
+            {% if item.admin_display_slots %}
+
+
+                <div class="transaction-detail-slot-list">
+
+
+                    {% for slot in item.admin_display_slots %}
+
+
+                        <div class="transaction-detail-slot">
+
+
+                            <!-- TIME -->
+
+                            <div class="transaction-detail-time">
+
+                                <div class="transaction-clock-icon">
+
+                                    <i class="far fa-clock"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <strong>
+
+                                        {{ slot.start_label }}
+
+                                        -
+
+                                        {{ slot.end_label }}
+
+                                    </strong>
+
+
+                                    <small>
+
+                                        Scheduled ride time
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- PARTICIPANTS -->
+
+                            <div class="transaction-detail-riders">
+
+                                <small>
+                                    Riders
+                                </small>
+
+                                <strong>
+
+                                    {{ slot.participant_count }}
+
+                                </strong>
+
+                            </div>
+
+
+                            <!-- STATUS -->
+
+                            <div>
+
+
+                                {% if slot.status == "confirmed" %}
+
+                                    <span class="transaction-detail-slot-status confirmed">
+
+                                        <i class="fas fa-circle-check"></i>
+
+                                        Confirmed
+
+                                    </span>
+
+
+                                {% elif slot.status == "held" %}
+
+                                    <span class="transaction-detail-slot-status held">
+
+                                        <i class="fas fa-hourglass-half"></i>
+
+                                        Payment Hold
+
+                                    </span>
+
+
+                                {% elif slot.status == "cancelled" %}
+
+                                    <span class="transaction-detail-slot-status cancelled">
+
+                                        <i class="fas fa-circle-xmark"></i>
+
+                                        Cancelled
+
+                                    </span>
+
+
+                                {% elif slot.status == "expired" %}
+
+                                    <span class="transaction-detail-slot-status expired">
+
+                                        <i class="fas fa-clock-rotate-left"></i>
+
+                                        Expired
+
+                                    </span>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        {% if slot.status == "held" and slot.hold_expires_at %}
+
+                            <div class="transaction-hold-expiry">
+
+                                <i class="fas fa-hourglass-end"></i>
+
+                                Hold expires:
+
+                                <strong>
+
+                                    {{ slot.hold_expires_at|date:"d M Y h:i A" }}
+
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="transaction-no-schedule">
+
+                    <i class="far fa-calendar-xmark"></i>
+
+                    No allocated ride schedule.
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        {% if not forloop.last %}
+
+            <hr class="ride-divider">
+
+        {% endif %}
+
+
+    {% empty %}
+
+
+        <p class="text-muted mb-0">
+
+            No ride information found.
+
+        </p>
+
+
+    {% endfor %}
+
+
+</div>
 
 
 
@@ -1237,6 +1484,321 @@ Transaction Details | FlyingFox Admin
 
 .multi-value {
     line-height: 1.7;
+}
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   TRANSACTION RIDE SCHEDULE
+========================================================= */
+
+.transaction-detail-ride {
+
+    padding: 3px 0;
+}
+
+
+.transaction-detail-ride-header {
+
+    display: flex;
+
+    margin-bottom: 12px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+.transaction-detail-ride-header strong {
+
+    display: block;
+
+    color: #1f2937;
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+
+.transaction-detail-ride-header small {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #8a929c;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   SLOT LIST
+========================================================= */
+
+.transaction-detail-slot-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.transaction-detail-slot {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(200px, 1fr)
+        80px
+        auto;
+
+    padding:
+        11px;
+
+    align-items: center;
+
+    gap: 15px;
+
+    border:
+        1px
+        solid
+        #edf0f2;
+
+    border-radius: 9px;
+
+    background: #fafbfc;
+}
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+.transaction-detail-time {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+
+.transaction-clock-icon {
+
+    display: flex;
+
+    width: 35px;
+    height: 35px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: #c31103;
+
+    background: #fff0ee;
+}
+
+
+.transaction-detail-time strong {
+
+    display: block;
+
+    color: #1f2937;
+
+    font-size: 10px;
+    font-weight: 900;
+}
+
+
+.transaction-detail-time small {
+
+    display: block;
+
+    margin-top: 2px;
+
+    color: #9098a1;
+
+    font-size: 7px;
+}
+
+
+/* =========================================================
+   RIDERS
+========================================================= */
+
+.transaction-detail-riders {
+
+    text-align: center;
+}
+
+
+.transaction-detail-riders small {
+
+    display: block;
+
+    color: #9098a1;
+
+    font-size: 7px;
+
+    text-transform: uppercase;
+}
+
+
+.transaction-detail-riders strong {
+
+    display: block;
+
+    margin-top: 2px;
+
+    color: #1f2937;
+
+    font-size: 15px;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.transaction-detail-slot-status {
+
+    display: inline-flex;
+
+    padding:
+        5px
+        8px;
+
+    align-items: center;
+
+    gap: 5px;
+
+    border-radius: 20px;
+
+    font-size: 7px;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+.transaction-detail-slot-status.confirmed {
+
+    color: #16733b;
+    background: #eaf8ef;
+}
+
+
+.transaction-detail-slot-status.held {
+
+    color: #90610b;
+    background: #fff4d5;
+}
+
+
+.transaction-detail-slot-status.cancelled {
+
+    color: #a42319;
+    background: #fff0ee;
+}
+
+
+.transaction-detail-slot-status.expired {
+
+    color: #69727c;
+    background: #eceff2;
+}
+
+
+/* =========================================================
+   HOLD EXPIRY
+========================================================= */
+
+.transaction-hold-expiry {
+
+    margin:
+        -2px
+        7px
+        4px;
+
+    padding:
+        7px
+        9px;
+
+    border-radius: 7px;
+
+    color: #92620c;
+
+    background: #fff8e2;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   NO SCHEDULE
+========================================================= */
+
+.transaction-no-schedule {
+
+    padding: 17px;
+
+    border-radius: 9px;
+
+    color: #9299a2;
+
+    background: #f8f9fa;
+
+    font-size: 9px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:767px) {
+
+    .transaction-detail-ride-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .transaction-detail-slot {
+
+        grid-template-columns: 1fr;
+
+        align-items: flex-start;
+    }
+
+
+    .transaction-detail-riders {
+
+        text-align: left;
+    }
+
 }
 
 

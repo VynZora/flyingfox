@@ -78,6 +78,149 @@
         </div>
 
 
+
+
+
+        <!-- =====================================================
+     SLOT SETTINGS
+===================================================== -->
+
+<div class="slot-settings-card mb-4">
+
+    <div class="slot-settings-header">
+
+        <div class="slot-settings-icon">
+            <i class="fas fa-clock"></i>
+        </div>
+
+        <div>
+
+            <h5>
+                Booking Slot Settings
+            </h5>
+
+            <p>
+                Configure how many participants can use
+                this ride in each time slot.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+
+        <!-- CAPACITY PER SLOT -->
+
+        <div class="col-md-6 mb-3">
+
+            <label
+                for="capacityPerSlot"
+                class="form-label"
+            >
+
+                Participants Per Slot
+
+                <span class="text-danger">
+                    *
+                </span>
+
+            </label>
+
+
+            <input
+                type="number"
+                name="capacity_per_slot"
+                id="capacityPerSlot"
+                class="form-control"
+                min="1"
+                step="1"
+                value="{% if ride %}{{ ride.capacity_per_slot }}{% else %}{{ form_data.capacity_per_slot|default:'15' }}{% endif %}"
+                placeholder="Example: 15"
+                required
+            >
+
+
+            <small class="text-muted">
+
+                Maximum number of participants allowed
+                in one time slot.
+
+            </small>
+
+        </div>
+
+
+        <!-- SLOT DURATION -->
+
+        <div class="col-md-6 mb-3">
+
+            <label
+                for="slotDurationMinutes"
+                class="form-label"
+            >
+
+                Slot Duration
+
+                <span class="text-danger">
+                    *
+                </span>
+
+            </label>
+
+
+            <div class="input-group">
+
+                <input
+                    type="number"
+                    name="slot_duration_minutes"
+                    id="slotDurationMinutes"
+                    class="form-control"
+                    min="1"
+                    step="1"
+                    value="{% if ride %}{{ ride.slot_duration_minutes }}{% else %}{{ form_data.slot_duration_minutes|default:'60' }}{% endif %}"
+                    placeholder="60"
+                    required
+                >
+
+                <span class="input-group-text">
+                    Minutes
+                </span>
+
+            </div>
+
+
+            <small class="text-muted">
+
+                Example: 60 minutes creates one-hour
+                booking slots.
+
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="slot-example">
+
+        <i class="fas fa-info-circle"></i>
+
+        <span>
+
+            With a 60 minute slot duration, booking times
+            run like 08:30–09:30, 09:30–10:30, and so on.
+
+        </span>
+
+    </div>
+
+</div>
+
+
+
         <!-- DURATION -->
         <div class="mb-4">
 
@@ -472,6 +615,77 @@
     color: #777777;
     font-size: 12px;
 }
+
+
+
+
+
+{% comment %} slot selction css start {% endcomment %}
+/* =========================================
+   SLOT SETTINGS
+========================================= */
+
+.slot-settings-card {
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fffaf6;
+}
+
+.slot-settings-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.slot-settings-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    border-radius: 10px;
+    background: #ff6b00;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+}
+
+.slot-settings-header h5 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #202020;
+}
+
+.slot-settings-header p {
+    margin: 0;
+    color: #777777;
+    font-size: 13px;
+}
+
+.slot-example {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    color: #666666;
+    font-size: 13px;
+}
+
+.slot-example i {
+    color: #ff6b00;
+    margin-top: 2px;
+}
+
+.slot-settings-card .input-group-text {
+    font-weight: 600;
+}
+{% comment %} slot selection css end  {% endcomment %}
 
 </style>
 

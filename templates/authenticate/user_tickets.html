@@ -24,7 +24,7 @@ My Tickets | Flying Fox
 
         <p>
             Access your confirmed Flying Fox tickets,
-            QR codes and ticket downloads.
+            ride schedules, QR codes and ticket downloads.
         </p>
 
     </div>
@@ -42,12 +42,25 @@ My Tickets | Flying Fox
                 {% for ticket in tickets %}
 
 
-                    <article class="ff-user-ticket-card">
+                    <article class="
+                        ff-user-ticket-card
+                        {% if ticket.booking_cancelled %}
+                            cancelled
+                        {% endif %}
+                    ">
 
 
                         <div class="ff-user-ticket-icon">
 
-                            <i class="fas fa-qrcode"></i>
+                            {% if ticket.booking_cancelled %}
+
+                                <i class="fas fa-ban"></i>
+
+                            {% else %}
+
+                                <i class="fas fa-qrcode"></i>
+
+                            {% endif %}
 
                         </div>
 
@@ -65,12 +78,7 @@ My Tickets | Flying Fox
                             </h3>
 
 
-                            <p>
-                                {{ ticket.booking.ride.name }}
-                            </p>
-
-
-                            <div>
+                            <div class="ff-ticket-meta">
 
                                 <span>
 
@@ -83,30 +91,157 @@ My Tickets | Flying Fox
 
                                 <span>
 
-                                    <i class="fas fa-clock"></i>
+                                    <i class="fas fa-users"></i>
 
-                                    {{ ticket.booking.time_slot }}
+                                    {{ ticket.booking.quantity }}
+
+                                    rider{{ ticket.booking.quantity|pluralize }}
 
                                 </span>
 
                             </div>
 
 
+                            {% if ticket.booking_cancelled %}
+
+                                <div class="ff-ticket-cancelled-badge">
+
+                                    <i class="fas fa-ban"></i>
+
+                                    Ticket Cancelled
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="ff-ticket-active-badge">
+
+                                    <i class="fas fa-check-circle"></i>
+
+                                    Active Ticket
+
+                                </div>
+
+                            {% endif %}
+
+
                         </div>
+
+
+                        {% if ticket.display_ride_items %}
+
+                            <div class="ff-ticket-rides">
+
+                                {% for item in ticket.display_ride_items %}
+
+                                    <div class="ff-ticket-ride">
+
+                                        <div class="ff-ticket-ride-head">
+
+                                            <div>
+
+                                                <span class="ff-ticket-ride-label">
+                                                    Adventure
+                                                </span>
+
+                                                <strong>
+                                                    {{ item.ride.name }}
+                                                </strong>
+
+                                            </div>
+
+
+                                            <span class="ff-ticket-rider-count">
+
+                                                {{ item.quantity }}
+
+                                                rider{{ item.quantity|pluralize }}
+
+                                            </span>
+
+                                        </div>
+
+
+                                        {% if item.display_slots %}
+
+                                            <div class="ff-ticket-slots">
+
+                                                <div class="ff-ticket-slot-title">
+
+                                                    <i class="far fa-clock"></i>
+
+                                                    Scheduled Ride Time
+
+                                                </div>
+
+
+                                                {% for slot in item.display_slots %}
+
+                                                    <div class="ff-ticket-slot-row">
+
+                                                        <span>
+
+                                                            {{ slot.slot_start_time|time:"h:i A" }}
+
+                                                            -
+
+                                                            {{ slot.slot_end_time|time:"h:i A" }}
+
+                                                        </span>
+
+
+                                                        <strong>
+
+                                                            {{ slot.participant_count }}
+
+                                                            rider{{ slot.participant_count|pluralize }}
+
+                                                        </strong>
+
+                                                    </div>
+
+                                                {% endfor %}
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
 
 
                         <div class="ff-user-ticket-actions">
 
 
-                            <a
-                                href="{% url 'download_ticket' ticket.ticket_id %}"
-                            >
+                            {% if not ticket.booking_cancelled %}
 
-                                <i class="fas fa-download"></i>
+                                <a
+                                    href="{% url 'download_ticket' ticket.ticket_id %}"
+                                >
 
-                                Download PDF
+                                    <i class="fas fa-download"></i>
 
-                            </a>
+                                    Download PDF
+
+                                </a>
+
+                            {% else %}
+
+                                <div class="ff-ticket-cancelled-message">
+
+                                    <i class="fas fa-circle-info"></i>
+
+                                    This ticket is no longer valid because
+                                    the booking was cancelled.
+
+                                </div>
+
+                            {% endif %}
 
 
                         </div>
@@ -205,6 +340,16 @@ My Tickets | Flying Fox
 }
 
 
+.ff-user-ticket-card.cancelled {
+
+    border-color:
+        #efc1bd;
+
+    background:
+        #fffafa;
+}
+
+
 .ff-user-ticket-card::after {
 
     content:
@@ -289,7 +434,7 @@ My Tickets | Flying Fox
     margin:
         3px
         0
-        5px;
+        8px;
 
     color:
         var(--ff-dark);
@@ -302,22 +447,7 @@ My Tickets | Flying Fox
 }
 
 
-.ff-user-ticket-info p {
-
-    margin:
-        0
-        0
-        10px;
-
-    font-size:
-        12px;
-
-    font-weight:
-        800;
-}
-
-
-.ff-user-ticket-info > div {
+.ff-ticket-meta {
 
     display:
         flex;
@@ -330,7 +460,7 @@ My Tickets | Flying Fox
 }
 
 
-.ff-user-ticket-info span {
+.ff-ticket-meta span {
 
     display:
         inline-flex;
@@ -346,6 +476,249 @@ My Tickets | Flying Fox
 
     font-size:
         9px;
+}
+
+
+.ff-ticket-active-badge,
+.ff-ticket-cancelled-badge {
+
+    display:
+        inline-flex;
+
+    margin-top:
+        10px;
+
+    min-height:
+        28px;
+
+    padding:
+        0
+        10px;
+
+    border-radius:
+        16px;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-ticket-active-badge {
+
+    color:
+        #107532;
+
+    background:
+        #eaf8ee;
+}
+
+
+.ff-ticket-cancelled-badge {
+
+    color:
+        #b0180e;
+
+    background:
+        #ffedeb;
+}
+
+
+.ff-ticket-rides {
+
+    grid-column:
+        1
+        /
+        -1;
+
+    display:
+        grid;
+
+    gap:
+        10px;
+
+    margin-top:
+        3px;
+}
+
+
+.ff-ticket-ride {
+
+    padding:
+        14px;
+
+    border:
+        1px solid
+        #eef0f2;
+
+    border-radius:
+        14px;
+
+    background:
+        #fafbfc;
+}
+
+
+.ff-ticket-ride-head {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+}
+
+
+.ff-ticket-ride-label {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--ff-text);
+
+    font-size:
+        8px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.ff-ticket-ride-head strong {
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-ticket-rider-count {
+
+    color:
+        var(--ff-red);
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    white-space:
+        nowrap;
+}
+
+
+.ff-ticket-slots {
+
+    display:
+        grid;
+
+    gap:
+        7px;
+
+    margin-top:
+        11px;
+
+    padding-top:
+        11px;
+
+    border-top:
+        1px solid
+        #e8eaed;
+}
+
+
+.ff-ticket-slot-title {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-ticket-slot-title i {
+
+    color:
+        var(--ff-red);
+}
+
+
+.ff-ticket-slot-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    font-size:
+        10px;
+}
+
+
+.ff-ticket-slot-row span {
+
+    color:
+        var(--ff-text);
+}
+
+
+.ff-ticket-slot-row strong {
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    white-space:
+        nowrap;
 }
 
 
@@ -399,6 +772,38 @@ My Tickets | Flying Fox
 
     font-weight:
         900;
+
+    text-decoration:
+        none;
+}
+
+
+.ff-ticket-cancelled-message {
+
+    width:
+        100%;
+
+    padding:
+        11px
+        13px;
+
+    border-radius:
+        12px;
+
+    color:
+        #b0180e;
+
+    background:
+        #ffedeb;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.6;
 }
 
 
@@ -408,6 +813,52 @@ My Tickets | Flying Fox
 
         grid-template-columns:
             1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .ff-user-ticket-card {
+
+        grid-template-columns:
+            55px
+            minmax(0, 1fr);
+
+        padding:
+            16px;
+    }
+
+
+    .ff-user-ticket-icon {
+
+        width:
+            55px;
+
+        height:
+            55px;
+    }
+
+
+    .ff-ticket-ride-head,
+    .ff-ticket-slot-row {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .ff-user-ticket-actions a {
+
+        width:
+            100%;
+
+        justify-content:
+            center;
     }
 
 }

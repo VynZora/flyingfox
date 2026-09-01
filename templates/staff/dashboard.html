@@ -35,6 +35,7 @@ Staff Dashboard | Flying Fox
     <div class="dashboard-actions">
 
 
+
         <a
             href="{% url 'ticket_scanner' %}"
             class="verify-ticket-btn"
@@ -344,52 +345,127 @@ Staff Dashboard | Flying Fox
 
                         <div class="dashboard-rides">
 
-                            {% for item in booking.ride_items.all %}
+{% for item in booking.ride_items.all %}
 
-                                <div class="dashboard-ride-item">
+    <div class="dashboard-ride-item">
 
-                                    <strong>
-                                        {{ item.ride.name }}
-                                    </strong>
+        <!-- =========================================
+             RIDE NAME
+        ========================================== -->
 
-                                    <small>
+        <strong class="dashboard-ride-name">
 
-                                        {{ item.quantity }}
+            {{ item.ride.name }}
 
-                                        rider{{ item.quantity|pluralize }}
-
-                                    </small>
+        </strong>
 
 
-                                    {% if item.status == "checked_in" %}
+        <!-- =========================================
+             TOTAL RIDERS FOR THIS RIDE
+        ========================================== -->
 
-                                        <span class="mini-status checked">
+        <small class="dashboard-ride-riders">
 
-                                            <i class="fas fa-check"></i>
+            <i class="fas fa-users"></i>
 
-                                            Checked
+            {{ item.quantity }}
 
-                                        </span>
+            rider{{ item.quantity|pluralize }}
 
-                                    {% else %}
+        </small>
 
-                                        <span class="mini-status pending">
 
-                                            Pending
+        <!-- =========================================
+             CONFIRMED RIDE SCHEDULE
+        ========================================== -->
 
-                                        </span>
+        {% if item.confirmed_slots %}
 
-                                    {% endif %}
+            <div class="dashboard-slot-list">
 
-                                </div>
+                {% for slot in item.confirmed_slots %}
 
-                            {% empty %}
+                    <div class="dashboard-slot-row">
 
-                                <small>
-                                    No rides
-                                </small>
+                        <div class="dashboard-slot-time">
 
-                            {% endfor %}
+                            <i class="far fa-clock"></i>
+
+                            <span>
+
+                                {{ slot.slot_start_time|time:"h:i A" }}
+
+                                -
+
+                                {{ slot.slot_end_time|time:"h:i A" }}
+
+                            </span>
+
+                        </div>
+
+
+                        <span class="dashboard-slot-riders">
+
+                            {{ slot.participant_count }}
+
+                            rider{{ slot.participant_count|pluralize }}
+
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="dashboard-no-slot">
+
+                <i class="far fa-clock"></i>
+
+                Schedule unavailable
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =========================================
+             CHECK-IN STATUS
+        ========================================== -->
+
+        {% if item.status == "checked_in" %}
+
+            <span class="mini-status checked">
+
+                <i class="fas fa-check"></i>
+
+                Checked
+
+            </span>
+
+        {% else %}
+
+            <span class="mini-status pending">
+
+                <i class="fas fa-clock"></i>
+
+                Pending
+
+            </span>
+
+        {% endif %}
+
+    </div>
+
+{% empty %}
+
+    <small>
+        No rides
+    </small>
+
+{% endfor %}
 
                         </div>
 
@@ -612,54 +688,127 @@ Staff Dashboard | Flying Fox
 
                         <div class="dashboard-rides">
 
-                            {% for item in booking.ride_items.all %}
+{% for item in booking.ride_items.all %}
 
-                                <div class="dashboard-ride-item">
+    <div class="dashboard-ride-item">
 
-                                    <strong>
+        <!-- =========================================
+             RIDE NAME
+        ========================================== -->
 
-                                        {{ item.ride.name }}
+        <strong class="dashboard-ride-name">
 
-                                    </strong>
+            {{ item.ride.name }}
 
-                                    <small>
-
-                                        {{ item.quantity }}
-
-                                        rider{{ item.quantity|pluralize }}
-
-                                    </small>
+        </strong>
 
 
-                                    {% if item.status == "checked_in" %}
+        <!-- =========================================
+             RIDERS
+        ========================================== -->
 
-                                        <span class="mini-status checked">
+        <small class="dashboard-ride-riders">
 
-                                            <i class="fas fa-check"></i>
+            <i class="fas fa-users"></i>
 
-                                            Checked
+            {{ item.quantity }}
 
-                                        </span>
+            rider{{ item.quantity|pluralize }}
 
-                                    {% else %}
+        </small>
 
-                                        <span class="mini-status pending">
 
-                                            Pending
+        <!-- =========================================
+             CONFIRMED SCHEDULE
+        ========================================== -->
 
-                                        </span>
+        {% if item.confirmed_slots %}
 
-                                    {% endif %}
+            <div class="dashboard-slot-list">
 
-                                </div>
+                {% for slot in item.confirmed_slots %}
 
-                            {% empty %}
+                    <div class="dashboard-slot-row">
 
-                                <small>
-                                    No rides
-                                </small>
+                        <div class="dashboard-slot-time">
 
-                            {% endfor %}
+                            <i class="far fa-clock"></i>
+
+                            <span>
+
+                                {{ slot.slot_start_time|time:"h:i A" }}
+
+                                -
+
+                                {{ slot.slot_end_time|time:"h:i A" }}
+
+                            </span>
+
+                        </div>
+
+
+                        <span class="dashboard-slot-riders">
+
+                            {{ slot.participant_count }}
+
+                            rider{{ slot.participant_count|pluralize }}
+
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="dashboard-no-slot">
+
+                <i class="far fa-clock"></i>
+
+                Schedule unavailable
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =========================================
+             STATUS
+        ========================================== -->
+
+        {% if item.status == "checked_in" %}
+
+            <span class="mini-status checked">
+
+                <i class="fas fa-check"></i>
+
+                Checked
+
+            </span>
+
+        {% else %}
+
+            <span class="mini-status pending">
+
+                <i class="fas fa-clock"></i>
+
+                Pending
+
+            </span>
+
+        {% endif %}
+
+    </div>
+
+{% empty %}
+
+    <small>
+        No rides
+    </small>
+
+{% endfor %}
 
                         </div>
 
@@ -2502,6 +2651,206 @@ Staff Dashboard | Flying Fox
 .dashboard-verify-link:hover {
     text-decoration:
         underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   RIDE SCHEDULE - STAFF DASHBOARD
+========================================================= */
+
+.dashboard-ride-name {
+    display: block;
+
+    color: var(--ff-dark);
+
+    font-size: 10px;
+    font-weight: 900;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   RIDE PARTICIPANTS
+========================================================= */
+
+.dashboard-ride-riders {
+    display: flex !important;
+
+    margin-top: 4px !important;
+
+    align-items: center;
+
+    gap: 5px;
+
+    color: #7f8994 !important;
+
+    font-size: 8px !important;
+}
+
+
+.dashboard-ride-riders i {
+    color: var(--ff-red);
+}
+
+
+/* =========================================================
+   SLOT LIST
+========================================================= */
+
+.dashboard-slot-list {
+    display: flex;
+
+    margin-top: 8px;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   SLOT ROW
+========================================================= */
+
+.dashboard-slot-row {
+    display: flex;
+
+    min-width: 225px;
+
+    padding:
+        6px
+        8px;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    border:
+        1px
+        solid
+        #edf0f2;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   SLOT TIME
+========================================================= */
+
+.dashboard-slot-time {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #4f5964;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-slot-time i {
+    color: var(--ff-red);
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   SLOT RIDER COUNT
+========================================================= */
+
+.dashboard-slot-riders {
+    padding:
+        3px
+        6px;
+
+    border-radius: 10px;
+
+    color: #14753a;
+
+    background: #eaf8ef;
+
+    font-size: 7px;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   NO SLOT
+========================================================= */
+
+.dashboard-no-slot {
+    display: flex;
+
+    margin-top: 7px;
+
+    padding:
+        6px
+        8px;
+
+    align-items: center;
+
+    gap: 6px;
+
+    border-radius: 7px;
+
+    color: #946610;
+
+    background: #fff7dd;
+
+    font-size: 8px;
+    font-weight: 800;
+}
+
+
+.dashboard-no-slot i {
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .dashboard-slot-row {
+        min-width: 210px;
+    }
+
+
+    .dashboard-slot-time {
+        font-size: 7px;
+    }
+
+
+    .dashboard-slot-riders {
+        font-size: 7px;
+    }
 }
 
 

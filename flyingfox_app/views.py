@@ -27,8 +27,9 @@ from django.core.validators import validate_email
 
 from datetime import datetime, time
 
+
 import razorpay
-import requests
+
 
 
 from .chatbot.engine import process_message
@@ -66,7 +67,7 @@ from django.contrib import messages
 from django.core.files.base import ContentFile
 from django.core.mail import EmailMessage
 from django.db import transaction
-from django.http import FileResponse, Http404, JsonResponse
+from django.http import FileResponse, Http404, JsonResponse, request
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -80,9 +81,6 @@ from django.views.decorators.http import (
     require_POST,
 )
 
-# sms 
-from twilio.base.exceptions import TwilioRestException
-from twilio.rest import Client
 
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
@@ -97,6 +95,17 @@ from .services.refund_status import (
 )
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+
+
+from .services.ride_slot_service import (
+    get_available_slots,
+    allocate_participants_from_start_slot,
+)
+
+from .services.telinfy import (
+    send_payment_confirmation_sms,
+)
+
 
 from .models import (
     BookingWeightGroup,
@@ -115,7 +124,7 @@ from .models import (
     Ride, RidePrice, Booking,
     Payment,
     Ticket,
-    Coupon,Testimonial,Offer,WEIGHT_RANGES, Refund,BookingRideItem
+    Coupon,Testimonial,Offer,WEIGHT_RANGES, Refund,BookingRideItem,BookingRideSlot
 )
 
 
@@ -131,7 +140,7 @@ LOGIN_COUNTRIES = {
         "flag": "🇮🇳",
         "min_length": 10,
         "max_length": 10,
-        "placeholder": "9633390345",
+        "placeholder": "9633650345",
     },
 
     "AE": {
@@ -1660,141 +1669,7 @@ def ride_list(request):
         }
     )
 
-# @login_required(login_url="admin_login")
-# def ride_create(request):
 
-#     if request.method == "POST":
-
-#         name = request.POST.get(
-#             "name",
-#             ""
-#         ).strip()
-
-#         description = request.POST.get(
-#             "description",
-#             ""
-#         ).strip()
-
-#         duration = request.POST.get(
-#             "duration",
-#             ""
-#         ).strip()
-
-#         safety_notes = request.POST.get(
-#             "safety_notes",
-#             ""
-#         ).strip()
-
-#         is_active = (
-#             request.POST.get("is_active")
-#             == "on"
-#         )
-
-
-#         # ==========================
-#         # VALIDATION
-#         # ==========================
-
-#         if not name:
-
-#             messages.error(
-#                 request,
-#                 "Ride name is required."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/ride_form.html"
-#             )
-
-
-#         if not description:
-
-#             messages.error(
-#                 request,
-#                 "Description is required."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/ride_form.html"
-#             )
-
-
-#         if not duration:
-
-#             messages.error(
-#                 request,
-#                 "Duration is required."
-#             )
-
-#             return render(
-#                 request,
-#                 "admin_pages/ride_form.html"
-#             )
-
-
-#         # ==========================
-#         # CREATE RIDE
-#         # ==========================
-
-#         ride = Ride.objects.create(
-#             name=name,
-#             description=description,
-#             duration=duration,
-#             safety_notes=safety_notes,
-#             is_active=is_active,
-#         )
-
-
-#         # ==========================
-#         # MULTIPLE IMAGES
-#         # ==========================
-
-#         images = request.FILES.getlist(
-#             "images"
-#         )
-
-#         for image in images:
-
-#             RideMedia.objects.create(
-#                 ride=ride,
-#                 media_type="image",
-#                 image=image
-#             )
-
-
-#         # ==========================
-#         # SINGLE VIDEO
-#         # ==========================
-
-#         video = request.FILES.get(
-#             "video"
-#         )
-
-#         if video:
-
-#             RideMedia.objects.create(
-#                 ride=ride,
-#                 media_type="video",
-#                 video=video
-#             )
-
-
-#         messages.success(
-#             request,
-#             "Ride added successfully."
-#         )
-
-#         return redirect(
-#             "ride_list"
-#         )
-
-
-#     return render(
-#         request,
-#         "admin_pages/ride_form.html"
-#     )
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -1805,170 +1680,15 @@ from .models import Ride, RideMedia
 
 
 
+
 @login_required(login_url="admin_login")
 def ride_create(request):
 
-    print("\n==============================")
-    print("RIDE CREATE VIEW CALLED")
-    print("METHOD:", request.method)
-    print("==============================")
-
     if request.method == "POST":
 
-        print("POST RECEIVED")
-        print("POST DATA:", request.POST)
-        print("FILES:", request.FILES)
-
-        name = request.POST.get("name", "").strip()
-        description = request.POST.get("description", "").strip()
-        duration = request.POST.get("duration", "").strip()
-        safety_notes = request.POST.get("safety_notes", "").strip()
-
-        is_featured = request.POST.get("is_featured") == "on"
-        is_active = request.POST.get("is_active") == "on"
-
-        print("NAME:", repr(name))
-        print("DESCRIPTION:", repr(description))
-        print("DURATION:", repr(duration))
-        print("FEATURED:", is_featured)
-        print("ACTIVE:", is_active)
-
-        form_data = {
-            "name": name,
-            "description": description,
-            "duration": duration,
-            "safety_notes": safety_notes,
-            "is_featured": is_featured,
-            "is_active": is_active,
-        }
-
-        if not name:
-            print("STOPPED: NAME EMPTY")
-            messages.error(request, "Ride name is required.")
-            return render(
-                request,
-                "admin_pages/ride_form.html",
-                {"form_data": form_data}
-            )
-
-        if not description:
-            print("STOPPED: DESCRIPTION EMPTY")
-            messages.error(request, "Description is required.")
-            return render(
-                request,
-                "admin_pages/ride_form.html",
-                {"form_data": form_data}
-            )
-
-        if not duration:
-            print("STOPPED: DURATION EMPTY")
-            messages.error(request, "Duration is required.")
-            return render(
-                request,
-                "admin_pages/ride_form.html",
-                {"form_data": form_data}
-            )
-
-        images = request.FILES.getlist("images")
-        video = request.FILES.get("video")
-
-        print("IMAGE COUNT:", len(images))
-        print("VIDEO:", video)
-
-        try:
-
-            with transaction.atomic():
-
-                print("ABOUT TO CREATE RIDE")
-
-                ride = Ride.objects.create(
-                    name=name,
-                    description=description,
-                    duration=duration,
-                    safety_notes=safety_notes,
-                    is_featured=is_featured,
-                    is_active=is_active,
-                )
-
-                print("RIDE CREATED:", ride.id, ride.name)
-
-                for image in images:
-
-                    print("CREATING IMAGE:", image.name)
-
-                    RideMedia.objects.create(
-                        ride=ride,
-                        media_type="image",
-                        image=image,
-                    )
-
-                    print("IMAGE CREATED")
-
-                if video:
-
-                    print("CREATING VIDEO:", video.name)
-
-                    RideMedia.objects.create(
-                        ride=ride,
-                        media_type="video",
-                        video=video,
-                    )
-
-                    print("VIDEO CREATED")
-
-        except Exception as error:
-
-            print("\n==============================")
-            print("RIDE CREATION ERROR")
-            print("TYPE:", type(error).__name__)
-            print("ERROR:", repr(error))
-            print("==============================\n")
-
-            messages.error(
-                request,
-                f"Unable to create ride: {error}"
-            )
-
-            return render(
-                request,
-                "admin_pages/ride_form.html",
-                {"form_data": form_data}
-            )
-
-        print("SUCCESS - REDIRECTING")
-
-        messages.success(
-            request,
-            "Ride added successfully."
-        )
-
-        return redirect("ride_list")
-
-    return render(
-        request,
-        "admin_pages/ride_form.html"
-    )
-
-
-
-
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.shortcuts import get_object_or_404, redirect, render
-
-from .models import Ride, RideMedia
-
-
-@login_required(login_url="admin_login")
-def ride_update(request, pk):
-
-    ride = get_object_or_404(
-        Ride,
-        pk=pk
-    )
-
-    if request.method == "POST":
+        # =====================================================
+        # BASIC RIDE DETAILS
+        # =====================================================
 
         name = request.POST.get(
             "name",
@@ -1990,15 +1710,410 @@ def ride_update(request, pk):
             ""
         ).strip()
 
+
+        # =====================================================
+        # SLOT SETTINGS
+        # =====================================================
+
+        capacity_per_slot_raw = request.POST.get(
+            "capacity_per_slot",
+            ""
+        ).strip()
+
+        slot_duration_minutes_raw = request.POST.get(
+            "slot_duration_minutes",
+            ""
+        ).strip()
+
+
+        # =====================================================
+        # STATUS
+        # =====================================================
+
         is_featured = (
             request.POST.get("is_featured")
-            == "on"
+            ==
+            "on"
         )
 
         is_active = (
             request.POST.get("is_active")
-            == "on"
+            ==
+            "on"
         )
+
+
+        # =====================================================
+        # PRESERVE FORM DATA
+        # =====================================================
+
+        form_data = {
+
+            "name":
+                name,
+
+            "description":
+                description,
+
+            "duration":
+                duration,
+
+            "safety_notes":
+                safety_notes,
+
+            "capacity_per_slot":
+                capacity_per_slot_raw,
+
+            "slot_duration_minutes":
+                slot_duration_minutes_raw,
+
+            "is_featured":
+                is_featured,
+
+            "is_active":
+                is_active,
+        }
+
+
+        # =====================================================
+        # VALIDATE BASIC FIELDS
+        # =====================================================
+
+        if not name:
+
+            messages.error(
+                request,
+                "Ride name is required."
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "form_data":
+                        form_data
+                }
+            )
+
+
+        if not description:
+
+            messages.error(
+                request,
+                "Description is required."
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "form_data":
+                        form_data
+                }
+            )
+
+
+        if not duration:
+
+            messages.error(
+                request,
+                "Duration is required."
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "form_data":
+                        form_data
+                }
+            )
+
+
+        # =====================================================
+        # VALIDATE CAPACITY
+        # =====================================================
+
+        try:
+
+            capacity_per_slot = int(
+                capacity_per_slot_raw
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            capacity_per_slot = 0
+
+
+        if capacity_per_slot <= 0:
+
+            messages.error(
+                request,
+                (
+                    "Capacity per slot must be "
+                    "greater than zero."
+                )
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "form_data":
+                        form_data
+                }
+            )
+
+
+        # =====================================================
+        # VALIDATE SLOT DURATION
+        # =====================================================
+
+        try:
+
+            slot_duration_minutes = int(
+                slot_duration_minutes_raw
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            slot_duration_minutes = 0
+
+
+        if slot_duration_minutes <= 0:
+
+            messages.error(
+                request,
+                (
+                    "Slot duration must be "
+                    "greater than zero."
+                )
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "form_data":
+                        form_data
+                }
+            )
+
+
+        # =====================================================
+        # MEDIA
+        # =====================================================
+
+        images = request.FILES.getlist(
+            "images"
+        )
+
+        video = request.FILES.get(
+            "video"
+        )
+
+
+        # =====================================================
+        # CREATE RIDE
+        # =====================================================
+
+        try:
+
+            with transaction.atomic():
+
+                ride = Ride.objects.create(
+
+                    name=
+                        name,
+
+                    description=
+                        description,
+
+                    duration=
+                        duration,
+
+                    safety_notes=
+                        safety_notes,
+
+                    capacity_per_slot=
+                        capacity_per_slot,
+
+                    slot_duration_minutes=
+                        slot_duration_minutes,
+
+                    is_featured=
+                        is_featured,
+
+                    is_active=
+                        is_active,
+                )
+
+
+                # =================================================
+                # IMAGES
+                # =================================================
+
+                for image in images:
+
+                    RideMedia.objects.create(
+
+                        ride=
+                            ride,
+
+                        media_type=
+                            "image",
+
+                        image=
+                            image,
+                    )
+
+
+                # =================================================
+                # VIDEO
+                # =================================================
+
+                if video:
+
+                    RideMedia.objects.create(
+
+                        ride=
+                            ride,
+
+                        media_type=
+                            "video",
+
+                        video=
+                            video,
+                    )
+
+
+        except Exception as error:
+
+            print(
+                "RIDE CREATION ERROR:",
+                error
+            )
+
+            messages.error(
+                request,
+                f"Unable to create ride: {error}"
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "form_data":
+                        form_data
+                }
+            )
+
+
+        messages.success(
+            request,
+            "Ride added successfully."
+        )
+
+        return redirect(
+            "ride_list"
+        )
+
+
+    return render(
+        request,
+        "admin_pages/ride_form.html"
+    )
+
+
+
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import Ride, RideMedia
+
+
+
+
+@login_required(login_url="admin_login")
+def ride_update(request, pk):
+
+    ride = get_object_or_404(
+        Ride,
+        pk=pk
+    )
+
+
+    if request.method == "POST":
+
+        # =====================================================
+        # BASIC DETAILS
+        # =====================================================
+
+        name = request.POST.get(
+            "name",
+            ""
+        ).strip()
+
+        description = request.POST.get(
+            "description",
+            ""
+        ).strip()
+
+        duration = request.POST.get(
+            "duration",
+            ""
+        ).strip()
+
+        safety_notes = request.POST.get(
+            "safety_notes",
+            ""
+        ).strip()
+
+
+        # =====================================================
+        # SLOT SETTINGS
+        # =====================================================
+
+        capacity_per_slot_raw = request.POST.get(
+            "capacity_per_slot",
+            ""
+        ).strip()
+
+        slot_duration_minutes_raw = request.POST.get(
+            "slot_duration_minutes",
+            ""
+        ).strip()
+
+
+        # =====================================================
+        # STATUS
+        # =====================================================
+
+        is_featured = (
+            request.POST.get("is_featured")
+            ==
+            "on"
+        )
+
+        is_active = (
+            request.POST.get("is_active")
+            ==
+            "on"
+        )
+
+
+        # =====================================================
+        # VALIDATION
+        # =====================================================
 
         if not name:
 
@@ -2015,6 +2130,7 @@ def ride_update(request, pk):
                 }
             )
 
+
         if not description:
 
             messages.error(
@@ -2029,6 +2145,7 @@ def ride_update(request, pk):
                     "ride": ride,
                 }
             )
+
 
         if not duration:
 
@@ -2045,6 +2162,85 @@ def ride_update(request, pk):
                 }
             )
 
+
+        # =====================================================
+        # CAPACITY VALIDATION
+        # =====================================================
+
+        try:
+
+            capacity_per_slot = int(
+                capacity_per_slot_raw
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            capacity_per_slot = 0
+
+
+        if capacity_per_slot <= 0:
+
+            messages.error(
+                request,
+                (
+                    "Capacity per slot must be "
+                    "greater than zero."
+                )
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "ride": ride,
+                }
+            )
+
+
+        # =====================================================
+        # SLOT DURATION VALIDATION
+        # =====================================================
+
+        try:
+
+            slot_duration_minutes = int(
+                slot_duration_minutes_raw
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            slot_duration_minutes = 0
+
+
+        if slot_duration_minutes <= 0:
+
+            messages.error(
+                request,
+                (
+                    "Slot duration must be "
+                    "greater than zero."
+                )
+            )
+
+            return render(
+                request,
+                "admin_pages/ride_form.html",
+                {
+                    "ride": ride,
+                }
+            )
+
+
+        # =====================================================
+        # MEDIA
+        # =====================================================
+
         images = request.FILES.getlist(
             "images"
         )
@@ -2053,40 +2249,86 @@ def ride_update(request, pk):
             "video"
         )
 
+
         try:
 
             with transaction.atomic():
 
+                # =================================================
+                # UPDATE RIDE
+                # =================================================
+
                 ride.name = name
+
                 ride.description = description
+
                 ride.duration = duration
+
                 ride.safety_notes = safety_notes
-                ride.is_featured = is_featured
-                ride.is_active = is_active
+
+                ride.capacity_per_slot = (
+                    capacity_per_slot
+                )
+
+                ride.slot_duration_minutes = (
+                    slot_duration_minutes
+                )
+
+                ride.is_featured = (
+                    is_featured
+                )
+
+                ride.is_active = (
+                    is_active
+                )
 
                 ride.save()
 
-                # Add new images
+
+                # =================================================
+                # ADD NEW IMAGES
+                # =================================================
+
                 for image in images:
 
                     RideMedia.objects.create(
-                        ride=ride,
-                        media_type="image",
-                        image=image,
+
+                        ride=
+                            ride,
+
+                        media_type=
+                            "image",
+
+                        image=
+                            image,
                     )
 
-                # Add new video
+
+                # =================================================
+                # ADD NEW VIDEO
+                # =================================================
+
                 if video:
 
                     RideMedia.objects.create(
-                        ride=ride,
-                        media_type="video",
-                        video=video,
+
+                        ride=
+                            ride,
+
+                        media_type=
+                            "video",
+
+                        video=
+                            video,
                     )
+
 
         except Exception as error:
 
-            print("RIDE UPDATE ERROR:", error)
+            print(
+                "RIDE UPDATE ERROR:",
+                error
+            )
 
             messages.error(
                 request,
@@ -2101,6 +2343,7 @@ def ride_update(request, pk):
                 }
             )
 
+
         messages.success(
             request,
             "Ride updated successfully."
@@ -2110,6 +2353,7 @@ def ride_update(request, pk):
             "ride_list"
         )
 
+
     return render(
         request,
         "admin_pages/ride_form.html",
@@ -2117,6 +2361,9 @@ def ride_update(request, pk):
             "ride": ride,
         }
     )
+
+
+
 
 @login_required(login_url="admin_login")
 def ride_delete(request, pk):
@@ -2474,19 +2721,51 @@ def ride_price_delete(request, pk):
 @_admin_required
 def booking_list(request):
 
+    # =====================================================
+    # PREFETCH RIDE SLOT ALLOCATIONS
+    #
+    # We keep every slot status so admin can understand
+    # pending / confirmed / cancelled / expired bookings.
+    # =====================================================
+
+    slot_queryset = (
+        BookingRideSlot.objects
+        .order_by(
+            "slot_start_time"
+        )
+    )
+
+
+    # =====================================================
+    # BOOKINGS
+    # =====================================================
+
     bookings_qs = (
         Booking.objects
+
         .select_related(
             "user",
             "payment",
             "ticket",
         )
+
         .prefetch_related(
+
             "ride_items__ride",
+
             "ride_items__ride_price",
+
             "ride_items__offer",
+
             "ride_items__weight_groups",
+
+            Prefetch(
+                "ride_items__allocated_slots",
+                queryset=slot_queryset,
+                to_attr="admin_slots",
+            ),
         )
+
         .order_by(
             "-created_at"
         )
@@ -2518,7 +2797,9 @@ def booking_list(request):
     if search:
 
         bookings_qs = (
-            bookings_qs.filter(
+            bookings_qs
+
+            .filter(
 
                 Q(
                     customer_name__icontains=
@@ -2559,8 +2840,8 @@ def booking_list(request):
                     ride_items__ride__name__icontains=
                         search
                 )
-
             )
+
             .distinct()
         )
 
@@ -2598,6 +2879,99 @@ def booking_list(request):
 
 
     # =====================================================
+    # PREPARE DISPLAY DATA
+    #
+    # Add admin_ride_items directly to each Booking so the
+    # template does not need complicated slot logic.
+    # =====================================================
+
+    for booking in bookings:
+
+        ride_items = list(
+            booking.ride_items.all()
+        )
+
+        booking_total_participants = 0
+
+
+        for item in ride_items:
+
+            booking_total_participants += (
+                item.quantity or 0
+            )
+
+
+            # =============================================
+            # SLOT ROWS WERE PREFETCHED ABOVE
+            # =============================================
+
+            slot_rows = list(
+                getattr(
+                    item,
+                    "admin_slots",
+                    []
+                )
+            )
+
+
+            # =============================================
+            # DISPLAY SLOT INFORMATION
+            # =============================================
+
+            display_slots = []
+
+
+            for slot in slot_rows:
+
+                display_slots.append(
+                    {
+                        "start_time":
+                            slot.slot_start_time,
+
+                        "end_time":
+                            slot.slot_end_time,
+
+                        "start_label":
+                            slot.slot_start_time.strftime(
+                                "%I:%M %p"
+                            ),
+
+                        "end_label":
+                            slot.slot_end_time.strftime(
+                                "%I:%M %p"
+                            ),
+
+                        "participant_count":
+                            slot.participant_count,
+
+                        "status":
+                            slot.status,
+
+                        "status_label":
+                            slot.get_status_display(),
+
+                        "hold_expires_at":
+                            slot.hold_expires_at,
+                    }
+                )
+
+
+            item.admin_display_slots = (
+                display_slots
+            )
+
+
+        booking.admin_ride_items = (
+            ride_items
+        )
+
+
+        booking.admin_total_participants = (
+            booking_total_participants
+        )
+
+
+    # =====================================================
     # RENDER
     # =====================================================
 
@@ -2622,7 +2996,6 @@ def booking_list(request):
         },
 
     )
-
 
 
 @_admin_required
@@ -3180,8 +3553,25 @@ def booking_update(request, pk):
     )
 
 
+
 @_admin_required
 def booking_detail(request, pk):
+
+    # =====================================================
+    # SLOT PREFETCH
+    # =====================================================
+
+    slot_queryset = (
+        BookingRideSlot.objects
+        .order_by(
+            "slot_start_time"
+        )
+    )
+
+
+    # =====================================================
+    # BOOKING
+    # =====================================================
 
     booking = get_object_or_404(
 
@@ -3203,12 +3593,21 @@ def booking_detail(request, pk):
 
             "ride_items__weight_groups",
 
+            Prefetch(
+                "ride_items__allocated_slots",
+                queryset=slot_queryset,
+                to_attr="admin_slots",
+            ),
         ),
 
         pk=pk,
 
     )
 
+
+    # =====================================================
+    # PAYMENT
+    # =====================================================
 
     payment = getattr(
         booking,
@@ -3217,6 +3616,10 @@ def booking_detail(request, pk):
     )
 
 
+    # =====================================================
+    # TICKET
+    # =====================================================
+
     ticket = getattr(
         booking,
         "ticket",
@@ -3224,9 +3627,124 @@ def booking_detail(request, pk):
     )
 
 
+    # =====================================================
+    # RIDE ITEMS
+    # =====================================================
+
     ride_items = list(
         booking.ride_items.all()
     )
+
+
+    # =====================================================
+    # PREPARE RIDE SLOT SCHEDULES
+    # =====================================================
+
+    total_confirmed_riders = 0
+    total_held_riders = 0
+    total_cancelled_riders = 0
+    total_expired_riders = 0
+
+
+    for item in ride_items:
+
+        slot_rows = list(
+            getattr(
+                item,
+                "admin_slots",
+                []
+            )
+        )
+
+
+        display_slots = []
+
+
+        for slot in slot_rows:
+
+            # =============================================
+            # COUNT SLOT STATUS
+            # =============================================
+
+            if slot.status == "confirmed":
+
+                total_confirmed_riders += (
+                    slot.participant_count
+                )
+
+            elif slot.status == "held":
+
+                total_held_riders += (
+                    slot.participant_count
+                )
+
+            elif slot.status == "cancelled":
+
+                total_cancelled_riders += (
+                    slot.participant_count
+                )
+
+            elif slot.status == "expired":
+
+                total_expired_riders += (
+                    slot.participant_count
+                )
+
+
+            # =============================================
+            # DISPLAY DATA
+            # =============================================
+
+            display_slots.append(
+                {
+                    "start_time":
+                        slot.slot_start_time,
+
+                    "end_time":
+                        slot.slot_end_time,
+
+                    "start_label":
+                        slot.slot_start_time.strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "end_label":
+                        slot.slot_end_time.strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "participant_count":
+                        slot.participant_count,
+
+                    "status":
+                        slot.status,
+
+                    "status_label":
+                        slot.get_status_display(),
+
+                    "hold_expires_at":
+                        slot.hold_expires_at,
+                }
+            )
+
+
+        item.admin_display_slots = (
+            display_slots
+        )
+
+
+        # =============================================
+        # TOTAL ALLOCATED RIDERS FOR THIS RIDE
+        # =============================================
+
+        item.admin_allocated_riders = sum(
+
+            slot["participant_count"]
+
+            for slot
+            in display_slots
+
+        )
 
 
     # =====================================================
@@ -3235,7 +3753,10 @@ def booking_detail(request, pk):
 
     total_participants = sum(
 
-        item.quantity
+        (
+            item.quantity
+            or 0
+        )
 
         for item
         in ride_items
@@ -3271,7 +3792,6 @@ def booking_detail(request, pk):
         "admin_pages/booking_detail.html",
 
         {
-
             "booking":
                 booking,
 
@@ -3290,9 +3810,21 @@ def booking_detail(request, pk):
             "total_amount":
                 total_amount,
 
+            "total_confirmed_riders":
+                total_confirmed_riders,
+
+            "total_held_riders":
+                total_held_riders,
+
+            "total_cancelled_riders":
+                total_cancelled_riders,
+
+            "total_expired_riders":
+                total_expired_riders,
         },
 
     )
+
 
 
 @_admin_required
@@ -3333,16 +3865,48 @@ def booking_delete(request, pk):
 @_admin_required
 def transaction_list(request):
 
+    # =====================================================
+    # SLOT PREFETCH
+    # =====================================================
+
+    slot_queryset = (
+        BookingRideSlot.objects
+        .order_by(
+            "slot_start_time"
+        )
+    )
+
+
+    # =====================================================
+    # PAYMENT QUERY
+    # =====================================================
+
     payments_qs = (
         Payment.objects
+
         .select_related(
             "booking",
             "booking__user",
-            "booking__ride",
-            "booking__ride_price",
-            "booking__offer",
             "booking__ticket",
         )
+
+        .prefetch_related(
+
+            "booking__ride_items__ride",
+
+            "booking__ride_items__ride_price",
+
+            "booking__ride_items__offer",
+
+            "booking__ride_items__weight_groups",
+
+            Prefetch(
+                "booking__ride_items__allocated_slots",
+                queryset=slot_queryset,
+                to_attr="admin_slots",
+            ),
+        )
+
         .order_by(
             "-created_at"
         )
@@ -3371,6 +3935,24 @@ def transaction_list(request):
     )
 
 
+    booking_date_raw = (
+        request.GET.get(
+            "booking_date",
+            ""
+        )
+        .strip()
+    )
+
+
+    booking_date = (
+        parse_date(
+            booking_date_raw
+        )
+        if booking_date_raw
+        else None
+    )
+
+
     # =====================================================
     # SEARCH
     # =====================================================
@@ -3378,7 +3960,9 @@ def transaction_list(request):
     if search:
 
         payments_qs = (
-            payments_qs.filter(
+            payments_qs
+
+            .filter(
 
                 Q(
                     booking__customer_name__icontains=
@@ -3409,7 +3993,7 @@ def transaction_list(request):
                 |
 
                 Q(
-                    booking__ride__name__icontains=
+                    booking__ride_items__ride__name__icontains=
                         search
                 )
 
@@ -3426,13 +4010,14 @@ def transaction_list(request):
                     gateway_payment_id__icontains=
                         search
                 )
-
             )
+
+            .distinct()
         )
 
 
     # =====================================================
-    # STATUS
+    # PAYMENT STATUS FILTER
     # =====================================================
 
     if status:
@@ -3440,6 +4025,20 @@ def transaction_list(request):
         payments_qs = (
             payments_qs.filter(
                 status=status
+            )
+        )
+
+
+    # =====================================================
+    # VISIT DATE FILTER
+    # =====================================================
+
+    if booking_date:
+
+        payments_qs = (
+            payments_qs.filter(
+                booking__booking_date=
+                    booking_date
             )
         )
 
@@ -3464,6 +4063,80 @@ def transaction_list(request):
 
 
     # =====================================================
+    # PREPARE MULTI-RIDE DISPLAY DATA
+    # =====================================================
+
+    for payment in payments:
+
+        booking = (
+            payment.booking
+        )
+
+
+        ride_items = list(
+            booking.ride_items.all()
+        )
+
+
+        total_participants = 0
+
+
+        for item in ride_items:
+
+            total_participants += (
+                item.quantity or 0
+            )
+
+
+            slot_rows = list(
+                getattr(
+                    item,
+                    "admin_slots",
+                    []
+                )
+            )
+
+
+            item.admin_display_slots = []
+
+
+            for slot in slot_rows:
+
+                item.admin_display_slots.append(
+                    {
+                        "start_label":
+                            slot.slot_start_time.strftime(
+                                "%I:%M %p"
+                            ),
+
+                        "end_label":
+                            slot.slot_end_time.strftime(
+                                "%I:%M %p"
+                            ),
+
+                        "participant_count":
+                            slot.participant_count,
+
+                        "status":
+                            slot.status,
+
+                        "status_label":
+                            slot.get_status_display(),
+                    }
+                )
+
+
+        booking.admin_ride_items = (
+            ride_items
+        )
+
+
+        booking.admin_total_participants = (
+            total_participants
+        )
+
+
+    # =====================================================
     # RENDER
     # =====================================================
 
@@ -3480,15 +4153,21 @@ def transaction_list(request):
             "selected_status":
                 status,
 
+            "selected_booking_date":
+                booking_date,
+
             "status_choices":
                 Payment.STATUS_CHOICES,
         },
     )
 
 
+
+
 # =========================================================
 # TRANSACTION DETAIL
 # =========================================================
+
 # =========================================================
 # TRANSACTION DETAIL
 # =========================================================
@@ -3498,6 +4177,22 @@ def transaction_detail(
     request,
     pk,
 ):
+
+    # =====================================================
+    # SLOT PREFETCH
+    # =====================================================
+
+    slot_queryset = (
+        BookingRideSlot.objects
+        .order_by(
+            "slot_start_time"
+        )
+    )
+
+
+    # =====================================================
+    # PAYMENT
+    # =====================================================
 
     payment = get_object_or_404(
 
@@ -3512,9 +4207,18 @@ def transaction_detail(
         .prefetch_related(
 
             "booking__ride_items__ride",
+
             "booking__ride_items__ride_price",
+
             "booking__ride_items__offer",
+
             "booking__ride_items__weight_groups",
+
+            Prefetch(
+                "booking__ride_items__allocated_slots",
+                queryset=slot_queryset,
+                to_attr="admin_slots",
+            ),
 
         ),
 
@@ -3522,8 +4226,18 @@ def transaction_detail(
     )
 
 
-    booking = payment.booking
+    # =====================================================
+    # BOOKING
+    # =====================================================
 
+    booking = (
+        payment.booking
+    )
+
+
+    # =====================================================
+    # TICKET
+    # =====================================================
 
     ticket = getattr(
         booking,
@@ -3542,12 +4256,124 @@ def transaction_detail(
 
 
     # =====================================================
+    # PREPARE SLOT DATA
+    # =====================================================
+
+    total_confirmed_riders = 0
+    total_held_riders = 0
+    total_cancelled_riders = 0
+    total_expired_riders = 0
+
+
+    for item in ride_items:
+
+        slot_rows = list(
+            getattr(
+                item,
+                "admin_slots",
+                []
+            )
+        )
+
+
+        display_slots = []
+
+
+        for slot in slot_rows:
+
+            # =============================================
+            # STATUS TOTALS
+            # =============================================
+
+            if slot.status == "confirmed":
+
+                total_confirmed_riders += (
+                    slot.participant_count
+                )
+
+            elif slot.status == "held":
+
+                total_held_riders += (
+                    slot.participant_count
+                )
+
+            elif slot.status == "cancelled":
+
+                total_cancelled_riders += (
+                    slot.participant_count
+                )
+
+            elif slot.status == "expired":
+
+                total_expired_riders += (
+                    slot.participant_count
+                )
+
+
+            # =============================================
+            # DISPLAY SLOT
+            # =============================================
+
+            display_slots.append(
+                {
+                    "start_time":
+                        slot.slot_start_time,
+
+                    "end_time":
+                        slot.slot_end_time,
+
+                    "start_label":
+                        slot.slot_start_time.strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "end_label":
+                        slot.slot_end_time.strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "participant_count":
+                        slot.participant_count,
+
+                    "status":
+                        slot.status,
+
+                    "status_label":
+                        slot.get_status_display(),
+
+                    "hold_expires_at":
+                        slot.hold_expires_at,
+                }
+            )
+
+
+        item.admin_display_slots = (
+            display_slots
+        )
+
+
+        item.admin_allocated_riders = sum(
+
+            slot[
+                "participant_count"
+            ]
+
+            for slot
+            in display_slots
+
+        )
+
+
+    # =====================================================
     # TOTAL PARTICIPANTS
     # =====================================================
 
     total_participants = sum(
 
-        item.quantity
+        (
+            item.quantity
+            or 0
+        )
 
         for item
         in ride_items
@@ -3583,7 +4409,6 @@ def transaction_detail(
         "admin_pages/transaction_detail.html",
 
         {
-
             "payment":
                 payment,
 
@@ -3602,6 +4427,17 @@ def transaction_detail(
             "total_amount":
                 total_amount,
 
+            "total_confirmed_riders":
+                total_confirmed_riders,
+
+            "total_held_riders":
+                total_held_riders,
+
+            "total_cancelled_riders":
+                total_cancelled_riders,
+
+            "total_expired_riders":
+                total_expired_riders,
         },
 
     )
@@ -4760,18 +5596,7 @@ def resend_login_otp(request):
     )
 
 
-def user_logout(request):
 
-    request.session.flush()
-
-    messages.success(
-        request,
-        "You have been logged out."
-    )
-
-    return redirect(
-        "user_signin"
-    )
 
 
 # =========================================================
@@ -5032,14 +5857,16 @@ def user_bookings(request):
             user=profile
         )
         .select_related(
-            "ride",
-            "ride_price",
-            "offer",
             "payment",
             "ticket",
         )
         .prefetch_related(
             "refunds",
+            "ride_items__ride",
+            "ride_items__ride_price",
+            "ride_items__offer",
+            "ride_items__weight_groups",
+            "ride_items__allocated_slots",
         )
         .order_by(
             "-created_at"
@@ -5049,10 +5876,65 @@ def user_bookings(request):
 
 
     # =====================================================
-    # REFUND INFORMATION FOR EACH BOOKING
+    # PREPARE BOOKING INFORMATION
     # =====================================================
 
     for booking in bookings:
+
+        # ---------------------------------------------
+        # MULTI-RIDE ITEMS
+        # ---------------------------------------------
+
+        ride_items = list(
+            booking.ride_items.all()
+        )
+
+
+        booking.display_ride_items = (
+            ride_items
+        )
+
+
+        # ---------------------------------------------
+        # SLOT INFORMATION FOR EACH RIDE
+        #
+        # Show:
+        #
+        # confirmed -> active paid booking
+        # cancelled -> historical cancelled booking
+        # held      -> payment still pending
+        #
+        # Do not show expired abandoned holds.
+        # ---------------------------------------------
+
+        for item in ride_items:
+
+            display_slots = [
+
+                slot
+
+                for slot
+                in item.allocated_slots.all()
+
+                if slot.status in [
+                    "held",
+                    "confirmed",
+                    "cancelled",
+                ]
+
+            ]
+
+
+            display_slots.sort(
+                key=lambda slot:
+                    slot.slot_start_time
+            )
+
+
+            item.display_slots = (
+                display_slots
+            )
+
 
         # ---------------------------------------------
         # PAYMENT
@@ -5075,31 +5957,60 @@ def user_bookings(request):
 
 
         refund_list.sort(
-            key=lambda item: item.requested_at,
+            key=lambda item:
+                item.requested_at,
             reverse=True,
         )
 
 
         booking.latest_refund = (
+
             refund_list[0]
+
             if refund_list
+
             else None
+
         )
 
 
         # ---------------------------------------------
-        # IF A REFUND REQUEST ALREADY EXISTS,
-        # DON'T OFFER ANOTHER ONE
+        # CANCELLED BOOKING
+        #
+        # Never show another refund request button.
+        # ---------------------------------------------
+
+        if booking.status == "cancelled":
+
+            booking.refund_info = {
+
+                "eligible": False,
+
+                "message": (
+                    "This booking has already "
+                    "been cancelled."
+                ),
+
+            }
+
+            continue
+
+
+        # ---------------------------------------------
+        # EXISTING REFUND REQUEST
         # ---------------------------------------------
 
         if booking.latest_refund:
 
             booking.refund_info = {
+
                 "eligible": False,
+
                 "message": (
                     "A cancellation/refund request "
                     "already exists for this booking."
                 ),
+
             }
 
             continue
@@ -5121,11 +6032,14 @@ def user_bookings(request):
         else:
 
             booking.refund_info = {
+
                 "eligible": False,
+
                 "message": (
                     "No successful payment "
                     "was found for this booking."
                 ),
+
             }
 
 
@@ -5137,6 +6051,7 @@ def user_bookings(request):
         request,
         "authenticate/user_bookings.html",
         {
+
             "profile":
                 profile,
 
@@ -5145,6 +6060,7 @@ def user_bookings(request):
 
             "active_page":
                 "bookings",
+
         }
     )
 
@@ -5178,30 +6094,97 @@ def user_tickets(request):
     )
 
 
-    tickets = (
+    tickets = list(
+
         Ticket.objects
         .filter(
             booking__user=profile
         )
         .select_related(
             "booking",
-            "booking__ride",
+        )
+        .prefetch_related(
+            "booking__ride_items__ride",
+            "booking__ride_items__allocated_slots",
         )
         .order_by(
             "-created_at"
         )
+
     )
+
+
+    # =====================================================
+    # PREPARE MULTI-RIDE + SLOT INFORMATION
+    # =====================================================
+
+    for ticket in tickets:
+
+        booking = ticket.booking
+
+
+        ride_items = list(
+            booking.ride_items.all()
+        )
+
+
+        ticket.display_ride_items = (
+            ride_items
+        )
+
+
+        for item in ride_items:
+
+            display_slots = [
+
+                slot
+
+                for slot
+                in item.allocated_slots.all()
+
+                if slot.status in [
+                    "confirmed",
+                    "cancelled",
+                ]
+
+            ]
+
+
+            display_slots.sort(
+                key=lambda slot:
+                    slot.slot_start_time
+            )
+
+
+            item.display_slots = (
+                display_slots
+            )
+
+
+        # ---------------------------------------------
+        # ACTIVE / CANCELLED TICKET STATE
+        # ---------------------------------------------
+
+        ticket.booking_cancelled = (
+            booking.status == "cancelled"
+        )
 
 
     return render(
         request,
         "authenticate/user_tickets.html",
         {
-            "profile": profile,
-            "tickets": tickets,
-            "active_page": "tickets",
+            "profile":
+                profile,
+
+            "tickets":
+                tickets,
+
+            "active_page":
+                "tickets",
         }
     )
+
 
 
 
@@ -5260,9 +6243,7 @@ def user_logout(request):
     )
 
 
-    return redirect(
-        "user_signin"
-    )
+    return redirect("home")
 
 
 
@@ -5871,10 +6852,15 @@ def bookings(request):
 
 
 
+
 @require_GET
 def booking_options_for_date(request):
 
     try:
+
+        # =====================================================
+        # 1. BOOKING DATE
+        # =====================================================
 
         booking_date_raw = (
             request.GET.get(
@@ -5884,20 +6870,25 @@ def booking_options_for_date(request):
             .strip()
         )
 
+
         booking_date = parse_date(
             booking_date_raw
         )
+
 
         if not booking_date:
 
             return JsonResponse(
                 {
                     "success": False,
-                    "message": "Please select a valid visit date.",
+                    "message": (
+                        "Please select a valid visit date."
+                    ),
                     "rides": [],
                 },
                 status=400,
             )
+
 
         if (
             booking_date
@@ -5908,12 +6899,18 @@ def booking_options_for_date(request):
             return JsonResponse(
                 {
                     "success": False,
-                    "message": "The visit date cannot be in the past.",
+                    "message": (
+                        "The visit date cannot be in the past."
+                    ),
                     "rides": [],
                 },
                 status=400,
             )
 
+
+        # =====================================================
+        # 2. ACTIVE RIDES
+        # =====================================================
 
         rides = (
             Ride.objects
@@ -5929,7 +6926,12 @@ def booking_options_for_date(request):
         ride_results = []
 
 
+        # =====================================================
+        # 3. PROCESS EACH RIDE
+        # =====================================================
+
         for ride in rides:
+
 
             # =================================================
             # PRICE VALID FOR SELECTED DATE
@@ -5940,8 +6942,10 @@ def booking_options_for_date(request):
                 .filter(
                     ride=ride,
                     is_active=True,
-                    start_date__lte=booking_date,
-                    end_date__gte=booking_date,
+                    start_date__lte=
+                        booking_date,
+                    end_date__gte=
+                        booking_date,
                 )
                 .order_by(
                     "-start_date",
@@ -5957,7 +6961,7 @@ def booking_options_for_date(request):
 
 
             # =================================================
-            # IMAGE
+            # RIDE IMAGE
             # =================================================
 
             ride_image = (
@@ -6002,15 +7006,17 @@ def booking_options_for_date(request):
             # =================================================
 
             offers = (
-                 Offer.objects
+                Offer.objects
                 .filter(
-                rides=ride,
-                 is_active=True,
-                start_date__lte=booking_date,
-                end_date__gte=booking_date,
+                    rides=ride,
+                    is_active=True,
+                    start_date__lte=
+                        booking_date,
+                    end_date__gte=
+                        booking_date,
                 )
-               .order_by(
-                 "-created_at"
+                .order_by(
+                    "-created_at"
                 )
             )
 
@@ -6018,11 +7024,16 @@ def booking_options_for_date(request):
             offer_results = []
 
 
+            # =================================================
+            # PROCESS OFFERS
+            # =================================================
+
             for offer in offers:
 
-                # -----------------------------------------
+
+                # ---------------------------------------------
                 # WEEKDAY OFFER
-                # -----------------------------------------
+                # ---------------------------------------------
 
                 if (
                     offer.offer_type
@@ -6037,9 +7048,9 @@ def booking_options_for_date(request):
                     continue
 
 
-                # -----------------------------------------
+                # ---------------------------------------------
                 # EARLY BIRD OFFER
-                # -----------------------------------------
+                # ---------------------------------------------
 
                 if (
                     offer.offer_type
@@ -6073,6 +7084,10 @@ def booking_options_for_date(request):
 
                         continue
 
+
+                # =============================================
+                # OFFER JSON
+                # =============================================
 
                 offer_results.append(
                     {
@@ -6210,6 +7225,10 @@ def booking_options_for_date(request):
                 )
 
 
+            # =================================================
+            # RIDE JSON
+            # =================================================
+
             ride_results.append(
                 {
 
@@ -6227,6 +7246,22 @@ def booking_options_for_date(request):
                     "image":
                         image_url,
 
+
+                    # =========================================
+                    # SLOT SETTINGS
+                    # =========================================
+
+                    "capacity_per_slot":
+                        ride.capacity_per_slot,
+
+                    "slot_duration_minutes":
+                        ride.slot_duration_minutes,
+
+
+                    # =========================================
+                    # PRICE
+                    # =========================================
+
                     "price_id":
                         ride_price.id,
 
@@ -6235,14 +7270,24 @@ def booking_options_for_date(request):
                             ride_price.price
                         ),
 
+
+                    # =========================================
+                    # OFFERS
+                    # =========================================
+
                     "offers":
                         offer_results,
                 }
             )
 
 
+        # =====================================================
+        # 4. SUCCESS RESPONSE
+        # =====================================================
+
         return JsonResponse(
             {
+
                 "success":
                     True,
 
@@ -6282,15 +7327,407 @@ def booking_options_for_date(request):
 
         return JsonResponse(
             {
-                "success": False,
-                "message": (
-                    "Unable to load rides for the selected date. "
-                    "Please try again."
-                ),
-                "rides": [],
+                "success":
+                    False,
+
+                "message":
+                    (
+                        "Unable to load rides for "
+                        "the selected date. "
+                        "Please try again."
+                    ),
+
+                "rides":
+                    [],
             },
             status=500,
         )
+
+
+
+
+
+@require_GET
+def booking_slot_availability(request):
+
+    try:
+
+        # =====================================================
+        # 1. READ REQUEST DATA
+        # =====================================================
+
+        booking_date_raw = (
+            request.GET.get(
+                "date",
+                ""
+            )
+            .strip()
+        )
+
+        ride_id_raw = (
+            request.GET.get(
+                "ride_id",
+                ""
+            )
+            .strip()
+        )
+
+        quantity_raw = (
+            request.GET.get(
+                "quantity",
+                ""
+            )
+            .strip()
+        )
+
+
+        # =====================================================
+        # 2. VALIDATE DATE
+        # =====================================================
+
+        booking_date = parse_date(
+            booking_date_raw
+        )
+
+
+        if not booking_date:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "Please select a valid visit date."
+                    ),
+                    "slots": [],
+                },
+                status=400,
+            )
+
+
+        if (
+            booking_date
+            <
+            timezone.localdate()
+        ):
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "The visit date cannot be in the past."
+                    ),
+                    "slots": [],
+                },
+                status=400,
+            )
+
+
+        # =====================================================
+        # 3. VALIDATE RIDE
+        # =====================================================
+
+        try:
+
+            ride_id = int(
+                ride_id_raw
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "Please select a valid ride."
+                    ),
+                    "slots": [],
+                },
+                status=400,
+            )
+
+
+        ride = (
+            Ride.objects
+            .filter(
+                id=ride_id,
+                is_active=True,
+            )
+            .first()
+        )
+
+
+        if not ride:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "The selected ride is not available."
+                    ),
+                    "slots": [],
+                },
+                status=404,
+            )
+
+
+        # =====================================================
+        # 4. VALIDATE QUANTITY
+        # =====================================================
+
+        try:
+
+            quantity = int(
+                quantity_raw
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            quantity = 0
+
+
+        if quantity <= 0:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        "Participant quantity must be "
+                        "greater than zero."
+                    ),
+                    "slots": [],
+                },
+                status=400,
+            )
+
+
+        # =====================================================
+        # 5. GET RAW SLOT AVAILABILITY
+        # =====================================================
+
+        slot_data = get_available_slots(
+            ride=ride,
+            booking_date=booking_date,
+        )
+
+
+        # =====================================================
+        # 6. CHECK EACH SLOT AS POSSIBLE START
+        # =====================================================
+
+        result_slots = []
+
+
+        for slot in slot_data:
+
+            allocation_result = (
+                allocate_participants_from_start_slot(
+                    ride=ride,
+                    booking_date=booking_date,
+                    requested_quantity=quantity,
+                    selected_start_time=
+                        slot["start_time"],
+                )
+            )
+
+
+            allocations = []
+
+
+            if allocation_result[
+                "available"
+            ]:
+
+                for allocation in (
+                    allocation_result[
+                        "allocations"
+                    ]
+                ):
+
+                    allocations.append(
+                        {
+                            "start_time":
+                                allocation[
+                                    "start_time"
+                                ].strftime(
+                                    "%H:%M"
+                                ),
+
+                            "end_time":
+                                allocation[
+                                    "end_time"
+                                ].strftime(
+                                    "%H:%M"
+                                ),
+
+                            "participant_count":
+                                allocation[
+                                    "participant_count"
+                                ],
+                        }
+                    )
+
+
+            # =================================================
+            # DISPLAY LABEL
+            # =================================================
+
+            start_label = (
+                slot[
+                    "start_time"
+                ].strftime(
+                    "%I:%M %p"
+                )
+            )
+
+            end_label = (
+                slot[
+                    "end_time"
+                ].strftime(
+                    "%I:%M %p"
+                )
+            )
+
+
+            result_slots.append(
+                {
+                    "start_time":
+                        slot[
+                            "start_time"
+                        ].strftime(
+                            "%H:%M"
+                        ),
+
+                    "end_time":
+                        slot[
+                            "end_time"
+                        ].strftime(
+                            "%H:%M"
+                        ),
+
+                    "start_label":
+                        start_label,
+
+                    "end_label":
+                        end_label,
+
+                    "capacity":
+                        slot[
+                            "capacity"
+                        ],
+
+                    "booked":
+                        slot[
+                            "booked"
+                        ],
+
+                    "remaining":
+                        slot[
+                            "remaining"
+                        ],
+
+                    "available":
+                        allocation_result[
+                            "available"
+                        ],
+
+                    "allocations":
+                        allocations,
+                }
+            )
+
+
+        # =====================================================
+        # 7. CHECK IF ANY START TIME CAN TAKE GROUP
+        # =====================================================
+
+        has_available_slot = any(
+            slot["available"]
+            for slot
+            in result_slots
+        )
+
+
+        # =====================================================
+        # 8. RESPONSE
+        # =====================================================
+
+        return JsonResponse(
+            {
+                "success": True,
+
+                "date":
+                    booking_date.isoformat(),
+
+                "ride": {
+                    "id":
+                        ride.id,
+
+                    "name":
+                        ride.name,
+
+                    "capacity_per_slot":
+                        ride.capacity_per_slot,
+
+                    "slot_duration_minutes":
+                        ride.slot_duration_minutes,
+                },
+
+                "quantity":
+                    quantity,
+
+                "has_available_slot":
+                    has_available_slot,
+
+                "slots":
+                    result_slots,
+            }
+        )
+
+
+    except Exception as error:
+
+        print(
+            "\n================================"
+        )
+
+        print(
+            "BOOKING SLOT AVAILABILITY ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "================================\n"
+        )
+
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Unable to load ride availability. "
+                    "Please try again."
+                ),
+                "slots": [],
+            },
+            status=500,
+        )
+
+
 
 
     
@@ -6825,6 +8262,7 @@ def _calculate_offer_discount(
         ),
         "",
     )
+
 
 
 
@@ -7471,6 +8909,176 @@ def booking_review(request):
 
 
         # =================================================
+        # SELECTED START TIME / SERVER SLOT VALIDATION
+        # =================================================
+
+        selected_start_raw = str(
+            submitted_item.get(
+                "selectedStart",
+                ""
+            )
+            or
+            ""
+        ).strip()
+
+
+        print(
+            "SELECTED START RAW:",
+            selected_start_raw
+        )
+
+
+        if not selected_start_raw:
+
+            return booking_fail(
+                (
+                    f"Please choose a start time "
+                    f"for {ride.name}."
+                )
+            )
+
+
+        try:
+
+            selected_start_time = (
+                datetime.strptime(
+                    selected_start_raw,
+                    "%H:%M"
+                ).time()
+            )
+
+        except (
+            TypeError,
+            ValueError,
+        ):
+
+            return booking_fail(
+                (
+                    f"The selected start time "
+                    f"for {ride.name} is invalid."
+                )
+            )
+
+
+        allocation_result = (
+            allocate_participants_from_start_slot(
+                ride=ride,
+                booking_date=booking_date,
+                requested_quantity=item_quantity,
+                selected_start_time=selected_start_time,
+            )
+        )
+
+
+        print(
+            "SLOT ALLOCATION RESULT:",
+            allocation_result
+        )
+
+
+        if not allocation_result.get(
+            "available",
+            False,
+        ):
+
+            return booking_fail(
+                (
+                    f"The selected start time "
+                    f"{selected_start_time.strftime('%I:%M %p')} "
+                    f"for {ride.name} no longer has enough "
+                    f"capacity for {item_quantity} rider"
+                    f"{'' if item_quantity == 1 else 's'}. "
+                    f"Please choose another start time."
+                )
+            )
+
+
+        validated_slot_allocations = []
+
+
+        for allocation in (
+            allocation_result.get(
+                "allocations",
+                []
+            )
+            or
+            []
+        ):
+
+            validated_slot_allocations.append(
+                {
+                    "start_time":
+                        allocation[
+                            "start_time"
+                        ].strftime(
+                            "%H:%M"
+                        ),
+
+                    "end_time":
+                        allocation[
+                            "end_time"
+                        ].strftime(
+                            "%H:%M"
+                        ),
+
+                    "start_label":
+                        allocation[
+                            "start_time"
+                        ].strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "end_label":
+                        allocation[
+                            "end_time"
+                        ].strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "participant_count":
+                        allocation[
+                            "participant_count"
+                        ],
+                }
+            )
+
+
+        if not validated_slot_allocations:
+
+            return booking_fail(
+                (
+                    f"A valid slot allocation could not "
+                    f"be created for {ride.name}. "
+                    f"Please choose another start time."
+                )
+            )
+
+
+        selected_start = (
+            selected_start_time.strftime(
+                "%H:%M"
+            )
+        )
+
+        selected_start_label = (
+            selected_start_time.strftime(
+                "%I:%M %p"
+            )
+        )
+
+
+        print(
+            "VALIDATED START TIME:",
+            selected_start
+        )
+
+        print(
+            "VALIDATED SLOT ALLOCATIONS:",
+            validated_slot_allocations
+        )
+
+
+        # =================================================
         # PRICE CALCULATION
         # =================================================
 
@@ -7784,6 +9392,15 @@ def booking_review(request):
                 "weight_groups":
                     validated_weight_groups,
 
+                "selected_start":
+                    selected_start,
+
+                "selected_start_label":
+                    selected_start_label,
+
+                "slot_allocations":
+                    validated_slot_allocations,
+
                 "price_per_person":
                     str(
                         price_per_person
@@ -7986,6 +9603,212 @@ def booking_review(request):
                 user_profile,
         },
     )
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+
+@require_POST
+def booking_send_otp(request):
+
+    # =====================================================
+    # PHONE
+    # =====================================================
+
+    phone_number = (
+        request.POST.get(
+            "phone_number",
+            ""
+        )
+        .strip()
+    )
+
+
+    if not phone_number:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Please enter your mobile number."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # VALIDATE INTERNATIONAL PHONE FORMAT
+    #
+    # Example:
+    # +919633390345
+    # =====================================================
+
+    if not re.fullmatch(
+        r"\+[1-9]\d{7,14}",
+        phone_number,
+    ):
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Please enter a valid mobile number."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # IMPORTANT:
+    # Any previous booking OTP verification becomes invalid
+    # when a new OTP is requested.
+    # =====================================================
+
+    request.session.pop(
+        "booking_verified_phone",
+        None,
+    )
+
+
+    # =====================================================
+    # SEND OTP
+    # =====================================================
+
+    try:
+
+        send_otp(
+            phone_number
+        )
+
+    except Exception as error:
+
+        print(
+            "BOOKING OTP SEND ERROR:",
+            repr(error),
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Unable to send OTP. "
+                    "Please try again."
+                ),
+            },
+            status=500,
+        )
+
+
+    return JsonResponse(
+        {
+            "success": True,
+            "message": (
+                "OTP sent successfully."
+            ),
+        }
+    )
+
+
+@require_POST
+def booking_verify_otp(request):
+
+    # =====================================================
+    # PHONE + OTP
+    # =====================================================
+
+    phone_number = (
+        request.POST.get(
+            "phone_number",
+            ""
+        )
+        .strip()
+    )
+
+    entered_otp = (
+        request.POST.get(
+            "otp",
+            ""
+        )
+        .strip()
+    )
+
+
+    if not phone_number:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Mobile number is missing."
+                ),
+            },
+            status=400,
+        )
+
+
+    if (
+        not entered_otp.isdigit()
+        or
+        len(entered_otp) != 6
+    ):
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "Please enter the 6-digit OTP."
+                ),
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # VERIFY USING EXISTING OTP SYSTEM
+    # =====================================================
+
+    success, message = verify_otp(
+        phone_number,
+        entered_otp,
+    )
+
+
+    if not success:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": message,
+            },
+            status=400,
+        )
+
+
+    # =====================================================
+    # STORE VERIFIED EXACT PHONE IN SESSION
+    # =====================================================
+
+    request.session[
+        "booking_verified_phone"
+    ] = phone_number
+
+    request.session.modified = True
+
+
+    return JsonResponse(
+        {
+            "success": True,
+            "message": (
+                "Mobile number verified successfully."
+            ),
+        }
+    )
+
+    
 
 
 def _validate_pending_booking_before_payment(
@@ -8558,6 +10381,156 @@ def _validate_pending_booking_before_payment(
 
 
         # =================================================
+        # SLOT REVALIDATION BEFORE PAYMENT
+        # =================================================
+
+        selected_start_raw = str(
+            item_data.get(
+                "selected_start",
+                ""
+            )
+            or
+            ""
+        ).strip()
+
+
+        if not selected_start_raw:
+
+            return (
+                None,
+                (
+                    f"No start time was found for "
+                    f"{ride.name}. Please review "
+                    f"your booking again."
+                )
+            )
+
+
+        try:
+
+            selected_start_time = (
+                datetime.strptime(
+                    selected_start_raw,
+                    "%H:%M"
+                ).time()
+            )
+
+        except (
+            TypeError,
+            ValueError,
+        ):
+
+            return (
+                None,
+                (
+                    f"The selected start time for "
+                    f"{ride.name} is invalid. "
+                    f"Please review your booking again."
+                )
+            )
+
+
+        allocation_result = (
+            allocate_participants_from_start_slot(
+                ride=ride,
+                booking_date=booking_date,
+                requested_quantity=item_quantity,
+                selected_start_time=selected_start_time,
+            )
+        )
+
+
+        if not allocation_result.get(
+            "available",
+            False,
+        ):
+
+            return (
+                None,
+                (
+                    f"The selected start time "
+                    f"{selected_start_time.strftime('%I:%M %p')} "
+                    f"for {ride.name} is no longer available. "
+                    f"Please select another time."
+                )
+            )
+
+
+        validated_slot_allocations = []
+
+
+        for allocation in (
+            allocation_result.get(
+                "allocations",
+                []
+            )
+            or
+            []
+        ):
+
+            validated_slot_allocations.append(
+                {
+                    "start_time":
+                        allocation[
+                            "start_time"
+                        ].strftime(
+                            "%H:%M"
+                        ),
+
+                    "end_time":
+                        allocation[
+                            "end_time"
+                        ].strftime(
+                            "%H:%M"
+                        ),
+
+                    "start_label":
+                        allocation[
+                            "start_time"
+                        ].strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "end_label":
+                        allocation[
+                            "end_time"
+                        ].strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "participant_count":
+                        allocation[
+                            "participant_count"
+                        ],
+                }
+            )
+
+
+        if not validated_slot_allocations:
+
+            return (
+                None,
+                (
+                    f"No valid slot allocation exists "
+                    f"for {ride.name}."
+                )
+            )
+
+
+        selected_start = (
+            selected_start_time.strftime(
+                "%H:%M"
+            )
+        )
+
+        selected_start_label = (
+            selected_start_time.strftime(
+                "%I:%M %p"
+            )
+        )
+
+
+        # =================================================
         # PRICE CALCULATION
         # =================================================
 
@@ -8922,6 +10895,15 @@ def _validate_pending_booking_before_payment(
                 "weight_groups":
                     validated_weight_groups,
 
+                "selected_start":
+                    selected_start,
+
+                "selected_start_label":
+                    selected_start_label,
+
+                "slot_allocations":
+                    validated_slot_allocations,
+
                 "price_per_person":
                     price_per_person,
 
@@ -9137,6 +11119,21 @@ def _validate_pending_booking_before_payment(
                         "weight_groups"
                     ],
 
+                "selected_start":
+                    item[
+                        "selected_start"
+                    ],
+
+                "selected_start_label":
+                    item[
+                        "selected_start_label"
+                    ],
+
+                "slot_allocations":
+                    item[
+                        "slot_allocations"
+                    ],
+
                 "price_per_person":
                     str(
                         item[
@@ -9322,6 +11319,7 @@ def _validate_pending_booking_before_payment(
     )
 
 
+
 # =========================================================
 # FIND OR CREATE CUSTOMER USER PROFILE DURING BOOKING
 # =========================================================
@@ -9332,7 +11330,6 @@ def _get_or_create_booking_user_profile(
     customer_name,
     customer_email,
     customer_phone,
-    customer_pincode,
 ):
 
     # =====================================================
@@ -9349,7 +11346,10 @@ def _get_or_create_booking_user_profile(
 
 
     # =====================================================
-    # 2. CREATE IF THIS MOBILE NUMBER DOES NOT EXIST
+    # 2. CREATE USER IF MOBILE NUMBER DOES NOT EXIST
+    #
+    # The booking phone has already been OTP verified
+    # before this function is called.
     # =====================================================
 
     if user_profile is None:
@@ -9363,21 +11363,24 @@ def _get_or_create_booking_user_profile(
                 phone=
                     customer_phone,
 
-                pincode=
-                    customer_pincode,
-
                 phone_verified=
-                    False,
+                    True,
             )
         )
 
+        return user_profile
+
 
     # =====================================================
-    # 3. UPDATE BASIC DETAILS
+    # 3. UPDATE EXISTING PROFILE
     # =====================================================
 
     changed_fields = []
 
+
+    # =====================================================
+    # NAME
+    # =====================================================
 
     if (
         customer_name
@@ -9396,25 +11399,26 @@ def _get_or_create_booking_user_profile(
         )
 
 
-    if (
-        customer_pincode
-        and
-        user_profile.pincode
-        !=
-        customer_pincode
-    ):
 
-        user_profile.pincode = (
-            customer_pincode
+    # =====================================================
+    # PHONE VERIFIED
+    #
+    # This phone was verified through booking OTP.
+    # =====================================================
+
+    if not user_profile.phone_verified:
+
+        user_profile.phone_verified = (
+            True
         )
 
         changed_fields.append(
-            "pincode"
+            "phone_verified"
         )
 
 
     # =====================================================
-    # 4. EMAIL IS ONLY PROFILE DATA
+    # EMAIL
     # =====================================================
 
     if customer_email:
@@ -9450,7 +11454,7 @@ def _get_or_create_booking_user_profile(
 
 
     # =====================================================
-    # 5. SAVE
+    # SAVE
     # =====================================================
 
     if changed_fields:
@@ -9517,15 +11521,6 @@ def booking_confirm(request):
     )
 
 
-    customer_pincode = (
-        request.POST.get(
-            "customer_pincode",
-            ""
-        )
-        .strip()
-    )
-
-
     terms_accepted = (
         request.POST.get(
             "terms_accepted"
@@ -9573,9 +11568,6 @@ def booking_confirm(request):
 
     # =====================================================
     # PHONE
-    #
-    # Example:
-    # +919876543210
     # =====================================================
 
     if not re.fullmatch(
@@ -9591,27 +11583,37 @@ def booking_confirm(request):
             status=400,
         )
 
+    # =====================================================
+# MOBILE OTP VERIFICATION CHECK
+# =====================================================
 
-    # =====================================================
-    # PINCODE
-    # =====================================================
+    verified_phone = (
+        request.session.get(
+        "booking_verified_phone",
+        ""
+    )
+    or
+    ""
+    ).strip()
+
 
     if (
-        not customer_pincode.isdigit()
-        or
-        len(customer_pincode) != 6
+    not verified_phone
+    or
+    verified_phone != customer_phone
     ):
 
         return JsonResponse(
-            {
-                "success": False,
-                "message": (
-                    "Please enter a valid "
-                    "6-digit PIN code."
-                ),
-            },
-            status=400,
-        )
+        {
+            "success": False,
+            "message": (
+                "Please verify your mobile number "
+                "with OTP before continuing."
+            ),
+        },
+        status=400,
+    )
+
 
 
     # =====================================================
@@ -9635,14 +11637,18 @@ def booking_confirm(request):
     # =====================================================
     # REVALIDATE COMPLETE MULTI-RIDE BOOKING
     #
-    # This performs final:
+    # This checks:
     #
-    # - ride validation
-    # - price validation
-    # - participant validation
-    # - offer validation
-    # - customer-history validation
-    # - final total calculation
+    # - rides
+    # - prices
+    # - participants
+    # - weight groups
+    # - offers
+    # - coupon
+    # - customer history
+    # - selected start time
+    # - slot capacity
+    # - final totals
     # =====================================================
 
     (
@@ -9665,6 +11671,7 @@ def booking_confirm(request):
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
                     error_message
                     or
@@ -9701,6 +11708,17 @@ def booking_confirm(request):
             },
             status=400,
         )
+
+
+    # =====================================================
+    # BOOKING DATE
+    # =====================================================
+
+    booking_date = (
+        validated[
+            "booking_date"
+        ]
+    )
 
 
     # =====================================================
@@ -9793,6 +11811,339 @@ def booking_confirm(request):
 
 
     # =====================================================
+    # LOCK ALL SELECTED RIDES
+    #
+    # IMPORTANT:
+    #
+    # Availability checking alone is not enough.
+    #
+    # Two customers could select the last remaining seats
+    # at almost the same moment.
+    #
+    # Lock every selected Ride row before doing the final
+    # capacity calculation and creating held slots.
+    #
+    # Sort IDs to reduce deadlock risk for multi-ride
+    # bookings.
+    # =====================================================
+
+    ride_ids = sorted(
+        {
+            int(
+                item[
+                    "ride_id"
+                ]
+            )
+            for item
+            in validated_items
+        }
+    )
+
+
+    locked_rides = {
+        ride.id: ride
+
+        for ride in (
+            Ride.objects
+            .select_for_update()
+            .filter(
+                id__in=ride_ids,
+                is_active=True,
+            )
+            .order_by(
+                "id"
+            )
+        )
+    }
+
+
+    if (
+        len(
+            locked_rides
+        )
+        !=
+        len(
+            ride_ids
+        )
+    ):
+
+        transaction.set_rollback(
+            True
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": (
+                    "One of the selected rides "
+                    "is no longer available. "
+                    "Please review your booking again."
+                ),
+            },
+            status=409,
+        )
+
+
+    # =====================================================
+    # FINAL SLOT CAPACITY CHECK WHILE RIDES ARE LOCKED
+    #
+    # Never trust slotAllocations stored in the browser
+    # or even the previous session calculation.
+    #
+    # Recalculate from database NOW while the Ride rows
+    # are locked.
+    # =====================================================
+
+    final_slot_allocations = {}
+
+
+    for item in validated_items:
+
+        ride = locked_rides[
+            int(
+                item[
+                    "ride_id"
+                ]
+            )
+        ]
+
+
+        selected_start_raw = str(
+            item.get(
+                "selected_start",
+                ""
+            )
+            or
+            ""
+        ).strip()
+
+
+        if not selected_start_raw:
+
+            transaction.set_rollback(
+                True
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        f"No start time was found for "
+                        f"{ride.name}. Please select "
+                        f"the ride time again."
+                    ),
+                },
+                status=409,
+            )
+
+
+        try:
+
+            selected_start_time = (
+                datetime.strptime(
+                    selected_start_raw,
+                    "%H:%M"
+                ).time()
+            )
+
+        except (
+            TypeError,
+            ValueError,
+        ):
+
+            transaction.set_rollback(
+                True
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        f"The selected start time "
+                        f"for {ride.name} is invalid."
+                    ),
+                },
+                status=409,
+            )
+
+
+        # =============================================
+        # RECALCULATE CAPACITY
+        # =============================================
+
+        allocation_result = (
+            allocate_participants_from_start_slot(
+                ride=ride,
+                booking_date=booking_date,
+                requested_quantity=
+                    item[
+                        "quantity"
+                    ],
+                selected_start_time=
+                    selected_start_time,
+            )
+        )
+
+
+        if not allocation_result.get(
+            "available",
+            False,
+        ):
+
+            transaction.set_rollback(
+                True
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        f"{ride.name} is no longer "
+                        f"available at "
+                        f"{selected_start_time.strftime('%I:%M %p')} "
+                        f"for {item['quantity']} rider"
+                        f"{'' if item['quantity'] == 1 else 's'}. "
+                        f"Please choose another start time."
+                    ),
+                },
+                status=409,
+            )
+
+
+        allocations = (
+            allocation_result.get(
+                "allocations",
+                []
+            )
+            or
+            []
+        )
+
+
+        if not allocations:
+
+            transaction.set_rollback(
+                True
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        f"No valid slot allocation "
+                        f"could be created for "
+                        f"{ride.name}."
+                    ),
+                },
+                status=409,
+            )
+
+
+        # =============================================
+        # EXTRA SAFETY:
+        # Allocation quantity must equal ride quantity.
+        # =============================================
+
+        allocated_quantity = sum(
+            int(
+                allocation[
+                    "participant_count"
+                ]
+            )
+            for allocation
+            in allocations
+        )
+
+
+        if (
+            allocated_quantity
+            !=
+            int(
+                item[
+                    "quantity"
+                ]
+            )
+        ):
+
+            transaction.set_rollback(
+                True
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        f"Unable to safely allocate "
+                        f"all riders for {ride.name}. "
+                        f"Please select the ride again."
+                    ),
+                },
+                status=409,
+            )
+
+
+        final_slot_allocations[
+            ride.id
+        ] = allocations
+
+
+        # Use the locked Ride object from this point.
+        item[
+            "ride"
+        ] = ride
+
+
+        print(
+            "\n================================"
+        )
+
+        print(
+            "FINAL SLOT CHECK SUCCESS"
+        )
+
+        print(
+            "RIDE:",
+            ride.name
+        )
+
+        print(
+            "START:",
+            selected_start_raw
+        )
+
+        print(
+            "QUANTITY:",
+            item[
+                "quantity"
+            ]
+        )
+
+        print(
+            "ALLOCATIONS:",
+            allocations
+        )
+
+        print(
+            "================================\n"
+        )
+
+
+    # =====================================================
+    # HOLD EXPIRY
+    #
+    # Customer gets 15 minutes to complete Razorpay.
+    # =====================================================
+
+    hold_expires_at = (
+        timezone.now()
+        +
+        timedelta(
+            minutes=15
+        )
+    )
+
+
+    # =====================================================
     # FIND / CREATE CUSTOMER PROFILE
     # =====================================================
 
@@ -9811,9 +12162,6 @@ def booking_confirm(request):
 
                 customer_phone=
                     customer_phone,
-
-                customer_pincode=
-                    customer_pincode,
             )
         )
 
@@ -9863,21 +12211,12 @@ def booking_confirm(request):
     # FIRST ITEM
     #
     # TEMPORARY LEGACY COMPATIBILITY
-    #
-    # Booking still contains the old fields:
-    #
-    # ride
-    # ride_price
-    # price_per_person
-    # offer
-    # time_slot
-    #
-    # We keep the first ride in those fields until the
-    # entire payment/ticket/staff system is migrated.
     # =====================================================
 
     first_item = (
-        validated_items[0]
+        validated_items[
+            0
+        ]
     )
 
 
@@ -9901,28 +12240,28 @@ def booking_confirm(request):
             customer_phone=
                 customer_phone,
 
-            customer_pincode=
-                customer_pincode,
-
 
             # =============================================
             # ONE DATE FOR WHOLE BOOKING
             # =============================================
 
             booking_date=
-                validated[
-                    "booking_date"
-                ],
+                booking_date,
 
 
             # =============================================
             # TEMPORARY LEGACY TIME FIELD
             #
-            # There is no time in the new booking flow.
+            # Store first ride selected start for older
+            # code that may still display Booking.time_slot.
+            # Per-ride slots remain source of truth.
             # =============================================
 
             time_slot=
-                "",
+                first_item.get(
+                    "selected_start",
+                    ""
+                ),
 
 
             # =============================================
@@ -9952,9 +12291,6 @@ def booking_confirm(request):
 
             # =============================================
             # TEMPORARY LEGACY SINGLE-RIDE FIELDS
-            #
-            # First ride only.
-            # Remove later after full migration.
             # =============================================
 
             ride=
@@ -10043,7 +12379,7 @@ def booking_confirm(request):
     # =====================================================
     # CREATE BOOKING RIDE ITEMS
     #
-    # One BookingRideItem per selected adventure.
+    # AND CREATE TEMPORARY SLOT HOLDS.
     # =====================================================
 
     created_booking_items = []
@@ -10056,6 +12392,17 @@ def booking_confirm(request):
             start=1,
         ):
 
+            ride = (
+                item[
+                    "ride"
+                ]
+            )
+
+
+            # =============================================
+            # CREATE BOOKING RIDE ITEM
+            # =============================================
+
             booking_item = (
                 BookingRideItem.objects.create(
 
@@ -10063,9 +12410,7 @@ def booking_confirm(request):
                         booking,
 
                     ride=
-                        item[
-                            "ride"
-                        ],
+                        ride,
 
                     ride_price=
                         item[
@@ -10120,6 +12465,100 @@ def booking_confirm(request):
 
 
             # =============================================
+            # CREATE HELD SLOT ROWS
+            #
+            # IMPORTANT:
+            # Use allocation_result generated on server
+            # while Ride row was locked.
+            # =============================================
+
+            allocations = (
+                final_slot_allocations.get(
+                    ride.id,
+                    []
+                )
+                or
+                []
+            )
+
+
+            if not allocations:
+
+                raise ValueError(
+                    (
+                        f"No final slot allocation "
+                        f"exists for {ride.name}."
+                    )
+                )
+
+
+            slot_objects = []
+
+
+            for allocation in allocations:
+
+                slot_objects.append(
+
+                    BookingRideSlot(
+
+                        booking_item=
+                            booking_item,
+
+                        slot_start_time=
+                            allocation[
+                                "start_time"
+                            ],
+
+                        slot_end_time=
+                            allocation[
+                                "end_time"
+                            ],
+
+                        participant_count=
+                            allocation[
+                                "participant_count"
+                            ],
+
+                        status=
+                            "held",
+
+                        hold_expires_at=
+                            hold_expires_at,
+                    )
+                )
+
+
+            BookingRideSlot.objects.bulk_create(
+                slot_objects
+            )
+
+
+            # =============================================
+            # VERIFY HELD QUANTITY
+            # =============================================
+
+            held_quantity = sum(
+                slot.participant_count
+                for slot
+                in slot_objects
+            )
+
+
+            if (
+                held_quantity
+                !=
+                booking_item.quantity
+            ):
+
+                raise ValueError(
+                    (
+                        f"Slot hold quantity mismatch "
+                        f"for {ride.name}."
+                    )
+                )
+
+
+            # =============================================
             # WEIGHT GROUPS FOR THIS RIDE
             # =============================================
 
@@ -10136,9 +12575,6 @@ def booking_confirm(request):
 
                         # =================================
                         # OLD PARENT RELATION
-                        #
-                        # Keep temporarily for compatibility
-                        # with old ticket/admin code.
                         # =================================
 
                         booking=
@@ -10192,6 +12628,8 @@ def booking_confirm(request):
                     f"BOOKING ITEM #{item_index} CREATED | "
                     f"Ride: {booking_item.ride.name} | "
                     f"Riders: {booking_item.quantity} | "
+                    f"Slots: {len(slot_objects)} | "
+                    f"Hold Until: {hold_expires_at} | "
                     f"Total: {booking_item.total_amount}"
                 )
             )
@@ -10204,7 +12642,7 @@ def booking_confirm(request):
         )
 
         print(
-            "BOOKING ITEM CREATE ERROR"
+            "BOOKING ITEM / SLOT HOLD CREATE ERROR"
         )
 
         print(
@@ -10236,11 +12674,12 @@ def booking_confirm(request):
             {
                 "success": False,
                 "message": (
-                    "Unable to save the selected "
-                    "rides and participant details."
+                    "Unable to reserve the selected "
+                    "ride times. Please choose your "
+                    "rides again."
                 ),
             },
-            status=500,
+            status=409,
         )
 
 
@@ -10276,9 +12715,47 @@ def booking_confirm(request):
 
 
     # =====================================================
+    # VERIFY SLOT HOLDS EXIST FOR EVERY ITEM
+    # =====================================================
+
+    for booking_item in created_booking_items:
+
+        held_count = (
+            BookingRideSlot.objects
+            .filter(
+                booking_item=
+                    booking_item,
+
+                status=
+                    "held",
+
+                hold_expires_at__gt=
+                    timezone.now(),
+            )
+            .count()
+        )
+
+
+        if held_count <= 0:
+
+            transaction.set_rollback(
+                True
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        f"Unable to reserve a time "
+                        f"for {booking_item.ride.name}."
+                    ),
+                },
+                status=409,
+            )
+
+
+    # =====================================================
     # RIDE NAMES
-    #
-    # Used by Razorpay and checkout description.
     # =====================================================
 
     ride_names = ", ".join(
@@ -10310,10 +12787,14 @@ def booking_confirm(request):
                 "total_amount"
             ]
             *
-            Decimal("100")
+            Decimal(
+                "100"
+            )
         )
         .quantize(
-            Decimal("1"),
+            Decimal(
+                "1"
+            ),
             rounding=
                 ROUND_HALF_UP,
         )
@@ -10378,7 +12859,9 @@ def booking_confirm(request):
                                 ),
 
                             "rides":
-                                ride_names[:250],
+                                ride_names[
+                                    :250
+                                ],
 
                             "ride_count":
                                 str(
@@ -10438,6 +12921,10 @@ def booking_confirm(request):
             "================================\n"
         )
 
+
+        # Because the complete function is atomic,
+        # Booking + BookingRideItem + slot holds
+        # are rolled back too.
 
         transaction.set_rollback(
             True
@@ -10616,6 +13103,11 @@ def booking_confirm(request):
     )
 
     print(
+        "SLOT HOLD EXPIRES:",
+        hold_expires_at
+    )
+
+    print(
         "RAZORPAY ORDER:",
         razorpay_order_id
     )
@@ -10672,6 +13164,9 @@ def booking_confirm(request):
 
 
 
+
+
+
 def booking_payment_verify(request):
 
     """
@@ -10693,6 +13188,7 @@ def booking_payment_verify(request):
         - mark Payment = paid
         - mark Booking = confirmed
         - keep all BookingRideItems booked
+        - convert BookingRideSlot held rows to confirmed
         - create/get one Ticket for whole booking
     11. Generate QR.
     12. Generate PDF.
@@ -10854,6 +13350,7 @@ def booking_payment_verify(request):
                 "ride_items__ride_price",
                 "ride_items__offer",
                 "ride_items__weight_groups",
+                "ride_items__allocated_slots",
             )
 
             .get(
@@ -11792,6 +14289,195 @@ def booking_payment_verify(request):
 
 
             # =================================================
+            # BOOKING RIDE SLOTS → CONFIRMED
+            #
+            # The slots were created as status="held" when
+            # booking_confirm() created the Razorpay order.
+            #
+            # Now Razorpay has returned status="captured", so
+            # these temporary holds become permanent confirmed
+            # allocations.
+            #
+            # Lock the slot rows as part of the same transaction
+            # so concurrent payment callbacks cannot finalize
+            # them inconsistently.
+            # =================================================
+
+            locked_slot_rows = list(
+                BookingRideSlot.objects
+                .select_for_update()
+                .filter(
+                    booking_item__booking=
+                        locked_booking
+                )
+                .select_related(
+                    "booking_item",
+                    "booking_item__ride",
+                )
+                .order_by(
+                    "booking_item_id",
+                    "slot_start_time",
+                )
+            )
+
+
+            if not locked_slot_rows:
+
+                raise ValueError(
+                    (
+                        "Booking has no "
+                        "BookingRideSlot records."
+                    )
+                )
+
+
+            # =================================================
+            # VERIFY EVERY BOOKING ITEM HAS THE CORRECT NUMBER
+            # OF RIDERS ALLOCATED ACROSS ITS SLOT ROWS
+            # =================================================
+
+            slots_by_item = {}
+
+
+            for slot_row in locked_slot_rows:
+
+                slots_by_item.setdefault(
+                    slot_row.booking_item_id,
+                    []
+                ).append(
+                    slot_row
+                )
+
+
+            for booking_item in locked_booking_items:
+
+                item_slot_rows = (
+                    slots_by_item.get(
+                        booking_item.id,
+                        []
+                    )
+                )
+
+
+                if not item_slot_rows:
+
+                    raise ValueError(
+                        (
+                            f"No slot allocation exists for "
+                            f"{booking_item.ride.name}."
+                        )
+                    )
+
+
+                allocated_riders = sum(
+                    slot_row.participant_count
+
+                    for slot_row
+                    in item_slot_rows
+                )
+
+
+                if (
+                    allocated_riders
+                    !=
+                    booking_item.quantity
+                ):
+
+                    raise ValueError(
+                        (
+                            f"Slot allocation rider count "
+                            f"does not match booking quantity "
+                            f"for {booking_item.ride.name}."
+                        )
+                    )
+
+
+            # =================================================
+            # HELD → CONFIRMED
+            #
+            # Once confirmed, hold_expires_at is cleared.
+            # Already-confirmed rows are left unchanged, which
+            # also makes this safe if finalization is retried.
+            # =================================================
+
+            confirmed_slot_count = (
+                BookingRideSlot.objects
+                .filter(
+                    booking_item__booking=
+                        locked_booking,
+
+                    status=
+                        "held",
+                )
+                .update(
+                    status=
+                        "confirmed",
+
+                    hold_expires_at=
+                        None,
+                )
+            )
+
+
+            # =================================================
+            # FINAL SLOT STATUS SAFETY CHECK
+            # =================================================
+
+            remaining_unconfirmed_slots = (
+                BookingRideSlot.objects
+                .filter(
+                    booking_item__booking=
+                        locked_booking,
+                )
+                .exclude(
+                    status=
+                        "confirmed",
+                )
+                .exists()
+            )
+
+
+            if remaining_unconfirmed_slots:
+
+                raise ValueError(
+                    (
+                        "One or more booking slot rows "
+                        "could not be confirmed."
+                    )
+                )
+
+
+            print(
+                "\\n========================================"
+            )
+
+            print(
+                "BOOKING RIDE SLOTS CONFIRMED"
+            )
+
+            print(
+                "BOOKING:",
+                locked_booking.booking_id
+            )
+
+            print(
+                "SLOT ROWS CHANGED:",
+                confirmed_slot_count
+            )
+
+            print(
+                "TOTAL SLOT ROWS:",
+                len(
+                    locked_slot_rows
+                )
+            )
+
+            print(
+                "========================================\\n"
+            )
+
+
+            # =================================================
             # ONE TICKET FOR WHOLE PARENT BOOKING
             # =================================================
 
@@ -11886,6 +14572,7 @@ def booking_payment_verify(request):
     # Payment             = paid
     # Booking             = confirmed
     # BookingRideItems    = booked
+    # BookingRideSlots    = confirmed
     # Ticket row          = exists
     #
     # Everything below is non-critical.
@@ -12281,25 +14968,34 @@ def booking_payment_verify(request):
             repr(error)
         )
 
-
-    # =====================================================
-    # 27. CLEAR TEMPORARY BOOKING SESSION
-    #
-    # Only clear after successful payment finalization.
-    # =====================================================
+# =====================================================
+# 27. CLEAR TEMPORARY BOOKING SESSION
+#
+# Only clear after successful payment finalization.
+# =====================================================
 
     try:
 
         request.session.pop(
-            "pending_booking",
-            None,
-        )
+        "pending_booking",
+        None,
+       )
 
 
         request.session.pop(
-            "current_booking_id",
-            None,
-        )
+        "current_booking_id",
+        None,
+    )
+
+
+    # =================================================
+    # CLEAR BOOKING MOBILE OTP VERIFICATION
+    # =================================================
+
+        request.session.pop(
+        "booking_verified_phone",
+        None,
+    )
 
 
         request.session.modified = True
@@ -12308,9 +15004,9 @@ def booking_payment_verify(request):
     except Exception as error:
 
         print(
-            "PAYMENT SESSION CLEANUP ERROR:",
-            repr(error)
-        )
+        "PAYMENT SESSION CLEANUP ERROR:",
+        repr(error)
+    )
 
 
     # =====================================================
@@ -12396,6 +15092,10 @@ def booking_payment_verify(request):
 
 
 
+
+
+
+
 def generate_ticket_qr(request, ticket):
     """
     Generate and save a QR code containing the ticket verification URL.
@@ -12446,30 +15146,16 @@ def generate_ticket_qr(request, ticket):
 
 def generate_whatsapp_ticket_image(ticket):
     """
-    Generate horizontal Flying Fox Adventure WhatsApp ticket.
+    Generate Flying Fox Adventure WhatsApp ticket image.
 
-    STATIC BACKGROUND:
-        - Flying Fox logo
-        - BOOKING CONFIRMED
-        - Mountains / trees
-        - Zipline artwork
-        - EVENT TICKET
-        - Empty QR border/frame
-        - Show QR at check-in
-        - SAFE / FUN / MEMORABLE
-        - Bottom four features
-
-    DYNAMIC PYTHON CONTENT:
-        - Booking information card
-        - Guest name
-        - Ticket number
-        - Visit date
-        - Total participants
-        - Booking ID
-        - Total amount
-        - Adventures table
-        - Participant counts
-        - Actual QR code
+    Supports:
+    - Multi-ride bookings
+    - Maximum 3 rides
+    - Confirmed ride slot schedules
+    - Split participant allocations
+    - Dynamic compact layout
+    - Existing static Flying Fox ticket background
+    - Existing QR area
     """
 
     # =====================================================
@@ -12480,6 +15166,7 @@ def generate_whatsapp_ticket_image(ticket):
         Booking.objects
         .prefetch_related(
             "ride_items__ride",
+            "ride_items__allocated_slots",
         )
         .get(
             pk=ticket.booking_id
@@ -12638,28 +15325,14 @@ def generate_whatsapp_ticket_image(ticket):
         )
 
     # =====================================================
-    # STATIC FONTS
-    # =====================================================
-
-    font_label = load_font(
-        16,
-        bold=False,
-    )
-
-    font_table_header = load_font(
-        16,
-        bold=True,
-    )
-
-    # =====================================================
-    # TEXT FITTING
+    # FIT FONT
     # =====================================================
 
     def fit_font(
         text,
         max_width,
         start_size=24,
-        minimum_size=11,
+        minimum_size=10,
         bold=True,
     ):
 
@@ -12716,7 +15389,23 @@ def generate_whatsapp_ticket_image(ticket):
         ).strip()
 
     # =====================================================
-    # BOOKING DATA
+    # FORMAT SLOT TIME
+    # =====================================================
+
+    def format_slot_time(value):
+
+        if not value:
+            return ""
+
+        formatted = value.strftime(
+            "%I:%M %p"
+        )
+
+        # 08:30 AM -> 8:30 AM
+        return formatted.lstrip("0")
+
+    # =====================================================
+    # BASIC BOOKING DATA
     # =====================================================
 
     customer_name = safe_text(
@@ -12828,12 +15517,23 @@ def generate_whatsapp_ticket_image(ticket):
         for item in ride_items
 
         if item.ride
-
     ]
 
     ride_count = len(
         valid_ride_items
     )
+
+    # =====================================================
+    # LIMIT WARNING
+    # =====================================================
+
+    if ride_count > 3:
+
+        print(
+            "WHATSAPP TICKET WARNING: "
+            "More than 3 rides detected. "
+            "Image layout is optimized for maximum 3 rides."
+        )
 
     # =====================================================
     # TOTAL PARTICIPANTS
@@ -12863,19 +15563,60 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
+    # BUILD CONFIRMED SLOT DATA
     # =====================================================
-    # COMPACT BOOKING INFORMATION CARD
+
+    ride_schedule_data = []
+
+    total_confirmed_slots = 0
+
+    for item in valid_ride_items:
+
+        confirmed_slots = [
+
+            slot
+
+            for slot
+            in item.allocated_slots.all()
+
+            if slot.status == "confirmed"
+        ]
+
+        confirmed_slots.sort(
+            key=lambda slot:
+                slot.slot_start_time
+        )
+
+        total_confirmed_slots += len(
+            confirmed_slots
+        )
+
+        ride_schedule_data.append(
+            {
+                "item": item,
+                "ride_name": safe_text(
+                    item.ride.name
+                ),
+                "quantity": int(
+                    item.quantity
+                    or
+                    0
+                ),
+                "slots": confirmed_slots,
+            }
+        )
+
     # =====================================================
+    # STATIC FONTS
     # =====================================================
-    #
-    # Previously card was much taller.
-    #
-    # New:
-    #
-    # Y 285 -> 510
-    #
-    # This gives more space to rides while protecting
-    # bottom static feature icons.
+
+    font_label = load_font(
+        16,
+        bold=False,
+    )
+
+    # =====================================================
+    # BOOKING INFORMATION CARD
     # =====================================================
 
     info_left = 70
@@ -12883,10 +15624,6 @@ def generate_whatsapp_ticket_image(ticket):
 
     info_top = 285
     info_bottom = 510
-
-    # =====================================================
-    # CARD
-    # =====================================================
 
     draw.rounded_rectangle(
         (
@@ -12948,23 +15685,18 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # COLUMN X POSITIONS
+    # COLUMN POSITIONS
     # =====================================================
 
     left_x = 165
     right_x = 680
 
     # =====================================================
-    # ROW 1
-    # GUEST / TICKET
+    # ROW 1 - GUEST / TICKET
     # =====================================================
 
     row1_label_y = 296
     row1_value_y = 321
-
-    # -----------------------------------------------------
-    # Guest
-    # -----------------------------------------------------
 
     draw.text(
         (
@@ -12993,10 +15725,6 @@ def generate_whatsapp_ticket_image(ticket):
         fill=DARK,
         font=guest_font,
     )
-
-    # -----------------------------------------------------
-    # Ticket
-    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13027,16 +15755,11 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # ROW 2
-    # DATE / PARTICIPANTS
+    # ROW 2 - DATE / PARTICIPANTS
     # =====================================================
 
     row2_label_y = 370
     row2_value_y = 395
-
-    # -----------------------------------------------------
-    # Visit date
-    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13065,10 +15788,6 @@ def generate_whatsapp_ticket_image(ticket):
         fill=DARK,
         font=visit_font,
     )
-
-    # -----------------------------------------------------
-    # Participants
-    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13099,16 +15818,11 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # ROW 3
-    # BOOKING / AMOUNT
+    # ROW 3 - BOOKING / AMOUNT
     # =====================================================
 
     row3_label_y = 444
     row3_value_y = 469
-
-    # -----------------------------------------------------
-    # Booking ID
-    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13137,10 +15851,6 @@ def generate_whatsapp_ticket_image(ticket):
         fill=DARK,
         font=booking_font,
     )
-
-    # -----------------------------------------------------
-    # Amount
-    # -----------------------------------------------------
 
     draw.text(
         (
@@ -13171,142 +15881,144 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
+    # ADVENTURE & RIDE SCHEDULE
     # =====================================================
-    # COMPACT DYNAMIC RIDES TABLE
-    # =====================================================
-    # =====================================================
-    #
-    # Starts immediately after booking card.
-    #
+
+    schedule_left = 70
+    schedule_right = 1090
+
+    schedule_top = 525
+
     # IMPORTANT:
-    # Static footer icons begin around y=720.
+    # Keep everything above footer icons.
+    schedule_max_bottom = 690
+
+    schedule_header_height = 31
+
+    # =====================================================
+    # DECIDE DISPLAY MODE
+    # =====================================================
     #
-    # Therefore table MUST finish before y=690.
+    # Detailed:
+    # 1-2 rides with manageable slot count.
+    #
+    # Compact:
+    # 3 rides or many slot allocations.
+    #
     # =====================================================
 
-    rides_top = 525
-
-    rides_max_bottom = 690
-
-    # =====================================================
-    # HEADER
-    # =====================================================
-
-    table_header_height = 31
-
-    table_bottom_padding = 4
-
-    displayed_row_count = max(
-        ride_count,
-        1,
+    compact_mode = (
+        ride_count >= 3
+        or
+        total_confirmed_slots > 5
     )
 
     # =====================================================
-    # SPACE AVAILABLE FOR ROWS
+    # CALCULATE TABLE HEIGHT
     # =====================================================
 
-    available_rows_height = (
-        rides_max_bottom
+    available_body_height = (
+        schedule_max_bottom
         -
-        rides_top
+        schedule_top
         -
-        table_header_height
-        -
-        table_bottom_padding
+        schedule_header_height
     )
 
-    # =====================================================
-    # AUTOMATIC ROW HEIGHT
-    # =====================================================
+    if compact_mode:
 
-    if displayed_row_count:
-
-        ride_row_height = (
-            available_rows_height
-            //
-            displayed_row_count
+        # Two rows per ride:
+        # Ride heading
+        # Compact schedule
+        required_rows = max(
+            ride_count * 2,
+            1,
         )
 
     else:
 
-        ride_row_height = (
-            available_rows_height
+        required_rows = 0
+
+        for ride_data in ride_schedule_data:
+
+            slot_count = len(
+                ride_data["slots"]
+            )
+
+            # 1 ride heading + each slot.
+            # At least one slot/info line.
+            required_rows += (
+                1
+                +
+                max(
+                    slot_count,
+                    1,
+                )
+            )
+
+        required_rows = max(
+            required_rows,
+            1,
         )
 
-    # Don't make 1-2 ride rows unnecessarily huge.
-    ride_row_height = min(
-        ride_row_height,
-        34,
+    row_height = (
+        available_body_height
+        //
+        required_rows
     )
 
-    # =====================================================
-    # FONT SIZES BASED ON ROW HEIGHT / RIDE COUNT
-    # =====================================================
+    # Prevent excessive row height.
+    if compact_mode:
 
-    if ride_count <= 2:
+        row_height = min(
+            row_height,
+            23,
+        )
 
-        ride_font_size = 18
-        quantity_font_size = 17
-
-    elif ride_count == 3:
-
-        ride_font_size = 16
-        quantity_font_size = 15
-
-    elif ride_count == 4:
-
-        ride_font_size = 14
-        quantity_font_size = 14
-
-    elif ride_count == 5:
-
-        ride_font_size = 13
-        quantity_font_size = 13
-
-    elif ride_count == 6:
-
-        ride_font_size = 12
-        quantity_font_size = 12
+        row_height = max(
+            row_height,
+            17,
+        )
 
     else:
 
-        ride_font_size = 11
-        quantity_font_size = 11
+        row_height = min(
+            row_height,
+            25,
+        )
 
-    # =====================================================
-    # TABLE BOTTOM
-    # =====================================================
+        row_height = max(
+            row_height,
+            16,
+        )
 
-    rides_bottom = (
-        rides_top
+    schedule_bottom = (
+        schedule_top
         +
-        table_header_height
+        schedule_header_height
         +
         (
-            displayed_row_count
+            required_rows
             *
-            ride_row_height
+            row_height
         )
-        +
-        table_bottom_padding
     )
 
-    # Absolute protection against footer overlap.
-    rides_bottom = min(
-        rides_bottom,
-        rides_max_bottom,
+    schedule_bottom = min(
+        schedule_bottom,
+        schedule_max_bottom,
     )
 
     # =====================================================
-    # TABLE BODY
+    # SCHEDULE CARD
     # =====================================================
 
     draw.rounded_rectangle(
         (
-            70,
-            rides_top,
-            1090,
-            rides_bottom,
+            schedule_left,
+            schedule_top,
+            schedule_right,
+            schedule_bottom,
         ),
         radius=14,
         fill=WHITE,
@@ -13315,116 +16027,139 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     # =====================================================
-    # RED TABLE HEADER
+    # RED HEADER
     # =====================================================
 
     draw.rounded_rectangle(
         (
-            70,
-            rides_top,
-            1090,
-            rides_top + table_header_height,
+            schedule_left,
+            schedule_top,
+            schedule_right,
+            schedule_top
+            +
+            schedule_header_height,
         ),
         radius=14,
         fill=RED,
     )
 
-    # -----------------------------------------------------
-    # Make lower header corners square
-    # -----------------------------------------------------
-
+    # Square lower corners of header.
     draw.rectangle(
         (
-            70,
-            rides_top + 14,
-            1090,
-            rides_top + table_header_height,
+            schedule_left,
+            schedule_top + 14,
+            schedule_right,
+            schedule_top
+            +
+            schedule_header_height,
         ),
         fill=RED,
     )
 
-    # =====================================================
-    # COLUMN DIVIDER
-    # =====================================================
-
-    table_divider_x = 675
-
-    draw.line(
-        (
-            table_divider_x,
-            rides_top + table_header_height,
-            table_divider_x,
-            rides_bottom - 4,
-        ),
-        fill=DIVIDER,
-        width=1,
-    )
-
-    # =====================================================
-    # TABLE HEADER
-    # =====================================================
-
-    compact_header_font = load_font(
+    schedule_header_font = load_font(
         15,
         bold=True,
     )
 
-    draw.text(
+    header_text = (
+        "ADVENTURE & RIDE SCHEDULE"
+    )
+
+    header_bbox = draw.textbbox(
         (
-            115,
-            rides_top + 5,
+            0,
+            0,
         ),
-        "ADVENTURE(S) BOOKED",
-        fill=WHITE,
-        font=compact_header_font,
+        header_text,
+        font=schedule_header_font,
+    )
+
+    header_width = (
+        header_bbox[2]
+        -
+        header_bbox[0]
     )
 
     draw.text(
         (
-            710,
-            rides_top + 5,
+            schedule_left
+            +
+            (
+                (
+                    schedule_right
+                    -
+                    schedule_left
+                )
+                -
+                header_width
+            )
+            // 2,
+
+            schedule_top + 5,
         ),
-        "PARTICIPANTS",
+        header_text,
         fill=WHITE,
-        font=compact_header_font,
+        font=schedule_header_font,
     )
 
     # =====================================================
-    # RIDE ROWS
+    # SCHEDULE CONTENT
     # =====================================================
 
-    row_y = (
-        rides_top
+    current_y = (
+        schedule_top
         +
-        table_header_height
-        +
-        3
+        schedule_header_height
     )
 
-    if valid_ride_items:
+    # =====================================================
+    # NO RIDES
+    # =====================================================
 
-        for index, item in enumerate(
-            valid_ride_items
+    if not ride_schedule_data:
+
+        empty_font = load_font(
+            14,
+            bold=False,
+        )
+
+        draw.text(
+            (
+                100,
+                current_y + 8,
+            ),
+            "No adventure schedule available.",
+            fill=GRAY,
+            font=empty_font,
+        )
+
+    # =====================================================
+    # COMPACT MODE
+    # Used primarily for 3 rides
+    # =====================================================
+
+    elif compact_mode:
+
+        for ride_index, ride_data in enumerate(
+            ride_schedule_data[:3]
         ):
 
-            # =================================================
-            # RIDE DATA
-            # =================================================
-
-            ride_name = safe_text(
-                item.ride.name
+            ride_name = (
+                ride_data["ride_name"]
             )
 
-            quantity = int(
-                item.quantity
-                or
-                0
+            quantity = (
+                ride_data["quantity"]
+            )
+
+            confirmed_slots = (
+                ride_data["slots"]
             )
 
             quantity_word = (
-                "Participant"
+                "Rider"
                 if quantity == 1
-                else "Participants"
+                else "Riders"
             )
 
             quantity_text = (
@@ -13432,156 +16167,453 @@ def generate_whatsapp_ticket_image(ticket):
                 f"{quantity_word}"
             )
 
-            # =================================================
-            # BULLET
-            # =================================================
+            # ---------------------------------------------
+            # RIDE HEADER LINE
+            # ---------------------------------------------
 
-            if ride_count <= 3:
+            ride_name_font = fit_font(
+                ride_name.upper(),
+                max_width=680,
+                start_size=14,
+                minimum_size=10,
+                bold=True,
+            )
 
-                bullet_size = 8
+            quantity_font = fit_font(
+                quantity_text,
+                max_width=180,
+                start_size=13,
+                minimum_size=10,
+                bold=True,
+            )
 
-            else:
-
-                bullet_size = 6
+            bullet_size = 6
 
             bullet_y = (
-                row_y
+                current_y
                 +
                 max(
-                    2,
+                    5,
                     (
-                        ride_row_height
+                        row_height
                         -
                         bullet_size
                     )
                     // 2
-                    -
-                    2
                 )
             )
 
             draw.ellipse(
                 (
-                    110,
+                    105,
                     bullet_y,
-                    110 + bullet_size,
+                    105 + bullet_size,
                     bullet_y + bullet_size,
                 ),
                 fill=RED,
             )
 
-            # =================================================
-            # RIDE NAME FONT
-            # =================================================
-
-            ride_font = fit_font(
-                ride_name,
-                max_width=490,
-                start_size=ride_font_size,
-                minimum_size=10,
-                bold=True,
+            draw.text(
+                (
+                    130,
+                    current_y + 2,
+                ),
+                ride_name.upper(),
+                fill=DARK,
+                font=ride_name_font,
             )
 
             draw.text(
                 (
-                    145,
-                    row_y,
+                    910,
+                    current_y + 2,
                 ),
-                ride_name,
-                fill=DARK,
-                font=ride_font,
+                quantity_text,
+                fill=RED,
+                font=quantity_font,
             )
 
-            # =================================================
-            # PARTICIPANT FONT
-            # =================================================
+            current_y += (
+                row_height
+            )
 
-            quantity_font = fit_font(
-                quantity_text,
-                max_width=300,
-                start_size=quantity_font_size,
-                minimum_size=10,
+            # ---------------------------------------------
+            # COMPACT SLOT LINE
+            # ---------------------------------------------
+
+            if confirmed_slots:
+
+                schedule_parts = []
+
+                for slot in confirmed_slots:
+
+                    start_label = format_slot_time(
+                        slot.slot_start_time
+                    )
+
+                    end_label = format_slot_time(
+                        slot.slot_end_time
+                    )
+
+                    riders = int(
+                        slot.participant_count
+                        or
+                        0
+                    )
+
+                    schedule_parts.append(
+                        f"{start_label}-{end_label} "
+                        f"({riders})"
+                    )
+
+                schedule_text = (
+                    "   |   ".join(
+                        schedule_parts
+                    )
+                )
+
+            else:
+
+                schedule_text = (
+                    "Confirmed ride schedule "
+                    "not available"
+                )
+
+            schedule_font = fit_font(
+                schedule_text,
+                max_width=900,
+                start_size=12,
+                minimum_size=9,
                 bold=False,
             )
 
             draw.text(
                 (
-                    710,
-                    row_y,
+                    130,
+                    current_y + 2,
                 ),
-                quantity_text,
-                fill=DARK,
-                font=quantity_font,
+                schedule_text,
+                fill=GRAY,
+                font=schedule_font,
             )
 
-            # =================================================
-            # DIVIDER BETWEEN RIDE ROWS
-            # =================================================
+            current_y += (
+                row_height
+            )
+
+            # ---------------------------------------------
+            # DIVIDER BETWEEN RIDES
+            # ---------------------------------------------
 
             if (
-                index
+                ride_index
                 <
-                len(valid_ride_items) - 1
+                min(
+                    len(ride_schedule_data),
+                    3,
+                )
+                - 1
             ):
 
                 divider_y = (
-                    row_y
-                    +
-                    ride_row_height
-                    -
-                    3
+                    current_y - 1
                 )
 
                 if (
                     divider_y
                     <
-                    rides_max_bottom
+                    schedule_bottom
                 ):
 
                     draw.line(
                         (
                             95,
                             divider_y,
-                            1060,
+                            1065,
                             divider_y,
                         ),
                         fill=DIVIDER,
                         width=1,
                     )
 
-            row_y += (
-                ride_row_height
-            )
+    # =====================================================
+    # DETAILED MODE
+    # Mainly for 1-2 rides
+    # =====================================================
 
     else:
 
-        empty_font = load_font(
-            15,
-            bold=False,
-        )
+        for ride_index, ride_data in enumerate(
+            ride_schedule_data
+        ):
 
-        draw.text(
-            (
-                145,
-                row_y,
-            ),
-            "No adventure details available",
-            fill=GRAY,
-            font=empty_font,
-        )
+            ride_name = (
+                ride_data["ride_name"]
+            )
 
-    # =====================================================
+            quantity = (
+                ride_data["quantity"]
+            )
+
+            confirmed_slots = (
+                ride_data["slots"]
+            )
+
+            quantity_word = (
+                "Rider"
+                if quantity == 1
+                else "Riders"
+            )
+
+            quantity_text = (
+                f"{quantity} "
+                f"{quantity_word}"
+            )
+
+            # ---------------------------------------------
+            # RIDE HEADING
+            # ---------------------------------------------
+
+            ride_font = fit_font(
+                ride_name.upper(),
+                max_width=650,
+                start_size=15,
+                minimum_size=10,
+                bold=True,
+            )
+
+            ride_quantity_font = fit_font(
+                quantity_text,
+                max_width=180,
+                start_size=14,
+                minimum_size=10,
+                bold=True,
+            )
+
+            bullet_size = 7
+
+            bullet_y = (
+                current_y
+                +
+                max(
+                    4,
+                    (
+                        row_height
+                        -
+                        bullet_size
+                    )
+                    // 2
+                )
+            )
+
+            draw.ellipse(
+                (
+                    105,
+                    bullet_y,
+                    105 + bullet_size,
+                    bullet_y + bullet_size,
+                ),
+                fill=RED,
+            )
+
+            draw.text(
+                (
+                    130,
+                    current_y + 2,
+                ),
+                ride_name.upper(),
+                fill=DARK,
+                font=ride_font,
+            )
+
+            draw.text(
+                (
+                    900,
+                    current_y + 2,
+                ),
+                quantity_text,
+                fill=RED,
+                font=ride_quantity_font,
+            )
+
+            current_y += (
+                row_height
+            )
+
+            # ---------------------------------------------
+            # CONFIRMED SLOT ROWS
+            # ---------------------------------------------
+
+            if confirmed_slots:
+
+                for slot_index, slot in enumerate(
+                    confirmed_slots
+                ):
+
+                    if (
+                        current_y
+                        +
+                        row_height
+                        >
+                        schedule_bottom
+                    ):
+
+                        break
+
+                    start_label = format_slot_time(
+                        slot.slot_start_time
+                    )
+
+                    end_label = format_slot_time(
+                        slot.slot_end_time
+                    )
+
+                    slot_time_text = (
+                        f"{start_label}"
+                        f" - "
+                        f"{end_label}"
+                    )
+
+                    slot_riders = int(
+                        slot.participant_count
+                        or
+                        0
+                    )
+
+                    slot_rider_word = (
+                        "Rider"
+                        if slot_riders == 1
+                        else "Riders"
+                    )
+
+                    slot_rider_text = (
+                        f"{slot_riders} "
+                        f"{slot_rider_word}"
+                    )
+
+                    time_font = fit_font(
+                        slot_time_text,
+                        max_width=500,
+                        start_size=13,
+                        minimum_size=9,
+                        bold=False,
+                    )
+
+                    slot_quantity_font = fit_font(
+                        slot_rider_text,
+                        max_width=180,
+                        start_size=13,
+                        minimum_size=9,
+                        bold=False,
+                    )
+
+                    # Small schedule bullet.
+                    draw.ellipse(
+                        (
+                            145,
+                            current_y
+                            +
+                            max(
+                                6,
+                                row_height // 2 - 2,
+                            ),
+                            149,
+                            current_y
+                            +
+                            max(
+                                6,
+                                row_height // 2 - 2,
+                            )
+                            +
+                            4,
+                        ),
+                        fill=GRAY,
+                    )
+
+                    draw.text(
+                        (
+                            170,
+                            current_y + 2,
+                        ),
+                        slot_time_text,
+                        fill=GRAY,
+                        font=time_font,
+                    )
+
+                    draw.text(
+                        (
+                            900,
+                            current_y + 2,
+                        ),
+                        slot_rider_text,
+                        fill=DARK,
+                        font=slot_quantity_font,
+                    )
+
+                    current_y += (
+                        row_height
+                    )
+
+            else:
+
+                no_schedule_font = load_font(
+                    11,
+                    bold=False,
+                )
+
+                draw.text(
+                    (
+                        170,
+                        current_y + 2,
+                    ),
+                    "Confirmed ride schedule "
+                    "not available",
+                    fill=GRAY,
+                    font=no_schedule_font,
+                )
+
+                current_y += (
+                    row_height
+                )
+
+            # ---------------------------------------------
+            # DIVIDER BETWEEN RIDES
+            # ---------------------------------------------
+
+            if (
+                ride_index
+                <
+                len(ride_schedule_data) - 1
+            ):
+
+                divider_y = (
+                    current_y - 1
+                )
+
+                if (
+                    divider_y
+                    <
+                    schedule_bottom
+                ):
+
+                    draw.line(
+                        (
+                            95,
+                            divider_y,
+                            1065,
+                            divider_y,
+                        ),
+                        fill=DIVIDER,
+                        width=1,
+                    )
+
     # =====================================================
     # QR CODE
     # =====================================================
-    # =====================================================
     #
-    # IMPORTANT:
+    # QR border already exists in static background.
+    # Do not draw another border.
     #
-    # The red QR border already exists in the static
-    # background.
-    #
-    # Do NOT draw another rectangle around QR.
     # =====================================================
 
     if not ticket.qr_image:
@@ -13625,18 +16657,10 @@ def generate_whatsapp_ticket_image(ticket):
 
     # =====================================================
     # QR POSITION
-    #
-    # Existing static frame is on right side.
     # =====================================================
 
     qr_x = 1285
     qr_y = 220
-
-    # =====================================================
-    # PASTE QR ONLY
-    #
-    # NO draw.rounded_rectangle() here.
-    # =====================================================
 
     image.paste(
         qr,
@@ -13694,7 +16718,7 @@ def generate_whatsapp_ticket_image(ticket):
             )
 
     # =====================================================
-    # SAVE IMAGE TO TICKET
+    # SAVE NEW IMAGE
     # =====================================================
 
     ticket.whatsapp_ticket_image.save(
@@ -13744,6 +16768,20 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     print(
+        "CONFIRMED SLOT ROWS:",
+        total_confirmed_slots,
+    )
+
+    print(
+        "SCHEDULE MODE:",
+        (
+            "COMPACT"
+            if compact_mode
+            else "DETAILED"
+        ),
+    )
+
+    print(
         "BOOKING CARD:",
         info_top,
         "->",
@@ -13751,16 +16789,56 @@ def generate_whatsapp_ticket_image(ticket):
     )
 
     print(
-        "RIDES TABLE:",
-        rides_top,
+        "SCHEDULE:",
+        schedule_top,
         "->",
-        rides_bottom,
+        schedule_bottom,
     )
 
     print(
         "FOOTER PROTECTION:",
-        rides_max_bottom,
+        schedule_max_bottom,
     )
+
+    # =====================================================
+    # PRINT SCHEDULE DETAILS
+    # =====================================================
+
+    print(
+        "RIDE SCHEDULE:"
+    )
+
+    for ride_data in ride_schedule_data:
+
+        print(
+            " -",
+            ride_data["ride_name"],
+            f"({ride_data['quantity']} riders)"
+        )
+
+        if ride_data["slots"]:
+
+            for slot in ride_data["slots"]:
+
+                print(
+                    "    ",
+                    format_slot_time(
+                        slot.slot_start_time
+                    ),
+                    "-",
+                    format_slot_time(
+                        slot.slot_end_time
+                    ),
+                    "=",
+                    slot.participant_count,
+                    "rider(s)",
+                )
+
+        else:
+
+            print(
+                "     NO CONFIRMED SLOTS"
+            )
 
     print(
         "QR:",
@@ -13781,787 +16859,169 @@ def generate_whatsapp_ticket_image(ticket):
 
 
 
-
 def generate_ticket_pdf(ticket):
 
+    """
+    Generate the PDF ticket using the same designed
+    ticket image used for WhatsApp.
+
+    Result:
+        Designed ticket image
+                ↓
+        One-page landscape PDF
+                ↓
+        ticket.pdf_ticket
+    """
+
     # =====================================================
-    # BOOKING
+    # IMPORTS
     # =====================================================
 
-    booking = (
-        Booking.objects
+    from io import BytesIO
 
-        .prefetch_related(
-            "ride_items__ride",
-            "ride_items__ride_price",
-            "ride_items__offer",
-            "ride_items__weight_groups",
+    from django.core.files.base import ContentFile
+
+    from PIL import Image
+
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.utils import ImageReader
+
+
+    # =====================================================
+    # 1. MAKE SURE DESIGNED TICKET IMAGE EXISTS
+    # =====================================================
+
+    if not ticket.whatsapp_ticket_image:
+
+        generate_whatsapp_ticket_image(
+            ticket
         )
 
-        .get(
-            pk=ticket.booking_id
+        ticket.refresh_from_db()
+
+
+    # =====================================================
+    # 2. VALIDATE IMAGE
+    # =====================================================
+
+    if not ticket.whatsapp_ticket_image:
+
+        raise ValueError(
+            "WhatsApp ticket image could not be generated."
         )
+
+
+    image_path = (
+        ticket.whatsapp_ticket_image.path
     )
 
 
     # =====================================================
-    # RIDE ITEMS
+    # 3. READ IMAGE SIZE
     # =====================================================
 
-    ride_items = list(
-        booking.ride_items.all()
-    )
+    with Image.open(
+        image_path
+    ) as ticket_image:
+
+        image_width, image_height = (
+            ticket_image.size
+        )
+
+
+    if (
+        image_width <= 0
+        or
+        image_height <= 0
+    ):
+
+        raise ValueError(
+            "Invalid ticket image dimensions."
+        )
 
 
     # =====================================================
-    # PDF BUFFER
+    # 4. CREATE PDF BUFFER
     # =====================================================
 
     buffer = BytesIO()
 
 
-    pdf = canvas.Canvas(
-        buffer,
-        pagesize=A4,
+    # =====================================================
+    # 5. CREATE PDF WITH SAME ASPECT RATIO
+    #
+    # The designed ticket is 1600 x 900.
+    #
+    # Instead of forcing it into portrait A4,
+    # make the PDF page use the same ratio.
+    # =====================================================
+
+    pdf_width = float(
+        image_width
+    )
+
+    pdf_height = float(
+        image_height
     )
 
 
-    page_width, page_height = A4
+    pdf = canvas.Canvas(
+        buffer,
+        pagesize=(
+            pdf_width,
+            pdf_height,
+        ),
+    )
 
 
     pdf.setTitle(
-        f"Flying Fox Ticket {ticket.ticket_number}"
+        f"Flying Fox Ticket "
+        f"{ticket.ticket_number}"
     )
 
 
     # =====================================================
-    # PAGE SETTINGS
+    # 6. DRAW DESIGNED TICKET IMAGE
     # =====================================================
 
-    LEFT = 55
-
-    RIGHT = (
-        page_width - 55
-    )
-
-    TOP = (
-        page_height - 70
-    )
-
-    BOTTOM_LIMIT = 175
-
-
-    # =====================================================
-    # HELPER — NEW PAGE
-    # =====================================================
-
-    def new_page():
-
-        pdf.showPage()
-
-        pdf.setFont(
-            "Helvetica-Bold",
-            17,
-        )
-
-        pdf.drawString(
-            LEFT,
-            page_height - 55,
-            "FLYING FOX ADVENTURE",
-        )
-
-        pdf.setFont(
-            "Helvetica",
-            10,
-        )
-
-        pdf.drawString(
-            LEFT,
-            page_height - 75,
-            (
-                f"Ticket #{ticket.ticket_number}"
-            ),
-        )
-
-        pdf.line(
-            LEFT,
-            page_height - 90,
-            RIGHT,
-            page_height - 90,
-        )
-
-        return (
-            page_height - 120
-        )
-
-
-    # =====================================================
-    # HELPER — ENSURE SPACE
-    # =====================================================
-
-    def ensure_space(
-        y_position,
-        required_height=40,
-    ):
-
-        if (
-            y_position
-            -
-            required_height
-            <
-            BOTTOM_LIMIT
-        ):
-
-            return new_page()
-
-        return y_position
-
-
-    # =====================================================
-    # HELPER — LABEL / VALUE
-    # =====================================================
-
-    def draw_row(
-        label,
-        value,
-        y_position,
-    ):
-
-        y_position = ensure_space(
-            y_position,
-            30,
-        )
-
-
-        pdf.setFont(
-            "Helvetica-Bold",
-            10,
-        )
-
-
-        pdf.drawString(
-            LEFT,
-            y_position,
-            f"{label}:",
-        )
-
-
-        pdf.setFont(
-            "Helvetica",
-            10,
-        )
-
-
-        pdf.drawString(
-            180,
-            y_position,
-            str(
-                value
-                if value is not None
-                else
-                ""
-            ),
-        )
-
-
-        return (
-            y_position - 20
-        )
-
-
-    # =====================================================
-    # HEADER
-    # =====================================================
-
-    pdf.setFont(
-        "Helvetica-Bold",
-        22,
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        TOP,
-        "FLYING FOX ADVENTURE",
-    )
-
-
-    pdf.setFont(
-        "Helvetica",
-        12,
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        TOP - 25,
-        "Munnar, Kerala",
-    )
-
-
-    pdf.line(
-        LEFT,
-        TOP - 45,
-        RIGHT,
-        TOP - 45,
-    )
-
-
-    y_position = (
-        TOP - 85
-    )
-
-
-    # =====================================================
-    # BASIC TICKET DETAILS
-    # =====================================================
-
-    basic_rows = [
-
-        (
-            "Ticket Number",
-            ticket.ticket_number,
+    pdf.drawImage(
+        ImageReader(
+            image_path
         ),
 
-        (
-            "Booking ID",
-            booking.booking_id,
-        ),
+        0,
+        0,
 
-        (
-            "Customer",
-            booking.customer_name,
-        ),
+        width=
+            pdf_width,
 
-        (
-            "Email",
-            booking.customer_email,
-        ),
+        height=
+            pdf_height,
 
-        (
-            "Phone",
-            booking.customer_phone,
-        ),
+        preserveAspectRatio=
+            True,
 
-        (
-            "Visit Date",
-            booking.booking_date.strftime(
-                "%d %B %Y"
-            ),
-        ),
-
-        (
-            "Adventures",
-            len(
-                ride_items
-            ),
-        ),
-
-        (
-            "Total Riders",
-            booking.quantity,
-        ),
-
-        (
-            "Subtotal",
-            (
-                f"INR "
-                f"{booking.subtotal}"
-            ),
-        ),
-
-        (
-            "Discount",
-            (
-                f"INR "
-                f"{booking.discount_amount}"
-            ),
-        ),
-
-        (
-            "Total Paid",
-            (
-                f"INR "
-                f"{booking.total_amount}"
-            ),
-        ),
-
-        (
-            "Booking Status",
-            booking.get_status_display(),
-        ),
-
-    ]
-
-
-    for label, value in basic_rows:
-
-        y_position = draw_row(
-            label,
-            value,
-            y_position,
-        )
-
-
-    # =====================================================
-    # SELECTED ADVENTURES
-    # =====================================================
-
-    y_position -= 8
-
-
-    y_position = ensure_space(
-        y_position,
-        55,
-    )
-
-
-    pdf.setFont(
-        "Helvetica-Bold",
-        14,
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        y_position,
-        "Selected Adventures",
-    )
-
-
-    y_position -= 26
-
-
-    # =====================================================
-    # EACH RIDE
-    # =====================================================
-
-    for index, item in enumerate(
-        ride_items,
-        start=1,
-    ):
-
-        y_position = ensure_space(
-            y_position,
-            130,
-        )
-
-
-        # =============================================
-        # RIDE TITLE
-        # =============================================
-
-        pdf.setFont(
-            "Helvetica-Bold",
-            12,
-        )
-
-
-        pdf.drawString(
-            LEFT,
-            y_position,
-            (
-                f"{index}. "
-                f"{item.ride.name}"
-            ),
-        )
-
-
-        y_position -= 20
-
-
-        # =============================================
-        # RIDE PRICE DETAILS
-        # =============================================
-
-        pdf.setFont(
-            "Helvetica",
-            10,
-        )
-
-
-        pdf.drawString(
-            LEFT + 10,
-            y_position,
-            (
-                f"Riders: "
-                f"{item.quantity}"
-            ),
-        )
-
-
-        y_position -= 17
-
-
-        pdf.drawString(
-            LEFT + 10,
-            y_position,
-            (
-                f"Price per rider: "
-                f"INR "
-                f"{item.price_per_person}"
-            ),
-        )
-
-
-        y_position -= 17
-
-
-        pdf.drawString(
-            LEFT + 10,
-            y_position,
-            (
-                f"Subtotal: "
-                f"INR "
-                f"{item.subtotal}"
-            ),
-        )
-
-
-        y_position -= 17
-
-
-        # =============================================
-        # OFFER
-        # =============================================
-
-        if item.offer:
-
-            offer_text = (
-                f"Offer: "
-                f"{item.offer.title}"
-            )
-
-
-            pdf.drawString(
-                LEFT + 10,
-                y_position,
-                offer_text,
-            )
-
-
-            y_position -= 17
-
-
-            pdf.drawString(
-                LEFT + 10,
-                y_position,
-                (
-                    f"Discount: "
-                    f"INR "
-                    f"{item.discount_amount}"
-                ),
-            )
-
-
-            y_position -= 17
-
-
-            if item.applied_coupon_code:
-
-                pdf.drawString(
-                    LEFT + 10,
-                    y_position,
-                    (
-                        f"Coupon: "
-                        f"{item.applied_coupon_code}"
-                    ),
-                )
-
-
-                y_position -= 17
-
-
-        # =============================================
-        # RIDE TOTAL
-        # =============================================
-
-        pdf.setFont(
-            "Helvetica-Bold",
-            10,
-        )
-
-
-        pdf.drawString(
-            LEFT + 10,
-            y_position,
-            (
-                f"Ride Total: "
-                f"INR "
-                f"{item.total_amount}"
-            ),
-        )
-
-
-        y_position -= 22
-
-
-        # =============================================
-        # WEIGHT GROUPS FOR THIS RIDE
-        # =============================================
-
-        weight_groups = list(
-            item.weight_groups.all()
-        )
-
-
-        if weight_groups:
-
-            y_position = ensure_space(
-                y_position,
-                (
-                    35
-                    +
-                    (
-                        len(
-                            weight_groups
-                        )
-                        *
-                        18
-                    )
-                ),
-            )
-
-
-            pdf.setFont(
-                "Helvetica-Bold",
-                10,
-            )
-
-
-            pdf.drawString(
-                LEFT + 10,
-                y_position,
-                "Participant Weight Groups",
-            )
-
-
-            y_position -= 18
-
-
-            for group in weight_groups:
-
-                pdf.setFont(
-                    "Helvetica",
-                    9,
-                )
-
-
-                pdf.drawString(
-                    LEFT + 20,
-                    y_position,
-                    (
-                        f"{group.label}: "
-                        f"{group.participant_count} "
-                        f"rider(s)"
-                    ),
-                )
-
-
-                y_position -= 17
-
-
-        # =============================================
-        # SEPARATOR
-        # =============================================
-
-        y_position -= 6
-
-
-        y_position = ensure_space(
-            y_position,
-            25,
-        )
-
-
-        pdf.setStrokeColorRGB(
-            0.85,
-            0.85,
-            0.85,
-        )
-
-
-        pdf.line(
-            LEFT,
-            y_position,
-            RIGHT,
-            y_position,
-        )
-
-
-        y_position -= 20
-
-
-    # =====================================================
-    # PAYMENT SUMMARY
-    # =====================================================
-
-    y_position = ensure_space(
-        y_position,
-        100,
-    )
-
-
-    pdf.setFont(
-        "Helvetica-Bold",
-        13,
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        y_position,
-        "Payment Summary",
-    )
-
-
-    y_position -= 24
-
-
-    y_position = draw_row(
-        "Subtotal",
-        (
-            f"INR "
-            f"{booking.subtotal}"
-        ),
-        y_position,
-    )
-
-
-    y_position = draw_row(
-        "Total Discount",
-        (
-            f"INR "
-            f"{booking.discount_amount}"
-        ),
-        y_position,
-    )
-
-
-    y_position = draw_row(
-        "Total Paid",
-        (
-            f"INR "
-            f"{booking.total_amount}"
-        ),
-        y_position,
+        mask=
+            "auto",
     )
 
 
     # =====================================================
-    # QR CODE
-    # =====================================================
-
-    if ticket.qr_image:
-
-        try:
-
-            qr_size = 130
-
-
-            pdf.drawImage(
-
-                ticket.qr_image.path,
-
-                (
-                    page_width
-                    -
-                    qr_size
-                    -
-                    55
-                ),
-
-                55,
-
-                width=
-                    qr_size,
-
-                height=
-                    qr_size,
-
-                preserveAspectRatio=
-                    True,
-
-                mask=
-                    "auto",
-            )
-
-
-        except (
-            OSError,
-            ValueError,
-        ):
-
-            pass
-
-
-    # =====================================================
-    # IMPORTANT INFORMATION
-    # =====================================================
-
-    pdf.setFont(
-        "Helvetica-Bold",
-        11,
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        145,
-        "Important:",
-    )
-
-
-    pdf.setFont(
-        "Helvetica",
-        9,
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        126,
-        (
-            "Show this QR ticket at "
-            "the Flying Fox counter."
-        ),
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        110,
-        (
-            "This QR ticket covers all "
-            "adventures listed in this booking."
-        ),
-    )
-
-
-    pdf.drawString(
-        LEFT,
-        94,
-        (
-            "Please arrive at least "
-            "30 minutes before your visit."
-        ),
-    )
-
-
-    # =====================================================
-    # SAVE PDF
+    # 7. FINISH PDF
     # =====================================================
 
     pdf.showPage()
 
-
     pdf.save()
-
 
     buffer.seek(
         0
     )
 
+
+    # =====================================================
+    # 8. SAVE PDF TO TICKET MODEL
+    # =====================================================
 
     ticket.pdf_ticket.save(
 
@@ -14578,22 +17038,71 @@ def generate_ticket_pdf(ticket):
     )
 
 
+    # =====================================================
+    # 9. SAVE TICKET
+    # =====================================================
+
+    ticket.save(
+        update_fields=[
+            "pdf_ticket",
+        ]
+    )
+
+
+    print()
+    print(
+        "=========================================="
+    )
+    print(
+        "DESIGNED TICKET PDF GENERATED"
+    )
+    print(
+        "=========================================="
+    )
+    print(
+        "TICKET:",
+        ticket.ticket_number,
+    )
+    print(
+        "IMAGE:",
+        ticket.whatsapp_ticket_image.name,
+    )
+    print(
+        "PDF:",
+        ticket.pdf_ticket.name,
+    )
+    print(
+        "SIZE:",
+        f"{image_width}x{image_height}",
+    )
+    print(
+        "=========================================="
+    )
+    print()
+
+
+    return ticket.pdf_ticket
+
+
+
+
 def send_ticket_email(ticket):
     """
     Send the confirmed Flying Fox booking ticket by email.
 
-    Multi-ride version:
+    Multi-ride + time-slot version:
     - One email per booking
     - One ticket number
     - One visit date
     - Lists every selected ride
+    - Lists confirmed scheduled ride slots
     - Lists weight groups for each ride
     - Shows offer/discount per ride
     - Attaches the generated PDF ticket
     """
 
     # =====================================================
-    # BOOKING WITH ALL MULTI-RIDE DATA
+    # BOOKING WITH ALL MULTI-RIDE + SLOT DATA
     # =====================================================
 
     try:
@@ -14605,6 +17114,7 @@ def send_ticket_email(ticket):
                 "ride_items__ride_price",
                 "ride_items__offer",
                 "ride_items__weight_groups",
+                "ride_items__allocated_slots",
             )
             .get(
                 pk=ticket.booking_id
@@ -14616,6 +17126,20 @@ def send_ticket_email(ticket):
         print(
             "TICKET EMAIL ERROR: "
             "Booking does not exist."
+        )
+
+        return False
+
+
+    # =====================================================
+    # DO NOT SEND ACTIVE TICKET FOR CANCELLED BOOKING
+    # =====================================================
+
+    if booking.status == "cancelled":
+
+        print(
+            "TICKET EMAIL SKIPPED: "
+            "Booking is cancelled."
         )
 
         return False
@@ -14682,6 +17206,7 @@ def send_ticket_email(ticket):
         f"Hi {booking.customer_name},"
     )
 
+
     lines.append("")
 
 
@@ -14690,12 +17215,18 @@ def send_ticket_email(ticket):
         "has been confirmed successfully."
     )
 
+
     lines.append("")
 
+
+    # =====================================================
+    # BOOKING DETAILS
+    # =====================================================
 
     lines.append(
         "BOOKING DETAILS"
     )
+
 
     lines.append(
         "----------------------------------------"
@@ -14743,6 +17274,7 @@ def send_ticket_email(ticket):
         "SELECTED ADVENTURES"
     )
 
+
     lines.append(
         "----------------------------------------"
     )
@@ -14758,6 +17290,7 @@ def send_ticket_email(ticket):
         # =============================================
 
         lines.append("")
+
 
         lines.append(
             f"{index}. {item.ride.name}"
@@ -14794,9 +17327,7 @@ def send_ticket_email(ticket):
             )
 
 
-            if (
-                item.applied_coupon_code
-            ):
+            if item.applied_coupon_code:
 
                 lines.append(
                     f"   Coupon: "
@@ -14821,6 +17352,109 @@ def send_ticket_email(ticket):
 
 
         # =============================================
+        # CONFIRMED SCHEDULED RIDE TIMES
+        # =============================================
+
+        confirmed_slots = [
+
+            slot
+
+            for slot
+            in item.allocated_slots.all()
+
+            if slot.status == "confirmed"
+
+        ]
+
+
+        confirmed_slots.sort(
+            key=lambda slot:
+                slot.slot_start_time
+        )
+
+
+        if confirmed_slots:
+
+            lines.append("")
+
+            lines.append(
+                "   Scheduled Ride Time:"
+            )
+
+
+            total_scheduled_riders = 0
+
+
+            for slot in confirmed_slots:
+
+                start_label = (
+                    slot
+                    .slot_start_time
+                    .strftime(
+                        "%I:%M %p"
+                    )
+                )
+
+
+                end_label = (
+                    slot
+                    .slot_end_time
+                    .strftime(
+                        "%I:%M %p"
+                    )
+                )
+
+
+                participant_count = (
+                    slot.participant_count
+                )
+
+
+                total_scheduled_riders += (
+                    participant_count
+                )
+
+
+                rider_word = (
+                    "rider"
+                    if participant_count == 1
+                    else "riders"
+                )
+
+
+                lines.append(
+                    (
+                        f"      - "
+                        f"{start_label} - "
+                        f"{end_label}: "
+                        f"{participant_count} "
+                        f"{rider_word}"
+                    )
+                )
+
+
+            lines.append(
+                (
+                    f"   Total Scheduled Riders: "
+                    f"{total_scheduled_riders}"
+                )
+            )
+
+
+        else:
+
+            # This should normally never happen for a
+            # confirmed booking, but keep the email safe.
+
+            lines.append("")
+
+            lines.append(
+                "   Scheduled Ride Time: "
+                "Not available"
+            )
+
+
+        # =============================================
         # WEIGHT GROUPS
         # =============================================
 
@@ -14830,6 +17464,8 @@ def send_ticket_email(ticket):
 
 
         if weight_groups:
+
+            lines.append("")
 
             lines.append(
                 "   Participant Weight Groups:"
@@ -14848,15 +17484,32 @@ def send_ticket_email(ticket):
                 )
 
 
+        # =============================================
+        # RIDE SEPARATOR
+        # =============================================
+
+        if index < len(
+            ride_items
+        ):
+
+            lines.append("")
+
+            lines.append(
+                "   ------------------------------------"
+            )
+
+
     # =====================================================
     # PAYMENT SUMMARY
     # =====================================================
 
     lines.append("")
 
+
     lines.append(
         "PAYMENT SUMMARY"
     )
+
 
     lines.append(
         "----------------------------------------"
@@ -14892,6 +17545,7 @@ def send_ticket_email(ticket):
         "IMPORTANT INFORMATION"
     )
 
+
     lines.append(
         "----------------------------------------"
     )
@@ -14900,6 +17554,12 @@ def send_ticket_email(ticket):
     lines.append(
         "• Your QR ticket is valid for all "
         "adventures listed in this booking."
+    )
+
+
+    lines.append(
+        "• Please follow the scheduled ride times "
+        "shown above."
     )
 
 
@@ -14950,6 +17610,7 @@ def send_ticket_email(ticket):
     lines.append(
         "Flying Fox Adventure"
     )
+
 
     lines.append(
         "Munnar, Kerala"
@@ -15028,8 +17689,8 @@ def send_ticket_email(ticket):
             # =============================================
             # OPEN STORAGE FILE
             #
-            # This is safer than depending only on .path
-            # and also works with remote storage later.
+            # This works with local storage and is also
+            # safer if remote storage is used later.
             # =============================================
 
             ticket.pdf_ticket.open(
@@ -15072,31 +17733,36 @@ def send_ticket_email(ticket):
             "\n========================================"
         )
 
+
         print(
             "TICKET EMAIL PDF ATTACH ERROR"
         )
+
 
         print(
             "TYPE:",
             type(error).__name__
         )
 
+
         print(
             "ERROR:",
             repr(error)
         )
+
 
         print(
             "TICKET:",
             ticket.ticket_number
         )
 
+
         print(
             "========================================\n"
         )
 
         # Do not stop the email just because
-        # the PDF attachment failed.
+        # PDF attachment failed.
 
 
     # =====================================================
@@ -15123,40 +17789,48 @@ def send_ticket_email(ticket):
             "\n========================================"
         )
 
+
         print(
             "TICKET EMAIL RESULT"
         )
+
 
         print(
             "TICKET:",
             ticket.ticket_number
         )
 
+
         print(
             "BOOKING:",
             booking.booking_id
         )
+
 
         print(
             "CUSTOMER:",
             booking.customer_name
         )
 
+
         print(
             "EMAIL:",
             customer_email
         )
+
 
         print(
             "RIDES:",
             ", ".join(
                 [
                     item.ride.name
+
                     for item
                     in ride_items
                 ]
             )
         )
+
 
         print(
             "RIDE COUNT:",
@@ -15165,20 +17839,79 @@ def send_ticket_email(ticket):
             )
         )
 
+
         print(
             "TOTAL RIDERS:",
             booking.quantity
         )
+
 
         print(
             "TOTAL:",
             booking.total_amount
         )
 
+
+        # =============================================
+        # SLOT DEBUG
+        # =============================================
+
+        slot_debug = []
+
+
+        for item in ride_items:
+
+            for slot in (
+                item.allocated_slots.all()
+            ):
+
+                if (
+                    slot.status
+                    !=
+                    "confirmed"
+                ):
+
+                    continue
+
+
+                slot_debug.append(
+                    (
+                        f"{item.ride.name}: "
+                        f"{slot.slot_start_time.strftime('%I:%M %p')}"
+                        f" - "
+                        f"{slot.slot_end_time.strftime('%I:%M %p')}"
+                        f" = "
+                        f"{slot.participant_count} rider(s)"
+                    )
+                )
+
+
+        print(
+            "SCHEDULE:"
+        )
+
+
+        if slot_debug:
+
+            for schedule_line in slot_debug:
+
+                print(
+                    " -",
+                    schedule_line
+                )
+
+        else:
+
+            print(
+                " - No confirmed slots found."
+            )
+
+
         print(
             "SENT:",
             email_sent
         )
+
 
         print(
             "========================================\n"
@@ -15194,34 +17927,41 @@ def send_ticket_email(ticket):
             "\n========================================"
         )
 
+
         print(
             "TICKET EMAIL SEND ERROR"
         )
+
 
         print(
             "TYPE:",
             type(error).__name__
         )
 
+
         print(
             "ERROR:",
             repr(error)
         )
+
 
         print(
             "TICKET:",
             ticket.ticket_number
         )
 
+
         print(
             "BOOKING:",
             booking.booking_id
         )
 
+
         print(
             "EMAIL:",
             customer_email
         )
+
 
         print(
             "========================================\n"
@@ -15239,7 +17979,13 @@ def booking_success(
     # =====================================================
     # BOOKING
     #
-    # Load the parent booking and all ride items.
+    # Load:
+    # - parent booking
+    # - rides
+    # - prices
+    # - offers
+    # - weight groups
+    # - confirmed ride slot allocations
     # =====================================================
 
     booking = get_object_or_404(
@@ -15255,6 +18001,12 @@ def booking_success(
             "ride_items__ride_price",
             "ride_items__offer",
             "ride_items__weight_groups",
+
+            # =============================================
+            # NEW:
+            # Scheduled ride slots
+            # =============================================
+            "ride_items__allocated_slots",
         ),
 
         booking_id=
@@ -15285,6 +18037,42 @@ def booking_success(
     ride_items = list(
         booking.ride_items.all()
     )
+
+
+    # =====================================================
+    # PREPARE CONFIRMED SLOT SCHEDULE
+    #
+    # Attach a simple display-safe list to each
+    # BookingRideItem.
+    #
+    # Example:
+    #
+    # 01:30 PM - 02:30 PM → 5 riders
+    # 02:30 PM - 03:30 PM → 5 riders
+    # =====================================================
+
+    for item in ride_items:
+
+        confirmed_slots = [
+
+            slot
+
+            for slot
+            in item.allocated_slots.all()
+
+            if slot.status == "confirmed"
+        ]
+
+
+        confirmed_slots.sort(
+            key=lambda slot:
+                slot.slot_start_time
+        )
+
+
+        item.confirmed_slots = (
+            confirmed_slots
+        )
 
 
     # =====================================================
@@ -15343,105 +18131,25 @@ def booking_success(
 
 
 
-def send_ticket_sms(ticket):
-    """
-    Send Twilio's predefined trial order-confirmation SMS.
 
-    Important:
-    This does not send the actual Booking ID or Ticket ID.
-    It sends Twilio's fixed trial confirmation template.
+def send_ticket_sms(ticket):
+
+    """
+    Send payment confirmation SMS through Telinfy
+    after successful Razorpay payment and ticket creation.
     """
 
     booking = ticket.booking
 
-    # -----------------------------------------
-    # 1. Validate customer phone
-    # -----------------------------------------
+    # =====================================================
+    # 1. CUSTOMER PHONE
+    # =====================================================
 
     if not booking.customer_phone:
-        print("SMS ERROR: Customer phone is empty.")
-        return False
 
-    # -----------------------------------------
-    # 2. Read Twilio settings
-    # -----------------------------------------
-
-    account_sid = getattr(
-        settings,
-        "TWILIO_ACCOUNT_SID",
-        "",
-    )
-
-    auth_token = getattr(
-        settings,
-        "TWILIO_AUTH_TOKEN",
-        "",
-    )
-
-    twilio_number = getattr(
-        settings,
-        "TWILIO_PHONE_NUMBER",
-        "",
-    )
-
-    if not account_sid:
         print(
-            "SMS ERROR: TWILIO_ACCOUNT_SID "
-            "is not configured."
-        )
-        return False
-
-    if not auth_token:
-        print(
-            "SMS ERROR: TWILIO_AUTH_TOKEN "
-            "is not configured."
-        )
-        return False
-
-    if not twilio_number:
-        print(
-            "SMS ERROR: TWILIO_PHONE_NUMBER "
-            "is not configured."
-        )
-        return False
-
-    # -----------------------------------------
-    # 3. Format Indian phone number
-    # -----------------------------------------
-
-    phone = (
-        booking.customer_phone
-        .strip()
-        .replace(" ", "")
-        .replace("-", "")
-        .replace("(", "")
-        .replace(")", "")
-    )
-
-    # 9633390345 -> +919633390345
-    if len(phone) == 10 and phone.isdigit():
-        phone = f"+91{phone}"
-
-    # 919633390345 -> +919633390345
-    elif (
-        len(phone) == 12
-        and phone.startswith("91")
-        and phone.isdigit()
-    ):
-        phone = f"+{phone}"
-
-    # Already in +919633390345 format
-    elif (
-        len(phone) == 13
-        and phone.startswith("+91")
-        and phone[1:].isdigit()
-    ):
-        pass
-
-    else:
-        print(
-            "SMS ERROR: Invalid customer phone number:",
-            phone,
+            "PAYMENT SMS ERROR: "
+            "Customer phone is empty."
         )
 
         ticket.sms_sent = False
@@ -15456,74 +18164,179 @@ def send_ticket_sms(ticket):
 
         return False
 
-    # -----------------------------------------
-    # 4. Send predefined Twilio trial template
-    # -----------------------------------------
+    phone_number = (
+        booking.customer_phone
+        .strip()
+    )
+
+    # =====================================================
+    # 2. BOOKING ID
+    # =====================================================
+
+    full_booking_id = str(
+        booking.booking_id
+    )
+
+    booking_id = (
+        "FFX-"
+        +
+        full_booking_id[:8].upper()
+    )
+
+    # =====================================================
+    # 3. AMOUNT
+    # =====================================================
+
+    total_amount = (
+        booking.total_amount
+        or
+        0
+    )
+
+    amount = (
+        f"{total_amount:.2f}"
+        .rstrip("0")
+        .rstrip(".")
+    )
+
+    # =====================================================
+    # 4. VISIT DATE
+    # =====================================================
+
+    if booking.booking_date:
+
+        visit_date = (
+            booking.booking_date.strftime(
+                "%d-%m-%Y"
+            )
+        )
+
+    else:
+
+        visit_date = ""
+
+    # =====================================================
+    # 5. SEND TELINFY PAYMENT CONFIRMATION
+    # =====================================================
 
     try:
-        client = Client(
-            account_sid,
-            auth_token,
+
+        response = (
+            send_payment_confirmation_sms(
+                phone_number=phone_number,
+                booking_id=booking_id,
+                amount=amount,
+                visit_date=visit_date,
+            )
         )
 
-        message = client.messages.create(
-            to=phone,
-            from_=twilio_number,
+        # =================================================
+        # 6. CHECK TELINFY RESPONSE
+        # =================================================
 
-            # Twilio trial predefined template
-            body="sms_order_confirmation",
+        responses = []
+
+        if isinstance(
+            response,
+            dict,
+        ):
+
+            responses = (
+                response.get(
+                    "responses",
+                    []
+                )
+            )
+
+        if not responses:
+
+            ticket.sms_sent = False
+            ticket.sms_status = "failed"
+
+            ticket.save(
+                update_fields=[
+                    "sms_sent",
+                    "sms_status",
+                ]
+            )
+
+            print(
+                "PAYMENT SMS ERROR: "
+                "No Telinfy response."
+            )
+
+            return False
+
+        first_response = (
+            responses[0]
         )
+
+        status = str(
+            first_response.get(
+                "status",
+                ""
+            )
+        ).strip().lower()
+
+        if status != "success":
+
+            ticket.sms_sent = False
+            ticket.sms_status = "failed"
+
+            ticket.save(
+                update_fields=[
+                    "sms_sent",
+                    "sms_status",
+                ]
+            )
+
+            print(
+                "PAYMENT SMS ERROR:",
+                response,
+            )
+
+            return False
+
+        # =================================================
+        # 7. SUCCESS
+        # =================================================
 
         ticket.sms_sent = True
-        ticket.sms_message_id = message.sid
-        ticket.sms_status = (
-            message.status or "queued"
-        )
+        ticket.sms_status = "sent"
 
         ticket.save(
             update_fields=[
                 "sms_sent",
-                "sms_message_id",
                 "sms_status",
             ]
         )
 
+        print()
         print(
-            "\n========== SMS REQUEST ACCEPTED =========="
+            "========== PAYMENT SMS SENT =========="
         )
-        print("TO:", phone)
-        print("FROM:", twilio_number)
-        print("MESSAGE SID:", message.sid)
-        print("INITIAL STATUS:", message.status)
         print(
-            "==========================================\n"
+            "TO:",
+            phone_number,
         )
+        print(
+            "BOOKING:",
+            booking_id,
+        )
+        print(
+            "AMOUNT:",
+            amount,
+        )
+        print(
+            "VISIT DATE:",
+            visit_date,
+        )
+        print(
+            "======================================"
+        )
+        print()
 
         return True
-
-    except TwilioRestException as error:
-
-        ticket.sms_sent = False
-        ticket.sms_status = "failed"
-
-        ticket.save(
-            update_fields=[
-                "sms_sent",
-                "sms_status",
-            ]
-        )
-
-        print(
-            "\n============ TWILIO SMS FAILED ============"
-        )
-        print("TO:", phone)
-        print("ERROR CODE:", error.code)
-        print("ERROR MESSAGE:", error.msg)
-        print(
-            "===========================================\n"
-        )
-
-        return False
 
     except Exception as error:
 
@@ -15537,54 +18350,140 @@ def send_ticket_sms(ticket):
             ]
         )
 
+        print()
         print(
-            "\n========== UNEXPECTED SMS ERROR =========="
+            "======= PAYMENT SMS FAILED ======="
         )
-        print("TO:", phone)
-        print("ERROR:", error)
         print(
-            "==========================================\n"
+            "TO:",
+            phone_number,
         )
+        print(
+            "ERROR:",
+            repr(error),
+        )
+        print(
+            "=================================="
+        )
+        print()
 
         return False
 
 
 
-def download_ticket(request, ticket_id):
+def download_ticket(
+    request,
+    ticket_id,
+):
+
+    # =====================================================
+    # GET TICKET
+    #
+    # No login is required.
+    #
+    # ticket_id is a UUID and is used as the private
+    # download identifier.
+    # =====================================================
+
     ticket = get_object_or_404(
-        Ticket.objects.select_related(
-            "booking"
+
+        Ticket.objects
+        .select_related(
+            "booking",
+            "booking__user",
         ),
+
         ticket_id=ticket_id,
     )
 
+
+    # =====================================================
+    # CANCELLED BOOKING
+    #
+    # A cancelled/refunded booking must never allow
+    # downloading an old valid-looking ticket.
+    # =====================================================
+
+    if (
+        ticket.booking.status
+        ==
+        "cancelled"
+    ):
+
+        messages.error(
+            request,
+            (
+                "This ticket has been cancelled "
+                "and is no longer valid."
+            )
+        )
+
+        # Customer may not be logged in, so don't send
+        # them to user_tickets.
+        return redirect(
+            "booking_success",
+            booking_id=
+                ticket.booking.booking_id,
+        )
+
+
+    # =====================================================
+    # TICKET PDF MUST EXIST
+    # =====================================================
+
     if not ticket.pdf_ticket:
-        raise Http404(
+
+        messages.error(
+            request,
             "Ticket PDF is not available."
         )
 
-    try:
-        file_handle = ticket.pdf_ticket.open(
-            "rb"
-        )
-    except (FileNotFoundError, OSError):
-        raise Http404(
-            "Ticket PDF file was not found."
+        return redirect(
+            "booking_success",
+            booking_id=
+                ticket.booking.booking_id,
         )
 
-    return FileResponse(
-        file_handle,
-        as_attachment=True,
-        filename=(
-            f"flying-fox-ticket-"
-            f"{ticket.ticket_number}.pdf"
-        ),
-        content_type="application/pdf",
+
+    # =====================================================
+    # OPEN PDF FILE
+    # =====================================================
+
+    try:
+
+        pdf_file = (
+            ticket.pdf_ticket.open(
+                "rb"
+            )
+        )
+
+    except (
+        FileNotFoundError,
+        OSError,
+        ValueError,
+    ):
+
+        raise Http404(
+            "Ticket PDF could not be found."
+        )
+
+
+    # =====================================================
+    # DOWNLOAD FILE
+    # =====================================================
+
+    filename = (
+        f"flying-fox-ticket-"
+        f"{ticket.ticket_number}.pdf"
     )
 
 
-
-
+    return FileResponse(
+        pdf_file,
+        as_attachment=True,
+        filename=filename,
+        content_type="application/pdf",
+    )
 
 
 # ==========================================
@@ -18495,7 +21394,6 @@ def ticket_staff_logout(request):
 # =========================================================
 # VERIFY QR TICKET
 # =========================================================
-
 @permission_required(
     "flyingfox_app.verify_ticket",
     login_url="ticket_staff_login",
@@ -18504,6 +21402,27 @@ def verify_ticket(
     request,
     qr_token,
 ):
+
+    # =====================================================
+    # CONFIRMED SLOT PREFETCH
+    # =====================================================
+
+    confirmed_slot_prefetch = Prefetch(
+
+        "booking__ride_items__allocated_slots",
+
+        queryset=(
+            BookingRideSlot.objects
+            .filter(
+                status="confirmed"
+            )
+            .order_by(
+                "slot_start_time"
+            )
+        ),
+
+        to_attr="confirmed_slots",
+    )
 
     # =====================================================
     # LOAD TICKET + FULL MULTI-RIDE BOOKING
@@ -18521,16 +21440,16 @@ def verify_ticket(
             "booking__ride_items__ride_price",
             "booking__ride_items__offer",
             "booking__ride_items__weight_groups",
+
+            confirmed_slot_prefetch,
         ),
 
         qr_token=qr_token,
     )
 
-
     booking = (
         ticket.booking
     )
-
 
     # =====================================================
     # RIDE ITEMS
@@ -18539,7 +21458,6 @@ def verify_ticket(
     ride_items = list(
         booking.ride_items.all()
     )
-
 
     # =====================================================
     # PAYMENT VALIDITY
@@ -18556,7 +21474,6 @@ def verify_ticket(
         "paid"
     )
 
-
     # =====================================================
     # BOOKING VALIDITY
     # =====================================================
@@ -18569,7 +21486,6 @@ def verify_ticket(
         ]
     )
 
-
     # =====================================================
     # RIDE ITEM VALIDITY
     # =====================================================
@@ -18577,7 +21493,6 @@ def verify_ticket(
     has_rides = bool(
         ride_items
     )
-
 
     # =====================================================
     # OVERALL VALIDITY
@@ -18591,7 +21506,6 @@ def verify_ticket(
         has_rides
     )
 
-
     # =====================================================
     # CHECK-IN COUNTS
     # =====================================================
@@ -18600,23 +21514,23 @@ def verify_ticket(
         ride_items
     )
 
-
     checked_in_ride_count = sum(
+
         1
+
         for item
         in ride_items
+
         if item.status
         ==
         "checked_in"
     )
-
 
     pending_ride_count = (
         total_ride_count
         -
         checked_in_ride_count
     )
-
 
     all_rides_checked_in = (
         total_ride_count > 0
@@ -18626,19 +21540,17 @@ def verify_ticket(
         total_ride_count
     )
 
-
     some_rides_checked_in = (
         checked_in_ride_count > 0
         and
         not all_rides_checked_in
     )
 
-
     # =====================================================
     # SYNC LEGACY TICKET USED STATE
     #
-    # Ticket is considered fully used only when all
-    # adventures have been checked in.
+    # Ticket becomes fully used only when every ride
+    # in this booking has been checked in.
     # =====================================================
 
     if (
@@ -18661,7 +21573,6 @@ def verify_ticket(
                 "checked_in_at",
             ]
         )
-
 
     # =====================================================
     # CONTEXT
@@ -18699,6 +21610,10 @@ def verify_ticket(
                 some_rides_checked_in,
         },
     )
+
+
+
+
 
 
 
@@ -19004,9 +21919,7 @@ def ticket_check_in(
 # =========================================================
 # STAFF TICKET DASHBOARD
 # =========================================================
-# =========================================================
-# STAFF TICKET DASHBOARD
-# =========================================================
+
 
 @permission_required(
     "flyingfox_app.verify_ticket",
@@ -19014,8 +21927,11 @@ def ticket_check_in(
 )
 def ticket_staff_dashboard(request):
 
-    today = timezone.localdate()
+    # =====================================================
+    # TODAY
+    # =====================================================
 
+    today = timezone.localdate()
 
     # =====================================================
     # SELECTED DATE
@@ -19029,7 +21945,6 @@ def ticket_staff_dashboard(request):
         .strip()
     )
 
-
     selected_date = (
         parse_date(
             selected_date_raw
@@ -19037,7 +21952,6 @@ def ticket_staff_dashboard(request):
         if selected_date_raw
         else None
     )
-
 
     # Default selected date = tomorrow
     if selected_date is None:
@@ -19050,11 +21964,37 @@ def ticket_staff_dashboard(request):
             )
         )
 
+    # =====================================================
+    # CONFIRMED SLOT PREFETCH
+    #
+    # Only confirmed ride slots are shown to staff.
+    #
+    # Example:
+    #
+    # Superman Zipline
+    # 10:30 AM - 11:30 AM -> 1 rider
+    # 11:30 AM - 12:30 PM -> 5 riders
+    # 12:30 PM - 01:30 PM -> 1 rider
+    # =====================================================
+
+    confirmed_slot_prefetch = Prefetch(
+        "ride_items__allocated_slots",
+
+        queryset=(
+            BookingRideSlot.objects
+            .filter(
+                status="confirmed"
+            )
+            .order_by(
+                "slot_start_time"
+            )
+        ),
+
+        to_attr="confirmed_slots",
+    )
 
     # =====================================================
     # COMMON BOOKING QUERY
-    #
-    # NEW MULTI-RIDE STRUCTURE
     # =====================================================
 
     base_bookings = (
@@ -19077,9 +22017,10 @@ def ticket_staff_dashboard(request):
             "ride_items__ride_price",
             "ride_items__offer",
             "ride_items__weight_groups",
+
+            confirmed_slot_prefetch,
         )
     )
-
 
     # =====================================================
     # TODAY BOOKINGS
@@ -19096,7 +22037,6 @@ def ticket_staff_dashboard(request):
             "created_at"
         )
     )
-
 
     # =====================================================
     # SELECTED DATE BOOKINGS
@@ -19115,21 +22055,16 @@ def ticket_staff_dashboard(request):
         )
     )
 
-
     # =====================================================
-    # DASHBOARD COUNTS
+    # TODAY BOOKING COUNT
     # =====================================================
 
     today_booking_count = (
         today_bookings.count()
     )
 
-
     # =====================================================
     # FULLY VERIFIED TICKETS TODAY
-    #
-    # Ticket.is_used becomes True only after
-    # all BookingRideItems are checked in.
     # =====================================================
 
     verified_today_count = (
@@ -19141,29 +22076,8 @@ def ticket_staff_dashboard(request):
         .count()
     )
 
-
     # =====================================================
-    # BOOKINGS STILL HAVING AT LEAST ONE PENDING RIDE
-    # =====================================================
-
-    pending_today_count = (
-        today_bookings
-        .exclude(
-            ride_items__status=
-                "checked_in"
-        )
-        .distinct()
-        .count()
-    )
-
-
-    # =====================================================
-    # IMPORTANT:
-    #
-    # The query above only finds bookings where there
-    # exists a non-checked-in relation depending on SQL
-    # behavior. Calculate it explicitly so partial
-    # check-ins are always counted correctly.
+    # BOOKINGS WITH AT LEAST ONE PENDING RIDE
     # =====================================================
 
     pending_today_count = sum(
@@ -19174,6 +22088,7 @@ def ticket_staff_dashboard(request):
         in today_bookings
 
         if any(
+
             item.status
             !=
             "checked_in"
@@ -19183,47 +22098,45 @@ def ticket_staff_dashboard(request):
         )
     )
 
-
     # =====================================================
     # TOTAL PARTICIPANTS TODAY
-    #
-    # Parent Booking.quantity already contains the
-    # combined quantity for all ride items.
     # =====================================================
 
     total_participants = (
         today_bookings
+
         .aggregate(
             total=Sum(
                 "quantity"
             )
         )
+
         .get(
             "total"
         )
+
         or
         0
     )
 
-
     # =====================================================
     # TOTAL ADVENTURES TODAY
-    #
-    # Count BookingRideItem rows instead of bookings.
     # =====================================================
 
     today_adventure_count = (
         BookingRideItem.objects
+
         .filter(
             booking__booking_date=today,
+
             booking__status__in=[
                 "confirmed",
                 "checked_in",
             ],
         )
+
         .count()
     )
-
 
     # =====================================================
     # CHECKED-IN ADVENTURES TODAY
@@ -19231,17 +22144,20 @@ def ticket_staff_dashboard(request):
 
     checked_in_adventure_count = (
         BookingRideItem.objects
+
         .filter(
             booking__booking_date=today,
+
             booking__status__in=[
                 "confirmed",
                 "checked_in",
             ],
+
             status="checked_in",
         )
+
         .count()
     )
-
 
     # =====================================================
     # PENDING ADVENTURES TODAY
@@ -19249,25 +22165,25 @@ def ticket_staff_dashboard(request):
 
     pending_adventure_count = (
         BookingRideItem.objects
+
         .filter(
             booking__booking_date=today,
+
             booking__status__in=[
                 "confirmed",
                 "checked_in",
             ],
         )
+
         .exclude(
             status="checked_in"
         )
+
         .count()
     )
 
-
     # =====================================================
     # RECENT FULLY VERIFIED TICKETS
-    #
-    # This list represents tickets where all rides have
-    # been checked in.
     # =====================================================
 
     recent_verified = (
@@ -19290,7 +22206,6 @@ def ticket_staff_dashboard(request):
             "-checked_in_at"
         )[:5]
     )
-
 
     # =====================================================
     # CONTEXT
@@ -19338,11 +22253,479 @@ def ticket_staff_dashboard(request):
         },
     )
 
+
+
+
+# =========================================================
+# STAFF RIDE SCHEDULE / CAPACITY BOARD
+# =========================================================
+
+@permission_required(
+    "flyingfox_app.verify_ticket",
+    login_url="ticket_staff_login",
+)
+def staff_ride_schedule(request):
+
+    # =====================================================
+    # TODAY
+    # =====================================================
+
+    today = timezone.localdate()
+
+    # =====================================================
+    # SELECTED DATE
+    # =====================================================
+
+    selected_date_raw = (
+        request.GET.get(
+            "date",
+            ""
+        )
+        .strip()
+    )
+
+    selected_date = (
+        parse_date(
+            selected_date_raw
+        )
+        if selected_date_raw
+        else None
+    )
+
+    # Invalid / empty date -> today
+    if selected_date is None:
+
+        selected_date = today
+
+    # =====================================================
+    # CURRENT TIME
+    #
+    # Used only for highlighting today's current slot.
+    # =====================================================
+
+    now = timezone.localtime()
+
+    current_time = (
+        now.time()
+        if selected_date == today
+        else None
+    )
+
+    # =====================================================
+    # ACTIVE RIDES
+    # =====================================================
+
+    rides = (
+        Ride.objects
+        .filter(
+            is_active=True
+        )
+        .order_by(
+            "name"
+        )
+    )
+
+    # =====================================================
+    # PAGE DATA
+    # =====================================================
+
+    ride_schedule = []
+
+    # Page totals
+    total_capacity = 0
+    total_occupied = 0
+    total_confirmed = 0
+    total_held = 0
+    total_remaining = 0
+
+    # =====================================================
+    # BUILD SCHEDULE FOR EACH RIDE
+    # =====================================================
+
+    for ride in rides:
+
+        # =================================================
+        # USE EXISTING BOOKING SLOT SERVICE
+        #
+        # This keeps staff capacity calculations consistent
+        # with customer booking availability.
+        # =================================================
+
+        available_slots = get_available_slots(
+            ride=ride,
+            booking_date=selected_date,
+        )
+
+        # =================================================
+        # CONFIRMED RIDERS BY SLOT
+        # =================================================
+
+        confirmed_rows = (
+            BookingRideSlot.objects
+
+            .filter(
+                booking_item__ride=ride,
+
+                booking_item__booking__booking_date=
+                    selected_date,
+
+                status="confirmed",
+            )
+
+            .values(
+                "slot_start_time"
+            )
+
+            .annotate(
+                total=Sum(
+                    "participant_count"
+                )
+            )
+        )
+
+        confirmed_by_start = {
+
+            row["slot_start_time"]:
+                row["total"] or 0
+
+            for row
+            in confirmed_rows
+        }
+
+        # =================================================
+        # ACTIVE HELD RIDERS BY SLOT
+        #
+        # Only holds that have NOT expired reduce capacity.
+        # =================================================
+
+        held_rows = (
+            BookingRideSlot.objects
+
+            .filter(
+                booking_item__ride=ride,
+
+                booking_item__booking__booking_date=
+                    selected_date,
+
+                status="held",
+
+                hold_expires_at__gt=
+                    timezone.now(),
+            )
+
+            .values(
+                "slot_start_time"
+            )
+
+            .annotate(
+                total=Sum(
+                    "participant_count"
+                )
+            )
+        )
+
+        held_by_start = {
+
+            row["slot_start_time"]:
+                row["total"] or 0
+
+            for row
+            in held_rows
+        }
+
+        # =================================================
+        # PREPARE DISPLAY SLOT ROWS
+        # =================================================
+
+        display_slots = []
+
+        ride_total_confirmed = 0
+        ride_total_held = 0
+        ride_total_occupied = 0
+        ride_total_remaining = 0
+        ride_total_capacity = 0
+
+        for slot in available_slots:
+
+            start_time = (
+                slot["start_time"]
+            )
+
+            end_time = (
+                slot["end_time"]
+            )
+
+            capacity = int(
+                slot["capacity"]
+            )
+
+            occupied = int(
+                slot["booked"]
+            )
+
+            remaining = int(
+                slot["remaining"]
+            )
+
+            confirmed = int(
+                confirmed_by_start.get(
+                    start_time,
+                    0
+                )
+            )
+
+            held = int(
+                held_by_start.get(
+                    start_time,
+                    0
+                )
+            )
+
+            # =================================================
+            # SAFETY
+            #
+            # Service "booked" is the source of truth for
+            # occupied capacity. Confirmed/held are only the
+            # breakdown shown to staff.
+            # =================================================
+
+            if capacity > 0:
+
+                usage_percent = round(
+                    (
+                        occupied
+                        /
+                        capacity
+                    )
+                    *
+                    100
+                )
+
+            else:
+
+                usage_percent = 0
+
+            usage_percent = max(
+                0,
+                min(
+                    usage_percent,
+                    100
+                )
+            )
+
+            # =================================================
+            # SLOT STATUS
+            # =================================================
+
+            if remaining <= 0:
+
+                status_key = "full"
+                status_label = "FULL"
+
+            elif occupied <= 0:
+
+                status_key = "available"
+                status_label = "AVAILABLE"
+
+            elif remaining <= max(
+                1,
+                capacity // 4
+            ):
+
+                status_key = "low"
+                status_label = "ALMOST FULL"
+
+            else:
+
+                status_key = "partial"
+                status_label = "AVAILABLE"
+
+            # =================================================
+            # CURRENT SLOT
+            # =================================================
+
+            is_current = False
+
+            if current_time is not None:
+
+                is_current = (
+                    start_time
+                    <=
+                    current_time
+                    <
+                    end_time
+                )
+
+            display_slots.append(
+                {
+                    "start_time":
+                        start_time,
+
+                    "end_time":
+                        end_time,
+
+                    "start_label":
+                        start_time.strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "end_label":
+                        end_time.strftime(
+                            "%I:%M %p"
+                        ),
+
+                    "capacity":
+                        capacity,
+
+                    "confirmed":
+                        confirmed,
+
+                    "held":
+                        held,
+
+                    "occupied":
+                        occupied,
+
+                    "remaining":
+                        remaining,
+
+                    "usage_percent":
+                        usage_percent,
+
+                    "status_key":
+                        status_key,
+
+                    "status_label":
+                        status_label,
+
+                    "is_current":
+                        is_current,
+                }
+            )
+
+            # =================================================
+            # RIDE TOTALS
+            # =================================================
+
+            ride_total_capacity += (
+                capacity
+            )
+
+            ride_total_confirmed += (
+                confirmed
+            )
+
+            ride_total_held += (
+                held
+            )
+
+            ride_total_occupied += (
+                occupied
+            )
+
+            ride_total_remaining += (
+                remaining
+            )
+
+        # =====================================================
+        # RIDE SUMMARY
+        # =====================================================
+
+        ride_schedule.append(
+            {
+                "ride":
+                    ride,
+
+                "slots":
+                    display_slots,
+
+                "slot_count":
+                    len(
+                        display_slots
+                    ),
+
+                "total_capacity":
+                    ride_total_capacity,
+
+                "total_confirmed":
+                    ride_total_confirmed,
+
+                "total_held":
+                    ride_total_held,
+
+                "total_occupied":
+                    ride_total_occupied,
+
+                "total_remaining":
+                    ride_total_remaining,
+            }
+        )
+
+        # =====================================================
+        # PAGE TOTALS
+        # =====================================================
+
+        total_capacity += (
+            ride_total_capacity
+        )
+
+        total_confirmed += (
+            ride_total_confirmed
+        )
+
+        total_held += (
+            ride_total_held
+        )
+
+        total_occupied += (
+            ride_total_occupied
+        )
+
+        total_remaining += (
+            ride_total_remaining
+        )
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+
+    return render(
+        request,
+        "staff/ride_schedule.html",
+        {
+            "today":
+                today,
+
+            "selected_date":
+                selected_date,
+
+            "ride_schedule":
+                ride_schedule,
+
+            "total_rides":
+                len(
+                    ride_schedule
+                ),
+
+            "total_capacity":
+                total_capacity,
+
+            "total_confirmed":
+                total_confirmed,
+
+            "total_held":
+                total_held,
+
+            "total_occupied":
+                total_occupied,
+
+            "total_remaining":
+                total_remaining,
+        },
+    )
+
 # =========================================================
 # VERIFIED TICKET HISTORY
-# =========================================================
-# =========================================================
-# VERIFIED TICKET LIST
 # =========================================================
 
 @permission_required(

@@ -4617,6 +4617,243 @@ body.ff-message-open {
     }
 }
 
+
+
+/* =========================================================
+   RIDE START TIME / SLOT AVAILABILITY
+========================================================= */
+
+.ff-slot-intro{
+    display:flex;
+    margin-bottom:14px;
+    padding:14px 15px;
+    border:1px solid #eceff2;
+    border-radius:15px;
+    align-items:flex-start;
+    gap:11px;
+    background:#fafbfc;
+}
+
+.ff-slot-intro-icon{
+    display:flex;
+    flex:0 0 36px;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    align-items:center;
+    justify-content:center;
+    color:var(--ff-red);
+    background:var(--ff-red-soft);
+}
+
+.ff-slot-intro strong,
+.ff-slot-intro span{
+    display:block;
+}
+
+.ff-slot-intro strong{
+    margin-bottom:3px;
+    color:var(--ff-dark);
+    font-size:12px;
+    font-weight:900;
+}
+
+.ff-slot-intro span{
+    color:var(--ff-text);
+    font-size:9px;
+    line-height:1.55;
+}
+
+.ff-slot-list{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:10px;
+}
+
+.ff-slot-card{
+    position:relative;
+    display:flex;
+    min-height:92px;
+    padding:13px 14px;
+    border:1px solid #e3e7eb;
+    border-radius:15px;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    background:#fff;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.ff-slot-card:hover{
+    border-color:rgba(195,17,3,.35);
+    box-shadow:0 8px 20px rgba(28,39,50,.06);
+    transform:translateY(-1px);
+}
+
+.ff-slot-card.selected{
+    border-color:var(--ff-red);
+    box-shadow:0 0 0 2px rgba(195,17,3,.08);
+    background:#fff9f8;
+}
+
+.ff-slot-card.unavailable{
+    opacity:.52;
+    cursor:not-allowed;
+    background:#f7f8f9;
+}
+
+.ff-slot-card.unavailable:hover{
+    border-color:#e3e7eb;
+    box-shadow:none;
+    transform:none;
+}
+
+.ff-slot-radio{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+}
+
+.ff-slot-copy strong,
+.ff-slot-copy span,
+.ff-slot-copy small{
+    display:block;
+}
+
+.ff-slot-copy strong{
+    color:var(--ff-dark);
+    font-size:13px;
+    font-weight:900;
+}
+
+.ff-slot-copy span{
+    margin-top:3px;
+    color:var(--ff-text);
+    font-size:9px;
+    line-height:1.4;
+}
+
+.ff-slot-copy small{
+    margin-top:7px;
+    color:#7a8490;
+    font-size:8px;
+    line-height:1.45;
+}
+
+.ff-slot-badge{
+    flex:0 0 auto;
+    padding:5px 8px;
+    border-radius:20px;
+    color:var(--ff-green);
+    background:#eef9f2;
+    font-size:8px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.ff-slot-card.unavailable .ff-slot-badge{
+    color:#777f88;
+    background:#eceff1;
+}
+
+.ff-slot-message{
+    display:none;
+    margin-top:11px;
+    padding:11px 13px;
+    border-radius:12px;
+    font-size:9px;
+    font-weight:700;
+    line-height:1.5;
+}
+
+.ff-slot-message.show{
+    display:block;
+}
+
+.ff-slot-message.info{
+    color:#4d5d6c;
+    background:#f2f5f7;
+}
+
+.ff-slot-message.error{
+    color:#9c160a;
+    background:#fff1ef;
+}
+
+.ff-slot-message.success{
+    color:#166b35;
+    background:#eef9f2;
+}
+
+.ff-slot-loading{
+    grid-column:1 / -1;
+    padding:18px;
+    border:1px dashed #dfe3e7;
+    border-radius:14px;
+    color:#7d8792;
+    background:#fafbfc;
+    font-size:9px;
+    font-weight:700;
+    text-align:center;
+}
+
+.ff-slot-allocation-preview{
+    display:flex;
+    flex-wrap:wrap;
+    margin-top:8px;
+    gap:5px;
+}
+
+.ff-slot-allocation-chip{
+    padding:4px 7px;
+    border-radius:18px;
+    color:var(--ff-red);
+    background:var(--ff-red-soft);
+    font-size:8px;
+    font-weight:800;
+}
+
+.ff-continue-slot-wrap{
+    display:flex;
+    margin-top:16px;
+    justify-content:flex-end;
+}
+
+.ff-continue-slot{
+    display:inline-flex;
+    min-height:50px;
+    padding:10px 20px;
+    border:0;
+    border-radius:26px;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    color:#fff;
+    background:var(--ff-red);
+    box-shadow:0 9px 22px rgba(195,17,3,.18);
+    font-size:10px;
+    font-weight:900;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.ff-continue-slot:hover{
+    color:#fff;
+    background:var(--ff-red-dark);
+    transform:translateY(-1px);
+}
+
+@media(max-width:575px){
+    .ff-slot-list{
+        grid-template-columns:1fr;
+    }
+
+    .ff-continue-slot{
+        width:100%;
+    }
+}
+
 </style>
 {% endblock %}
 
@@ -5283,24 +5520,126 @@ body.ff-message-open {
         </div>
 
     
-        <div class="ff-add-current-ride-wrap">
+        <div class="ff-continue-slot-wrap">
             <button
                 type="button"
-                class="ff-add-current-ride"
-                id="addCurrentRide"
+                class="ff-continue-slot"
+                id="continueToSlot"
             >
-                <i class="fas fa-plus"></i>
-                Add This Ride
+                <i class="fas fa-clock"></i>
+                Choose Start Time
             </button>
         </div>
 
         <p class="ff-current-builder-note">
-            Add this ride to your booking before choosing another adventure.
+            After assigning all participant weight ranges, choose the starting time for this ride.
         </p>
 
 </div>
 
 </section>
+
+
+                    <!-- =================================================
+                         RIDE START TIME
+                    ================================================== -->
+                    <section
+                        class="ff-panel locked"
+                        id="slotPanel"
+                    >
+
+                        <button
+                            type="button"
+                            class="ff-panel-head"
+                            id="slotPanelButton"
+                            disabled
+                        >
+                            <span class="ff-panel-heading">
+                                <span class="ff-panel-icon">
+                                    <i class="fas fa-clock"></i>
+                                </span>
+
+                                <span>
+                                    <h3>Choose Start Time</h3>
+                                    <p>Select when this ride should begin. Live capacity is checked for your full group.</p>
+                                </span>
+                            </span>
+
+                            <span class="ff-panel-toggle">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                        </button>
+
+                        <div
+                            class="ff-selected-bar"
+                            id="slotSelected"
+                        >
+                            <span class="ff-selected-icon">
+                                <i class="fas fa-clock"></i>
+                            </span>
+
+                            <div>
+                                <small>Selected Start Time</small>
+                                <strong id="slotSelectedTime">—</strong>
+                                <span id="slotSelectedAllocation">Live capacity confirmed</span>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="ff-change-btn"
+                                data-open="slotPanel"
+                            >
+                                Change
+                            </button>
+                        </div>
+
+                        <div class="ff-panel-body">
+
+                            <div class="ff-slot-intro">
+                                <span class="ff-slot-intro-icon">
+                                    <i class="fas fa-circle-info"></i>
+                                </span>
+
+                                <div>
+                                    <strong>Live Ride Capacity</strong>
+                                    <span>
+                                        Choose a starting time. If the first hour has fewer seats than your group needs, the system can continue the remaining riders into the next consecutive hour when capacity is available.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div
+                                class="ff-slot-list"
+                                id="slotList"
+                            >
+                                <div class="ff-slot-loading">
+                                    Complete the participant details, then choose a start time.
+                                </div>
+                            </div>
+
+                            <div
+                                class="ff-slot-message"
+                                id="slotMessage"
+                            ></div>
+
+                            <div class="ff-add-current-ride-wrap">
+                                <button
+                                    type="button"
+                                    class="ff-add-current-ride"
+                                    id="addCurrentRide"
+                                >
+                                    <i class="fas fa-plus"></i>
+                                    Add This Ride
+                                </button>
+                            </div>
+
+                            <p class="ff-current-builder-note">
+                                Availability is checked again by Django before the booking is finalized.
+                            </p>
+
+                        </div>
+
+                    </section>
 
 
 
@@ -5653,11 +5992,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const ridePanel = document.getElementById("ridePanel");
     const offerPanel = document.getElementById("offerPanel");
     const participantPanel = document.getElementById("participantPanel");
+    const slotPanel = document.getElementById("slotPanel");
 
     const datePanelButton = document.getElementById("datePanelButton");
     const ridePanelButton = document.getElementById("ridePanelButton");
     const offerPanelButton = document.getElementById("offerPanelButton");
     const participantPanelButton = document.getElementById("participantPanelButton");
+    const slotPanelButton = document.getElementById("slotPanelButton");
 
     const bookingDate = document.getElementById("bookingDate");
     const dateContinue = document.getElementById("dateContinue");
@@ -5690,6 +6031,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const addWeightRange = document.getElementById("addWeightRange");
     const weightAllocationMessage = document.getElementById("weightAllocationMessage");
     const offerStatus = document.getElementById("offerStatus");
+
+    const continueToSlot = document.getElementById("continueToSlot");
+    const slotList = document.getElementById("slotList");
+    const slotMessage = document.getElementById("slotMessage");
+    const slotSelected = document.getElementById("slotSelected");
+    const slotSelectedTime = document.getElementById("slotSelectedTime");
+    const slotSelectedAllocation = document.getElementById("slotSelectedAllocation");
 
     const addCurrentRide = document.getElementById("addCurrentRide");
     const selectedAdventures = document.getElementById("selectedAdventures");
@@ -5742,6 +6090,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentRideOffers = [];
     let couponValidated = false;
     let drawerOfferRadio = null;
+
+    let selectedStartTime = "";
+    let selectedSlotData = null;
+    let currentSlotResponse = null;
+    let slotRequestController = null;
+
+    const slotAvailabilityUrl = "{% url 'booking_slot_availability' %}";
 
     const maximumParticipants = 10;
 
@@ -6284,6 +6639,13 @@ document.addEventListener("DOMContentLoaded", function () {
             participantPanelButton
         );
 
+        resetSlotSelection();
+
+        lockPanel(
+            slotPanel,
+            slotPanelButton
+        );
+
         updateCurrentRidePreview();
 
         offerPanel.scrollIntoView({
@@ -6676,6 +7038,12 @@ document.addEventListener("DOMContentLoaded", function () {
         couponMessage.textContent = "";
         couponCode.classList.remove(
             "is-invalid"
+        );
+
+        resetSlotSelection();
+        lockPanel(
+            slotPanel,
+            slotPanelButton
         );
 
         if (requiresCoupon) {
@@ -7762,6 +8130,391 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     /* =========================================================
+       START TIME / LIVE SLOT AVAILABILITY
+    ========================================================= */
+
+    function setSlotMessage(
+        message = "",
+        type = "info"
+    ) {
+        if (!slotMessage) {
+            return;
+        }
+
+        slotMessage.textContent = message;
+        slotMessage.className = "ff-slot-message";
+
+        if (message) {
+            slotMessage.classList.add(
+                "show",
+                type
+            );
+        }
+    }
+
+    function resetSlotSelection() {
+        selectedStartTime = "";
+        selectedSlotData = null;
+        currentSlotResponse = null;
+
+        if (slotRequestController) {
+            slotRequestController.abort();
+            slotRequestController = null;
+        }
+
+        slotSelected?.classList.remove(
+            "show"
+        );
+
+        if (slotSelectedTime) {
+            slotSelectedTime.textContent = "—";
+        }
+
+        if (slotSelectedAllocation) {
+            slotSelectedAllocation.textContent =
+                "Live capacity confirmed";
+        }
+
+        if (slotList) {
+            slotList.innerHTML = `
+                <div class="ff-slot-loading">
+                    Complete the participant details, then choose a start time.
+                </div>
+            `;
+        }
+
+        setSlotMessage();
+    }
+
+    function formatAllocationText(allocations) {
+        if (!Array.isArray(allocations) || !allocations.length) {
+            return "";
+        }
+
+        return allocations
+            .map(
+                function (allocation) {
+                    return `${allocation.start_time} • ${allocation.participant_count} rider${allocation.participant_count === 1 ? "" : "s"}`;
+                }
+            )
+            .join(" + ");
+    }
+
+    function renderSlotAvailability(data) {
+        currentSlotResponse = data;
+        selectedStartTime = "";
+        selectedSlotData = null;
+        slotSelected?.classList.remove("show");
+
+        if (!slotList) {
+            return;
+        }
+
+        slotList.innerHTML = "";
+
+        const slots = Array.isArray(data?.slots)
+            ? data.slots
+            : [];
+
+        if (!slots.length) {
+            slotList.innerHTML = `
+                <div class="ff-slot-loading">
+                    No ride times are available for this date.
+                </div>
+            `;
+
+            setSlotMessage(
+                "No start times are available for this ride. Please choose another ride or visit date.",
+                "error"
+            );
+
+            return;
+        }
+
+        slots.forEach(
+            function (slot) {
+                const available = Boolean(slot.available);
+                const card = document.createElement("label");
+
+                card.className = `ff-slot-card${available ? "" : " unavailable"}`;
+
+                const allocations = Array.isArray(slot.allocations)
+                    ? slot.allocations
+                    : [];
+
+                const allocationHtml = available && allocations.length
+                    ? `
+                        <div class="ff-slot-allocation-preview">
+                            ${allocations.map(
+                                function (allocation) {
+                                    return `
+                                        <span class="ff-slot-allocation-chip">
+                                            ${escapeHtml(allocation.start_time)} • ${allocation.participant_count} rider${allocation.participant_count === 1 ? "" : "s"}
+                                        </span>
+                                    `;
+                                }
+                            ).join("")}
+                        </div>
+                    `
+                    : "";
+
+                card.innerHTML = `
+                    <input
+                        type="radio"
+                        class="ff-slot-radio"
+                        name="ride_start_time_ui"
+                        value="${escapeHtml(slot.start_time)}"
+                        ${available ? "" : "disabled"}
+                    >
+
+                    <span class="ff-slot-copy">
+                        <strong>
+                            ${escapeHtml(slot.start_label)}
+                        </strong>
+
+                        <span>
+                            to ${escapeHtml(slot.end_label)}
+                        </span>
+
+                        <small>
+                            ${available
+                                ? `${slot.remaining} seat${slot.remaining === 1 ? "" : "s"} remaining in this hour`
+                                : "Your full group cannot start here"}
+                        </small>
+
+                        ${allocationHtml}
+                    </span>
+
+                    <span class="ff-slot-badge">
+                        ${available ? "Available" : "Full"}
+                    </span>
+                `;
+
+                const radio = card.querySelector(".ff-slot-radio");
+
+                if (available && radio) {
+                    radio.addEventListener(
+                        "change",
+                        function () {
+                            document.querySelectorAll(
+                                ".ff-slot-card"
+                            ).forEach(
+                                function (slotCard) {
+                                    slotCard.classList.remove(
+                                        "selected"
+                                    );
+                                }
+                            );
+
+                            card.classList.add(
+                                "selected"
+                            );
+
+                            selectedStartTime =
+                                slot.start_time;
+
+                            selectedSlotData =
+                                slot;
+
+                            slotSelectedTime.textContent =
+                                `${slot.start_label} - ${slot.end_label}`;
+
+                            const allocationText =
+                                formatAllocationText(
+                                    slot.allocations
+                                );
+
+                            slotSelectedAllocation.textContent =
+                                allocationText
+                                ||
+                                `${data.quantity} rider${data.quantity === 1 ? "" : "s"}`;
+
+                            slotSelected.classList.add(
+                                "show"
+                            );
+
+                            setSlotMessage(
+                                "Start time selected. You can now add this ride to your booking.",
+                                "success"
+                            );
+                        }
+                    );
+                }
+
+                slotList.appendChild(card);
+            }
+        );
+
+        if (!data.has_available_slot) {
+            setSlotMessage(
+                "There is not enough consecutive capacity for your group on this date.",
+                "error"
+            );
+        }
+        else {
+            setSlotMessage(
+                "Choose one available start time below.",
+                "info"
+            );
+        }
+    }
+
+    async function loadSlotAvailability(
+        openAfterLoad = true
+    ) {
+        if (!bookingState.bookingDate || !rideId) {
+            showError(
+                "Please select the visit date and ride first."
+            );
+            return false;
+        }
+
+        if (!validateWeightAllocation(true)) {
+            return false;
+        }
+
+        const quantity = getQuantity();
+
+        if (quantity <= 0) {
+            showError(
+                "Please add at least one participant."
+            );
+            return false;
+        }
+
+        const rideTotal = ridePrice * quantity;
+        const offerResult = calculateOffer(
+            quantity,
+            rideTotal
+        );
+
+        if (
+            selectedOffer
+            &&
+            !offerResult.eligible
+        ) {
+            showError(
+                offerResult.note
+            );
+            return false;
+        }
+
+        if (slotRequestController) {
+            slotRequestController.abort();
+        }
+
+        slotRequestController =
+            new AbortController();
+
+        resetSlotSelection();
+
+        /* resetSlotSelection aborts the previous controller,
+           so create the controller used by this request now. */
+        slotRequestController =
+            new AbortController();
+
+        unlockPanel(
+            slotPanel,
+            slotPanelButton
+        );
+
+        if (openAfterLoad) {
+            closePanel(
+                participantPanel
+            );
+
+            openPanel(
+                slotPanel
+            );
+        }
+
+        slotList.innerHTML = `
+            <div class="ff-slot-loading">
+                Checking live ride capacity...
+            </div>
+        `;
+
+        setSlotMessage(
+            "Checking the available start times for your group...",
+            "info"
+        );
+
+        const params = new URLSearchParams({
+            date:
+                bookingState.bookingDate,
+            ride_id:
+                String(rideId),
+            quantity:
+                String(quantity)
+        });
+
+        try {
+            const response = await fetch(
+                `${slotAvailabilityUrl}?${params.toString()}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With":
+                            "XMLHttpRequest"
+                    },
+                    signal:
+                        slotRequestController.signal
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(
+                    data.message
+                    ||
+                    "Unable to load ride availability."
+                );
+            }
+
+            renderSlotAvailability(data);
+
+            if (openAfterLoad) {
+                slotPanel.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+
+            return true;
+        }
+        catch (error) {
+            if (error.name === "AbortError") {
+                return false;
+            }
+
+            slotList.innerHTML = `
+                <div class="ff-slot-loading">
+                    Ride availability could not be loaded.
+                </div>
+            `;
+
+            setSlotMessage(
+                error.message
+                ||
+                "Unable to load ride availability. Please try again.",
+                "error"
+            );
+
+            return false;
+        }
+    }
+
+    continueToSlot?.addEventListener(
+        "click",
+        async function () {
+            await loadSlotAvailability(
+                true
+            );
+        }
+    );
+
+    /* =========================================================
        CURRENT OFFER CALCULATION
        Frontend estimate only.
        Django must recalculate before payment.
@@ -8074,6 +8827,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const quantity =
             getQuantity();
 
+        if (
+            selectedStartTime
+            &&
+            currentSlotResponse
+            &&
+            Number(currentSlotResponse.quantity || 0)
+            !==
+            quantity
+        ) {
+            resetSlotSelection();
+
+            lockPanel(
+                slotPanel,
+                slotPanelButton
+            );
+        }
+
         participantTotal.textContent =
             quantity;
 
@@ -8156,6 +8926,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const groups =
             getWeightGroups();
 
+        if (!selectedStartTime || !selectedSlotData) {
+            showError(
+                "Please choose a start time for this ride."
+            );
+
+            return null;
+        }
+
         const rideTotal =
             ridePrice
             *
@@ -8221,6 +8999,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
             quantity:
                 quantity,
+
+            selectedStart:
+                selectedStartTime,
+
+            selectedStartLabel:
+                selectedSlotData.start_label
+                ||
+                selectedStartTime,
+
+            selectedEndLabel:
+                selectedSlotData.end_label
+                ||
+                "",
+
+            slotAllocations:
+                Array.isArray(
+                    selectedSlotData.allocations
+                )
+                    ? selectedSlotData.allocations.map(
+                        function (allocation) {
+                            return {
+                                start_time:
+                                    allocation.start_time,
+                                end_time:
+                                    allocation.end_time,
+                                participant_count:
+                                    allocation.participant_count
+                            };
+                        }
+                    )
+                    : [],
 
             weightGroups:
                 groups.map(
@@ -8425,6 +9234,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                 ${escapeHtml(item.offerName)}
                             </span>
 
+                            <span>
+                                <i class="fas fa-clock"></i>
+                                Start ${escapeHtml(item.selectedStartLabel || item.selectedStart)}
+                                ${item.selectedEndLabel ? ` - ${escapeHtml(item.selectedEndLabel)}` : ""}
+                            </span>
+
                             <div class="ff-added-weight-list">
                                 ${weights}
                             </div>
@@ -8546,6 +9361,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 participantPanelButton
             );
 
+            lockPanel(
+                slotPanel,
+                slotPanelButton
+            );
+
             ridePanel.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
@@ -8598,6 +9418,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "show"
         );
 
+        resetSlotSelection();
+
         dynamicOffers.innerHTML = "";
 
         couponWrap.classList.remove(
@@ -8639,6 +9461,11 @@ document.addEventListener("DOMContentLoaded", function () {
         lockPanel(
             participantPanel,
             participantPanelButton
+        );
+
+        lockPanel(
+            slotPanel,
+            slotPanelButton
         );
 
         if (keepRidePanelOpen) {
@@ -8707,6 +9534,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             ${item.quantity} rider${item.quantity === 1 ? "" : "s"}
                             •
                             ${escapeHtml(item.offerName)}
+                            <br>
+                            Start ${escapeHtml(item.selectedStartLabel || item.selectedStart)}
                         </small>
                     </span>
 
@@ -8815,6 +9644,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 couponCode:
                                     item.couponCode,
 
+                                selectedStart:
+                                    item.selectedStart,
+
                                 weightGroups:
                                     item.weightGroups.map(
                                         function (group) {
@@ -8889,6 +9721,11 @@ document.addEventListener("DOMContentLoaded", function () {
     lockPanel(
         participantPanel,
         participantPanelButton
+    );
+
+    lockPanel(
+        slotPanel,
+        slotPanelButton
     );
 
     updateBookingSummary();

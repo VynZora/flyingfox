@@ -1,14 +1,22 @@
+
+import requests
+from django.conf import settings
+
+# =========================================================
+# GENERATE OTP
+# =========================================================
+
 import secrets
 from datetime import timedelta
 
 from django.utils import timezone
-import requests
-from django.conf import settings
 
+from .models import (
+    OTPVerification,
+    Booking,
+)
 
-from .models import Booking, OTPVerification
 from .services.telinfy import send_otp_sms
-
 
 
 # =========================================================
@@ -18,11 +26,8 @@ from .services.telinfy import send_otp_sms
 def generate_otp():
 
     return str(
-        secrets.randbelow(
-            900000
-        )
-        +
-        100000
+        secrets.randbelow(900000)
+        + 100000
     )
 
 
@@ -30,79 +35,22 @@ def generate_otp():
 # SEND OTP
 # =========================================================
 
-# def send_otp(
-#     phone_number,):
-
-#     phone_number = str(
-#         phone_number
-#     ).strip()
-
-#     # Generate 6-digit OTP
-#     otp = generate_otp()
-
-#     # Expire previous OTPs
-#     OTPVerification.objects.filter(
-#         phone_number=phone_number,
-#         is_verified=False,
-#     ).update(
-#         expires_at=timezone.now()
-#     )
-
-#     # Create new OTP
-#     otp_verification = (
-#         OTPVerification.objects.create(
-#             phone_number=phone_number,
-#             otp=otp,
-#             expires_at=(
-#                 timezone.now()
-#                 +
-#                 timedelta(
-#                     minutes=5
-#                 )
-#             ),
-#         )
-#     )
-
-#     # =====================================================
-#     # TELINFY SMS
-#     # =====================================================
-
-#     try:
-
-#         response = send_otp_sms(
-#             phone_number,
-#             otp,
-#         )
-
-#     except Exception:
-
-#         # SMS failed.
-#         # Remove OTP so it cannot be verified
-#         # despite never reaching the customer.
-
-#         otp_verification.delete()
-
-#         raise
-
-#     return (
-#         otp_verification,
-#         response,
-#     )
-
-
-
 def send_otp(phone_number):
 
-    phone_number = str(phone_number).strip()
+    phone_number = str(
+        phone_number
+    ).strip()
 
     # =====================================================
-    # TEMPORARY FIXED OTP
-    # Remove this once Telinfy SMS is ready.
+    # GENERATE RANDOM 6-DIGIT OTP
     # =====================================================
 
-    otp = "123456"
+    otp = generate_otp()
 
-    # Expire previous unused OTPs
+    # =====================================================
+    # EXPIRE ALL PREVIOUS UNUSED OTPs
+    # =====================================================
+
     OTPVerification.objects.filter(
         phone_number=phone_number,
         is_verified=False,
@@ -110,27 +58,45 @@ def send_otp(phone_number):
         expires_at=timezone.now()
     )
 
-    # Save the temporary OTP
-    otp_verification = OTPVerification.objects.create(
-        phone_number=phone_number,
-        otp=otp,
-        expires_at=(
-            timezone.now()
-            + timedelta(minutes=5)
-        ),
+    # =====================================================
+    # CREATE NEW OTP RECORD
+    # =====================================================
+
+    otp_verification = (
+        OTPVerification.objects.create(
+            phone_number=phone_number,
+            otp=otp,
+            expires_at=(
+                timezone.now()
+                + timedelta(minutes=5)
+            ),
+        )
     )
 
     # =====================================================
-    # TEMPORARILY DO NOT SEND SMS
+    # SEND OTP THROUGH TELINFY
     # =====================================================
 
-    response = {
-        "success": True,
-        "message": "Temporary OTP mode",
-    }
+    try:
 
-    return otp_verification, response
+        response = send_otp_sms(
+            phone_number,
+            otp,
+        )
 
+    except Exception:
+
+        # SMS submission failed.
+        # Delete OTP because customer did not receive it.
+
+        otp_verification.delete()
+
+        raise
+
+    return (
+        otp_verification,
+        response,
+    )
 
 
 # =========================================================
@@ -142,9 +108,17 @@ def verify_otp(
     entered_otp,
 ):
 
+    phone_number = str(
+        phone_number
+    ).strip()
+
     entered_otp = str(
         entered_otp
     ).strip()
+
+    # =====================================================
+    # GET LATEST ACTIVE OTP
+    # =====================================================
 
     otp_record = (
         OTPVerification.objects
@@ -152,31 +126,36 @@ def verify_otp(
             phone_number=phone_number,
             is_verified=False,
         )
-        .order_by(
-            "-created_at"
-        )
+        .order_by("-created_at")
         .first()
     )
 
-    # No OTP
+    # =====================================================
+    # OTP DOES NOT EXIST
+    # =====================================================
+
     if not otp_record:
 
         return (
             False,
-            "No OTP found. "
-            "Please request a new OTP.",
+            "No OTP found. Please request a new OTP.",
         )
 
-    # Expired
+    # =====================================================
+    # OTP EXPIRED
+    # =====================================================
+
     if timezone.now() >= otp_record.expires_at:
 
         return (
             False,
-            "OTP has expired. "
-            "Please request a new OTP.",
+            "OTP has expired. Please request a new OTP.",
         )
 
-    # Too many attempts
+    # =====================================================
+    # TOO MANY ATTEMPTS
+    # =====================================================
+
     if otp_record.attempts >= 5:
 
         return (
@@ -185,7 +164,10 @@ def verify_otp(
             "Please request a new OTP.",
         )
 
-    # Wrong OTP
+    # =====================================================
+    # INCORRECT OTP
+    # =====================================================
+
     if otp_record.otp != entered_otp:
 
         otp_record.attempts += 1
@@ -201,12 +183,12 @@ def verify_otp(
             "Invalid OTP.",
         )
 
-    # Correct
-    otp_record.is_verified = True
+    # =====================================================
+    # CORRECT OTP
+    # =====================================================
 
-    otp_record.verified_at = (
-        timezone.now()
-    )
+    otp_record.is_verified = True
+    otp_record.verified_at = timezone.now()
 
     otp_record.save(
         update_fields=[
@@ -219,8 +201,6 @@ def verify_otp(
         True,
         "OTP verified successfully.",
     )
-
-
 
 
 
@@ -238,7 +218,7 @@ def send_ticket_whatsapp(request, ticket):
         {{2}} Ticket number
         {{3}} Booking ID
         {{4}} Visit date
-        {{5}} Ride summary
+        {{5}} Ride summary + confirmed ride schedule
         {{6}} Total riders
         {{7}} Total amount
     """
@@ -252,6 +232,7 @@ def send_ticket_whatsapp(request, ticket):
         .prefetch_related(
             "ride_items__ride",
             "ride_items__weight_groups",
+            "ride_items__allocated_slots",
         )
         .get(
             pk=ticket.booking.pk
@@ -455,7 +436,25 @@ def send_ticket_whatsapp(request, ticket):
         return False
 
     # =====================================================
-    # RIDE SUMMARY
+    # FORMAT SLOT TIME
+    # =====================================================
+
+    def format_slot_time(value):
+
+        if not value:
+            return ""
+
+        return (
+            value.strftime(
+                "%I:%M %p"
+            )
+            .lstrip("0")
+        )
+
+    # =====================================================
+    # RIDE SUMMARY + CONFIRMED TIME SCHEDULE
+    #
+    # This complete value goes into WhatsApp {{5}}.
     # =====================================================
 
     ride_lines = []
@@ -465,7 +464,7 @@ def send_ticket_whatsapp(request, ticket):
         if not item.ride:
             continue
 
-        quantity = (
+        quantity = int(
             item.quantity
             or
             0
@@ -477,15 +476,93 @@ def send_ticket_whatsapp(request, ticket):
             else "participants"
         )
 
+        # -------------------------------------------------
+        # RIDE NAME + TOTAL PARTICIPANTS
+        # -------------------------------------------------
+
         ride_lines.append(
             f"{item.ride.name} - "
             f"{quantity} {participant_word}"
         )
 
+        # -------------------------------------------------
+        # CONFIRMED SLOT ALLOCATIONS ONLY
+        # -------------------------------------------------
+
+        confirmed_slots = [
+
+            slot
+
+            for slot
+            in item.allocated_slots.all()
+
+            if slot.status == "confirmed"
+        ]
+
+        confirmed_slots.sort(
+            key=lambda slot:
+                slot.slot_start_time
+        )
+
+        # -------------------------------------------------
+        # ADD SLOT SCHEDULE
+        # -------------------------------------------------
+
+        if confirmed_slots:
+
+            for slot in confirmed_slots:
+
+                start_time = (
+                    format_slot_time(
+                        slot.slot_start_time
+                    )
+                )
+
+                end_time = (
+                    format_slot_time(
+                        slot.slot_end_time
+                    )
+                )
+
+                slot_riders = int(
+                    slot.participant_count
+                    or
+                    0
+                )
+
+                rider_word = (
+                    "rider"
+                    if slot_riders == 1
+                    else "riders"
+                )
+
+                ride_lines.append(
+                    f"{start_time} - "
+                    f"{end_time}: "
+                    f"{slot_riders} {rider_word}"
+                )
+
+        else:
+
+            # This should normally not happen for a
+            # successfully confirmed booking, but we avoid
+            # displaying false schedule information.
+            ride_lines.append(
+                "Schedule unavailable"
+            )
+
+        # Blank line between rides.
+        ride_lines.append("")
+
+    # =====================================================
+    # FINAL {{5}} VALUE
+    # =====================================================
+
     ride_summary = (
-        ", ".join(
+        "\n".join(
             ride_lines
         )
+        .strip()
     )
 
     if not ride_summary:
@@ -530,13 +607,16 @@ def send_ticket_whatsapp(request, ticket):
     # =====================================================
 
     total_riders_value = sum(
+
         int(
             item.quantity
             or
             0
         )
+
         for item
         in booking.ride_items.all()
+
         if item.ride
     )
 
@@ -574,45 +654,63 @@ def send_ticket_whatsapp(request, ticket):
 
     # =====================================================
     # BODY PARAMETERS
+    #
+    # IMPORTANT:
+    # Keep exactly 7 parameters because the approved
+    # WhatsApp template has {{1}} through {{7}}.
     # =====================================================
 
     body_parameters = [
+
+        # {{1}} Customer name
         {
             "type": "text",
             "text": str(
                 customer_name
             ),
         },
+
+        # {{2}} Ticket number
         {
             "type": "text",
             "text": str(
                 ticket_number
             ),
         },
+
+        # {{3}} Booking ID
         {
             "type": "text",
             "text": str(
                 booking_id_value
             ),
         },
+
+        # {{4}} Visit date
         {
             "type": "text",
             "text": str(
                 visit_date
             ),
         },
+
+        # {{5}} Ride details + confirmed schedule
         {
             "type": "text",
             "text": str(
                 ride_summary
             ),
         },
+
+        # {{6}} Total riders
         {
             "type": "text",
             "text": str(
                 total_riders
             ),
         },
+
+        # {{7}} Total amount
         {
             "type": "text",
             "text": str(
@@ -649,7 +747,8 @@ def send_ticket_whatsapp(request, ticket):
                             "type": "image",
 
                             "image": {
-                                "link": ticket_image_url,
+                                "link":
+                                    ticket_image_url,
                             },
                         }
                     ],
@@ -735,6 +834,22 @@ def send_ticket_whatsapp(request, ticket):
             f"  {{{{{index}}}}}:",
             parameter["text"],
         )
+
+    # =====================================================
+    # EXTRA SCHEDULE DEBUG
+    # =====================================================
+
+    print(
+        "----------------------------------------"
+    )
+
+    print(
+        "WHATSAPP RIDE SCHEDULE {{5}}:"
+    )
+
+    print(
+        ride_summary
+    )
 
     print(
         "========================================"

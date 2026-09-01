@@ -1031,6 +1031,273 @@
 
         }
 
+
+
+
+
+        /* =====================================================
+   RIDE SCHEDULE
+===================================================== */
+
+.ff-ride-schedule {
+    margin-top: 16px;
+
+    padding:
+        15px;
+
+    border:
+        1px
+        solid
+        #e7eaed;
+
+    border-radius: 14px;
+
+    background:
+        #f8f9fb;
+}
+
+
+/* =====================================================
+   SCHEDULE HEADING
+===================================================== */
+
+.ff-ride-schedule-heading {
+    display: flex;
+
+    margin-bottom: 11px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+.ff-ride-schedule-heading > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--ff-dark);
+
+    font-size: 11px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+
+.ff-ride-schedule-heading i {
+    color: var(--ff-red);
+}
+
+
+.ff-schedule-total {
+    padding:
+        5px
+        8px;
+
+    border-radius: 20px;
+
+    color: #14753a;
+    background: #eaf8ef;
+
+    font-size: 9px;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   SLOT LIST
+===================================================== */
+
+.ff-slot-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+/* =====================================================
+   SLOT ROW
+===================================================== */
+
+.ff-slot-row {
+    display: flex;
+
+    min-height: 43px;
+
+    padding:
+        9px
+        11px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    border:
+        1px
+        solid
+        #edf0f2;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+}
+
+
+/* =====================================================
+   SLOT TIME
+===================================================== */
+
+.ff-slot-time {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.ff-slot-time i {
+    color: var(--ff-red);
+
+    font-size: 10px;
+}
+
+
+.ff-slot-time strong {
+    color: var(--ff-dark);
+
+    font-size: 11px;
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   SLOT PARTICIPANTS
+===================================================== */
+
+.ff-slot-participants {
+    display: inline-flex;
+
+    padding:
+        5px
+        8px;
+
+    align-items: center;
+
+    gap: 5px;
+
+    border-radius: 20px;
+
+    color: #14753a;
+
+    background: #eaf8ef;
+
+    font-size: 9px;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   SCHEDULE NOTE
+===================================================== */
+
+.ff-schedule-note {
+    display: flex;
+
+    margin-top: 10px;
+
+    padding:
+        9px
+        10px;
+
+    align-items: flex-start;
+
+    gap: 7px;
+
+    border-radius: 9px;
+
+    color: #6a5b22;
+
+    background: #fff8df;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    line-height: 1.5;
+}
+
+
+.ff-schedule-note i {
+    margin-top: 2px;
+
+    color: #c99114;
+}
+
+
+/* =====================================================
+   MISSING SCHEDULE
+===================================================== */
+
+.ff-schedule-missing {
+    display: flex;
+
+    padding:
+        11px;
+
+    align-items: center;
+
+    gap: 8px;
+
+    border-radius: 10px;
+
+    color: #9f2017;
+
+    background: #fff0ee;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .ff-slot-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+
+    .ff-slot-time strong {
+        font-size: 10px;
+    }
+
+
+    .ff-ride-schedule-heading {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+}
+
     </style>
 
 </head>
@@ -1681,6 +1948,105 @@
 
 
                     </div>
+
+
+
+
+<!-- =====================================
+     CONFIRMED RIDE SCHEDULE
+====================================== -->
+
+<div class="ff-ride-schedule">
+
+    <div class="ff-ride-schedule-heading">
+
+        <div>
+
+            <i class="far fa-clock"></i>
+
+            <span>
+                Scheduled Ride Time
+            </span>
+
+        </div>
+
+
+        <span class="ff-schedule-total">
+
+            {{ item.quantity }}
+
+            rider{{ item.quantity|pluralize }}
+
+        </span>
+
+    </div>
+
+
+    {% if item.confirmed_slots %}
+
+        <div class="ff-slot-list">
+
+            {% for slot in item.confirmed_slots %}
+
+                <div class="ff-slot-row">
+
+                    <div class="ff-slot-time">
+
+                        <i class="fas fa-clock"></i>
+
+                        <strong>
+
+                            {{ slot.slot_start_time|time:"h:i A" }}
+
+                            -
+
+                            {{ slot.slot_end_time|time:"h:i A" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ff-slot-participants">
+
+                        <i class="fas fa-user"></i>
+
+                        {{ slot.participant_count }}
+
+                        rider{{ slot.participant_count|pluralize }}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="ff-schedule-note">
+
+            <i class="fas fa-circle-info"></i>
+
+            Check this scheduled time before
+            checking in the adventure.
+
+        </div>
+
+    {% else %}
+
+        <div class="ff-schedule-missing">
+
+            <i class="fas fa-triangle-exclamation"></i>
+
+            No confirmed ride schedule was found
+            for this adventure.
+
+        </div>
+
+    {% endif %}
+
+</div>
 
 
                     <!-- =====================================

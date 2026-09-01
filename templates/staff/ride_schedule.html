@@ -1,0 +1,1758 @@
+{% extends "staff/staff_base.html" %}
+
+
+{% block title %}
+Ride Schedule | Flying Fox
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     PAGE HEADER
+===================================================== -->
+
+<div class="schedule-header">
+
+    <div>
+
+        <h1>
+            Ride Schedule
+        </h1>
+
+        <p>
+            Live ride capacity and participant allocation.
+        </p>
+
+    </div>
+
+
+    <div class="schedule-header-actions">
+
+        <a
+            href="{% url 'ticket_staff_dashboard' %}"
+            class="schedule-back-btn"
+        >
+
+            <i class="fas fa-arrow-left"></i>
+
+            Dashboard
+
+        </a>
+
+
+        <form
+            method="GET"
+            class="schedule-date-form"
+        >
+
+            <i class="fas fa-calendar-days"></i>
+
+            <input
+                type="date"
+                name="date"
+                value="{{ selected_date|date:'Y-m-d' }}"
+            >
+
+            <button type="submit">
+
+                View Schedule
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     DATE BANNER
+===================================================== -->
+
+<div class="schedule-date-banner">
+
+    <div class="schedule-date-icon">
+
+        <i class="fas fa-calendar-day"></i>
+
+    </div>
+
+
+    <div>
+
+        <small>
+            Showing schedule for
+        </small>
+
+        <strong>
+            {{ selected_date|date:"l, d F Y" }}
+        </strong>
+
+    </div>
+
+
+    {% if selected_date == today %}
+
+        <span class="today-badge">
+            Today
+        </span>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     OVERALL STATS
+===================================================== -->
+
+<div class="schedule-stats">
+
+
+    <div class="schedule-stat-card">
+
+        <div class="schedule-stat-icon blue">
+
+            <i class="fas fa-person-running"></i>
+
+        </div>
+
+        <div>
+
+            <strong>
+                {{ total_rides }}
+            </strong>
+
+            <span>
+                Active Rides
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="schedule-stat-card">
+
+        <div class="schedule-stat-icon green">
+
+            <i class="fas fa-circle-check"></i>
+
+        </div>
+
+        <div>
+
+            <strong>
+                {{ total_confirmed }}
+            </strong>
+
+            <span>
+                Confirmed Riders
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="schedule-stat-card">
+
+        <div class="schedule-stat-icon orange">
+
+            <i class="fas fa-hourglass-half"></i>
+
+        </div>
+
+        <div>
+
+            <strong>
+                {{ total_held }}
+            </strong>
+
+            <span>
+                Payment Holds
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="schedule-stat-card">
+
+        <div class="schedule-stat-icon purple">
+
+            <i class="fas fa-chair"></i>
+
+        </div>
+
+        <div>
+
+            <strong>
+                {{ total_remaining }}
+            </strong>
+
+            <span>
+                Available Capacity
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     LEGEND
+===================================================== -->
+
+<div class="schedule-legend">
+
+    <span>
+
+        <i class="legend-dot available"></i>
+
+        Available
+
+    </span>
+
+
+    <span>
+
+        <i class="legend-dot low"></i>
+
+        Almost Full
+
+    </span>
+
+
+    <span>
+
+        <i class="legend-dot full"></i>
+
+        Full
+
+    </span>
+
+
+    <span>
+
+        <i class="legend-dot held"></i>
+
+        Payment Hold
+
+    </span>
+
+</div>
+
+
+<!-- =====================================================
+     RIDES
+===================================================== -->
+
+<div class="ride-schedule-list">
+
+
+    {% for ride_data in ride_schedule %}
+
+
+        <section class="ride-schedule-card">
+
+
+            <!-- =============================================
+                 RIDE HEADER
+            ============================================== -->
+
+            <div class="ride-schedule-header">
+
+
+                <div>
+
+                    <div class="ride-title-row">
+
+                        <div class="ride-title-icon">
+
+                            <i class="fas fa-person-running"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                {{ ride_data.ride.name }}
+                            </h2>
+
+                            <p>
+
+                                {{ ride_data.ride.slot_duration_minutes }}
+                                minute slots
+
+                                ·
+
+                                {{ ride_data.ride.capacity_per_slot }}
+                                riders per slot
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ride-summary">
+
+                    <div>
+
+                        <small>
+                            Confirmed
+                        </small>
+
+                        <strong>
+                            {{ ride_data.total_confirmed }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <small>
+                            Held
+                        </small>
+
+                        <strong>
+                            {{ ride_data.total_held }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <small>
+                            Available
+                        </small>
+
+                        <strong>
+                            {{ ride_data.total_remaining }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =============================================
+                 SLOT TABLE
+            ============================================== -->
+
+            <div class="schedule-table-scroll">
+
+                <table class="schedule-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Confirmed
+                            </th>
+
+                            <th>
+                                Held
+                            </th>
+
+                            <th>
+                                Occupied
+                            </th>
+
+                            <th>
+                                Capacity
+                            </th>
+
+                            <th>
+                                Available
+                            </th>
+
+                            <th>
+                                Usage
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for slot in ride_data.slots %}
+
+
+                            <tr
+                                class="
+                                    slot-table-row
+                                    {% if slot.is_current %}
+                                        current-slot-row
+                                    {% endif %}
+                                "
+                            >
+
+
+                                <!-- TIME -->
+
+                                <td>
+
+                                    <div class="slot-time-cell">
+
+                                        <i class="far fa-clock"></i>
+
+                                        <strong>
+
+                                            {{ slot.start_label }}
+
+                                            -
+
+                                            {{ slot.end_label }}
+
+                                        </strong>
+
+
+                                        {% if slot.is_current %}
+
+                                            <span class="now-badge">
+                                                Now
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- CONFIRMED -->
+
+                                <td>
+
+                                    <span class="number confirmed-number">
+
+                                        {{ slot.confirmed }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- HELD -->
+
+                                <td>
+
+                                    {% if slot.held > 0 %}
+
+                                        <span class="held-count">
+
+                                            <i class="fas fa-hourglass-half"></i>
+
+                                            {{ slot.held }}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="zero-number">
+                                            0
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- OCCUPIED -->
+
+                                <td>
+
+                                    <strong class="occupied-number">
+
+                                        {{ slot.occupied }}
+
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- CAPACITY -->
+
+                                <td>
+
+                                    {{ slot.capacity }}
+
+                                </td>
+
+
+                                <!-- REMAINING -->
+
+                                <td>
+
+                                    <strong
+                                        class="
+                                            remaining-number
+                                            {% if slot.remaining == 0 %}
+                                                none
+                                            {% endif %}
+                                        "
+                                    >
+
+                                        {{ slot.remaining }}
+
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- USAGE -->
+
+                                <td>
+
+                                    <div class="capacity-progress">
+
+                                        <div class="capacity-progress-top">
+
+                                            <span>
+
+                                                {{ slot.occupied }}
+                                                /
+                                                {{ slot.capacity }}
+
+                                            </span>
+
+                                            <strong>
+
+                                                {{ slot.usage_percent }}%
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="capacity-track">
+
+                                            <div
+                                                class="
+                                                    capacity-bar
+                                                    {{ slot.status_key }}
+                                                "
+                                                style="
+                                                    width:
+                                                    {{ slot.usage_percent }}%;
+                                                "
+                                            >
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    <span
+                                        class="
+                                            slot-status
+                                            {{ slot.status_key }}
+                                        "
+                                    >
+
+                                        {% if slot.status_key == "full" %}
+
+                                            <i class="fas fa-circle-xmark"></i>
+
+                                        {% elif slot.status_key == "low" %}
+
+                                            <i class="fas fa-triangle-exclamation"></i>
+
+                                        {% else %}
+
+                                            <i class="fas fa-circle-check"></i>
+
+                                        {% endif %}
+
+
+                                        {{ slot.status_label }}
+
+                                    </span>
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% empty %}
+
+
+                            <tr>
+
+                                <td
+                                    colspan="8"
+                                    class="schedule-empty"
+                                >
+
+                                    No time slots are configured
+                                    for this ride.
+
+                                </td>
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+    {% empty %}
+
+
+        <div class="schedule-page-empty">
+
+            <i class="fas fa-person-running"></i>
+
+            <h3>
+                No Active Rides
+            </h3>
+
+            <p>
+                There are currently no active rides
+                to display.
+            </p>
+
+        </div>
+
+
+    {% endfor %}
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.schedule-header {
+
+    display: flex;
+
+    margin-bottom: 20px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.schedule-header h1 {
+
+    margin: 0;
+
+    color: var(--ff-dark);
+
+    font-size: 27px;
+    font-weight: 900;
+}
+
+
+.schedule-header p {
+
+    margin:
+        5px
+        0
+        0;
+
+    font-size: 11px;
+}
+
+
+.schedule-header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.schedule-back-btn {
+
+    display: inline-flex;
+
+    min-height: 45px;
+
+    padding:
+        0
+        16px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border:
+        1px
+        solid
+        var(--ff-border);
+
+    border-radius: 9px;
+
+    color: var(--ff-dark);
+    background: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+
+.schedule-back-btn:hover {
+
+    color: var(--ff-red);
+}
+
+
+/* =========================================================
+   DATE FORM
+========================================================= */
+
+.schedule-date-form {
+
+    display: flex;
+
+    min-height: 45px;
+
+    padding:
+        4px
+        4px
+        4px
+        13px;
+
+    align-items: center;
+
+    gap: 8px;
+
+    border:
+        1px
+        solid
+        var(--ff-border);
+
+    border-radius: 9px;
+
+    background: #ffffff;
+}
+
+
+.schedule-date-form > i {
+
+    color: var(--ff-red);
+}
+
+
+.schedule-date-form input {
+
+    border: 0;
+
+    outline: 0;
+
+    color: var(--ff-dark);
+
+    background: transparent;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+.schedule-date-form button {
+
+    min-height: 35px;
+
+    padding:
+        0
+        13px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    color: #ffffff;
+    background: var(--ff-red);
+
+    cursor: pointer;
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   DATE BANNER
+========================================================= */
+
+.schedule-date-banner {
+
+    display: flex;
+
+    margin-bottom: 18px;
+
+    padding:
+        15px
+        17px;
+
+    align-items: center;
+
+    gap: 12px;
+
+    border:
+        1px
+        solid
+        var(--ff-border);
+
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+
+.schedule-date-icon {
+
+    display: flex;
+
+    width: 42px;
+    height: 42px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    color: var(--ff-red);
+
+    background: #fff0ee;
+}
+
+
+.schedule-date-banner small,
+.schedule-date-banner strong {
+
+    display: block;
+}
+
+
+.schedule-date-banner small {
+
+    margin-bottom: 3px;
+
+    color: #8a939e;
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+
+    font-weight: 800;
+}
+
+
+.schedule-date-banner strong {
+
+    color: var(--ff-dark);
+
+    font-size: 12px;
+}
+
+
+.today-badge {
+
+    margin-left: auto;
+
+    padding:
+        5px
+        10px;
+
+    border-radius: 20px;
+
+    color: #14753a;
+    background: #eaf8ef;
+
+    font-size: 8px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   OVERALL STATS
+========================================================= */
+
+.schedule-stats {
+
+    display: grid;
+
+    margin-bottom: 18px;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 12px;
+}
+
+
+.schedule-stat-card {
+
+    display: flex;
+
+    min-height: 90px;
+
+    padding: 15px;
+
+    align-items: center;
+
+    gap: 12px;
+
+    border:
+        1px
+        solid
+        var(--ff-border);
+
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+
+.schedule-stat-icon {
+
+    display: flex;
+
+    width: 43px;
+    height: 43px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+}
+
+
+.schedule-stat-icon.blue {
+
+    color: #2765c5;
+    background: #eef4ff;
+}
+
+
+.schedule-stat-icon.green {
+
+    color: #16803a;
+    background: #eaf8ef;
+}
+
+
+.schedule-stat-icon.orange {
+
+    color: #a66d10;
+    background: #fff5da;
+}
+
+
+.schedule-stat-icon.purple {
+
+    color: #7452bd;
+    background: #f1edff;
+}
+
+
+.schedule-stat-card strong {
+
+    display: block;
+
+    color: var(--ff-dark);
+
+    font-size: 19px;
+    font-weight: 900;
+}
+
+
+.schedule-stat-card span {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #848d98;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   LEGEND
+========================================================= */
+
+.schedule-legend {
+
+    display: flex;
+
+    margin-bottom: 18px;
+
+    padding:
+        10px
+        13px;
+
+    align-items: center;
+
+    gap: 18px;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+}
+
+
+.schedule-legend span {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #68727d;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+
+.legend-dot {
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+}
+
+
+.legend-dot.available {
+
+    background: #23a455;
+}
+
+
+.legend-dot.low {
+
+    background: #e29a19;
+}
+
+
+.legend-dot.full {
+
+    background: var(--ff-red);
+}
+
+
+.legend-dot.held {
+
+    background: #7460c3;
+}
+
+
+/* =========================================================
+   RIDE CARDS
+========================================================= */
+
+.ride-schedule-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+.ride-schedule-card {
+
+    overflow: hidden;
+
+    border:
+        1px
+        solid
+        var(--ff-border);
+
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   RIDE HEADER
+========================================================= */
+
+.ride-schedule-header {
+
+    display: flex;
+
+    padding:
+        17px
+        19px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-bottom:
+        1px
+        solid
+        #eef0f2;
+}
+
+
+.ride-title-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.ride-title-icon {
+
+    display: flex;
+
+    width: 43px;
+    height: 43px;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+    background: var(--ff-red);
+}
+
+
+.ride-title-row h2 {
+
+    margin: 0;
+
+    color: var(--ff-dark);
+
+    font-size: 15px;
+    font-weight: 900;
+}
+
+
+.ride-title-row p {
+
+    margin:
+        4px
+        0
+        0;
+
+    color: #88919b;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   RIDE SUMMARY
+========================================================= */
+
+.ride-summary {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.ride-summary > div {
+
+    min-width: 68px;
+
+    padding:
+        8px
+        10px;
+
+    border-radius: 8px;
+
+    background: #f7f8fa;
+
+    text-align: center;
+}
+
+
+.ride-summary small,
+.ride-summary strong {
+
+    display: block;
+}
+
+
+.ride-summary small {
+
+    color: #929aa3;
+
+    font-size: 7px;
+
+    text-transform: uppercase;
+}
+
+
+.ride-summary strong {
+
+    margin-top: 3px;
+
+    color: var(--ff-dark);
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.schedule-table-scroll {
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+
+.schedule-table {
+
+    width: 100%;
+
+    min-width: 930px;
+
+    border-collapse: collapse;
+}
+
+
+.schedule-table th {
+
+    padding:
+        11px
+        14px;
+
+    color: #77818c;
+    background: #fafbfc;
+
+    font-size: 8px;
+    font-weight: 900;
+
+    text-align: left;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+
+.schedule-table td {
+
+    padding:
+        13px
+        14px;
+
+    border-top:
+        1px
+        solid
+        #eef0f2;
+
+    color: #5c6671;
+
+    font-size: 9px;
+
+    vertical-align: middle;
+}
+
+
+.slot-table-row:hover {
+
+    background: #fcfcfd;
+}
+
+
+.current-slot-row {
+
+    background: #fff9ee;
+}
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+.slot-time-cell {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    white-space: nowrap;
+}
+
+
+.slot-time-cell > i {
+
+    color: var(--ff-red);
+}
+
+
+.slot-time-cell strong {
+
+    color: var(--ff-dark);
+
+    font-size: 9px;
+}
+
+
+.now-badge {
+
+    padding:
+        3px
+        6px;
+
+    border-radius: 10px;
+
+    color: #96610a;
+    background: #fff0bf;
+
+    font-size: 6px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   NUMBERS
+========================================================= */
+
+.number,
+.occupied-number,
+.remaining-number {
+
+    color: var(--ff-dark);
+
+    font-size: 10px;
+    font-weight: 900;
+}
+
+
+.confirmed-number {
+
+    color: #16803a;
+}
+
+
+.held-count {
+
+    display: inline-flex;
+
+    padding:
+        4px
+        7px;
+
+    align-items: center;
+
+    gap: 4px;
+
+    border-radius: 10px;
+
+    color: #684db1;
+
+    background: #f0ebff;
+
+    font-size: 8px;
+    font-weight: 900;
+}
+
+
+.zero-number {
+
+    color: #a1a8af;
+}
+
+
+.remaining-number {
+
+    color: #16803a;
+}
+
+
+.remaining-number.none {
+
+    color: var(--ff-red);
+}
+
+
+/* =========================================================
+   CAPACITY PROGRESS
+========================================================= */
+
+.capacity-progress {
+
+    width: 120px;
+}
+
+
+.capacity-progress-top {
+
+    display: flex;
+
+    margin-bottom: 5px;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    font-size: 7px;
+}
+
+
+.capacity-progress-top strong {
+
+    color: var(--ff-dark);
+}
+
+
+.capacity-track {
+
+    overflow: hidden;
+
+    width: 100%;
+    height: 6px;
+
+    border-radius: 10px;
+
+    background: #e8ebee;
+}
+
+
+.capacity-bar {
+
+    height: 100%;
+
+    border-radius: 10px;
+}
+
+
+.capacity-bar.available,
+.capacity-bar.partial {
+
+    background: #28a85b;
+}
+
+
+.capacity-bar.low {
+
+    background: #e29a19;
+}
+
+
+.capacity-bar.full {
+
+    background: var(--ff-red);
+}
+
+
+/* =========================================================
+   SLOT STATUS
+========================================================= */
+
+.slot-status {
+
+    display: inline-flex;
+
+    padding:
+        5px
+        8px;
+
+    align-items: center;
+
+    gap: 5px;
+
+    border-radius: 20px;
+
+    font-size: 7px;
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+
+.slot-status.available,
+.slot-status.partial {
+
+    color: #16803a;
+    background: #eaf8ef;
+}
+
+
+.slot-status.low {
+
+    color: #946610;
+    background: #fff5da;
+}
+
+
+.slot-status.full {
+
+    color: #a42319;
+    background: #fff0ee;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.schedule-empty {
+
+    padding: 30px !important;
+
+    color: #999 !important;
+
+    text-align: center;
+}
+
+
+.schedule-page-empty {
+
+    padding: 60px 20px;
+
+    border:
+        1px
+        solid
+        var(--ff-border);
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+.schedule-page-empty i {
+
+    margin-bottom: 12px;
+
+    color: #c7cdd3;
+
+    font-size: 30px;
+}
+
+
+.schedule-page-empty h3 {
+
+    margin:
+        0
+        0
+        5px;
+
+    color: var(--ff-dark);
+}
+
+
+.schedule-page-empty p {
+
+    margin: 0;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .schedule-stats {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+
+    .ride-schedule-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .schedule-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .schedule-header-actions {
+
+        width: 100%;
+
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    .schedule-back-btn {
+
+        width: 100%;
+    }
+
+
+    .schedule-date-form {
+
+        width: 100%;
+    }
+
+
+    .schedule-date-form input {
+
+        min-width: 0;
+
+        flex: 1;
+    }
+
+
+    .schedule-stats {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .schedule-legend {
+
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+
+    .ride-summary {
+
+        width: 100%;
+    }
+
+
+    .ride-summary > div {
+
+        min-width: 0;
+
+        flex: 1;
+    }
+
+}
+
+
+</style>
+
+{% endblock %}

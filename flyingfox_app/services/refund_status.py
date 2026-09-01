@@ -6,6 +6,7 @@ from django.conf import settings
 from flyingfox_app.models import Refund
 
 
+
 @transaction.atomic
 def mark_refund_processed(
     *,
@@ -15,7 +16,7 @@ def mark_refund_processed(
 ):
 
     # =====================================================
-    # FIND REFUND
+    # FIND + LOCK REFUND
     # =====================================================
 
     refund = (
@@ -26,7 +27,8 @@ def mark_refund_processed(
             "payment",
         )
         .filter(
-            razorpay_refund_id=razorpay_refund_id
+            razorpay_refund_id=
+                razorpay_refund_id
         )
         .first()
     )
@@ -40,8 +42,8 @@ def mark_refund_processed(
     # =====================================================
     # IDEMPOTENCY
     #
-    # Webhook can be delivered more than once.
-    # Do not process twice.
+    # Razorpay webhooks can arrive more than once.
+    # Never process the same refund twice.
     # =====================================================
 
     if refund.status == "processed":
@@ -51,6 +53,51 @@ def mark_refund_processed(
 
     booking = refund.booking
     payment = refund.payment
+
+
+    # =====================================================
+    # LOCK BOOKING
+    # =====================================================
+
+    booking = (
+        Booking.objects
+        .select_for_update()
+        .get(
+            pk=booking.pk
+        )
+    )
+
+
+    # =====================================================
+    # LOCK PAYMENT
+    # =====================================================
+
+    payment = (
+        Payment.objects
+        .select_for_update()
+        .get(
+            pk=payment.pk
+        )
+    )
+
+
+    # =====================================================
+    # LOCK BOOKING RIDE SLOTS
+    #
+    # These are the capacity reservations belonging
+    # to this booking.
+    # =====================================================
+
+    booking_slots = list(
+
+        BookingRideSlot.objects
+        .select_for_update()
+        .filter(
+            booking_item__booking=
+                booking
+        )
+
+    )
 
 
     # =====================================================
@@ -64,6 +111,7 @@ def mark_refund_processed(
         or
         "processed"
     )
+
 
     if arn:
 
@@ -89,8 +137,10 @@ def mark_refund_processed(
     # =====================================================
     # PAYMENT
     #
-    # Your policy returns 90%, so technically this is
-    # a partial refund.
+    # Customer receives 90%, therefore technically
+    # this is a partial monetary refund.
+    #
+    # But the entire adventure booking is cancelled.
     # =====================================================
 
     payment.status = (
@@ -124,10 +174,100 @@ def mark_refund_processed(
 
 
     # =====================================================
+    # RELEASE RIDE SLOT CAPACITY
+    #
+    # IMPORTANT:
+    #
+    # Only confirmed slots consume paid-booking
+    # capacity.
+    #
+    # Once the refund is successfully processed,
+    # convert them:
+    #
+    #     confirmed -> cancelled
+    #
+    # The availability service will then ignore
+    # these rows and the seats become bookable again.
+    # =====================================================
+
+    cancelled_slot_count = (
+
+        BookingRideSlot.objects
+        .filter(
+            booking_item__booking=
+                booking,
+
+            status=
+                "confirmed",
+        )
+        .update(
+            status=
+                "cancelled",
+
+            hold_expires_at=
+                None,
+        )
+
+    )
+
+
+    print(
+        "BOOKING RIDE SLOTS CANCELLED"
+    )
+
+    print(
+        "BOOKING:",
+        booking.booking_id
+    )
+
+    print(
+        "SLOT ROWS CHANGED:",
+        cancelled_slot_count
+    )
+
+
+    # =====================================================
+    # SAFETY CHECK
+    #
+    # After a completed cancellation there should not
+    # be any confirmed slot allocation remaining.
+    # =====================================================
+
+    remaining_confirmed_slots = (
+
+        BookingRideSlot.objects
+        .filter(
+            booking_item__booking=
+                booking,
+
+            status=
+                "confirmed",
+        )
+        .count()
+
+    )
+
+
+    if remaining_confirmed_slots:
+
+        raise ValueError(
+            (
+                "Refund was processed but "
+                f"{remaining_confirmed_slots} "
+                "confirmed ride slot allocation(s) "
+                "still remain."
+            )
+        )
+
+
+    # =====================================================
     # TICKET
     #
-    # If your Ticket model has an active/used field,
-    # invalidate it here.
+    # Booking is cancelled, so the ticket should no
+    # longer be considered valid for entry.
+    #
+    # Keep this section according to the actual fields
+    # available in your Ticket model.
     # =====================================================
 
     ticket = getattr(
@@ -137,15 +277,26 @@ def mark_refund_processed(
     )
 
 
-    # Example only:
+    # If your Ticket model later has an `is_active`
+    # field, it can be disabled here.
+    #
+    # Example:
     #
     # if ticket:
+    #
     #     ticket.is_active = False
-    #     ticket.save(update_fields=["is_active"])
+    #
+    #     ticket.save(
+    #         update_fields=[
+    #             "is_active",
+    #         ]
+    #     )
 
 
     # =====================================================
     # EMAIL
+    #
+    # Email failure must NOT undo a completed refund.
     # =====================================================
 
     try:
@@ -153,19 +304,37 @@ def mark_refund_processed(
         if booking.customer_email:
 
             subject = (
-                "Flying Fox Adventures - Refund Processed"
+                "Flying Fox Adventures - "
+                "Refund Processed"
             )
 
 
             message = (
                 f"Hello {booking.customer_name},\n\n"
-                f"Your cancellation and refund have been processed.\n\n"
-                f"Booking ID: {booking.booking_id}\n"
-                f"Amount Paid: ₹{refund.original_amount}\n"
-                f"Cancellation Charge: ₹{refund.deduction_amount}\n"
-                f"Refund Amount: ₹{refund.refund_amount}\n\n"
-                f"The refund has been sent to your original "
-                f"payment method. Bank processing time may vary.\n\n"
+
+                f"Your cancellation and refund "
+                f"have been processed.\n\n"
+
+                f"Booking ID: "
+                f"{booking.booking_id}\n"
+
+                f"Amount Paid: "
+                f"₹{refund.original_amount}\n"
+
+                f"Cancellation Charge: "
+                f"₹{refund.deduction_amount}\n"
+
+                f"Refund Amount: "
+                f"₹{refund.refund_amount}\n\n"
+
+                f"Your booking has been cancelled "
+                f"and the reserved ride slots have "
+                f"been released.\n\n"
+
+                f"The refund has been sent to your "
+                f"original payment method. "
+                f"Bank processing time may vary.\n\n"
+
                 f"Flying Fox Adventures"
             )
 
@@ -180,10 +349,12 @@ def mark_refund_processed(
                 fail_silently=False,
             )
 
+
     except Exception as error:
 
         # Refund must remain processed even if
         # email temporarily fails.
+
         print(
             "REFUND EMAIL ERROR:",
             repr(error)

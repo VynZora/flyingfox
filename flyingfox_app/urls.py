@@ -383,10 +383,28 @@ path(
     views.booking_options_for_date,
     name="booking_options_for_date",
 ),
+
+path(
+    "booking/slots/",
+    views.booking_slot_availability,
+    name="booking_slot_availability",
+),
 path(
     "booking/review/",
     views.booking_review,
     name="booking_review",
+),
+
+path(
+    "booking/otp/send/",
+    views.booking_send_otp,
+    name="booking_send_otp",
+),
+
+path(
+    "booking/otp/verify/",
+    views.booking_verify_otp,
+    name="booking_verify_otp",
 ),
 
 path(
@@ -745,6 +763,12 @@ path(
     "staff/tickets/dashboard/",
     views.ticket_staff_dashboard,
     name="ticket_staff_dashboard",
+),
+
+path(
+    "staff/ride-schedule/",
+    views.staff_ride_schedule,
+    name="staff_ride_schedule",
 ),
 
 path(
