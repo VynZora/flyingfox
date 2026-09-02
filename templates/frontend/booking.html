@@ -4723,31 +4723,32 @@ body.ff-message-open {
 
 .ff-slot-copy strong{
     color:var(--ff-dark);
-    font-size:13px;
+    font-size:15px;
     font-weight:900;
+    line-height:1.3;
 }
 
 .ff-slot-copy span{
-    margin-top:3px;
+    margin-top:4px;
     color:var(--ff-text);
-    font-size:9px;
+    font-size:10px;
     line-height:1.4;
 }
 
 .ff-slot-copy small{
-    margin-top:7px;
+    margin-top:8px;
     color:#7a8490;
-    font-size:8px;
+    font-size:9px;
     line-height:1.45;
 }
 
 .ff-slot-badge{
     flex:0 0 auto;
-    padding:5px 8px;
+    padding:6px 9px;
     border-radius:20px;
     color:var(--ff-green);
     background:#eef9f2;
-    font-size:8px;
+    font-size:9px;
     font-weight:900;
     white-space:nowrap;
 }
@@ -4853,6 +4854,181 @@ body.ff-message-open {
         width:100%;
     }
 }
+
+
+
+
+
+
+
+{% comment %} time slot css start {% endcomment %}
+/* =========================================================
+   BOOKING SUMMARY - RIDE + COMPLETE SLOT SCHEDULE
+========================================================= */
+
+.ff-summary-adventure-row{
+    display:grid;
+
+    width:100%;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+
+    align-items:start;
+
+    column-gap:20px;
+
+    padding:12px 0;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.09);
+}
+
+
+/* =========================================================
+   RIDE INFORMATION
+========================================================= */
+
+.ff-summary-adventure-info{
+    min-width:0;
+}
+
+
+.ff-summary-ride-name{
+    color:#ffffff;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    line-height:1.4;
+}
+
+
+.ff-summary-ride-meta{
+    margin-top:3px;
+
+    color:rgba(255,255,255,.48);
+
+    font-size:8px;
+
+    line-height:1.4;
+}
+
+
+/* =========================================================
+   RIDE PRICE
+========================================================= */
+
+.ff-summary-adventure-price{
+    justify-self:end;
+
+    color:#ffffff;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    white-space:nowrap;
+}
+
+
+/* =========================================================
+   COMPLETE SCHEDULE
+========================================================= */
+
+.ff-summary-schedule{
+
+    /* IMPORTANT:
+       schedule uses the COMPLETE width
+       of the booking summary row
+    */
+
+    grid-column:
+        1 / -1;
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding-top:8px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.10);
+}
+
+
+.ff-summary-schedule-title{
+    margin-bottom:6px;
+
+    color:rgba(255,255,255,.72);
+
+    font-size:8px;
+
+    font-weight:900;
+}
+
+
+/* =========================================================
+   EACH SLOT
+========================================================= */
+
+.ff-summary-slot-line{
+
+    display:grid;
+
+    width:100%;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+
+    align-items:center;
+
+    gap:20px;
+
+    min-height:22px;
+
+    padding:3px 0;
+
+    font-size:8px;
+
+    line-height:1.5;
+}
+
+
+/* TIME - LEFT */
+
+.ff-summary-slot-time{
+    justify-self:start;
+
+    color:rgba(255,255,255,.65);
+
+    white-space:nowrap;
+}
+
+
+/* RIDERS - FAR RIGHT */
+
+.ff-summary-slot-riders{
+    justify-self:end;
+
+    min-width:70px;
+
+    color:rgba(255,255,255,.82);
+
+    font-size:8px;
+
+    font-weight:900;
+
+    text-align:right;
+
+    white-space:nowrap;
+}
+{% comment %} time slot cdd end  {% endcomment %}
 
 </style>
 {% endblock %}
@@ -7176,16 +7352,13 @@ document.addEventListener("DOMContentLoaded", function () {
             offer.label;
 
         drawerOfferDescription.textContent =
-            offer.description
-            ||
-            "Special promotional offer for eligible bookings.";
+         stripHtml(
+         offer.description
+          ||
+          "Special promotional offer for eligible bookings."
+        );
 
         const detailRows = [];
-
-        detailRows.push([
-            "Offer Type",
-            offer.type.replaceAll("_", " ")
-        ]);
 
         detailRows.push([
             "Minimum Riders",
@@ -9520,29 +9693,114 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
                 const row =
-                    document.createElement(
-                        "div"
-                    );
+    document.createElement(
+        "div"
+    );
 
-                row.className =
-                    "ff-summary-adventure-row";
+row.className =
+    "ff-summary-adventure-row";
 
-                row.innerHTML = `
-                    <span>
-                        ${escapeHtml(item.rideName)}
-                        <small>
-                            ${item.quantity} rider${item.quantity === 1 ? "" : "s"}
-                            •
-                            ${escapeHtml(item.offerName)}
-                            <br>
-                            Start ${escapeHtml(item.selectedStartLabel || item.selectedStart)}
-                        </small>
-                    </span>
 
-                    <strong>
-                        ${money(item.total)}
-                    </strong>
-                `;
+/* =========================================================
+   BUILD COMPLETE SLOT SCHEDULE
+========================================================= */
+
+let scheduleHtml = "";
+
+if (
+    Array.isArray(item.slotAllocations)
+    &&
+    item.slotAllocations.length > 0
+) {
+
+    scheduleHtml =
+        item.slotAllocations
+            .map(
+                function (allocation) {
+
+                    return `
+                        <div class="ff-summary-slot-line">
+                            <span class="ff-summary-slot-time">
+                                ${escapeHtml(allocation.start_time)}
+                                -
+                                ${escapeHtml(allocation.end_time)}
+                            </span>
+
+                            <span class="ff-summary-slot-riders">
+                                ${allocation.participant_count}
+                                rider${Number(allocation.participant_count) === 1 ? "" : "s"}
+                            </span>
+                        </div>
+                    `;
+                }
+            )
+            .join("");
+
+}
+else {
+
+    scheduleHtml = `
+        <div class="ff-summary-slot-line">
+            <span class="ff-summary-slot-time">
+                ${escapeHtml(
+                    item.selectedStartLabel
+                    ||
+                    item.selectedStart
+                    ||
+                    ""
+                )}
+                ${item.selectedEndLabel
+                    ? ` - ${escapeHtml(item.selectedEndLabel)}`
+                    : ""}
+            </span>
+
+            <span class="ff-summary-slot-riders">
+                ${item.quantity}
+                rider${Number(item.quantity) === 1 ? "" : "s"}
+            </span>
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   RENDER SUMMARY RIDE
+========================================================= */
+
+row.innerHTML = `
+
+    <div class="ff-summary-adventure-info">
+
+        <div class="ff-summary-ride-name">
+            ${escapeHtml(item.rideName)}
+        </div>
+
+        <div class="ff-summary-ride-meta">
+            ${item.quantity}
+            rider${Number(item.quantity) === 1 ? "" : "s"}
+            •
+            ${escapeHtml(item.offerName)}
+        </div>
+
+    </div>
+
+
+    <strong class="ff-summary-adventure-price">
+        ${money(item.total)}
+    </strong>
+
+
+    <div class="ff-summary-schedule">
+
+        <div class="ff-summary-schedule-title">
+            Schedule
+        </div>
+
+        ${scheduleHtml}
+
+    </div>
+
+`;
 
                 summaryAdventures.appendChild(
                     row

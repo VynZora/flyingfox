@@ -236,7 +236,7 @@
 
                             <!-- Duration -->
 
-                            <div class="col-md-6 col-lg-4">
+                            <div class="col-md-6 col-lg-3">
 
                                 <div class="feature">
 
@@ -269,7 +269,7 @@
 
                             <!-- Availability -->
 
-                            <div class="col-md-6 col-lg-4">
+                            {% comment %} <div class="col-md-6 col-lg-4">
 
                                 <div class="feature">
 
@@ -305,13 +305,39 @@
 
                                 </div>
 
-                            </div>
+                            </div> {% endcomment %}
+
+                            <!-- Capacity -->
+
+    <div class="col-md-6 col-lg-3">
+
+        <div class="feature">
+
+            <div class="icon">
+                <i class="far fa-users"></i>
+            </div>
+
+            <div class="content">
+
+                <h6>
+                    Capacity
+                </h6>
+
+                <span>
+                    {{ ride.capacity_per_slot }} Riders/Hour
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
 
 
 
                             <!-- Price -->
 
-                            <div class="col-md-6 col-lg-4">
+                            <div class="col-md-6 col-lg-3">
 
                                 <div class="feature">
 

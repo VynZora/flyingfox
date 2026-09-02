@@ -6251,10 +6251,10 @@ def user_logout(request):
 
 
 # home page 
-
 def home(request):
 
     today = timezone.localdate()
+
 
     # -----------------------------------------
     # RIDE VIDEOS
@@ -6328,11 +6328,19 @@ def home(request):
 
     # -----------------------------------------
     # ALL ACTIVE RIDES
+    # ONLY RIDES WITH CURRENT ACTIVE PRICE
     # -----------------------------------------
 
     rides = (
         Ride.objects
-        .filter(is_active=True)
+        .filter(
+            is_active=True,
+
+            # Must have valid current active price
+            prices__is_active=True,
+            prices__start_date__lte=today,
+            prices__end_date__gte=today,
+        )
         .prefetch_related(
 
             # Videos
@@ -6357,81 +6365,89 @@ def home(request):
             ),
 
         )
+        .distinct()
         .order_by("-created_at")
     )
 
 
     # -----------------------------------------
-# FEATURED RIDES
-# -----------------------------------------
+    # FEATURED RIDES
+    # ONLY FEATURED RIDES WITH CURRENT ACTIVE PRICE
+    # -----------------------------------------
 
     featured_rides = (
-    Ride.objects
-    .filter(
-        is_active=True,
-        is_featured=True,
+        Ride.objects
+        .filter(
+            is_active=True,
+            is_featured=True,
+
+            # Must have valid current active price
+            prices__is_active=True,
+            prices__start_date__lte=today,
+            prices__end_date__gte=today,
+        )
+        .prefetch_related(
+
+            # Featured ride videos
+            Prefetch(
+                "media",
+                queryset=video_media,
+                to_attr="featured_videos",
+            ),
+
+            # Featured ride images
+            Prefetch(
+                "media",
+                queryset=image_media,
+                to_attr="featured_images",
+            ),
+
+            # Featured ride prices
+            Prefetch(
+                "prices",
+                queryset=current_prices,
+                to_attr="featured_prices",
+            ),
+
+        )
+        .distinct()
+        .order_by("-created_at")
     )
-    .prefetch_related(
-
-        # Featured ride videos
-        Prefetch(
-            "media",
-            queryset=video_media,
-            to_attr="featured_videos",
-        ),
-
-        # Featured ride images
-        Prefetch(
-            "media",
-            queryset=image_media,
-            to_attr="featured_images",
-        ),
-
-        # Featured ride prices
-        Prefetch(
-            "prices",
-            queryset=current_prices,
-            to_attr="featured_prices",
-        ),
-
-    )
-    .order_by("-created_at")
-)
 
 
-   # =========================================
-# SUPERMAN RIDE
-# =========================================
+    # =========================================
+    # SUPERMAN RIDE
+    # =========================================
 
     superman_ride = (
         Ride.objects
-       .filter(
-        slug="super-man",
-        is_active=True,
-       )
-       .first()
+        .filter(
+            slug="super-man",
+            is_active=True,
+        )
+        .first()
     )
 
 
-# =========================================
-# SUPERMAN CURRENT PRICE
-# =========================================
+    # =========================================
+    # SUPERMAN CURRENT PRICE
+    # =========================================
 
     superman_price = None
 
     if superman_ride:
 
-      superman_price = (
-        RidePrice.objects
-        .filter(
-            ride=superman_ride,
-            is_active=True,
-            start_date__lte=today,
-            end_date__gte=today,
+        superman_price = (
+            RidePrice.objects
+            .filter(
+                ride=superman_ride,
+                is_active=True,
+                start_date__lte=today,
+                end_date__gte=today,
+            )
+            .order_by("price")
+            .first()
         )
-        .order_by("price")
-        .first()
-    )
 
 
     # -----------------------------------------
@@ -6455,22 +6471,28 @@ def home(request):
         .order_by("-created_at")[:3]
     )
 
+
     today = timezone.now().date()
 
+
+    # -----------------------------------------
+    # ACTIVE OFFERS
+    # -----------------------------------------
+
     active_offers = (
-    Offer.objects
-    .filter(
-        is_active=True,
-        start_date__lte=today,
-        end_date__gte=today,
-    )
-    .exclude(
-        banner_image=""
-    )
-    .filter(
-        banner_image__isnull=False
-    )
-    .order_by("-created_at")
+        Offer.objects
+        .filter(
+            is_active=True,
+            start_date__lte=today,
+            end_date__gte=today,
+        )
+        .exclude(
+            banner_image=""
+        )
+        .filter(
+            banner_image__isnull=False
+        )
+        .order_by("-created_at")
     )
 
 
@@ -6485,11 +6507,14 @@ def home(request):
             "testimonials": testimonials,
             "blogs": blogs,
             "active_offers": active_offers,
-             # Superman
+
+            # Superman
             "superman_ride": superman_ride,
             "superman_price": superman_price,
         },
     )
+
+
 
 
 
@@ -6522,7 +6547,14 @@ def rides(request):
 
     rides_queryset = (
         Ride.objects
-        .filter(is_active=True)
+        .filter(
+            is_active=True,
+
+            # Ride must have a currently valid active price
+            prices__is_active=True,
+            prices__start_date__lte=today,
+            prices__end_date__gte=today,
+        )
         .prefetch_related(
             Prefetch(
                 "media",
@@ -6535,6 +6567,7 @@ def rides(request):
                 to_attr="current_prices",
             ),
         )
+        .distinct()
         .order_by(
             "-is_featured",
             "-created_at",
