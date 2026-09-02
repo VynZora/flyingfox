@@ -1014,78 +1014,91 @@
 
 
         <!-- =====================================================
-             PROGRESS HEADER
-        ====================================================== -->
+     PROGRESS HEADER
+====================================================== -->
 
-        <div class="ff-auth-progress">
+<div class="ff-auth-progress">
 
-            <div class="ff-auth-steps">
-
-
-                <!-- STEP 1 -->
-
-                <div class="ff-auth-step active">
-
-                    <div class="ff-auth-step-icon">
-
-                        <i class="fas fa-mobile-alt"></i>
-
-                    </div>
-
-                    <span>
-                        Mobile Number
-                    </span>
-
-                </div>
+    <div class="ff-auth-steps">
 
 
+        <!-- STEP 1 -->
+        <div
+            class="ff-auth-step
+            {% if auth_step >= 1 %} completed {% endif %}
+            {% if auth_step == 1 %} active {% endif %}"
+        >
 
-                <div class="ff-auth-step-line"></div>
+            <div class="ff-auth-step-icon">
 
-
-
-                <!-- STEP 2 -->
-
-                <div class="ff-auth-step">
-
-                    <div class="ff-auth-step-icon">
-
-                        <i class="fas fa-shield-alt"></i>
-
-                    </div>
-
-                    <span>
-                        Verify OTP
-                    </span>
-
-                </div>
-
-
-
-                <div class="ff-auth-step-line"></div>
-
-
-
-                <!-- STEP 3 -->
-
-                <div class="ff-auth-step">
-
-                    <div class="ff-auth-step-icon">
-
-                        <i class="fas fa-ticket-alt"></i>
-
-                    </div>
-
-                    <span>
-                        Ready to Book
-                    </span>
-
-                </div>
-
+                <i class="fas fa-mobile-alt"></i>
 
             </div>
 
+            <span>
+                Mobile Number
+            </span>
+
         </div>
+
+
+        <!-- LINE 1 -->
+        <div
+            class="ff-auth-step-line
+            {% if auth_step >= 2 %} completed {% endif %}"
+        ></div>
+
+
+        <!-- STEP 2 -->
+        <div
+            class="ff-auth-step
+            {% if auth_step >= 2 %} completed {% endif %}
+            {% if auth_step == 2 %} active {% endif %}"
+        >
+
+            <div class="ff-auth-step-icon">
+
+                <i class="fas fa-shield-alt"></i>
+
+            </div>
+
+            <span>
+                Verify OTP
+            </span>
+
+        </div>
+
+
+        <!-- LINE 2 -->
+        <div
+            class="ff-auth-step-line
+            {% if auth_step >= 3 %} completed {% endif %}"
+        ></div>
+
+
+        <!-- STEP 3 -->
+        <div
+            class="ff-auth-step
+            {% if auth_step >= 3 %} completed {% endif %}
+            {% if auth_step == 3 %} active {% endif %}"
+        >
+
+            <div class="ff-auth-step-icon">
+
+                <i class="fas fa-ticket-alt"></i>
+
+            </div>
+
+            <span>
+                Ready to Book
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
 
 
 
@@ -1600,6 +1613,50 @@
 <script>
 
 document.addEventListener(
+
+    /* =====================================================
+   AUTO HIDE DJANGO MESSAGES
+===================================================== */
+
+    const djangoMessages =
+    document.querySelectorAll(".ff-login-alert");
+
+    djangoMessages.forEach(function (message, index) {
+
+    // Keep message visible for a few seconds
+    setTimeout(function () {
+
+        message.style.transition =
+            "opacity 0.4s ease, transform 0.4s ease";
+
+        message.style.opacity = "0";
+        message.style.transform = "translateY(-8px)";
+
+        // Remove it after fade animation
+        setTimeout(function () {
+
+            message.remove();
+
+            // Remove empty message container
+            const container =
+                document.querySelector(".ff-login-messages");
+
+            if (
+                container &&
+                container.querySelectorAll(".ff-login-alert").length === 0
+            ) {
+                container.remove();
+            }
+
+        }, 400);
+
+    }, 3500 + (index * 300));
+
+    });
+
+
+
+
     "DOMContentLoaded",
     function () {
 

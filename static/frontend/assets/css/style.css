@@ -36384,3 +36384,233 @@ p {
     }
 }
 /* pre loader css end  */
+
+
+
+/* index page offers css sstart */
+/* =========================================================
+   OFFER CARD
+========================================================= */
+
+.ff-offer-banner {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+}
+
+
+/* =========================================================
+   OFFER IMAGE
+========================================================= */
+
+.ff-offer-banner-image {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.45s ease;
+}
+
+
+/* =========================================================
+   DARK GRADIENT
+========================================================= */
+
+.ff-offer-banner-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.78) 0%,
+            rgba(0, 0, 0, 0.35) 42%,
+            rgba(0, 0, 0, 0.03) 72%,
+            transparent 100%
+        );
+}
+
+
+/* =========================================================
+   OFFER CONTENT
+========================================================= */
+
+.ff-offer-card-content {
+    position: absolute;
+
+    left: 24px;
+    right: 24px;
+    bottom: 22px;
+
+    z-index: 3;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   SPECIAL OFFER BADGE
+========================================================= */
+
+.ff-offer-card-badge {
+    display: inline-flex;
+
+    margin-bottom: 8px;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+
+    color: #ffffff;
+}
+
+
+.ff-offer-card-badge i {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   OFFER TITLE
+========================================================= */
+
+.ff-offer-card-title {
+    margin: 0 0 10px;
+
+    color: #ffffff;
+
+    font-size: 24px;
+
+    font-weight: 900;
+
+    line-height: 1.15;
+
+    text-transform: uppercase;
+
+    text-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   VIEW OFFER
+========================================================= */
+
+.ff-offer-card-view {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.ff-offer-card-view i {
+    font-size: 10px;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.ff-offer-banner-link:hover
+.ff-offer-banner-image {
+    transform:
+        scale(1.04);
+}
+
+
+.ff-offer-banner-link:hover
+.ff-offer-card-view i {
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-offer-card-content {
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+    }
+
+
+    .ff-offer-card-title {
+        font-size: 20px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-offer-card-content {
+        left: 16px;
+        right: 16px;
+        bottom: 15px;
+    }
+
+
+    .ff-offer-card-badge {
+        margin-bottom: 5px;
+
+        font-size: 8px;
+    }
+
+
+    .ff-offer-card-title {
+        margin-bottom: 7px;
+
+        font-size: 17px;
+
+        line-height: 1.15;
+    }
+
+
+    .ff-offer-card-view {
+        font-size: 9px;
+    }
+
+}
+/* index page offers css end */

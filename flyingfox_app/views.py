@@ -5098,6 +5098,7 @@ def user_signin(request):
                     "phone": phone,
                     "countries": LOGIN_COUNTRIES,
                     "selected_country": "IN",
+                    "auth_step": 1,
                 }
             )
 
@@ -5130,6 +5131,7 @@ def user_signin(request):
                     "phone": phone,
                     "countries": LOGIN_COUNTRIES,
                     "selected_country": selected_country,
+                    "auth_step": 1,
                 }
             )
 
@@ -5167,6 +5169,7 @@ def user_signin(request):
                     "phone": phone,
                     "countries": LOGIN_COUNTRIES,
                     "selected_country": selected_country,
+                    "auth_step": 1,
                 }
             )
 
@@ -5212,6 +5215,7 @@ def user_signin(request):
                     "phone": phone,
                     "countries": LOGIN_COUNTRIES,
                     "selected_country": selected_country,
+                    "auth_step": 1,
                 }
             )
 
@@ -5277,6 +5281,7 @@ def user_signin(request):
             "phone": phone,
             "countries": LOGIN_COUNTRIES,
             "selected_country": selected_country,
+            "auth_step": 1,
         }
     )
 
@@ -6307,7 +6312,9 @@ def home(request):
 
     gallery_videos = (
         GalleryItem.objects
-        .filter(video__isnull=False)
+        .filter(
+            video__isnull=False
+        )
         .exclude(video="")
         .order_by("-uploaded_at")[:10]
     )
@@ -6319,7 +6326,9 @@ def home(request):
 
     gallery_images = (
         GalleryItem.objects
-        .filter(image__isnull=False)
+        .filter(
+            image__isnull=False
+        )
         .exclude(image="")
         .select_related("category")
         .order_by("-uploaded_at")[:8]
@@ -6336,28 +6345,24 @@ def home(request):
         .filter(
             is_active=True,
 
-            # Must have valid current active price
             prices__is_active=True,
             prices__start_date__lte=today,
             prices__end_date__gte=today,
         )
         .prefetch_related(
 
-            # Videos
             Prefetch(
                 "media",
                 queryset=video_media,
                 to_attr="uploaded_videos",
             ),
 
-            # Images
             Prefetch(
                 "media",
                 queryset=image_media,
                 to_attr="uploaded_images",
             ),
 
-            # Current Prices
             Prefetch(
                 "prices",
                 queryset=current_prices,
@@ -6381,28 +6386,24 @@ def home(request):
             is_active=True,
             is_featured=True,
 
-            # Must have valid current active price
             prices__is_active=True,
             prices__start_date__lte=today,
             prices__end_date__gte=today,
         )
         .prefetch_related(
 
-            # Featured ride videos
             Prefetch(
                 "media",
                 queryset=video_media,
                 to_attr="featured_videos",
             ),
 
-            # Featured ride images
             Prefetch(
                 "media",
                 queryset=image_media,
                 to_attr="featured_images",
             ),
 
-            # Featured ride prices
             Prefetch(
                 "prices",
                 queryset=current_prices,
@@ -6472,11 +6473,10 @@ def home(request):
     )
 
 
-    today = timezone.now().date()
-
-
     # -----------------------------------------
     # ACTIVE OFFERS
+    # ONLY CURRENTLY VALID OFFERS
+    # SHOW ALL VALID OFFERS
     # -----------------------------------------
 
     active_offers = (
@@ -6486,34 +6486,42 @@ def home(request):
             start_date__lte=today,
             end_date__gte=today,
         )
-        .exclude(
-            banner_image=""
-        )
-        .filter(
-            banner_image__isnull=False
-        )
+        .prefetch_related("rides")
         .order_by("-created_at")
     )
+
+
+    # -----------------------------------------
+    # CONTEXT
+    # -----------------------------------------
+
+    context = {
+
+        "rides": rides,
+
+        "featured_rides": featured_rides,
+
+        "gallery_videos": gallery_videos,
+
+        "gallery_images": gallery_images,
+
+        "testimonials": testimonials,
+
+        "blogs": blogs,
+
+        "active_offers": active_offers,
+
+        "superman_ride": superman_ride,
+
+        "superman_price": superman_price,
+    }
 
 
     return render(
         request,
         "frontend/index.html",
-        {
-            "rides": rides,
-            "featured_rides": featured_rides,
-            "gallery_videos": gallery_videos,
-            "gallery_images": gallery_images,
-            "testimonials": testimonials,
-            "blogs": blogs,
-            "active_offers": active_offers,
-
-            # Superman
-            "superman_ride": superman_ride,
-            "superman_price": superman_price,
-        },
+        context,
     )
-
 
 
 
@@ -21017,18 +21025,23 @@ from django.utils import timezone
 from .models import Offer
 
 
+
 def offers(request):
 
     today = timezone.localdate()
 
     # =========================================================
-    # GET ALL OFFERS
+    # GET ONLY CURRENTLY ACTIVE / VALID OFFERS
     # =========================================================
 
     offers_qs = (
         Offer.objects
         .prefetch_related("rides")
-        .all()
+        .filter(
+            is_active=True,
+            start_date__lte=today,
+            end_date__gte=today,
+        )
         .order_by("-created_at")
     )
 
@@ -21079,49 +21092,13 @@ def offers(request):
 
 
     # =========================================================
-    # PREPARE DISPLAY STATUS
+    # ACTIVE STATUS FOR TEMPLATE
     # =========================================================
-
-    active_count = 0
-    upcoming_count = 0
-    expired_count = 0
-    inactive_count = 0
-
 
     for offer in offers_qs:
 
-        # Your model already calculates the status
-        status = offer.computed_status
-
-        offer.display_status = status
-
-
-        if status == "active":
-
-            offer.display_status_label = "Active"
-
-            active_count += 1
-
-
-        elif status == "upcoming":
-
-            offer.display_status_label = "Upcoming"
-
-            upcoming_count += 1
-
-
-        elif status == "expired":
-
-            offer.display_status_label = "Expired"
-
-            expired_count += 1
-
-
-        else:
-
-            offer.display_status_label = "Inactive"
-
-            inactive_count += 1
+        offer.display_status = "active"
+        offer.display_status_label = "Active"
 
 
     # =========================================================
@@ -21129,6 +21106,8 @@ def offers(request):
     # =========================================================
 
     total_count = offers_qs.count()
+
+    active_count = total_count
 
 
     # =========================================================
@@ -21147,11 +21126,11 @@ def offers(request):
 
         "active_count": active_count,
 
-        "upcoming_count": upcoming_count,
+        "upcoming_count": 0,
 
-        "expired_count": expired_count,
+        "expired_count": 0,
 
-        "inactive_count": inactive_count,
+        "inactive_count": 0,
     }
 
 
@@ -21160,6 +21139,8 @@ def offers(request):
         "frontend/offers.html",
         context
     )
+
+
 
 
 

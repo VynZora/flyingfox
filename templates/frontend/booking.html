@@ -5030,13 +5030,680 @@ body.ff-message-open {
 }
 {% comment %} time slot cdd end  {% endcomment %}
 
+
+
+{% comment %} progress bar css start {% endcomment %}
+
+
+/* =========================================================
+   FLYING FOX BOOKING PROGRESS BAR
+========================================================= */
+
+.ff-booking-progress {
+    position: relative;
+
+    width: 100%;
+    max-width: 720px;
+
+    margin: 0 auto 38px;
+
+    padding:
+        22px
+        24px
+        20px;
+
+    border:
+        1px solid
+        #e8ebee;
+
+    border-radius: 22px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 10px 32px
+        rgba(20, 30, 42, 0.055);
+}
+
+
+/* =========================================================
+   PROGRESS TRACK
+========================================================= */
+
+.ff-progress-track {
+    display: flex;
+
+    width: fit-content;
+
+    margin:
+        0
+        auto;
+
+    align-items: flex-start;
+
+    justify-content: center;
+
+    gap: 34px;
+}
+
+
+/* =========================================================
+   IMPORTANT
+
+   Hide the original connector DIVs.
+
+   We will draw cleaner connectors using ::after
+   on each progress step.
+========================================================= */
+
+.ff-progress-line {
+    display: none !important;
+}
+
+
+/* =========================================================
+   EACH STEP
+========================================================= */
+
+.ff-progress-step {
+    position: relative;
+
+    display: flex;
+
+    width: 68px;
+
+    flex:
+        0
+        0
+        68px;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   CONNECTING LINE
+
+   Every step except Review gets a line AFTER it.
+========================================================= */
+
+.ff-progress-step:not([data-step="review"])::after {
+    content: "";
+
+    position: absolute;
+
+    top: 22px;
+
+    left:
+        calc(
+            50% + 23px
+        );
+
+    width: 56px;
+    height: 3px;
+
+    border-radius: 10px;
+
+    background: #dfe3e8;
+
+    z-index: -1;
+
+    transition:
+        background
+        0.3s
+        ease;
+}
+
+
+/* =========================================================
+   COMPLETED CONNECTOR
+
+   If a step is completed, the line after that step becomes red.
+========================================================= */
+
+.ff-progress-step.completed::after {
+    background:
+        var(--ff-red);
+}
+
+
+/* =========================================================
+   STEP ICON
+========================================================= */
+
+.ff-progress-icon {
+    position: relative;
+
+    display: flex;
+
+    width: 46px;
+    height: 46px;
+
+    flex:
+        0
+        0
+        46px;
+
+    border:
+        2px solid
+        #dfe3e8;
+
+    border-radius: 50%;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #9ba3ac;
+
+    background: #ffffff;
+
+    font-size: 14px;
+
+    box-shadow:
+        0 4px 12px
+        rgba(20, 30, 42, 0.05);
+
+    transition:
+        border-color 0.25s ease,
+        color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.ff-progress-label {
+    display: block;
+
+    margin-top: 9px;
+
+    color: #8a929c;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+
+    transition:
+        color
+        0.25s
+        ease;
+}
+
+
+/* =========================================================
+   COMPLETED / REACHED STEP
+========================================================= */
+
+.ff-progress-step.completed
+.ff-progress-icon {
+    border-color:
+        var(--ff-red);
+
+    color: #ffffff;
+
+    background:
+        var(--ff-red);
+
+    box-shadow:
+        0 6px 16px
+        rgba(195, 17, 3, 0.16);
+}
+
+
+.ff-progress-step.completed
+.ff-progress-label {
+    color:
+        var(--ff-red);
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   ACTIVE / CURRENT STEP
+========================================================= */
+
+.ff-progress-step.active
+.ff-progress-icon {
+    border-color:
+        var(--ff-red);
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d7190f,
+            #a80b01
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(195, 17, 3, 0.23);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.ff-progress-step.active
+.ff-progress-label {
+    color:
+        var(--ff-red);
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   ACTIVE OUTER RING
+========================================================= */
+
+.ff-progress-step.active
+.ff-progress-icon::after {
+    content: "";
+
+    position: absolute;
+
+    width: 56px;
+    height: 56px;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.14);
+
+    border-radius: 50%;
+
+    z-index: -1;
+}
+
+
+/* =========================================================
+   FUTURE STEP
+========================================================= */
+
+.ff-progress-step:not(.active):not(.completed)
+.ff-progress-icon {
+    border-color:
+        #dfe3e8;
+
+    color:
+        #9ba3ac;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 4px 12px
+        rgba(20, 30, 42, 0.04);
+}
+
+
+.ff-progress-step:not(.active):not(.completed)
+.ff-progress-label {
+    color:
+        #8a929c;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-booking-progress {
+        max-width: 680px;
+
+        margin-bottom: 28px;
+
+        padding:
+            20px
+            18px;
+    }
+
+
+    .ff-progress-track {
+        gap: 27px;
+    }
+
+
+    .ff-progress-step {
+        width: 64px;
+
+        flex-basis: 64px;
+    }
+
+
+    .ff-progress-icon {
+        width: 43px;
+        height: 43px;
+
+        flex-basis: 43px;
+
+        font-size: 13px;
+    }
+
+
+    .ff-progress-step:not([data-step="review"])::after {
+        top: 20px;
+
+        left:
+            calc(
+                50% + 22px
+            );
+
+        width: 48px;
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+        width: 52px;
+        height: 52px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-booking-progress {
+        width: 100%;
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        margin-bottom: 22px;
+
+        padding:
+            16px
+            12px
+            14px;
+
+        border-radius: 17px;
+
+        scrollbar-width: none;
+    }
+
+
+    .ff-booking-progress::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .ff-progress-track {
+        width: max-content;
+
+        margin:
+            0
+            auto;
+
+        gap: 18px;
+    }
+
+
+    .ff-progress-step {
+        width: 54px;
+
+        flex:
+            0
+            0
+            54px;
+    }
+
+
+    .ff-progress-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        font-size: 11px;
+    }
+
+
+    .ff-progress-label {
+        margin-top: 7px;
+
+        font-size: 8px;
+    }
+
+
+    .ff-progress-step:not([data-step="review"])::after {
+        top: 18px;
+
+        left:
+            calc(
+                50% + 19px
+            );
+
+        width: 35px;
+
+        height: 3px;
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+        width: 46px;
+        height: 46px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .ff-progress-track {
+        gap: 14px;
+    }
+
+
+    .ff-progress-step {
+        width: 50px;
+
+        flex-basis: 50px;
+    }
+
+
+    .ff-progress-label {
+        font-size: 7px;
+    }
+
+
+    .ff-progress-step:not([data-step="review"])::after {
+        left:
+            calc(
+                50% + 19px
+            );
+
+        width: 28px;
+    }
+
+}
+
+
+{% comment %} progress bar css end {% endcomment %}
 </style>
 {% endblock %}
 
 
 {% block content %}
+
 <section class="ff-booking-page">
+
     <div class="container">
+
+
+        <!-- =========================================================
+             BOOKING PROGRESS BAR
+        ========================================================= -->
+
+        <div class="ff-booking-progress">
+
+            <div class="ff-progress-track">
+
+
+                <!-- STEP 1 -->
+                <div
+                    class="ff-progress-step active"
+                    data-step="date"
+                >
+
+                    <div class="ff-progress-icon">
+
+                        <i class="fas fa-calendar-alt"></i>
+
+                    </div>
+
+                    <span class="ff-progress-label">
+                        Visit Date
+                    </span>
+
+                </div>
+
+
+                <div class="ff-progress-line"></div>
+
+
+                <!-- STEP 2 -->
+                <div
+                    class="ff-progress-step"
+                    data-step="ride"
+                >
+
+                    <div class="ff-progress-icon">
+
+                        <i class="fas fa-person-running"></i>
+
+                    </div>
+
+                    <span class="ff-progress-label">
+                        Ride
+                    </span>
+
+                </div>
+
+
+                <div class="ff-progress-line"></div>
+
+
+                <!-- STEP 3 -->
+                <div
+                    class="ff-progress-step"
+                    data-step="offer"
+                >
+
+                    <div class="ff-progress-icon">
+
+                        <i class="fas fa-tags"></i>
+
+                    </div>
+
+                    <span class="ff-progress-label">
+                        Offer
+                    </span>
+
+                </div>
+
+
+                <div class="ff-progress-line"></div>
+
+
+                <!-- STEP 4 -->
+                <div
+                    class="ff-progress-step"
+                    data-step="participants"
+                >
+
+                    <div class="ff-progress-icon">
+
+                        <i class="fas fa-users"></i>
+
+                    </div>
+
+                    <span class="ff-progress-label">
+                        Riders
+                    </span>
+
+                </div>
+
+
+                <div class="ff-progress-line"></div>
+
+
+                <!-- STEP 5 -->
+                <div
+                    class="ff-progress-step"
+                    data-step="slot"
+                >
+
+                    <div class="ff-progress-icon">
+
+                        <i class="fas fa-clock"></i>
+
+                    </div>
+
+                    <span class="ff-progress-label">
+                        Time
+                    </span>
+
+                </div>
+
+
+                <div class="ff-progress-line"></div>
+
+
+                <!-- STEP 6 -->
+                <div
+                    class="ff-progress-step"
+                    data-step="review"
+                >
+
+                    <div class="ff-progress-icon">
+
+                        <i class="fas fa-clipboard-check"></i>
+
+                    </div>
+
+                    <span class="ff-progress-label">
+                        Review
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================================
+             EXISTING BOOKING ROW
+        ========================================================= -->
 
         <div class="row g-4 ff-booking-row">
 
@@ -6157,6 +6824,122 @@ body.ff-message-open {
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+
+    /* =========================================================
+       BOOKING PROGRESS BAR
+    ========================================================= */
+
+    const bookingProgressOrder = [
+
+        "date",
+
+        "ride",
+
+        "offer",
+
+        "participants",
+
+        "slot",
+
+        "review"
+
+    ];
+
+
+    function updateBookingProgress(
+        currentStep
+    ) {
+
+        const currentIndex =
+            bookingProgressOrder.indexOf(
+                currentStep
+            );
+
+
+        if (currentIndex === -1) {
+
+            return;
+
+        }
+
+
+        const steps =
+            document.querySelectorAll(
+                ".ff-progress-step"
+            );
+
+
+        const lines =
+            document.querySelectorAll(
+                ".ff-progress-line"
+            );
+
+
+        steps.forEach(
+            function (
+                step,
+                index
+            ) {
+
+                step.classList.remove(
+                    "active",
+                    "completed"
+                );
+
+
+                if (
+                    index
+                    <
+                    currentIndex
+                ) {
+
+                    step.classList.add(
+                        "completed"
+                    );
+
+                }
+                else if (
+                    index
+                    ===
+                    currentIndex
+                ) {
+
+                    step.classList.add(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+
+        lines.forEach(
+            function (
+                line,
+                index
+            ) {
+
+                line.classList.toggle(
+                    "completed",
+                    index < currentIndex
+                );
+
+            }
+        );
+
+    }
+
+
+    /*
+     * Booking starts with Visit Date
+     */
+
+    updateBookingProgress(
+        "date"
+    );
+
+
     /* =========================================================
        ELEMENTS
     ========================================================= */
@@ -6804,15 +7587,25 @@ document.addEventListener("DOMContentLoaded", function () {
         closePanel(ridePanel);
 
         unlockPanel(
-            offerPanel,
-            offerPanelButton
+          offerPanel,
+          offerPanelButton
         );
 
-        openPanel(offerPanel);
+        openPanel(
+            offerPanel
+        );
+
+
+/* PROGRESS -> OFFER */
+
+        updateBookingProgress(
+           "offer"
+        );
+
 
         lockPanel(
-            participantPanel,
-            participantPanelButton
+          participantPanel,
+          participantPanelButton
         );
 
         resetSlotSelection();
@@ -7246,19 +8039,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         unlockPanel(
-            participantPanel,
-            participantPanelButton
-        );
+          participantPanel,
+         participantPanelButton
+         );
 
         buildWeights();
 
         closePanel(
-            offerPanel
+           offerPanel
         );
 
         openPanel(
             participantPanel
         );
+
+
+/* PROGRESS -> PARTICIPANTS */
+
+        updateBookingProgress(
+           "participants"
+        );
+
 
         updateCurrentRidePreview();
 
@@ -7601,6 +8402,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     openPanel(
                         participantPanel
+                    );
+
+
+                    /* PROGRESS -> PARTICIPANTS */
+
+                     updateBookingProgress(
+                          "participants"
                     );
 
                     participantPanel.scrollIntoView({
@@ -8489,6 +9297,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             selectedSlotData =
                                 slot;
 
+                            /* PROGRESS -> REVIEW */
+
+                            updateBookingProgress(
+                                "review"
+                            );    
+
                             slotSelectedTime.textContent =
                                 `${slot.start_label} - ${slot.end_label}`;
 
@@ -8599,6 +9413,12 @@ document.addEventListener("DOMContentLoaded", function () {
             openPanel(
                 slotPanel
             );
+
+            /* PROGRESS -> TIME SLOT */
+
+             updateBookingProgress(
+                "slot"
+              );
         }
 
         slotList.innerHTML = `

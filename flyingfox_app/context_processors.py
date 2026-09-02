@@ -10,7 +10,7 @@ def footer_popular_rides(request):
     popular_rides = (
         Ride.objects
         .filter(is_active=True)
-        .order_by("-created_at")[:6]
+        .order_by("-created_at")[:4]
     )
 
     return {

@@ -139,71 +139,671 @@
 
 
 
-        /* =========================================================
-           PROGRESS
-        ========================================================= */
+       /* =========================================================
+   BOOKING REVIEW PROGRESS BAR
+========================================================= */
 
-        .ff-review-progress {
+.ff-booking-progress {
+    position: relative;
 
-            display: flex;
+    width: 100%;
+    max-width: 720px;
 
-            max-width: 760px;
+    margin:
+        0
+        auto
+        45px;
 
-            margin:
-                0
-                auto
-                45px;
+    padding:
+        22px
+        24px
+        20px;
 
-            align-items: center;
-            justify-content: center;
+    border:
+        1px solid
+        #e8ebee;
 
-            gap: 10px;
+    border-radius: 22px;
 
-            flex-wrap: wrap;
-        }
+    background:
+        #ffffff;
 
-
-        .ff-review-progress span {
-
-            display: inline-flex;
-
-            min-height: 42px;
-
-            padding:
-                9px
-                18px;
-
-            border-radius: 30px;
-
-            align-items: center;
-
-            gap: 8px;
-
-            color: #8a929d;
-
-            background: #f2f3f5;
-
-            font-size: 13px;
-            font-weight: 700;
-        }
+    box-shadow:
+        0 10px 32px
+        rgba(20, 30, 42, 0.055);
+}
 
 
-        .ff-review-progress span.completed {
+/* =========================================================
+   TRACK
+========================================================= */
 
-            color: var(--ff-green);
+.ff-progress-track {
+    display: flex;
 
-            background: var(--ff-green-light);
-        }
+    width:
+        fit-content;
+
+    margin:
+        0
+        auto;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        center;
+
+    gap:
+        34px;
+}
 
 
-        .ff-review-progress span.active {
+/* =========================================================
+   HIDE OLD CONNECTOR ELEMENTS
 
-            color: #ffffff;
+   Connectors are drawn with ::after instead.
+========================================================= */
 
-            background: var(--ff-red);
-        }
+.ff-progress-line {
+    display:
+        none !important;
+}
 
 
+/* =========================================================
+   STEP
+========================================================= */
+
+.ff-progress-step {
+    position:
+        relative;
+
+    display:
+        flex;
+
+    width:
+        68px;
+
+    flex:
+        0
+        0
+        68px;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    text-align:
+        center;
+
+    z-index:
+        2;
+}
+
+
+/* =========================================================
+   LINE BETWEEN STEPS
+========================================================= */
+
+.ff-progress-step:not([data-step="review"])::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        22px;
+
+    left:
+        calc(
+            50% + 23px
+        );
+
+    width:
+        56px;
+
+    height:
+        3px;
+
+    border-radius:
+        10px;
+
+    background:
+        #dfe3e8;
+
+    z-index:
+        -1;
+
+    transition:
+        background
+        0.3s
+        ease;
+}
+
+
+/* Reached line */
+
+.ff-progress-step.completed::after {
+    background:
+        var(--ff-red);
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.ff-progress-icon {
+    position:
+        relative;
+
+    display:
+        flex;
+
+    width:
+        46px;
+
+    height:
+        46px;
+
+    flex:
+        0
+        0
+        46px;
+
+    border:
+        2px solid
+        #dfe3e8;
+
+    border-radius:
+        50%;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        #9ba3ac;
+
+    background:
+        #ffffff;
+
+    font-size:
+        14px;
+
+    box-shadow:
+        0 4px 12px
+        rgba(20, 30, 42, 0.05);
+
+    transition:
+        border-color 0.25s ease,
+        color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.ff-progress-label {
+    display:
+        block;
+
+    margin-top:
+        9px;
+
+    color:
+        #8a929c;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.2;
+
+    white-space:
+        nowrap;
+
+    transition:
+        color
+        0.25s
+        ease;
+}
+
+
+/* =========================================================
+   COMPLETED / REACHED
+========================================================= */
+
+.ff-progress-step.completed
+.ff-progress-icon {
+    border-color:
+        var(--ff-red);
+
+    color:
+        #ffffff;
+
+    background:
+        var(--ff-red);
+
+    box-shadow:
+        0 6px 16px
+        rgba(195, 17, 3, 0.16);
+}
+
+
+.ff-progress-step.completed
+.ff-progress-label {
+    color:
+        var(--ff-red);
+
+    font-weight:
+        900;
+}
+
+
+/* =========================================================
+   CURRENT / ACTIVE
+========================================================= */
+
+.ff-progress-step.active
+.ff-progress-icon {
+    border-color:
+        var(--ff-red);
+
+    color:
+        #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d7190f,
+            #a80b01
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(195, 17, 3, 0.23);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.ff-progress-step.active
+.ff-progress-label {
+    color:
+        var(--ff-red);
+
+    font-weight:
+        900;
+}
+
+
+/* =========================================================
+   ACTIVE OUTER RING
+========================================================= */
+
+.ff-progress-step.active
+.ff-progress-icon::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        56px;
+
+    height:
+        56px;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.14);
+
+    border-radius:
+        50%;
+
+    z-index:
+        -1;
+}
+
+
+/* =========================================================
+   FUTURE STEP
+========================================================= */
+
+.ff-progress-step:not(.active):not(.completed)
+.ff-progress-icon {
+    border-color:
+        #dfe3e8;
+
+    color:
+        #9ba3ac;
+
+    background:
+        #ffffff;
+}
+
+
+.ff-progress-step:not(.active):not(.completed)
+.ff-progress-label {
+    color:
+        #8a929c;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-booking-progress {
+        max-width:
+            680px;
+
+        margin-bottom:
+            30px;
+
+        padding:
+            20px
+            18px;
+    }
+
+
+    .ff-progress-track {
+        gap:
+            27px;
+    }
+
+
+    .ff-progress-step {
+        width:
+            64px;
+
+        flex-basis:
+            64px;
+    }
+
+
+    .ff-progress-icon {
+        width:
+            43px;
+
+        height:
+            43px;
+
+        flex-basis:
+            43px;
+
+        font-size:
+            13px;
+    }
+
+
+    .ff-progress-step:not([data-step="review"])::after {
+        top:
+            20px;
+
+        left:
+            calc(
+                50% + 22px
+            );
+
+        width:
+            48px;
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+        width:
+            52px;
+
+        height:
+            52px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE PROGRESS BAR
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-booking-progress {
+        width: 100%;
+        max-width: 100%;
+
+        margin-bottom: 24px;
+
+        padding:
+            15px
+            8px
+            13px;
+
+        overflow: hidden;
+
+        border-radius: 17px;
+    }
+
+
+    /* ---------------------------------------------------------
+       Make all 6 steps fit exactly inside available width
+    --------------------------------------------------------- */
+
+    .ff-progress-track {
+        display: grid;
+
+        width: 100%;
+
+        grid-template-columns:
+            repeat(6, minmax(0, 1fr));
+
+        gap: 0;
+
+        margin: 0;
+
+        align-items: start;
+    }
+
+
+    /* ---------------------------------------------------------
+       EACH STEP
+    --------------------------------------------------------- */
+
+    .ff-progress-step {
+        position: relative;
+
+        width: 100%;
+        min-width: 0;
+
+        flex: none;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+
+    /* ---------------------------------------------------------
+       ICON
+    --------------------------------------------------------- */
+
+    .ff-progress-icon {
+        width: 36px;
+        height: 36px;
+
+        flex:
+            0
+            0
+            36px;
+
+        font-size: 10px;
+
+        border-width: 2px;
+    }
+
+
+    /* ---------------------------------------------------------
+       LABEL
+    --------------------------------------------------------- */
+
+    .ff-progress-label {
+        width: 100%;
+
+        margin-top: 7px;
+
+        padding:
+            0
+            1px;
+
+        overflow: hidden;
+
+        color: #8a929c;
+
+        font-size: 7px;
+
+        font-weight: 800;
+
+        line-height: 1.15;
+
+        white-space: normal;
+
+        text-overflow: ellipsis;
+    }
+
+
+    /* ---------------------------------------------------------
+       CONNECTOR BETWEEN CIRCLES
+
+       Because each grid column has equal width, this line
+       automatically adapts to different phone widths.
+    --------------------------------------------------------- */
+
+    .ff-progress-step:not([data-step="review"])::after {
+        content: "";
+
+        position: absolute;
+
+        top: 17px;
+
+        left:
+            calc(
+                50% + 18px
+            );
+
+        width:
+            calc(
+                100% - 36px
+            );
+
+        height: 3px;
+
+        border-radius: 10px;
+
+        background: #dfe3e8;
+
+        z-index: -1;
+    }
+
+
+    /* Reached connector */
+
+    .ff-progress-step.completed::after {
+        background:
+            var(--ff-red);
+    }
+
+
+    /* ---------------------------------------------------------
+       ACTIVE OUTER RING
+    --------------------------------------------------------- */
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+        width: 43px;
+        height: 43px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .ff-booking-progress {
+        padding:
+            14px
+            5px
+            12px;
+    }
+
+
+    .ff-progress-icon {
+        width: 34px;
+        height: 34px;
+
+        flex-basis: 34px;
+
+        font-size: 9px;
+    }
+
+
+    .ff-progress-label {
+        margin-top: 6px;
+
+        font-size: 6.5px;
+    }
+
+
+    .ff-progress-step:not([data-step="review"])::after {
+        top: 16px;
+
+        left:
+            calc(
+                50% + 17px
+            );
+
+        width:
+            calc(
+                100% - 34px
+            );
+
+        height: 2px;
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+        width: 41px;
+        height: 41px;
+    }
+
+}
 
         /* =========================================================
            CARDS
@@ -2897,7 +3497,7 @@ body.ff-terms-open {
              BOOKING PROGRESS
         ====================================================== -->
 
-        <div class="ff-review-progress">
+        {% comment %} <div class="ff-review-progress">
 
             <span class="completed">
 
@@ -2934,7 +3534,150 @@ body.ff-terms-open {
 
             </span>
 
+        </div> {% endcomment %}
+
+
+        <!-- =========================================================
+     BOOKING PROGRESS
+========================================================= -->
+
+<div class="ff-booking-progress">
+
+    <div class="ff-progress-track">
+
+
+        <!-- VISIT DATE -->
+        <div
+            class="ff-progress-step completed"
+            data-step="date"
+        >
+
+            <div class="ff-progress-icon">
+
+                <i class="fas fa-calendar-alt"></i>
+
+            </div>
+
+            <span class="ff-progress-label">
+                Visit Date
+            </span>
+
         </div>
+
+
+        <div class="ff-progress-line"></div>
+
+
+        <!-- RIDE -->
+        <div
+            class="ff-progress-step completed"
+            data-step="ride"
+        >
+
+            <div class="ff-progress-icon">
+
+                <i class="fas fa-person-running"></i>
+
+            </div>
+
+            <span class="ff-progress-label">
+                Ride
+            </span>
+
+        </div>
+
+
+        <div class="ff-progress-line"></div>
+
+
+        <!-- OFFER -->
+        <div
+            class="ff-progress-step completed"
+            data-step="offer"
+        >
+
+            <div class="ff-progress-icon">
+
+                <i class="fas fa-tags"></i>
+
+            </div>
+
+            <span class="ff-progress-label">
+                Offer
+            </span>
+
+        </div>
+
+
+        <div class="ff-progress-line"></div>
+
+
+        <!-- RIDERS -->
+        <div
+            class="ff-progress-step completed"
+            data-step="participants"
+        >
+
+            <div class="ff-progress-icon">
+
+                <i class="fas fa-users"></i>
+
+            </div>
+
+            <span class="ff-progress-label">
+                Riders
+            </span>
+
+        </div>
+
+
+        <div class="ff-progress-line"></div>
+
+
+        <!-- TIME -->
+        <div
+            class="ff-progress-step completed"
+            data-step="slot"
+        >
+
+            <div class="ff-progress-icon">
+
+                <i class="fas fa-clock"></i>
+
+            </div>
+
+            <span class="ff-progress-label">
+                Time
+            </span>
+
+        </div>
+
+
+        <div class="ff-progress-line"></div>
+
+
+        <!-- REVIEW -->
+        <div
+            class="ff-progress-step active"
+            data-step="review"
+        >
+
+            <div class="ff-progress-icon">
+
+                <i class="fas fa-clipboard-check"></i>
+
+            </div>
+
+            <span class="ff-progress-label">
+                Review
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
 
 
 
