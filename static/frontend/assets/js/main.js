@@ -252,7 +252,7 @@ Version         : 1.0
 
   // preloader
  $(window).on("load", function () {
-   $(".preloader").delay(3000).fadeOut(500);
+   $(".preloader").delay(1000).fadeOut(500);
  });
 
   // fun fact counter

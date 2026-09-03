@@ -1,10 +1,24 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 
-{% block title %}Our Gallery - Flying Fox Adventure{% endblock %}
+{% block title %}
+{% if gallery_items.number == 1 %}
+Gallery - Flying Fox Adventure Munnar
+{% else %}
+Gallery {{ gallery_items.number }} - Flying Fox Adventure Munnar
+{% endif %}
+{% endblock %}
 
 {% block meta_description %}
-Explore photos and videos from Flying Fox Adventure in Munnar and discover the scenery, zipline experiences and memorable moments from our adventure activities.
+{% if gallery_items.number == 1 %}
+Explore Gallery 1 of Flying Fox Adventure Munnar featuring exciting zipline adventures, scenic views and memorable outdoor experiences.
+{% elif gallery_items.number == 2 %}
+Explore Gallery 2 of Flying Fox Adventure Munnar featuring more adventure moments, zipline experiences and beautiful Munnar scenery.
+{% elif gallery_items.number == 3 %}
+Explore Gallery 3 of Flying Fox Adventure Munnar with thrilling rides, adventure photography and memorable experiences in Munnar.
+{% else %}
+Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featuring photos and videos from our exciting adventure activities.
+{% endif %}
 {% endblock %}
 
 {% block nav_gallery %}active{% endblock %}

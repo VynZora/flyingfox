@@ -36685,3 +36685,140 @@ p {
     border-radius: 50%;
 }
 /* our mission css end  */
+
+
+
+/* update offers button css start */
+/* ==============================
+   EXPLORE ALL OFFERS BUTTON
+============================== */
+/* Explore All Offers Button */
+.ff-offers-explore-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    padding: 7px 7px 7px 22px;
+
+    background: #ffffff !important;
+    color: #C31103 !important;
+
+    border: 1px solid #ffffff;
+    border-radius: 50px;
+
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+
+    text-decoration: none !important;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/* Red arrow circle */
+.ff-offers-explore-btn > span {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #C31103 !important;
+    color: #ffffff !important;
+
+    border-radius: 50%;
+
+    transition:
+        transform 0.35s ease,
+        background 0.3s ease;
+}
+
+
+/* Hover */
+.ff-offers-explore-btn:hover {
+    background: #ffffff !important;
+    color: #C31103 !important;
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+
+/* Arrow animation */
+.ff-offers-explore-btn:hover > span {
+    background: #8F0D02 !important;
+    color: #ffffff !important;
+
+    transform: rotate(-35deg);
+}
+
+
+/* Arrow icon */
+.ff-offers-explore-btn > span i {
+    color: inherit;
+    line-height: 1;
+}
+
+@media (max-width: 767px) {
+
+    .ff-offers-bottom {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 18px;
+    }
+
+    .ff-offers-explore-btn {
+        width: 100%;
+        max-width: 100%;
+
+        justify-content: space-between;
+
+        padding: 7px 7px 7px 18px;
+
+        font-size: 14px;
+
+        box-sizing: border-box;
+    }
+
+    .ff-offers-explore-btn > span {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 36px;
+    }
+
+    .ff-offers-navigation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        gap: 10px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .ff-offers-explore-btn {
+        font-size: 13px;
+        padding-left: 16px;
+    }
+
+    .ff-offers-explore-btn > span {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+}
+/* update offers css end */

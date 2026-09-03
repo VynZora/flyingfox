@@ -5547,6 +5547,40 @@ body.ff-message-open {
 
 
 {% comment %} progress bar css end {% endcomment %}
+
+
+{% comment %} past time css start {% endcomment %}
+/* =========================================================
+   PAST SLOT
+========================================================= */
+
+.ff-slot-card.past {
+
+    opacity: 0.58;
+
+    cursor: not-allowed;
+
+    background: #f5f6f7;
+
+}
+
+
+.ff-slot-card.past .ff-slot-copy strong {
+
+    color: #8a929d;
+
+}
+
+
+.ff-slot-card.past .ff-slot-badge {
+
+    color: #6b7280;
+
+    background: #e9ecef;
+
+}
+{% comment %} past time css end  {% endcomment %}
+
 </style>
 {% endblock %}
 
@@ -9182,169 +9216,401 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderSlotAvailability(data) {
-        currentSlotResponse = data;
-        selectedStartTime = "";
-        selectedSlotData = null;
-        slotSelected?.classList.remove("show");
 
-        if (!slotList) {
-            return;
-        }
+    currentSlotResponse = data;
 
-        slotList.innerHTML = "";
+    selectedStartTime = "";
 
-        const slots = Array.isArray(data?.slots)
-            ? data.slots
-            : [];
+    selectedSlotData = null;
 
-        if (!slots.length) {
-            slotList.innerHTML = `
-                <div class="ff-slot-loading">
-                    No ride times are available for this date.
-                </div>
-            `;
+    slotSelected?.classList.remove(
+        "show"
+    );
 
-            setSlotMessage(
-                "No start times are available for this ride. Please choose another ride or visit date.",
-                "error"
-            );
 
-            return;
-        }
+    if (!slotList) {
 
-        slots.forEach(
-            function (slot) {
-                const available = Boolean(slot.available);
-                const card = document.createElement("label");
+        return;
 
-                card.className = `ff-slot-card${available ? "" : " unavailable"}`;
+    }
 
-                const allocations = Array.isArray(slot.allocations)
+
+    slotList.innerHTML = "";
+
+
+    const slots = Array.isArray(
+        data?.slots
+    )
+        ? data.slots
+        : [];
+
+
+    /* =========================================================
+       NO SLOTS
+    ========================================================= */
+
+    if (!slots.length) {
+
+        slotList.innerHTML = `
+            <div class="ff-slot-loading">
+                No ride times are available for this date.
+            </div>
+        `;
+
+
+        setSlotMessage(
+            "No start times are available for this ride. Please choose another ride or visit date.",
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    /* =========================================================
+       BUILD SLOT CARDS
+    ========================================================= */
+
+    slots.forEach(
+
+        function (slot) {
+
+
+            /* =================================================
+               SLOT STATE
+            ================================================= */
+
+            const available =
+                Boolean(
+                    slot.available
+                );
+
+
+            const isPast =
+                Boolean(
+                    slot.is_past
+                );
+
+
+            const card =
+                document.createElement(
+                    "label"
+                );
+
+
+            card.className =
+                `ff-slot-card${available ? "" : " unavailable"}${isPast ? " past" : ""}`;
+
+
+            /* =================================================
+               SLOT ALLOCATIONS
+            ================================================= */
+
+            const allocations =
+                Array.isArray(
+                    slot.allocations
+                )
                     ? slot.allocations
                     : [];
 
-                const allocationHtml = available && allocations.length
+
+            const allocationHtml =
+                available
+                &&
+                allocations.length
+
                     ? `
                         <div class="ff-slot-allocation-preview">
+
                             ${allocations.map(
-                                function (allocation) {
+
+                                function (
+                                    allocation
+                                ) {
+
                                     return `
                                         <span class="ff-slot-allocation-chip">
-                                            ${escapeHtml(allocation.start_time)} • ${allocation.participant_count} rider${allocation.participant_count === 1 ? "" : "s"}
+
+                                            ${escapeHtml(
+                                                allocation.start_time
+                                            )}
+
+                                            •
+
+                                            ${allocation.participant_count}
+
+                                            rider${allocation.participant_count === 1 ? "" : "s"}
+
                                         </span>
                                     `;
+
                                 }
+
                             ).join("")}
+
                         </div>
                     `
+
                     : "";
 
-                card.innerHTML = `
-                    <input
-                        type="radio"
-                        class="ff-slot-radio"
-                        name="ride_start_time_ui"
-                        value="${escapeHtml(slot.start_time)}"
-                        ${available ? "" : "disabled"}
-                    >
 
-                    <span class="ff-slot-copy">
-                        <strong>
-                            ${escapeHtml(slot.start_label)}
-                        </strong>
+            /* =================================================
+               SLOT MESSAGE
+            ================================================= */
 
-                        <span>
-                            to ${escapeHtml(slot.end_label)}
-                        </span>
+            let slotDescription = "";
 
-                        <small>
-                            ${available
-                                ? `${slot.remaining} seat${slot.remaining === 1 ? "" : "s"} remaining in this hour`
-                                : "Your full group cannot start here"}
-                        </small>
 
-                        ${allocationHtml}
+            if (isPast) {
+
+                slotDescription =
+                    "This start time has already passed";
+
+            }
+
+            else if (available) {
+
+                slotDescription =
+                    `${slot.remaining} seat${slot.remaining === 1 ? "" : "s"} remaining in this hour`;
+
+            }
+
+            else {
+
+                slotDescription =
+                    "Your full group cannot start here";
+
+            }
+
+
+            /* =================================================
+               SLOT BADGE
+            ================================================= */
+
+            let slotBadgeText = "";
+
+
+            if (isPast) {
+
+                slotBadgeText =
+                    "Past";
+
+            }
+
+            else if (available) {
+
+                slotBadgeText =
+                    "Available";
+
+            }
+
+            else {
+
+                slotBadgeText =
+                    "Full";
+
+            }
+
+
+            /* =================================================
+               SLOT HTML
+            ================================================= */
+
+            card.innerHTML = `
+
+                <input
+                    type="radio"
+                    class="ff-slot-radio"
+                    name="ride_start_time_ui"
+                    value="${escapeHtml(
+                        slot.start_time
+                    )}"
+                    ${available ? "" : "disabled"}
+                >
+
+
+                <span class="ff-slot-copy">
+
+
+                    <strong>
+
+                        ${escapeHtml(
+                            slot.start_label
+                        )}
+
+                    </strong>
+
+
+                    <span>
+
+                        to
+
+                        ${escapeHtml(
+                            slot.end_label
+                        )}
+
                     </span>
 
-                    <span class="ff-slot-badge">
-                        ${available ? "Available" : "Full"}
-                    </span>
-                `;
 
-                const radio = card.querySelector(".ff-slot-radio");
+                    <small>
 
-                if (available && radio) {
-                    radio.addEventListener(
-                        "change",
-                        function () {
-                            document.querySelectorAll(
-                                ".ff-slot-card"
-                            ).forEach(
-                                function (slotCard) {
-                                    slotCard.classList.remove(
-                                        "selected"
-                                    );
-                                }
-                            );
+                        ${slotDescription}
 
-                            card.classList.add(
-                                "selected"
-                            );
+                    </small>
 
-                            selectedStartTime =
-                                slot.start_time;
 
-                            selectedSlotData =
-                                slot;
+                    ${allocationHtml}
 
-                            /* PROGRESS -> REVIEW */
 
-                            updateBookingProgress(
-                                "review"
-                            );    
+                </span>
 
-                            slotSelectedTime.textContent =
-                                `${slot.start_label} - ${slot.end_label}`;
 
-                            const allocationText =
-                                formatAllocationText(
-                                    slot.allocations
+                <span class="ff-slot-badge">
+
+                    ${slotBadgeText}
+
+                </span>
+
+            `;
+
+
+            /* =================================================
+               RADIO BUTTON
+            ================================================= */
+
+            const radio =
+                card.querySelector(
+                    ".ff-slot-radio"
+                );
+
+
+            /* =================================================
+               ONLY AVAILABLE SLOT CAN BE SELECTED
+            ================================================= */
+
+            if (
+                available
+                &&
+                radio
+            ) {
+
+                radio.addEventListener(
+
+                    "change",
+
+                    function () {
+
+
+                        document.querySelectorAll(
+                            ".ff-slot-card"
+                        ).forEach(
+
+                            function (
+                                slotCard
+                            ) {
+
+                                slotCard.classList.remove(
+                                    "selected"
                                 );
 
-                            slotSelectedAllocation.textContent =
-                                allocationText
-                                ||
-                                `${data.quantity} rider${data.quantity === 1 ? "" : "s"}`;
+                            }
 
-                            slotSelected.classList.add(
-                                "show"
+                        );
+
+
+                        card.classList.add(
+                            "selected"
+                        );
+
+
+                        selectedStartTime =
+                            slot.start_time;
+
+
+                        selectedSlotData =
+                            slot;
+
+
+                        /* PROGRESS -> REVIEW */
+
+                        updateBookingProgress(
+                            "review"
+                        );
+
+
+                        slotSelectedTime.textContent =
+                            `${slot.start_label} - ${slot.end_label}`;
+
+
+                        const allocationText =
+                            formatAllocationText(
+                                slot.allocations
                             );
 
-                            setSlotMessage(
-                                "Start time selected. You can now add this ride to your booking.",
-                                "success"
-                            );
-                        }
-                    );
-                }
 
-                slotList.appendChild(card);
+                        slotSelectedAllocation.textContent =
+                            allocationText
+                            ||
+                            `${data.quantity} rider${data.quantity === 1 ? "" : "s"}`;
+
+
+                        slotSelected.classList.add(
+                            "show"
+                        );
+
+
+                        setSlotMessage(
+                            "Start time selected. You can now add this ride to your booking.",
+                            "success"
+                        );
+
+                    }
+
+                );
+
             }
+
+
+            /* =================================================
+               ADD SLOT TO PAGE
+            ================================================= */
+
+            slotList.appendChild(
+                card
+            );
+
+        }
+
+    );
+
+
+    /* =========================================================
+       BOTTOM MESSAGE
+    ========================================================= */
+
+    if (
+        !data.has_available_slot
+    ) {
+
+        setSlotMessage(
+            "There is not enough available capacity for your group on this date.",
+            "error"
         );
 
-        if (!data.has_available_slot) {
-            setSlotMessage(
-                "There is not enough consecutive capacity for your group on this date.",
-                "error"
-            );
-        }
-        else {
-            setSlotMessage(
-                "Choose one available start time below.",
-                "info"
-            );
-        }
     }
+
+    else {
+
+        setSlotMessage(
+            "Choose one available start time below.",
+            "info"
+        );
+
+    }
+
+}
 
     async function loadSlotAvailability(
         openAfterLoad = true

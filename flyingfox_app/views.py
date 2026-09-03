@@ -7387,6 +7387,70 @@ def booking_options_for_date(request):
 
 
 
+def _is_past_ride_start_time(
+    *,
+    booking_date,
+    start_time,
+):
+    """
+    Return True when the ride start time has already passed.
+
+    Future dates:
+        Never considered past.
+
+    Today:
+        Compare the slot start time against the current
+        Django local time.
+
+    Past dates:
+        Always considered past.
+    """
+
+    now = timezone.localtime()
+
+    today = now.date()
+
+
+    # =====================================================
+    # PAST DATE
+    # =====================================================
+
+    if booking_date < today:
+
+        return True
+
+
+    # =====================================================
+    # FUTURE DATE
+    # =====================================================
+
+    if booking_date > today:
+
+        return False
+
+
+    # =====================================================
+    # TODAY
+    # =====================================================
+
+    slot_datetime = datetime.combine(
+        booking_date,
+        start_time,
+    )
+
+
+    if timezone.is_aware(now):
+
+        slot_datetime = timezone.make_aware(
+            slot_datetime,
+            timezone.get_current_timezone(),
+        )
+
+
+    return slot_datetime <= now
+
+
+
 
 @require_GET
 def booking_slot_availability(request):
@@ -7566,15 +7630,39 @@ def booking_slot_availability(request):
 
         for slot in slot_data:
 
-            allocation_result = (
-                allocate_participants_from_start_slot(
-                    ride=ride,
-                    booking_date=booking_date,
-                    requested_quantity=quantity,
-                    selected_start_time=
-                        slot["start_time"],
-                )
+            # =================================================
+            # IMPORTANT:
+            # TODAY'S PAST START TIMES CANNOT BE BOOKED
+            # =================================================
+
+            is_past = _is_past_ride_start_time(
+                booking_date=booking_date,
+                start_time=slot["start_time"],
             )
+
+
+            # =================================================
+            # ALLOCATION
+            # =================================================
+
+            if is_past:
+
+                allocation_result = {
+                    "available": False,
+                    "allocations": [],
+                }
+
+            else:
+
+                allocation_result = (
+                    allocate_participants_from_start_slot(
+                        ride=ride,
+                        booking_date=booking_date,
+                        requested_quantity=quantity,
+                        selected_start_time=
+                            slot["start_time"],
+                    )
+                )
 
 
             allocations = []
@@ -7635,6 +7723,10 @@ def booking_slot_availability(request):
             )
 
 
+            # =================================================
+            # RESULT
+            # =================================================
+
             result_slots.append(
                 {
                     "start_time":
@@ -7672,13 +7764,25 @@ def booking_slot_availability(request):
                             "remaining"
                         ],
 
+                    "is_past":
+                        is_past,
+
                     "available":
-                        allocation_result[
-                            "available"
-                        ],
+                        (
+                            False
+                            if is_past
+                            else
+                            allocation_result[
+                                "available"
+                            ]
+                        ),
 
                     "allocations":
-                        allocations,
+                        (
+                            []
+                            if is_past
+                            else allocations
+                        ),
                 }
             )
 
@@ -7767,7 +7871,6 @@ def booking_slot_availability(request):
             },
             status=500,
         )
-
 
 
 
@@ -8999,6 +9102,26 @@ def booking_review(request):
                     f"for {ride.name} is invalid."
                 )
             )
+
+
+
+        # =================================================
+        # REJECT TODAY'S PAST START TIME
+        # =================================================
+
+        if _is_past_ride_start_time(
+            booking_date=booking_date,
+            start_time=selected_start_time,
+        ):
+
+            return booking_fail(
+                (
+                    f"The selected start time "
+                    f"{selected_start_time.strftime('%I:%M %p')} "
+                    f"for {ride.name} has already passed. "
+                    f"Please choose another start time."
+                )
+            )   
 
 
         allocation_result = (
@@ -10469,6 +10592,30 @@ def _validate_pending_booking_before_payment(
                     f"Please review your booking again."
                 )
             )
+
+        # =================================================
+        # REJECT START TIME THAT HAS NOW PASSED
+        #
+        # Example:
+        # Customer selected 03:30 PM earlier,
+        # but reaches payment at 03:40 PM.
+        # =================================================
+
+        if _is_past_ride_start_time(
+            booking_date=booking_date,
+            start_time=selected_start_time,
+        ):
+
+            return (
+                None,
+                (
+                    f"The selected start time "
+                    f"{selected_start_time.strftime('%I:%M %p')} "
+                    f"for {ride.name} has already passed. "
+                    f"Please return to the booking page "
+                    f"and choose another start time."
+                )
+            )   
 
 
         allocation_result = (
@@ -12006,6 +12153,37 @@ def booking_confirm(request):
                 },
                 status=409,
             )
+
+
+        # =============================================
+        # FINAL PAST-TIME CHECK
+        #
+        # This runs while the selected Ride rows
+        # are already locked.
+        # =============================================
+
+        if _is_past_ride_start_time(
+            booking_date=booking_date,
+            start_time=selected_start_time,
+        ):
+
+            transaction.set_rollback(
+                True
+            )
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": (
+                        f"The selected start time "
+                        f"{selected_start_time.strftime('%I:%M %p')} "
+                        f"for {ride.name} has already passed. "
+                        f"Please return to the booking page "
+                        f"and choose another start time."
+                    ),
+                },
+                status=409,
+            )    
 
 
         # =============================================
@@ -18552,12 +18730,6 @@ def about(request):
     return render(request, "frontend/about.html", {"testimonials": testimonials,   "mission_gallery_images": mission_gallery_images,})
 
 
-def activity(request):
-    return render(request, "frontend/activity.html")
-
-
-def activity_single(request):
-    return render(request, "frontend/activity-single.html")
 
 def blog(request):
 
@@ -18780,22 +18952,6 @@ Munnar, Kerala
 
 
 
-def destination(request):
-    return render(request, "frontend/destination.html")
-
-
-def destination_single(request):
-    return render(request, "frontend/destination-single.html")
-
-
-def destination_two(request):
-    return render(request, "frontend/destination-2.html")
-
-
-def faq(request):
-    return render(request, "frontend/faq.html")
-
-
 def gallery(request):
 
     gallery_queryset = (
@@ -18830,36 +18986,13 @@ def register(request):
     return render(request, "frontend/register.html")
 
 
-def team(request):
-    return render(request, "frontend/team.html")
 
-
-def privacy(request):
-    return render(request, "frontend/privacy.html")
-
-
-def terms(request):
-    return render(request, "frontend/terms.html")
-
-
-def testimonial(request):
-    return render(request, "frontend/testimonial.html")
-
-
-def tour_two(request):
-    return render(request, "frontend/tour-2.html")
-
-
-def tour_three(request):
-    return render(request, "frontend/tour-3.html")
 
 
 def forgot_password(request):
     return render(request, "frontend/forgot-password.html")
 
 
-def coming_soon(request):
-    return render(request, "frontend/coming-soon.html")
 
 
 def page_404(request, exception=None):

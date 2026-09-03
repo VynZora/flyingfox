@@ -457,17 +457,6 @@ path(
     name="about"
 ),
 
-path(
-    "activity/",
-    views.activity,
-    name="activity"
-),
-
-path(
-    "activity-single/",
-    views.activity_single,
-    name="activity_single"
-),
 
 path(
     "blog/",
@@ -487,29 +476,8 @@ path(
     name="contact"
 ),
 
-path(
-    "destination/",
-    views.destination,
-    name="destination"
-),
 
-path(
-    "destination-single/",
-    views.destination_single,
-    name="destination_single"
-),
 
-path(
-    "destination-2/",
-    views.destination_two,
-    name="destination_two"
-),
-
-path(
-    "faq/",
-    views.faq,
-    name="faq"
-),
 
 path(
     "gallery/",
@@ -529,35 +497,11 @@ path(
     name="register"
 ),
 
-path(
-    "team/",
-    views.team,
-    name="team"
-),
 
-path(
-    "privacy/",
-    views.privacy,
-    name="privacy"
-),
 
-path(
-    "terms/",
-    views.terms,
-    name="terms"
-),
 
-path(
-    "testimonial/",
-    views.testimonial,
-    name="testimonial"
-),
 
-path(
-    "tour-2/",
-    views.tour_two,
-    name="tour_two"
-),
+
 
 path(
     "forgot-password/",
@@ -565,11 +509,6 @@ path(
     name="forgot_password"
 ),
 
-path(
-    "coming-soon/",
-    views.coming_soon,
-    name="coming_soon"
-),
 
 path(
     "404/",
