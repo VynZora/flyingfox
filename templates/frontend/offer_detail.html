@@ -5,6 +5,19 @@
 {{ offer.title }} - Flying Fox Adventure
 {% endblock %}
 
+
+
+
+{% block meta_description %}
+{% if offer.description %}
+{{ offer.description|striptags|truncatechars:160 }}
+{% else %}
+Discover {{ offer.title }} from Flying Fox Adventure and explore available zipline adventure offers in Munnar.
+{% endif %}
+{% endblock %}
+
+
+
 {% block nav_offers %}active{% endblock %}
 
 

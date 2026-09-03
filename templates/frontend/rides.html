@@ -3,20 +3,14 @@
 
 {% block title %}Rides- Flying Fox Adventure{% endblock %}
 
+{% block meta_description %}
+Explore Flying Fox Adventure zipline rides in Munnar. Compare exciting ride experiences, adventure options and plan your ziplining experience in Munnar.
+{% endblock %}
+
 {% block nav_rides %}active{% endblock %}
 
 {% block content %}
   <!-- breadcrumb -->
-  {% comment %} <div class="site-breadcrumb" style="background: url({% static 'frontend/assets/img/about/img-3.jpg' %})">
-    <div class="container">
-      <h3 class="breadcrumb-title"> Rides</h3>
-      <ul class="breadcrumb-menu">
-        <li><a href="{% url 'home' %}">Home</a></li>
-        <li class="active">Rides</li>
-      </ul>
-    </div>
-  </div> {% endcomment %}
-
 
   <!-- =========================================
      RIDES HERO / BREADCRUMB
@@ -78,13 +72,13 @@
                     data-wow-delay=".2s"
                 >
 
-                    <span class="site-title-tagline">
+                    <h1 class="site-title-tagline">
 
                         <i class="fas fa-mountain"></i>
 
                         Flying Fox Adventures
 
-                    </span>
+                    </h1>
 
                     <h3 class="site-title">
 
@@ -166,7 +160,7 @@
                         <img
                             class="shape"
                             src="{% static 'frontend/assets/img/shape/01.webp' %}"
-                            alt=""
+                            alt="flying fox adventure munnar"
                         >
 
                     </div>

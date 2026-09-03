@@ -6,6 +6,7 @@
 {{ blog.title }} - Flying Fox Adventure
 {% endblock %}
 
+{% block meta_description %}{{ blog.description|striptags|truncatechars:160 }}{% endblock %}
 
 {% block nav_blog %}
 active

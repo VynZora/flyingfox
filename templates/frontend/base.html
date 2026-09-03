@@ -14,7 +14,20 @@
     <title>{% block title %}Flying Fox Adventure{% endblock %}</title>
 
     <!-- favicon -->
+
+
+    <meta
+  name="description"
+  content="{% block meta_description %}Experience thrilling zipline adventures in Munnar with Flying Fox Adventure. Discover exciting rides, scenic views and professionally managed adventure experiences.{% endblock %}"/>
      
+
+   <!-- Canonical URL -->
+    <link
+        rel="canonical"
+        href="https://flyingfoxadventuremunnar.com{{ request.path }}"
+    >
+
+
     <!-- =====================================================
      FLYING FOX FAVICONS
 ===================================================== -->
@@ -538,18 +551,18 @@
         <img
             class="shape-1"
             src="{% static 'frontend/assets/img/shape/05.webp' %}"
-            alt="">
+            alt="footer shape 1 flying fox munnar">
 
         <img
             class="shape-2"
             src="{% static 'frontend/assets/img/shape/06.webp' %}"
-            alt=""
+            alt="footer shape 2 flying fox munnar"
         >
 
         <img
             class="shape-3"
             src="{% static 'frontend/assets/img/shape/07.webp' %}"
-            alt=""
+            alt="footer shape 3 flying fox munnar"
         >
 
     </div>

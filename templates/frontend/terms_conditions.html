@@ -181,16 +181,38 @@ Terms & Conditions | Flying Fox Adventure
     position: sticky;
     top: 120px;
 
+    /* Important */
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    overflow-x: hidden;
+
     padding: 28px;
 
     border: 1px solid #eeeeee;
-
     border-radius: 20px;
-
     background: #ffffff;
 
     box-shadow:
         0 15px 45px rgba(0, 0, 0, 0.06);
+}
+
+.ff-legal-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #c31103 #f3f3f3;
+}
+
+.ff-legal-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.ff-legal-sidebar::-webkit-scrollbar-track {
+    background: #f3f3f3;
+    border-radius: 10px;
+}
+
+.ff-legal-sidebar::-webkit-scrollbar-thumb {
+    background: #c31103;
+    border-radius: 10px;
 }
 
 
@@ -665,9 +687,9 @@ Terms & Conditions | Flying Fox Adventure
 
                 <aside class="ff-legal-sidebar">
 
-                    <h4 class="ff-legal-sidebar-title">
+                    <h1 class="ff-legal-sidebar-title">
                         On This Page
-                    </h4>
+                    </h1>
 
                     <ul>
 

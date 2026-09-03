@@ -3087,6 +3087,28 @@ label {
   margin-top: 50px;
 }
 
+/* =========================================
+   FEATURE CARDS FIX
+========================================= */
+
+.feature-area .row.g-4 > [class*="col-"] {
+    display: flex;
+}
+
+.feature-area .feature-item {
+    width: 100%;
+    height: 100%;
+}
+
+.feature-area .feature-head {
+    min-height: 72px;
+}
+
+.feature-area .feature-info {
+    margin-top: 24px;
+    padding-top: 24px;
+}
+
 /* ===================
 23. Counter css 
 ====================== */
@@ -8661,7 +8683,7 @@ span.flatpickr-weekday {
   transform: translateY(-5px);
 }
 
-.safety-feature-item h4 {
+.safety-feature-item .safety-feature-title {
   margin-bottom: 12px;
   color: #ffffff;
   font-size: 17px;
@@ -9176,7 +9198,7 @@ span.flatpickr-weekday {
    FEATURE TEXT
 ========================================================= */
 
-.safety-first-section .safety-feature-item h4 {
+.safety-first-section .safety-feature-item .safety-feature-title {
     margin-bottom: 10px;
 
     font-size: 17px;
@@ -17819,6 +17841,7 @@ span.flatpickr-weekday {
 
 .ff-superman-feature-tag,
 .ff-superman-small-label {
+  
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -17836,6 +17859,22 @@ span.flatpickr-weekday {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.7px;
+}
+.ff-superman-feature-content h3.ff-superman-small-label {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+
+    margin: 0 0 18px 0;
+
+    color: var(--theme-color);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+
+    /* prevent normal content h3 styles */
+    letter-spacing: normal;
 }
 
 .ff-superman-feature-heading h2 {
@@ -17953,7 +17992,7 @@ span.flatpickr-weekday {
     max-width: 580px;
 }
 
-.ff-superman-feature-content h3 {
+.ff-superman-feature-content .ff-superman-content-title {
     margin: 18px 0 18px;
 
     color: #171717;
@@ -17963,7 +18002,7 @@ span.flatpickr-weekday {
     font-weight: 800;
 }
 
-.ff-superman-feature-content h3 span {
+.ff-superman-feature-content .ff-superman-content-title span {
     display: block;
     color: #C31103;
 }
@@ -18279,7 +18318,7 @@ span.flatpickr-weekday {
         font-size: 40px;
     }
 
-    .ff-superman-feature-content h3 {
+    .ff-superman-feature-content .ff-superman-content-title {
         font-size: 36px;
     }
 }
@@ -18320,7 +18359,7 @@ span.flatpickr-weekday {
         height: 300px;
     }
 
-    .ff-superman-feature-content h3 {
+    .ff-superman-feature-content .ff-superman-content-title {
         margin-top: 15px;
 
         font-size: 30px;
@@ -18361,7 +18400,7 @@ span.flatpickr-weekday {
         font-size: 28px;
     }
 
-    .ff-superman-feature-content h3 {
+    .ff-superman-feature-content .ff-superman-content-title {
         font-size: 27px;
     }
 
@@ -19831,26 +19870,22 @@ span.flatpickr-weekday {
     margin-bottom: 12px;
 }
 
-.ff-mission-heading h2 {
+.ff-mission-heading .ff-mission-main-title {
     margin-bottom: 14px;
-
     color: var(--color-dark);
-
     font-size: clamp(44px, 5vw, 72px);
     font-weight: 900;
     line-height: 1;
     text-transform: uppercase;
 }
 
-.ff-mission-heading h2 span {
+.ff-mission-heading .ff-mission-main-title span {
     color: var(--theme-color);
 }
 
-.ff-mission-heading h4 {
+.ff-mission-heading .ff-mission-sub-title {
     margin-bottom: 16px;
-
     color: var(--color-dark);
-
     font-size: 18px;
     font-weight: 600;
 }
@@ -20080,11 +20115,11 @@ span.flatpickr-weekday {
         padding: 80px 0;
     }
 
-    .ff-mission-heading h2 {
+    .ff-mission-heading .ff-mission-main-title {
         font-size: 40px;
     }
 
-    .ff-mission-heading h4 {
+    .ff-mission-heading .ff-mission-sub-title {
         font-size: 16px;
     }
 
@@ -36614,3 +36649,39 @@ p {
 
 }
 /* index page offers css end */
+
+
+
+
+/* our mission css start */
+.ff-mission-heading .site-title-tagline {
+    display: inline-flex;
+    align-items: center;
+
+    color: var(--theme-color);
+
+    font-weight: 500;
+    font-size: 22px;
+
+    border: 1.5px solid #1e1e1e;
+    border-radius: 50px;
+
+    padding: 3px 15px 3px 3px;
+    margin-bottom: 12px;
+}
+
+.ff-mission-heading .site-title-tagline i {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+
+    margin-right: 8px;
+
+    text-align: center;
+
+    color: #ffffff;
+    background: var(--theme-color);
+
+    border-radius: 50%;
+}
+/* our mission css end  */

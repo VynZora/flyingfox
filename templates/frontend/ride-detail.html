@@ -6,6 +6,8 @@
 {{ ride.name }} | Flying Fox Adventure
 {% endblock %}
 
+{% block meta_description %}{{ ride.description|striptags|truncatechars:160 }}{% endblock %}
+
 
 {% block content %}
 
