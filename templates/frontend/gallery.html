@@ -21,19 +21,27 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
 {% endif %}
 {% endblock %}
 
+
+ <!-- Canonical URL -->
+    {% if gallery_items.number == 1 %}
+        <link
+            rel="canonical"
+            href="https://flyingfoxadventuremunnar.com/gallery/"
+        >
+    {% else %}
+        <link
+            rel="canonical"
+            href="https://flyingfoxadventuremunnar.com/gallery/page/{{ gallery_items.number }}/"
+        >
+    {% endif %}
+
+
+
 {% block nav_gallery %}active{% endblock %}
 
 {% block content %}
   <!-- breadcrumb -->
-  {% comment %} <div class="site-breadcrumb" style="background: url({% static 'frontend/assets/img/about/img-6.jpeg' %})">
-    <div class="container">
-      <h3 class="breadcrumb-title">Our Gallery</h3>
-      <ul class="breadcrumb-menu">
-        <li><a href="{% url 'home' %}">Home</a></li>
-        <li class="active">Our Gallery</li>
-      </ul>
-    </div>
-  </div> {% endcomment %}
+  
 
 
   <div class="site-breadcrumb ff-about-math-hero">
@@ -184,58 +192,83 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
              PAGINATION
         =========================================== -->
 
-        {% if gallery_items.has_other_pages %}
+{% if gallery_items.has_other_pages %}
 
-        <div class="pagination-area">
+<div class="pagination-area">
 
-            <ul class="pagination">
+    <ul class="pagination">
 
-                {% if gallery_items.has_previous %}
+        <!-- Previous -->
+        {% if gallery_items.has_previous %}
+            <li class="page-item">
 
-                <li class="page-item">
+                {% if gallery_items.previous_page_number == 1 %}
                     <a
                         class="page-link"
-                        href="?page={{ gallery_items.previous_page_number }}"
+                        href="{% url 'gallery' %}"
                     >
                         <i class="fas fa-arrow-left"></i>
                     </a>
-                </li>
-
-                {% endif %}
-
-
-                {% for page in gallery_items.paginator.page_range %}
-
-                <li class="page-item {% if gallery_items.number == page %}active{% endif %}">
+                {% else %}
                     <a
                         class="page-link"
-                        href="?page={{ page }}"
+                        href="{% url 'gallery_page' gallery_items.previous_page_number %}"
+                    >
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                {% endif %}
+
+            </li>
+        {% endif %}
+
+
+        <!-- Page numbers -->
+        {% for page in gallery_items.paginator.page_range %}
+
+            <li class="page-item {% if gallery_items.number == page %}active{% endif %}">
+
+                {% if page == 1 %}
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery' %}"
                     >
                         {{ page }}
                     </a>
-                </li>
-
-                {% endfor %}
-
-
-                {% if gallery_items.has_next %}
-
-                <li class="page-item">
+                {% else %}
                     <a
                         class="page-link"
-                        href="?page={{ gallery_items.next_page_number }}"
+                        href="{% url 'gallery_page' page %}"
                     >
-                        <i class="fas fa-arrow-right"></i>
+                        {{ page }}
                     </a>
-                </li>
-
                 {% endif %}
 
-            </ul>
+            </li>
 
-        </div>
+        {% endfor %}
+
+
+        <!-- Next -->
+        {% if gallery_items.has_next %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="{% url 'gallery_page' gallery_items.next_page_number %}"
+                >
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            </li>
 
         {% endif %}
+
+    </ul>
+
+</div>
+
+{% endif %}
 
     </div>
 

@@ -486,6 +486,12 @@ path(
 ),
 
 path(
+    "gallery/page/<int:page>/",
+    views.gallery,
+    name="gallery_page"
+),
+
+path(
     "login/",
     views.login_page,
     name="login_page"

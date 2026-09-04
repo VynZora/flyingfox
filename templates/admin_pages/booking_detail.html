@@ -48,14 +48,10 @@ Booking Details | FlyingFox Admin
 
 
 .detail-grid {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
-
+    align-items: start;
 }
 
 
@@ -611,6 +607,22 @@ Booking Details | FlyingFox Admin
 
 }
 
+
+
+{% comment %} button color css start {% endcomment %}
+.badge.bg-success,
+.badge.bg-danger,
+.badge.bg-primary,
+.badge.bg-secondary {
+    color: #ffffff !important;
+}
+
+.badge.bg-warning {
+    color: #1f2937 !important;
+}
+{% comment %} button color css end  {% endcomment %}
+
+
  </style>
  
  {% endblock %}
@@ -666,7 +678,7 @@ Booking Details | FlyingFox Admin
 
 
 
-    <div class="detail-grid">
+{% comment %} <div class="detail-grid">
 
 
         <!-- BOOKING -->
@@ -1109,7 +1121,532 @@ Booking Details | FlyingFox Admin
 </div>
 
 
+    </div> {% endcomment %}
+
+
+    <!-- =====================================================
+     ROW 1
+     BOOKING INFORMATION + RIDE DETAILS
+====================================================== -->
+
+<div class="detail-grid">
+
+    <!-- =================================================
+         LEFT - BOOKING INFORMATION
+    ================================================== -->
+
+    <div class="detail-card">
+
+        <h5>
+            Booking Information
+        </h5>
+
+        <div class="info-row">
+            <span>Booking ID</span>
+
+            <strong>
+                {{ booking.booking_id }}
+            </strong>
+        </div>
+
+        <div class="info-row">
+            <span>Ride Date</span>
+
+            <strong>
+                {{ booking.booking_date|date:"d M Y" }}
+            </strong>
+        </div>
+
+        <div class="info-row">
+            <span>Total Riders</span>
+
+            <strong>
+                {{ total_participants }}
+            </strong>
+        </div>
+
+        <div class="info-row">
+            <span>Created</span>
+
+            <strong>
+                {{ booking.created_at|date:"d M Y h:i A" }}
+            </strong>
+        </div>
+
     </div>
+
+
+    <!-- =================================================
+         RIGHT - RIDE DETAILS
+    ================================================== -->
+
+    <div class="detail-card">
+
+        <h5>
+            Ride Details
+        </h5>
+
+
+        {% for item in ride_items %}
+
+            <div class="ride-detail-item">
+
+
+                <!-- RIDE HEADER -->
+
+                <div class="ride-detail-header">
+
+                    <div>
+
+                        <strong>
+                            {{ item.ride.name }}
+                        </strong>
+
+                        <div class="ride-slot-config">
+
+                            Capacity:
+                            {{ item.ride.capacity_per_slot }}
+                            riders / slot
+
+                            ·
+
+                            {{ item.ride.slot_duration_minutes }}
+                            minutes
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="badge bg-primary">
+
+                        {{ item.quantity }}
+
+                        Rider{{ item.quantity|pluralize }}
+
+                    </span>
+
+                </div>
+
+
+                <!-- PARTICIPANTS -->
+
+                <div class="info-row">
+
+                    <span>
+                        Participants
+                    </span>
+
+                    <strong>
+                        {{ item.quantity }}
+                    </strong>
+
+                </div>
+
+
+                <!-- RIDE PRICE -->
+
+                {% if item.ride_price %}
+
+                    <div class="info-row">
+
+                        <span>
+                            Ride Price
+                        </span>
+
+                        <strong>
+                            {{ item.ride_price }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- OFFER -->
+
+                {% if item.offer %}
+
+                    <div class="info-row">
+
+                        <span>
+                            Offer
+                        </span>
+
+                        <strong>
+                            {{ item.offer.title }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- RIDE TOTAL -->
+
+                <div class="info-row">
+
+                    <span>
+                        Ride Total
+                    </span>
+
+                    <strong class="price-text">
+                        ₹{{ item.total_amount }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            {% if not forloop.last %}
+                <hr class="my-4">
+            {% endif %}
+
+
+        {% empty %}
+
+            <p class="text-muted mb-0">
+                No ride items found.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!-- =====================================================
+     ROW 2
+     CUSTOMER + ALLOCATED SCHEDULE
+====================================================== -->
+
+<div class="detail-grid mt-4">
+
+
+    <!-- =================================================
+         LEFT - CUSTOMER
+    ================================================== -->
+
+    <div class="detail-card">
+
+        <h5>
+            Customer
+        </h5>
+
+
+        <div class="info-row">
+
+            <span>
+                Name
+            </span>
+
+            <strong>
+                {{ booking.customer_name }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Email
+            </span>
+
+            <strong>
+                {{ booking.customer_email }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Phone
+            </span>
+
+            <strong>
+                {{ booking.customer_phone }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                PIN Code
+            </span>
+
+            <strong>
+                {{ booking.customer_pincode }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span>
+                Time Slot
+            </span>
+
+            <strong>
+                {{ booking.time_slot }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         RIGHT - ALLOCATED SCHEDULE
+    ================================================== -->
+
+    <div class="detail-card">
+
+        <h5>
+            Allocated Schedule
+        </h5>
+
+
+        {% for item in ride_items %}
+
+
+            <!-- Ride name -->
+
+            <div class="ride-detail-header">
+
+                <div>
+
+                    <strong>
+                        {{ item.ride.name }}
+                    </strong>
+
+                </div>
+
+
+                <span class="badge bg-primary">
+
+                    {{ item.admin_allocated_riders }}
+
+                    rider{{ item.admin_allocated_riders|pluralize }}
+
+                </span>
+
+            </div>
+
+
+            <!-- Schedule -->
+
+            <div class="admin-detail-schedule">
+
+
+                <div class="admin-detail-schedule-title">
+
+                    <div>
+
+                        <i class="fas fa-calendar-check"></i>
+
+                        Allocated Schedule
+
+                    </div>
+
+
+                    <span>
+
+                        {{ item.admin_allocated_riders }}
+
+                        rider{{ item.admin_allocated_riders|pluralize }}
+
+                        allocated
+
+                    </span>
+
+                </div>
+
+
+                {% if item.admin_display_slots %}
+
+
+                    <div class="admin-detail-slot-list">
+
+
+                        {% for slot in item.admin_display_slots %}
+
+
+                            <div class="admin-detail-slot">
+
+
+                                <!-- TIME -->
+
+                                <div class="detail-slot-time">
+
+                                    <div class="detail-slot-clock">
+
+                                        <i class="far fa-clock"></i>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <strong>
+
+                                            {{ slot.start_label }}
+                                            -
+                                            {{ slot.end_label }}
+
+                                        </strong>
+
+                                        <small>
+                                            Scheduled ride time
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- RIDERS -->
+
+                                <div class="detail-slot-count">
+
+                                    <small>
+                                        Riders
+                                    </small>
+
+                                    <strong>
+                                        {{ slot.participant_count }}
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- STATUS -->
+
+                                <div>
+
+
+                                    {% if slot.status == "confirmed" %}
+
+                                        <span class="detail-slot-status confirmed">
+
+                                            <i class="fas fa-circle-check"></i>
+
+                                            Confirmed
+
+                                        </span>
+
+
+                                    {% elif slot.status == "held" %}
+
+                                        <span class="detail-slot-status held">
+
+                                            <i class="fas fa-hourglass-half"></i>
+
+                                            Payment Hold
+
+                                        </span>
+
+
+                                    {% elif slot.status == "cancelled" %}
+
+                                        <span class="detail-slot-status cancelled">
+
+                                            <i class="fas fa-circle-xmark"></i>
+
+                                            Cancelled
+
+                                        </span>
+
+
+                                    {% elif slot.status == "expired" %}
+
+                                        <span class="detail-slot-status expired">
+
+                                            <i class="fas fa-clock-rotate-left"></i>
+
+                                            Expired
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </div>
+
+
+                            </div>
+
+
+                            {% if slot.status == "held" and slot.hold_expires_at %}
+
+                                <div class="slot-hold-expiry">
+
+                                    <i class="fas fa-hourglass-end"></i>
+
+                                    Hold expires:
+
+                                    <strong>
+                                        {{ slot.hold_expires_at|date:"d M Y h:i A" }}
+                                    </strong>
+
+                                </div>
+
+                            {% endif %}
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <div class="admin-detail-no-slots">
+
+                        <i class="far fa-calendar-xmark"></i>
+
+                        No allocated schedule exists for this ride.
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+            {% if not forloop.last %}
+                <hr class="my-4">
+            {% endif %}
+
+
+        {% empty %}
+
+            <p class="text-muted mb-0">
+                No allocated schedule found.
+            </p>
+
+        {% endfor %}
+
+
+    </div>
+
+</div>
 
 
 

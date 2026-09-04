@@ -18952,7 +18952,7 @@ Munnar, Kerala
 
 
 
-def gallery(request):
+def gallery(request, page=1):
 
     gallery_queryset = (
         GalleryItem.objects
@@ -18965,9 +18965,7 @@ def gallery(request):
         12,
     )
 
-    gallery_items = paginator.get_page(
-        request.GET.get("page")
-    )
+    gallery_items = paginator.get_page(page)
 
     return render(
         request,
@@ -18976,6 +18974,8 @@ def gallery(request):
             "gallery_items": gallery_items,
         },
     )
+
+
 
 
 def login_page(request):
