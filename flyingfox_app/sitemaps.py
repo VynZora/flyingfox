@@ -23,6 +23,8 @@ class StaticViewSitemap(Sitemap):
             "offers",
             "gallery",
             "contact",
+            "bookings",   
+            "user_signin", 
             "terms_conditions",
             "privacy_policy",
         ]
