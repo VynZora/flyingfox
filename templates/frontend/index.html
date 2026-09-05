@@ -1128,7 +1128,7 @@ Try the Munnar zipline at Flying Fox Adventure. Fly 1.5 KM above the valley on S
   </div>
 </div>
 <!-- rides area end -->
-
+{% comment %} 
 <!-- offers section -->
 <section class="ff-home-offers">
   <div class="ff-offers-cable ff-offers-cable-one"></div>
@@ -1260,7 +1260,334 @@ Try the Munnar zipline at Flying Fox Adventure. Fly 1.5 KM above the valley on S
       </div>
     </div>
   </div>
+</section> {% endcomment %}
+
+
+
+<!-- =========================================================
+     FLYING FOX OFFERS V2
+========================================================= -->
+
+<section
+    class="ff-deals-v2"
+    style="--ff-deals-pattern: url('{% static 'frontend/assets/img/offers/offers-pattern.webp' %}');"
+>
+
+    <!-- =====================================================
+         DECORATIVE BACKGROUND
+    ====================================================== -->
+
+    <div
+        class="ff-deals-v2-pattern"
+        aria-hidden="true"
+    ></div>
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <div class="ff-deals-v2-container">
+
+        <div class="ff-deals-v2-layout">
+
+
+            <!-- =================================================
+                 LEFT SIDE
+            ================================================== -->
+
+            <div class="ff-deals-v2-intro">
+
+
+                <!-- SMALL LABEL -->
+
+                <div class="ff-deals-v2-eyebrow">
+
+                    <i class="far fa-ticket"></i>
+
+                    <span>
+                        Limited-Time Deals
+                    </span>
+
+                    <span class="ff-deals-v2-eyebrow-line"></span>
+
+                </div>
+
+
+                <!-- MAIN TITLE -->
+
+                <h2 class="ff-deals-v2-title">
+
+                    <span class="ff-deals-v2-title-white">
+                        More Thrill.
+                    </span>
+
+                    <span class="ff-deals-v2-title-cream">
+                        Better Price.
+                    </span>
+
+                </h2>
+
+
+                <!-- DESCRIPTION -->
+
+                <p class="ff-deals-v2-description">
+                    Discover exclusive Flying Fox offers
+                    and make your Munnar adventure even
+                    more exciting.
+                </p>
+
+
+                <!-- ALL OFFERS BUTTON -->
+
+                <a
+                    href="{% url 'offers' %}"
+                    class="ff-deals-v2-all-btn"
+                >
+
+                    <span class="ff-deals-v2-all-btn-text">
+                        Explore All Offers
+                    </span>
+
+                    <span class="ff-deals-v2-all-btn-icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE
+            ================================================== -->
+
+            <div class="ff-deals-v2-content">
+
+
+                <!-- =============================================
+                     TOP TOOLBAR
+                ============================================== -->
+
+                <div class="ff-deals-v2-toolbar">
+
+
+                    <div class="ff-deals-v2-toolbar-title">
+
+                        <i class="far fa-ticket"></i>
+
+                        <span>
+                            Latest Adventure Deals
+                        </span>
+
+                    </div>
+
+
+                    {% if active_offers|length > 1 %}
+
+                    <div class="ff-deals-v2-controls">
+
+
+                        <!-- PREVIOUS -->
+
+                        <button
+                            type="button"
+                            class="ff-deals-v2-nav ff-deals-v2-prev"
+                            aria-label="Previous offer"
+                        >
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+
+
+                        <!-- NEXT -->
+
+                        <button
+                            type="button"
+                            class="ff-deals-v2-nav ff-deals-v2-next"
+                            aria-label="Next offer"
+                        >
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+
+
+                        <!-- COUNTER -->
+
+                        {% comment %} <div class="ff-deals-v2-counter">
+
+                            <strong class="ff-deals-v2-current">
+                                01
+                            </strong>
+
+                            <span class="ff-deals-v2-counter-slash">
+                                /
+                            </span>
+
+                            <span class="ff-deals-v2-total">
+                                {{ active_offers|length|stringformat:"02d" }}
+                            </span>
+
+                        </div>
+
+
+                        <span class="ff-deals-v2-counter-line"></span> {% endcomment %}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- =============================================
+                     OFFERS
+                ============================================== -->
+
+                {% if active_offers %}
+
+                <div
+                    class="ff-deals-v2-slider owl-carousel owl-theme"
+                >
+
+                    {% for offer in active_offers %}
+
+                    <div class="ff-deals-v2-slide">
+
+
+                        <article class="ff-deals-v2-card">
+
+
+                            <!-- =============================
+                                 IMAGE
+                            ============================== -->
+
+                            <a
+                                href="{% url 'frontend_offer_detail' offer.slug %}"
+                                class="ff-deals-v2-image-link"
+                                aria-label="View {{ offer.title }}"
+                            >
+
+                                <div class="ff-deals-v2-image-wrap">
+
+
+                                    {% if offer.banner_image %}
+
+                                    <img
+                                        src="{{ offer.banner_image.url }}"
+                                        alt="{{ offer.title }}"
+                                        class="ff-deals-v2-image"
+                                        loading="lazy"
+                                    />
+
+                                    {% endif %}
+
+
+                                    <span class="ff-deals-v2-badge">
+
+                                        <i class="fas fa-tag"></i>
+
+                                        Special Offer
+
+                                    </span>
+
+
+                                </div>
+
+                            </a>
+
+
+                            <!-- =============================
+                                 WHITE CONTENT
+                            ============================== -->
+
+                            <div class="ff-deals-v2-card-body">
+
+
+                                <h3 class="ff-deals-v2-card-title">
+
+                                    <a
+                                        href="{% url 'frontend_offer_detail' offer.slug %}"
+                                    >
+                                        {{ offer.title }}
+                                    </a>
+
+                                </h3>
+
+
+                                {% if offer.description %}
+
+                                <p class="ff-deals-v2-card-description">
+                                    {{ offer.description|striptags|truncatewords:15 }}
+                                </p>
+
+                                {% endif %}
+
+
+                                <a
+                                    href="{% url 'frontend_offer_detail' offer.slug %}"
+                                    class="ff-deals-v2-view"
+                                >
+
+                                    <span>
+                                        View Deal
+                                    </span>
+
+                                    <i class="fas fa-arrow-right"></i>
+
+                                </a>
+
+
+                            </div>
+
+
+                        </article>
+
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                {% else %}
+
+
+                <!-- =============================================
+                     EMPTY STATE
+                ============================================== -->
+
+                <div class="ff-deals-v2-empty">
+
+                    <i class="far fa-ticket"></i>
+
+                    <h3>
+                        New offers coming soon
+                    </h3>
+
+                    <p>
+                        Check back soon for our latest
+                        Flying Fox adventure deals.
+                    </p>
+
+                </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
+
+
+
+
 
 <!-- safety section -->
 
@@ -3004,111 +3331,291 @@ Try the Munnar zipline at Flying Fox Adventure. Fly 1.5 KM above the valley on S
   });
 </script>
 
+
+
+{% comment %} offers js start {% endcomment %}
 <script>
 $(document).ready(function () {
 
-  const offerSlider = $(".ff-offers-slider");
+    /* =========================================================
+       GET SLIDER
+    ========================================================= */
 
-  if (!offerSlider.length) {
-    return;
-  }
+    const slider =
+        $(".ff-deals-v2-slider");
 
-  offerSlider.owlCarousel({
 
-    loop: true,
+    if (!slider.length) {
+        return;
+    }
 
-    margin: 20,
 
-    nav: false,
+    /* =========================================================
+       TOTAL OFFERS
+    ========================================================= */
 
-    dots: false,
+    const totalOffers =
+        slider
+            .find(".ff-deals-v2-slide")
+            .length;
 
-    autoplay: true,
 
-    autoplayTimeout: 4500,
+    function ffFormatOfferNumber(number) {
 
-    autoplayHoverPause: true,
-
-    smartSpeed: 700,
-
-    mouseDrag: true,
-
-    touchDrag: true,
-
-    pullDrag: true,
-
-    responsive: {
-
-      0: {
-        items: 1,
-        margin: 14,
-        stagePadding: 0
-      },
-
-      576: {
-        items: 1.15,
-        margin: 16,
-        stagePadding: 0
-      },
-
-      768: {
-        items: 1.5,
-        margin: 18,
-        stagePadding: 0
-      },
-
-      992: {
-        items: 1.8,
-        margin: 18,
-        stagePadding: 0
-      },
-
-      1200: {
-        items: 2.15,
-        margin: 20,
-        stagePadding: 0
-      },
-
-      1400: {
-        items: 2.35,
-        margin: 20,
-        stagePadding: 0
-      },
-
-      1600: {
-        items: 2.45,
-        margin: 22,
-        stagePadding: 0
-      }
+        return String(number)
+            .padStart(2, "0");
 
     }
 
-  });
+
+    /* =========================================================
+       INITIAL TOTAL
+    ========================================================= */
+
+    $(".ff-deals-v2-total").text(
+        ffFormatOfferNumber(totalOffers)
+    );
 
 
-  /* PREVIOUS BUTTON */
-
-  $(".ff-offers-prev").on("click", function (e) {
-
-    e.preventDefault();
-
-    offerSlider.trigger("prev.owl.carousel", [700]);
-
-  });
+    $(".ff-deals-v2-current").text(
+        "01"
+    );
 
 
-  /* NEXT BUTTON */
+    /* =========================================================
+       INITIALIZE OWL
+    ========================================================= */
 
-  $(".ff-offers-next").on("click", function (e) {
+    slider.owlCarousel({
 
-    e.preventDefault();
+        loop:
+            totalOffers > 2,
 
-    offerSlider.trigger("next.owl.carousel", [700]);
+        nav:
+            false,
 
-  });
+        dots:
+            totalOffers > 1,
+
+        autoplay:
+            totalOffers > 1,
+
+        autoplayTimeout:
+            4500,
+
+        autoplayHoverPause:
+            true,
+
+        smartSpeed:
+            700,
+
+        mouseDrag:
+            true,
+
+        touchDrag:
+            true,
+
+        pullDrag:
+            true,
+
+        responsive: {
+
+
+            /* MOBILE */
+
+            0: {
+
+                items:
+                    1,
+
+                margin:
+                    14,
+
+                stagePadding:
+                    0
+
+            },
+
+
+            /* LARGE MOBILE */
+
+            576: {
+
+                items:
+                    1.15,
+
+                margin:
+                    16,
+
+                stagePadding:
+                    0
+
+            },
+
+
+            /* TABLET */
+
+            768: {
+
+                items:
+                    1.7,
+
+                margin:
+                    18,
+
+                stagePadding:
+                    0
+
+            },
+
+
+            /* SMALL DESKTOP */
+
+            992: {
+
+                items:
+                    2,
+
+                margin:
+                    20,
+
+                stagePadding:
+                    0
+
+            },
+
+
+            /* DESKTOP */
+
+            1200: {
+
+                items:
+                    2.20,
+
+                margin:
+                    21,
+
+                stagePadding:
+                    0
+
+            },
+
+
+            /* LARGE DESKTOP */
+
+            1400: {
+
+                items:
+                    2.45,
+
+                margin:
+                    22,
+
+                stagePadding:
+                    0
+
+            },
+
+
+            /* VERY LARGE */
+
+            1600: {
+
+                items:
+                    2.70,
+
+                margin:
+                    24,
+
+                stagePadding:
+                    0
+
+            }
+
+        }
+
+    });
+
+
+    /* =========================================================
+       UPDATE CURRENT NUMBER
+    ========================================================= */
+
+    slider.on(
+        "changed.owl.carousel",
+        function (event) {
+
+            let index =
+                event.item.index;
+
+
+            if (
+                event.relatedTarget &&
+                typeof event.relatedTarget.relative === "function"
+            ) {
+
+                index =
+                    event.relatedTarget.relative(
+                        event.item.index
+                    );
+
+            }
+
+
+            $(".ff-deals-v2-current").text(
+                ffFormatOfferNumber(
+                    index + 1
+                )
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       PREVIOUS
+    ========================================================= */
+
+    $(".ff-deals-v2-prev").on(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            slider.trigger(
+                "prev.owl.carousel",
+                [700]
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       NEXT
+    ========================================================= */
+
+    $(".ff-deals-v2-next").on(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            slider.trigger(
+                "next.owl.carousel",
+                [700]
+            );
+
+        }
+    );
 
 });
 </script>
+{% comment %} offers js end  {% endcomment %}
+
+
+
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

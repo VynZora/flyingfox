@@ -36822,3 +36822,2029 @@ p {
     }
 }
 /* update offers css end */
+
+
+
+
+
+
+
+
+/* offers section css satrt */
+/* ============================================================
+   FLYING FOX OFFERS V2
+   Completely isolated from old .ff-offers-* CSS
+============================================================ */
+/* ============================================================
+   FLYING FOX OFFERS V2
+   COMPACT FINAL VERSION
+============================================================ */
+
+
+/* ============================================================
+   SECTION
+============================================================ */
+
+.ff-deals-v2 {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    overflow:
+        hidden;
+
+    isolation:
+        isolate;
+
+    padding:
+        58px
+        0
+        52px;
+
+    background:
+        radial-gradient(
+            circle at 14% 22%,
+            rgba(255,255,255,.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(255,255,255,.04),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #df180b 0%,
+            #c31103 48%,
+            #a30d02 100%
+        );
+}
+
+
+/* ============================================================
+   DECORATIVE TRANSPARENT PATTERN
+============================================================ */
+
+.ff-deals-v2-pattern {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        0;
+
+    pointer-events:
+        none;
+
+    background-image:
+        var(--ff-deals-pattern);
+
+    background-repeat:
+        no-repeat;
+
+    background-position:
+        center bottom;
+
+    background-size:
+        100% 100%;
+
+    opacity:
+        .34;
+}
+
+
+.ff-deals-v2::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        1;
+
+    pointer-events:
+        none;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(143,13,2,.10) 0%,
+            rgba(195,17,3,.02) 40%,
+            rgba(120,8,1,.08) 100%
+        );
+}
+
+
+/* ============================================================
+   CONTAINER
+============================================================ */
+
+.ff-deals-v2-container {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    width:
+        100%;
+
+    max-width:
+        1800px;
+
+    margin:
+        0 auto;
+
+    padding-left:
+        clamp(35px, 5vw, 90px);
+
+    padding-right:
+        0;
+}
+
+
+/* ============================================================
+   MAIN GRID
+============================================================ */
+
+.ff-deals-v2-layout {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(310px, .84fr)
+        minmax(0, 2.16fr);
+
+    gap:
+        clamp(36px, 4vw, 68px);
+
+    align-items:
+        center;
+}
+
+
+/* ============================================================
+   LEFT INTRO
+============================================================ */
+
+.ff-deals-v2-intro {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    width:
+        100%;
+
+    max-width:
+        450px;
+}
+
+
+/* ============================================================
+   SMALL LABEL
+============================================================ */
+
+.ff-deals-v2-eyebrow {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+
+    margin-bottom:
+        20px;
+
+    color:
+        #ffffff !important;
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1;
+
+    letter-spacing:
+        .4px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.ff-deals-v2-eyebrow i {
+
+    color:
+        #ffffff !important;
+
+    font-size:
+        20px;
+}
+
+
+.ff-deals-v2-eyebrow-line {
+
+    width:
+        105px;
+
+    height:
+        1px;
+
+    display:
+        block;
+
+    margin-left:
+        8px;
+
+    background:
+        rgba(255,255,255,.72);
+}
+
+
+/* ============================================================
+   TITLE
+============================================================ */
+
+.ff-deals-v2-title {
+
+    margin:
+        0
+        0
+        16px !important;
+
+    padding:
+        0;
+
+    font-family:
+        var(--body-font);
+
+    font-size:
+        clamp(44px, 3.45vw, 61px);
+
+    font-weight:
+        900 !important;
+
+    line-height:
+        .96;
+
+    letter-spacing:
+        -2px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.ff-deals-v2-title-white {
+
+    display:
+        block;
+
+    color:
+        #ffffff !important;
+}
+
+
+.ff-deals-v2-title-cream {
+
+    display:
+        block;
+
+    margin-top:
+        6px;
+
+    color:
+        #fff0c7 !important;
+}
+
+
+/* ============================================================
+   DESCRIPTION
+============================================================ */
+
+.ff-deals-v2-description {
+
+    max-width:
+        410px;
+
+    margin:
+        0
+        0
+        21px !important;
+
+    color:
+        rgba(255,255,255,.90) !important;
+
+    font-size:
+        16px;
+
+    font-weight:
+        400;
+
+    line-height:
+        1.5;
+}
+
+
+/* ============================================================
+   EXPLORE ALL BUTTON
+============================================================ */
+
+.ff-deals-v2-all-btn {
+
+    width:
+        292px;
+
+    min-height:
+        58px;
+
+    display:
+        flex !important;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        5px
+        5px
+        5px
+        26px !important;
+
+    margin:
+        0;
+
+    border:
+        0;
+
+    border-radius:
+        999px;
+
+    background:
+        #ffffff !important;
+
+    color:
+        #c31103 !important;
+
+    text-decoration:
+        none !important;
+
+    box-shadow:
+        0 14px 30px
+        rgba(74,0,0,.14);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+}
+
+
+.ff-deals-v2-all-btn:hover {
+
+    color:
+        #c31103 !important;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 18px 38px
+        rgba(74,0,0,.21);
+}
+
+
+.ff-deals-v2-all-btn-text {
+
+    display:
+        block !important;
+
+    width:
+        auto !important;
+
+    height:
+        auto !important;
+
+    padding:
+        0 !important;
+
+    margin:
+        0 !important;
+
+    border-radius:
+        0 !important;
+
+    background:
+        transparent !important;
+
+    color:
+        #c31103 !important;
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.2;
+
+    white-space:
+        nowrap;
+}
+
+
+.ff-deals-v2-all-btn-icon {
+
+    width:
+        46px !important;
+
+    height:
+        46px !important;
+
+    flex:
+        0 0 46px;
+
+    display:
+        flex !important;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin:
+        0 !important;
+
+    padding:
+        0 !important;
+
+    border-radius:
+        50% !important;
+
+    background:
+        #c31103 !important;
+
+    color:
+        #ffffff !important;
+
+    transition:
+        transform .3s ease;
+}
+
+
+.ff-deals-v2-all-btn:hover
+.ff-deals-v2-all-btn-icon {
+
+    transform:
+        translateX(3px);
+}
+
+
+/* ============================================================
+   RIGHT CONTENT
+============================================================ */
+
+.ff-deals-v2-content {
+
+    position:
+        relative;
+
+    min-width:
+        0;
+
+    width:
+        100%;
+}
+
+
+/* ============================================================
+   TOOLBAR
+============================================================ */
+
+.ff-deals-v2-toolbar {
+
+    min-height:
+        44px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    margin-bottom:
+        15px;
+
+    padding-right:
+        clamp(28px, 4vw, 70px);
+}
+
+
+.ff-deals-v2-toolbar-title {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    color:
+        #ffffff !important;
+
+    font-size:
+        15px;
+
+    font-weight:
+        900;
+
+    line-height:
+        1;
+
+    letter-spacing:
+        .4px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.ff-deals-v2-toolbar-title i {
+
+    color:
+        #ffffff !important;
+
+    font-size:
+        20px;
+}
+
+
+/* ============================================================
+   TOOLBAR CONTROLS
+============================================================ */
+
+.ff-deals-v2-controls {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+}
+
+
+/* ============================================================
+   PREVIOUS / NEXT BUTTONS
+============================================================ */
+
+.ff-deals-v2-nav {
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    min-width:
+        48px;
+
+    padding:
+        0 !important;
+
+    margin:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        0 !important;
+
+    border-radius:
+        50%;
+
+    cursor:
+        pointer;
+
+    outline:
+        none;
+
+    font-size:
+        16px;
+
+    line-height:
+        1;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+
+.ff-deals-v2-prev {
+
+    background:
+        rgba(255,255,255,.55) !important;
+
+    color:
+        #c31103 !important;
+}
+
+
+.ff-deals-v2-next {
+
+    background:
+        #ffffff !important;
+
+    color:
+        #c31103 !important;
+}
+
+
+.ff-deals-v2-nav:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 9px 20px
+        rgba(64,0,0,.15);
+}
+
+
+/* ============================================================
+   COUNTER
+============================================================ */
+
+.ff-deals-v2-counter {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    margin-left:
+        6px;
+
+    color:
+        rgba(255,255,255,.68) !important;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+}
+
+
+.ff-deals-v2-current {
+
+    color:
+        #ffffff !important;
+
+    font-size:
+        16px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-deals-v2-total,
+.ff-deals-v2-counter-slash {
+
+    color:
+        rgba(255,255,255,.80) !important;
+}
+
+
+.ff-deals-v2-counter-line {
+
+    width:
+        38px;
+
+    height:
+        1px;
+
+    margin-left:
+        6px;
+
+    display:
+        block;
+
+    background:
+        rgba(255,255,255,.60);
+}
+
+
+/* ============================================================
+   OWL SLIDER
+============================================================ */
+
+.ff-deals-v2-slider {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    margin:
+        0;
+
+    padding:
+        0;
+}
+
+
+/*
+   IMPORTANT:
+   Do NOT stretch the cards vertically.
+*/
+
+.ff-deals-v2-slider .owl-stage {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+}
+
+
+.ff-deals-v2-slider .owl-item {
+
+    display:
+        block;
+
+    float:
+        none;
+}
+
+
+.ff-deals-v2-slide {
+
+    width:
+        100%;
+
+    display:
+        block;
+
+    padding:
+        0
+        0
+        4px;
+}
+
+
+/* ============================================================
+   OFFER CARD
+============================================================ */
+
+.ff-deals-v2-card {
+
+    width:
+        100%;
+
+    height:
+        auto !important;
+
+    min-height:
+        0 !important;
+
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    margin:
+        0;
+
+    border:
+        1px solid
+        rgba(255,255,255,.40);
+
+    border-radius:
+        20px;
+
+    background:
+        #ffffff !important;
+
+    box-shadow:
+        0 14px 34px
+        rgba(66,0,0,.16);
+
+    transition:
+        transform .32s ease,
+        box-shadow .32s ease;
+}
+
+
+.ff-deals-v2-card:hover {
+
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 20px 44px
+        rgba(66,0,0,.22);
+}
+
+
+/* ============================================================
+   CARD IMAGE
+============================================================ */
+
+.ff-deals-v2-image-link {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    padding:
+        0;
+
+    margin:
+        0;
+}
+
+
+.ff-deals-v2-image-wrap {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    aspect-ratio:
+        16 / 9;
+
+    overflow:
+        hidden;
+
+    background:
+        #eeeeee;
+}
+
+
+.ff-deals-v2-image {
+
+    width:
+        100% !important;
+
+    height:
+        100% !important;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+
+    object-position:
+        center;
+
+    margin:
+        0;
+
+    transition:
+        transform .45s ease;
+}
+
+
+.ff-deals-v2-card:hover
+.ff-deals-v2-image {
+
+    transform:
+        scale(1.03);
+}
+
+
+/* ============================================================
+   BADGE
+============================================================ */
+
+.ff-deals-v2-badge {
+
+    position:
+        absolute;
+
+    top:
+        14px;
+
+    left:
+        14px;
+
+    z-index:
+        2;
+
+    display:
+        inline-flex !important;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    width:
+        auto !important;
+
+    height:
+        auto !important;
+
+    padding:
+        7px
+        13px !important;
+
+    margin:
+        0 !important;
+
+    border-radius:
+        999px !important;
+
+    background:
+        #c31103 !important;
+
+    color:
+        #ffffff !important;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    line-height:
+        1;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .3px;
+
+    box-shadow:
+        0 6px 14px
+        rgba(60,0,0,.16);
+}
+
+
+/* ============================================================
+   CARD BODY
+============================================================ */
+
+.ff-deals-v2-card-body {
+
+    flex:
+        none !important;
+
+    display:
+        block !important;
+
+    height:
+        auto !important;
+
+    min-height:
+        0 !important;
+
+    padding:
+        16px
+        18px
+        17px;
+
+    background:
+        #ffffff !important;
+}
+
+
+/* ============================================================
+   CARD TITLE
+============================================================ */
+
+.ff-deals-v2-card-title {
+
+    margin:
+        0
+        0
+        7px !important;
+
+    padding:
+        0 !important;
+
+    color:
+        #171717 !important;
+
+    font-family:
+        var(--body-font);
+
+    font-size:
+        19px;
+
+    font-weight:
+        900 !important;
+
+    line-height:
+        1.14;
+}
+
+
+.ff-deals-v2-card-title a {
+
+    color:
+        #171717 !important;
+
+    text-decoration:
+        none !important;
+}
+
+
+.ff-deals-v2-card-title a:hover {
+
+    color:
+        #c31103 !important;
+}
+
+
+/* ============================================================
+   CARD DESCRIPTION
+============================================================ */
+
+.ff-deals-v2-card-description {
+
+    display:
+        -webkit-box;
+
+    -webkit-line-clamp:
+        2;
+
+    -webkit-box-orient:
+        vertical;
+
+    overflow:
+        hidden;
+
+    min-height:
+        0 !important;
+
+    margin:
+        0
+        0
+        11px !important;
+
+    color:
+        #737373 !important;
+
+    font-size:
+        13px;
+
+    font-weight:
+        400;
+
+    line-height:
+        1.42;
+}
+
+
+/* ============================================================
+   VIEW DEAL
+============================================================ */
+
+.ff-deals-v2-view {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    width:
+        fit-content;
+
+    margin:
+        2px
+        0
+        0 !important;
+
+    color:
+        #c31103 !important;
+
+    text-decoration:
+        none !important;
+
+    font-size:
+        14px;
+
+    font-weight:
+        900;
+
+    line-height:
+        1;
+}
+
+
+.ff-deals-v2-view span {
+
+    width:
+        auto !important;
+
+    height:
+        auto !important;
+
+    padding:
+        0 !important;
+
+    margin:
+        0 !important;
+
+    background:
+        transparent !important;
+
+    color:
+        #c31103 !important;
+}
+
+
+.ff-deals-v2-view i {
+
+    color:
+        #c31103 !important;
+
+    transition:
+        transform .25s ease;
+}
+
+
+.ff-deals-v2-view:hover i {
+
+    transform:
+        translateX(4px);
+}
+
+
+/* ============================================================
+   OWL NAV
+============================================================ */
+
+.ff-deals-v2-slider .owl-nav {
+
+    display:
+        none !important;
+}
+
+
+/* ============================================================
+   OWL DOTS
+============================================================ */
+
+.ff-deals-v2-slider .owl-dots {
+
+    display:
+        flex !important;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    margin-top:
+        11px !important;
+
+    padding-right:
+        60px;
+}
+
+
+.ff-deals-v2-slider .owl-dot {
+
+    width:
+        9px;
+
+    height:
+        9px;
+
+    padding:
+        0 !important;
+
+    margin:
+        0 !important;
+
+    border:
+        0 !important;
+
+    background:
+        transparent !important;
+}
+
+
+.ff-deals-v2-slider .owl-dot span {
+
+    width:
+        8px !important;
+
+    height:
+        8px !important;
+
+    display:
+        block;
+
+    margin:
+        0 !important;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,.32) !important;
+
+    transition:
+        .25s ease;
+}
+
+
+.ff-deals-v2-slider
+.owl-dot.active
+span {
+
+    width:
+        11px !important;
+
+    height:
+        11px !important;
+
+    background:
+        #ffffff !important;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.ff-deals-v2-empty {
+
+    max-width:
+        520px;
+
+    padding:
+        36px
+        28px;
+
+    border-radius:
+        20px;
+
+    background:
+        #ffffff;
+
+    text-align:
+        center;
+}
+
+
+.ff-deals-v2-empty > i {
+
+    margin-bottom:
+        12px;
+
+    color:
+        #c31103;
+
+    font-size:
+        36px;
+}
+
+
+.ff-deals-v2-empty h3 {
+
+    margin-bottom:
+        8px;
+
+    color:
+        #171717;
+
+    font-weight:
+        900;
+}
+
+
+/* ============================================================
+   DESKTOP 1200 - 1399
+============================================================ */
+
+@media
+(max-width: 1399px)
+and
+(min-width: 992px) {
+
+    .ff-deals-v2 {
+
+        padding:
+            50px
+            0
+            46px;
+    }
+
+
+    .ff-deals-v2-container {
+
+        padding-left:
+            45px;
+    }
+
+
+    .ff-deals-v2-layout {
+
+        grid-template-columns:
+            minmax(280px, .85fr)
+            minmax(0, 2.15fr);
+
+        gap:
+            34px;
+    }
+
+
+    .ff-deals-v2-title {
+
+        font-size:
+            45px;
+    }
+
+
+    .ff-deals-v2-intro {
+
+        max-width:
+            370px;
+    }
+
+
+    .ff-deals-v2-description {
+
+        font-size:
+            15px;
+    }
+
+
+    .ff-deals-v2-card-body {
+
+        padding:
+            15px
+            17px
+            16px;
+    }
+
+}
+
+
+/* ============================================================
+   TABLET <= 991
+============================================================ */
+
+@media
+(max-width: 991px) {
+
+    .ff-deals-v2 {
+
+        padding:
+            55px
+            0
+            58px;
+    }
+
+
+    .ff-deals-v2-container {
+
+        padding:
+            0
+            25px;
+    }
+
+
+    .ff-deals-v2-layout {
+
+        display:
+            block;
+    }
+
+
+    .ff-deals-v2-pattern {
+
+        opacity:
+            .24;
+
+        background-size:
+            auto 100%;
+
+        background-position:
+            center bottom;
+    }
+
+
+    .ff-deals-v2-intro {
+
+        max-width:
+            650px;
+
+        margin:
+            0
+            auto
+            40px;
+
+        text-align:
+            center;
+    }
+
+
+    .ff-deals-v2-eyebrow {
+
+        justify-content:
+            center;
+    }
+
+
+    .ff-deals-v2-description {
+
+        max-width:
+            520px;
+
+        margin-left:
+            auto !important;
+
+        margin-right:
+            auto !important;
+    }
+
+
+    .ff-deals-v2-all-btn {
+
+        margin-left:
+            auto;
+
+        margin-right:
+            auto;
+    }
+
+
+    .ff-deals-v2-toolbar {
+
+        padding-right:
+            0;
+    }
+
+
+    .ff-deals-v2-slider .owl-dots {
+
+        padding-right:
+            0;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE <= 767
+============================================================ */
+
+@media
+(max-width: 767px) {
+
+    .ff-deals-v2 {
+
+        padding:
+            44px
+            0
+            48px;
+    }
+
+
+    .ff-deals-v2-container {
+
+        padding:
+            0
+            16px;
+    }
+
+
+    .ff-deals-v2-pattern {
+
+        opacity:
+            .17;
+
+        background-size:
+            auto 100%;
+
+        background-position:
+            22% bottom;
+    }
+
+
+    .ff-deals-v2-intro {
+
+        margin-bottom:
+            34px;
+    }
+
+
+    .ff-deals-v2-eyebrow {
+
+        margin-bottom:
+            17px;
+
+        font-size:
+            11px;
+    }
+
+
+    .ff-deals-v2-eyebrow-line {
+
+        width:
+            45px;
+    }
+
+
+    .ff-deals-v2-title {
+
+        margin-bottom:
+            15px !important;
+
+        font-size:
+            clamp(
+                38px,
+                11vw,
+                48px
+            );
+
+        line-height:
+            .97;
+
+        letter-spacing:
+            -1.3px;
+    }
+
+
+    .ff-deals-v2-description {
+
+        margin-bottom:
+            20px !important;
+
+        font-size:
+            14px;
+    }
+
+
+    .ff-deals-v2-all-btn {
+
+        width:
+            100%;
+
+        max-width:
+            310px;
+
+        min-height:
+            54px;
+    }
+
+
+    .ff-deals-v2-all-btn-icon {
+
+        width:
+            43px !important;
+
+        height:
+            43px !important;
+
+        flex-basis:
+            43px;
+    }
+
+
+    /* toolbar */
+
+    .ff-deals-v2-toolbar {
+
+        flex-direction:
+            column;
+
+        justify-content:
+            center;
+
+        gap:
+            12px;
+
+        margin-bottom:
+            16px;
+    }
+
+
+    .ff-deals-v2-toolbar-title {
+
+        justify-content:
+            center;
+
+        font-size:
+            12px;
+    }
+
+
+    .ff-deals-v2-controls {
+
+        justify-content:
+            center;
+    }
+
+
+    .ff-deals-v2-nav {
+
+        width:
+            42px;
+
+        height:
+            42px;
+
+        min-width:
+            42px;
+    }
+
+
+    .ff-deals-v2-counter-line {
+
+        display:
+            none;
+    }
+
+
+    /* compact card */
+
+    .ff-deals-v2-card {
+
+        border-radius:
+            17px;
+    }
+
+
+    .ff-deals-v2-image-wrap {
+
+        aspect-ratio:
+            16 / 9;
+    }
+
+
+    .ff-deals-v2-badge {
+
+        top:
+            11px;
+
+        left:
+            11px;
+
+        padding:
+            6px
+            10px !important;
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-deals-v2-card-body {
+
+        height:
+            auto !important;
+
+        min-height:
+            0 !important;
+
+        padding:
+            14px
+            15px
+            15px;
+    }
+
+
+    .ff-deals-v2-card-title {
+
+        margin-bottom:
+            6px !important;
+
+        font-size:
+            18px;
+    }
+
+
+    .ff-deals-v2-card-description {
+
+        min-height:
+            0 !important;
+
+        margin-bottom:
+            10px !important;
+
+        font-size:
+            13px;
+
+        line-height:
+            1.4;
+    }
+
+
+    .ff-deals-v2-view {
+
+        margin-top:
+            2px !important;
+
+        font-size:
+            14px;
+    }
+
+
+    .ff-deals-v2-slider .owl-dots {
+
+        margin-top:
+            10px !important;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SMALL MOBILE <= 420
+============================================================ */
+
+@media
+(max-width: 420px) {
+
+    .ff-deals-v2 {
+
+        padding:
+            40px
+            0
+            44px;
+    }
+
+
+    .ff-deals-v2-title {
+
+        font-size:
+            36px;
+    }
+
+
+    .ff-deals-v2-eyebrow {
+
+        font-size:
+            10px;
+    }
+
+
+    .ff-deals-v2-eyebrow-line {
+
+        width:
+            28px;
+    }
+
+
+    .ff-deals-v2-all-btn {
+
+        padding-left:
+            19px !important;
+    }
+
+
+    .ff-deals-v2-all-btn-text {
+
+        font-size:
+            14px;
+    }
+
+
+    .ff-deals-v2-card-body {
+
+        padding:
+            13px
+            14px
+            14px;
+    }
+
+
+    .ff-deals-v2-card-title {
+
+        font-size:
+            17px;
+    }
+
+}
+
+
+
+
+/* ============================================================
+   EQUAL HEIGHT OFFER CARDS
+============================================================ */
+
+/* Make Owl items stretch equally */
+.ff-deals-v2-slider .owl-stage {
+    display: flex;
+    align-items: stretch;
+}
+
+
+/* Each owl item must behave like a flex item */
+.ff-deals-v2-slider .owl-item {
+    display: flex;
+    float: none;
+}
+
+
+/* Slide fills the owl item */
+.ff-deals-v2-slide {
+    width: 100%;
+    display: flex;
+    padding: 0 0 4px;
+}
+
+
+/* Card fills available item height */
+.ff-deals-v2-card {
+    width: 100%;
+
+    height: 100% !important;
+    min-height: 0 !important;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    margin: 0;
+
+    border: 1px solid rgba(255,255,255,.40);
+    border-radius: 20px;
+
+    background: #ffffff !important;
+
+    box-shadow:
+        0 14px 34px rgba(66,0,0,.16);
+
+    transition:
+        transform .32s ease,
+        box-shadow .32s ease;
+}
+
+
+/* Image stays fixed proportion */
+.ff-deals-v2-image-wrap {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    background: #eeeeee;
+
+    flex-shrink: 0;
+}
+
+
+/* Body fills only remaining space */
+.ff-deals-v2-card-body {
+    flex: 1 1 auto !important;
+
+    display: flex !important;
+    flex-direction: column;
+
+    height: auto !important;
+    min-height: 0 !important;
+
+    padding:
+        16px
+        18px
+        17px;
+
+    background: #ffffff !important;
+}
+
+
+/* Keep title compact */
+.ff-deals-v2-card-title {
+    margin: 0 0 7px !important;
+
+    padding: 0 !important;
+
+    font-size: 19px;
+    font-weight: 900 !important;
+    line-height: 1.14;
+}
+
+
+/* Description stays max 2 lines */
+.ff-deals-v2-card-description {
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+
+    min-height: 0 !important;
+
+    margin: 0 0 11px !important;
+
+    color: #737373 !important;
+
+    font-size: 13px;
+    line-height: 1.42;
+}
+
+
+/* Push View Deal to same bottom position */
+.ff-deals-v2-view {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    width: fit-content;
+
+    margin-top: auto !important;
+
+    padding-top: 4px;
+
+    color: #c31103 !important;
+
+    text-decoration: none !important;
+
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+
+/* ============================================================
+   OFFERS V2 END
+============================================================ */
+/* offers css end  */

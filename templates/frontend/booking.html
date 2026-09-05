@@ -301,7 +301,7 @@ Book your Flying Fox Adventure in Munnar and enjoy an exciting zipline experienc
     gap:12px;
     background:#fff;
     text-align:left;
-    cursor:pointer;
+    cursor:default;
 }
 
 .ff-panel-head:disabled{
@@ -2325,15 +2325,110 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display:none;                /* Chrome, Safari, Edge Chromium */
 }
 
-/* Mobile/tablet — natural stacked layout, no height capping */
-@media(max-width:991px){
-    .ff-booking-form-card{
-        height:auto !important;
-        max-height:none !important;
-        overflow:visible;
-    }
-}
 {% comment %} sticky css end  {% endcomment %}
+
+
+
+{% comment %} mobile view screen has fixed hieght css start {% endcomment %}
+/* =========================================================
+   MOBILE / TABLET BOOKING FORM
+   FIT INSIDE VIEWPORT + INTERNAL SCROLL
+========================================================= */
+
+@media (max-width: 991px) {
+
+    /* -----------------------------------------
+       RIGHT BOOTSTRAP COLUMN
+    ----------------------------------------- */
+
+    .ff-booking-row > .col-lg-7 {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        flex:
+            0
+            0
+            100%;
+
+        min-width: 0;
+    }
+
+
+    /* -----------------------------------------
+       RIGHT BOOKING CARD
+    ----------------------------------------- */
+
+    .ff-booking-form-card {
+
+        width: 100%;
+
+        height:
+            var(
+                --ff-mobile-booking-height,
+                auto
+            ) !important;
+
+        max-height:
+            var(
+                --ff-mobile-booking-height,
+                none
+            ) !important;
+
+        overflow-x:
+            hidden !important;
+
+        overflow-y:
+            auto !important;
+
+        overscroll-behavior:
+            contain;
+
+        -webkit-overflow-scrolling:
+            touch;
+
+        scrollbar-width:
+            thin;
+
+        scroll-behavior:
+            smooth;
+    }
+
+}
+
+/* =========================================================
+   SMALL MOBILE CARD
+========================================================= */
+
+@media (max-width: 575px) {
+
+    .ff-booking-form-card {
+
+        padding:
+            16px;
+
+        border-radius:
+            20px;
+    }
+
+}
+
+
+@media (max-width: 420px) {
+
+    .ff-booking-form-card {
+
+        padding:
+            14px;
+
+        border-radius:
+            18px;
+    }
+
+}
+{% comment %} mobile view screen has fixed hieght css end {% endcomment %}
+
 
 
 
@@ -5365,143 +5460,99 @@ body.ff-message-open {
 }
 
 
+
+
+
+
 /* =========================================================
-   TABLET
+   BOOKING PROGRESS BAR
+   COMPLETE RESPONSIVE SYSTEM
 ========================================================= */
 
-@media (max-width: 991px) {
+
+/* =========================================================
+   LARGE TABLET / SMALL LAPTOP
+   992px - 1199px
+========================================================= */
+
+@media (max-width: 1199px) {
 
     .ff-booking-progress {
-        max-width: 680px;
 
-        margin-bottom: 28px;
+        width: min(
+            100%,
+            700px
+        );
+
+        max-width: 700px;
 
         padding:
             20px
+            20px
             18px;
+
+        margin:
+            0
+            auto
+            30px;
     }
 
 
     .ff-progress-track {
-        gap: 27px;
+
+        width: 100%;
+
+        margin: 0;
+
+        justify-content:
+            space-between;
+
+        gap: 0;
     }
 
 
     .ff-progress-step {
-        width: 64px;
 
-        flex-basis: 64px;
+        width: auto;
+
+        min-width: 0;
+
+        flex:
+            1
+            1
+            16.666%;
     }
 
 
     .ff-progress-icon {
+
         width: 43px;
         height: 43px;
 
-        flex-basis: 43px;
+        flex:
+            0
+            0
+            43px;
 
         font-size: 13px;
     }
 
 
-    .ff-progress-step:not([data-step="review"])::after {
+    .ff-progress-step:not(
+        [data-step="review"]
+    )::after {
+
         top: 20px;
 
         left:
             calc(
-                50% + 22px
+                50% + 21px
             );
 
-        width: 48px;
-    }
-
-
-    .ff-progress-step.active
-    .ff-progress-icon::after {
-        width: 52px;
-        height: 52px;
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 767px) {
-
-    .ff-booking-progress {
-        width: 100%;
-        max-width: 100%;
-
-        overflow-x: auto;
-
-        margin-bottom: 22px;
-
-        padding:
-            16px
-            12px
-            14px;
-
-        border-radius: 17px;
-
-        scrollbar-width: none;
-    }
-
-
-    .ff-booking-progress::-webkit-scrollbar {
-        display: none;
-    }
-
-
-    .ff-progress-track {
-        width: max-content;
-
-        margin:
-            0
-            auto;
-
-        gap: 18px;
-    }
-
-
-    .ff-progress-step {
-        width: 54px;
-
-        flex:
-            0
-            0
-            54px;
-    }
-
-
-    .ff-progress-icon {
-        width: 38px;
-        height: 38px;
-
-        flex-basis: 38px;
-
-        font-size: 11px;
-    }
-
-
-    .ff-progress-label {
-        margin-top: 7px;
-
-        font-size: 8px;
-    }
-
-
-    .ff-progress-step:not([data-step="review"])::after {
-        top: 18px;
-
-        left:
+        width:
             calc(
-                50% + 19px
+                100% - 42px
             );
-
-        width: 35px;
 
         height: 3px;
     }
@@ -5509,8 +5560,373 @@ body.ff-message-open {
 
     .ff-progress-step.active
     .ff-progress-icon::after {
-        width: 46px;
-        height: 46px;
+
+        width: 51px;
+        height: 51px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   <= 991px
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-booking-progress {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        padding:
+            18px
+            16px
+            16px;
+
+        margin-bottom:
+            26px;
+
+        border-radius:
+            19px;
+
+        overflow:
+            hidden;
+    }
+
+
+    .ff-progress-track {
+
+        display: flex;
+
+        width: 100%;
+
+        max-width: 100%;
+
+        margin: 0;
+
+        padding:
+            0
+            4px;
+
+        justify-content:
+            space-between;
+
+        gap: 0;
+    }
+
+
+    .ff-progress-step {
+
+        width: auto;
+
+        min-width: 0;
+
+        flex:
+            1
+            1
+            16.666%;
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .ff-progress-icon {
+
+        width: 40px;
+        height: 40px;
+
+        flex:
+            0
+            0
+            40px;
+
+        font-size: 12px;
+    }
+
+
+    .ff-progress-label {
+
+        margin-top:
+            7px;
+
+        font-size:
+            8px;
+
+        line-height:
+            1.2;
+
+        white-space:
+            nowrap;
+    }
+
+
+    .ff-progress-step:not(
+        [data-step="review"]
+    )::after {
+
+        top: 19px;
+
+        left:
+            calc(
+                50% + 20px
+            );
+
+        width:
+            calc(
+                100% - 40px
+            );
+
+        height:
+            3px;
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width:
+            48px;
+
+        height:
+            48px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-booking-progress {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        padding:
+            16px
+            10px
+            14px;
+
+        margin-bottom:
+            22px;
+
+        border-radius:
+            17px;
+
+        overflow:
+            hidden;
+    }
+
+
+    .ff-progress-track {
+
+        display: flex;
+
+        width: 100%;
+
+        max-width: 100%;
+
+        margin: 0;
+
+        padding:
+            0
+            2px;
+
+        justify-content:
+            space-between;
+
+        gap: 0;
+    }
+
+
+    .ff-progress-step {
+
+        width: auto;
+
+        min-width: 0;
+
+        flex:
+            1
+            1
+            16.666%;
+
+        padding:
+            0
+            1px;
+    }
+
+
+    .ff-progress-icon {
+
+        width:
+            36px;
+
+        height:
+            36px;
+
+        flex:
+            0
+            0
+            36px;
+
+        font-size:
+            10px;
+    }
+
+
+    .ff-progress-label {
+
+        margin-top:
+            6px;
+
+        font-size:
+            7px;
+
+        line-height:
+            1.15;
+
+        white-space:
+            nowrap;
+    }
+
+
+    .ff-progress-step:not(
+        [data-step="review"]
+    )::after {
+
+        top:
+            17px;
+
+        left:
+            calc(
+                50% + 18px
+            );
+
+        width:
+            calc(
+                100% - 36px
+            );
+
+        height:
+            2px;
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width:
+            44px;
+
+        height:
+            44px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 575px
+========================================================= */
+
+@media (max-width: 575px) {
+
+    .ff-booking-progress {
+
+        padding:
+            15px
+            7px
+            13px;
+
+        border-radius:
+            16px;
+    }
+
+
+    .ff-progress-track {
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .ff-progress-step {
+
+        padding:
+            0;
+    }
+
+
+    .ff-progress-icon {
+
+        width:
+            34px;
+
+        height:
+            34px;
+
+        flex:
+            0
+            0
+            34px;
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-progress-label {
+
+        margin-top:
+            6px;
+
+        font-size:
+            6.5px;
+
+        letter-spacing:
+            -0.1px;
+    }
+
+
+    .ff-progress-step:not(
+        [data-step="review"]
+    )::after {
+
+        top:
+            16px;
+
+        left:
+            calc(
+                50% + 17px
+            );
+
+        width:
+            calc(
+                100% - 34px
+            );
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width:
+            40px;
+
+        height:
+            40px;
     }
 
 }
@@ -5518,38 +5934,172 @@ body.ff-message-open {
 
 /* =========================================================
    VERY SMALL MOBILE
+   <= 420px
 ========================================================= */
 
 @media (max-width: 420px) {
 
-    .ff-progress-track {
-        gap: 14px;
+    .ff-booking-progress {
+
+        padding:
+            14px
+            5px
+            12px;
+
+        border-radius:
+            15px;
     }
 
 
-    .ff-progress-step {
-        width: 50px;
+    .ff-progress-track {
 
-        flex-basis: 50px;
+        padding: 0;
+    }
+
+
+    .ff-progress-icon {
+
+        width:
+            31px;
+
+        height:
+            31px;
+
+        flex:
+            0
+            0
+            31px;
+
+        font-size:
+            8px;
     }
 
 
     .ff-progress-label {
-        font-size: 7px;
+
+        margin-top:
+            5px;
+
+        font-size:
+            5.8px;
+
+        line-height:
+            1.1;
+
+        letter-spacing:
+            -0.2px;
     }
 
 
-    .ff-progress-step:not([data-step="review"])::after {
+    .ff-progress-step:not(
+        [data-step="review"]
+    )::after {
+
+        top:
+            14.5px;
+
         left:
             calc(
-                50% + 19px
+                50% + 15.5px
             );
 
-        width: 28px;
+        width:
+            calc(
+                100% - 31px
+            );
+
+        height:
+            2px;
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width:
+            37px;
+
+        height:
+            37px;
     }
 
 }
 
+
+/* =========================================================
+   EXTRA SMALL PHONES
+   <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .ff-booking-progress {
+
+        padding:
+            13px
+            3px
+            11px;
+    }
+
+
+    .ff-progress-icon {
+
+        width:
+            28px;
+
+        height:
+            28px;
+
+        flex:
+            0
+            0
+            28px;
+
+        font-size:
+            7px;
+    }
+
+
+    .ff-progress-label {
+
+        font-size:
+            5.2px;
+
+        letter-spacing:
+            -0.25px;
+    }
+
+
+    .ff-progress-step:not(
+        [data-step="review"]
+    )::after {
+
+        top:
+            13px;
+
+        left:
+            calc(
+                50% + 14px
+            );
+
+        width:
+            calc(
+                100% - 28px
+            );
+    }
+
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width:
+            34px;
+
+        height:
+            34px;
+    }
+
+}
 
 {% comment %} progress bar css end {% endcomment %}
 
@@ -5586,6 +6136,998 @@ body.ff-message-open {
 }
 {% comment %} past time css end  {% endcomment %}
 
+
+
+{% comment %} wizard css start {% endcomment %}
+/* =========================================================
+   BOOKING WIZARD
+   ONE BOOKING SECTION VISIBLE AT A TIME
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   MAIN WIZARD CONTAINER
+--------------------------------------------------------- */
+
+.ff-booking-stage {
+    position: relative;
+
+    width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   HIDE ALL WIZARD STEPS BY DEFAULT
+--------------------------------------------------------- */
+
+.ff-booking-stage .ff-booking-step {
+    display: none;
+
+    margin-bottom: 0;
+}
+
+
+/* ---------------------------------------------------------
+   SHOW ONLY CURRENT ACTIVE STEP
+--------------------------------------------------------- */
+
+.ff-booking-stage
+.ff-booking-step.ff-step-active {
+
+    display: block;
+
+    animation:
+        ffBookingStepIn
+        0.24s
+        ease;
+}
+
+
+/* ---------------------------------------------------------
+   ACTIVE WIZARD PANEL BODY MUST STAY OPEN
+
+   Your old accordion CSS uses:
+   .ff-panel-body { display:none; }
+
+   So this override is required.
+--------------------------------------------------------- */
+
+.ff-booking-stage
+.ff-booking-step.ff-step-active
+.ff-panel-body {
+
+    display: block;
+}
+
+
+/* ---------------------------------------------------------
+   REMOVE OLD ACCORDION SPACE BETWEEN WIZARD SCREENS
+--------------------------------------------------------- */
+
+.ff-booking-stage
+.ff-panel {
+
+    margin-bottom: 0;
+}
+
+
+/* ---------------------------------------------------------
+   WIZARD SCREEN TRANSITION
+--------------------------------------------------------- */
+
+@keyframes ffBookingStepIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(
+                12px
+            );
+
+    }
+
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(
+                0
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-booking-stage {
+
+        min-height: 0;
+
+    }
+
+}
+
+
+
+
+/* =========================================================
+   REVIEW WIZARD STEP
+========================================================= */
+
+.ff-booking-review-step {
+    display: none;
+}
+
+
+/* SHOW REVIEW ONLY WHEN ACTIVE */
+
+.ff-booking-review-step.ff-step-active {
+    display: block;
+
+    animation:
+        ffBookingStepIn
+        0.24s
+        ease;
+}
+{% comment %} wizard css end  {% endcomment %}
+
+
+
+
+{% comment %} back button and css atrt {% endcomment %}
+/* =========================================================
+   BOOKING WIZARD ACTIONS
+========================================================= */
+
+.ff-wizard-action-row,
+.ff-wizard-back-row {
+
+    display: flex;
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+.ff-wizard-back-btn {
+
+    display: inline-flex;
+
+    min-height: 46px;
+
+    padding:
+        10px
+        18px;
+
+    border:
+        1px
+        solid
+        #dfe3e8;
+
+    border-radius: 23px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    color:
+        var(--ff-dark);
+
+    background:
+        #ffffff;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        0.2s ease;
+}
+
+
+.ff-wizard-back-btn:hover {
+
+    border-color:
+        rgba(
+            195,
+            17,
+            3,
+            0.28
+        );
+
+    color:
+        var(--ff-red);
+
+    background:
+        var(--ff-red-soft);
+
+    transform:
+        translateX(
+            -2px
+        );
+}
+
+
+@media (max-width: 575px) {
+
+    .ff-wizard-action-row {
+
+        align-items: stretch;
+
+        flex-direction: column-reverse;
+
+    }
+
+
+    .ff-wizard-action-row
+    .ff-wizard-back-btn {
+
+        width: 100%;
+
+    }
+
+}
+{% comment %} back button css end  {% endcomment %}
+
+
+
+/* =========================================================
+   WIZARD PROGRESS STEP INTERACTION
+========================================================= */
+
+
+/* FUTURE STEP */
+
+.ff-progress-step {
+
+    cursor: default;
+
+    user-select: none;
+}
+
+
+/* CURRENT STEP */
+
+.ff-progress-step.active {
+
+    cursor: pointer;
+}
+
+
+/* COMPLETED STEP */
+
+.ff-progress-step.completed {
+
+    cursor: pointer;
+}
+
+
+/* SMALL INTERACTION */
+
+.ff-progress-step.active
+.ff-progress-icon,
+
+.ff-progress-step.completed
+.ff-progress-icon {
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.ff-progress-step.completed:hover
+.ff-progress-icon {
+
+    transform:
+        translateY(
+            -2px
+        );
+}
+
+
+
+
+
+{% comment %} start {% endcomment %}
+/* =========================================================
+   WIZARD MODE - REMOVE OLD ACCORDION TOGGLE
+========================================================= */
+
+.ff-booking-stage
+.ff-panel-toggle {
+
+    display: none;
+}
+{% comment %} end {% endcomment %}
+
+
+
+
+
+
+{% comment %} button css start {% endcomment %}
+/* =========================================================
+   WIZARD BACK BUTTON - CLEAN SECONDARY STYLE
+========================================================= */
+
+.ff-wizard-back-btn {
+
+    display: inline-flex;
+
+    min-height: 46px;
+
+    padding:
+        10px
+        18px;
+
+    border:
+        1px solid
+        #e1e5e9;
+
+    border-radius: 14px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    color:
+        #4f5965;
+
+    background:
+        #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px
+        rgba(
+            20,
+            30,
+            42,
+            0.04
+        );
+
+    transition:
+        0.2s ease;
+}
+
+
+.ff-wizard-back-btn i {
+
+    color:
+        var(--ff-red);
+
+    font-size: 10px;
+}
+
+
+.ff-wizard-back-btn:hover {
+
+    border-color:
+        rgba(
+            195,
+            17,
+            3,
+            0.28
+        );
+
+    color:
+        var(--ff-red);
+
+    background:
+        #fff8f7;
+
+    transform:
+        translateX(
+            -2px
+        );
+}
+{% comment %} button css end  {% endcomment %}
+
+
+
+
+
+
+{% comment %} start {% endcomment %}
+/* =========================================================
+   REVIEW STEP HEADING
+========================================================= */
+
+.ff-review-step-head {
+    margin-bottom: 22px;
+}
+
+
+.ff-review-step-head span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--ff-red);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+}
+
+
+.ff-review-step-head h2 {
+    margin:
+        0
+        0
+        6px;
+
+    color: var(--ff-dark);
+
+    font-size: 24px;
+
+    font-weight: 900;
+}
+
+
+.ff-review-step-head p {
+    margin: 0;
+
+    color: var(--ff-text);
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+{% comment %} end {% endcomment %}
+
+
+{% comment %} hide left section in mobile start {% endcomment %}
+/* =========================================================
+   MOBILE - HIDE LEFT INFORMATION COLUMN
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-booking-row > .col-lg-5 {
+        display: none !important;
+    }
+
+    .ff-booking-row > .col-lg-7 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+}
+{% comment %} hide left section in mobile view end  {% endcomment %}
+
+{% comment %} progree bar fix start {% endcomment %}
+/* =========================================================
+   VERY SMALL MOBILE
+   FIT ALL 6 STEPS INSIDE SCREEN
+========================================================= */
+
+@media (max-width: 420px) {
+
+    /* ---------------------------------------------------------
+       OUTER PROGRESS CARD
+    --------------------------------------------------------- */
+
+    .ff-booking-progress {
+
+        width: 100%;
+        max-width: 100%;
+
+        padding:
+            14px
+            8px
+            12px;
+
+        overflow: hidden;
+
+        border-radius: 16px;
+    }
+
+
+    /* ---------------------------------------------------------
+       TRACK MUST USE AVAILABLE WIDTH
+       DO NOT USE max-content ON SMALL PHONE
+    --------------------------------------------------------- */
+
+    .ff-progress-track {
+
+        display: flex;
+
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0;
+
+        padding:
+            0
+            4px;
+
+        align-items: flex-start;
+
+        justify-content: space-between;
+
+        gap: 0;
+    }
+
+
+    /* ---------------------------------------------------------
+       EACH OF THE 6 STEPS GETS EQUAL WIDTH
+    --------------------------------------------------------- */
+
+    .ff-progress-step {
+
+        width: auto;
+
+        min-width: 0;
+
+        flex:
+            1
+            1
+            16.666%;
+
+        padding:
+            0
+            1px;
+    }
+
+
+    /* ---------------------------------------------------------
+       SMALLER ICON
+    --------------------------------------------------------- */
+
+    .ff-progress-icon {
+
+        width: 34px;
+        height: 34px;
+
+        flex:
+            0
+            0
+            34px;
+
+        font-size: 10px;
+    }
+
+
+    /* ---------------------------------------------------------
+       SMALL LABEL
+    --------------------------------------------------------- */
+
+    .ff-progress-label {
+
+        margin-top: 6px;
+
+        font-size: 6.5px;
+
+        line-height: 1.15;
+
+        white-space: nowrap;
+    }
+
+
+    /* ---------------------------------------------------------
+       CONNECTING LINE
+    --------------------------------------------------------- */
+
+    .ff-progress-step:not(
+        [data-step="review"]
+    )::after {
+
+        top: 16px;
+
+        left:
+            calc(
+                50% + 17px
+            );
+
+        width:
+            calc(
+                100% - 34px
+            );
+
+        height: 2px;
+    }
+
+
+    /* ---------------------------------------------------------
+       ACTIVE OUTER RING
+    --------------------------------------------------------- */
+
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width: 40px;
+        height: 40px;
+    }
+
+}
+{% comment %} progree bar fix end {% endcomment %}
+
+{% comment %} offers card mobile view  style start {% endcomment %}
+@media (max-width: 575px) {
+
+    .ff-offer-grid,
+    #dynamicOffers {
+
+        gap: 10px;
+    }
+
+
+    .ff-offer-card {
+
+        min-height: 150px;
+
+        padding:
+            14px
+            14px
+            58px;
+
+        border-radius: 16px;
+    }
+
+
+    .ff-offer-main {
+
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+
+    .ff-offer-icon {
+
+        width: 44px;
+        height: 44px;
+
+        flex:
+            0
+            0
+            44px;
+
+        border-radius: 12px;
+
+        font-size: 16px;
+    }
+
+
+    .ff-offer-card h4 {
+
+        margin-bottom: 3px;
+
+        font-size: 13px;
+    }
+
+
+    .ff-offer-card p {
+
+        margin-bottom: 5px;
+
+        font-size: 8px;
+
+        line-height: 1.35;
+    }
+
+
+    .ff-offer-meta {
+
+        gap: 4px;
+    }
+
+
+    .ff-offer-label,
+    .ff-offer-rule {
+
+        font-size: 7px;
+    }
+
+
+    .ff-offer-actions {
+
+        top: auto;
+
+        right: 14px;
+        bottom: 10px;
+        left: 14px;
+
+        width: auto;
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+        gap: 8px;
+
+        transform: none;
+    }
+
+
+    .ff-offer-more,
+    .ff-offer-select-btn {
+
+        min-height: 34px;
+
+        padding:
+            7px
+            8px;
+
+        font-size: 7px;
+    }
+
+}
+{% comment %} offers card mobile view  style end {% endcomment %}
+
+
+
+
+{% comment %} navbar hide css start {% endcomment %}
+/* =========================================================
+   BOOKING PAGE SMART NAVBAR
+========================================================= */
+
+.ff-booking-smart-navbar {
+
+    transition:
+        transform 0.32s ease,
+        opacity 0.25s ease;
+
+    will-change:
+        transform;
+}
+
+
+.ff-booking-smart-navbar.ff-navbar-hidden {
+
+    transform:
+        translateY(
+            -115%
+        );
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+{% comment %} navbar hide css end {% endcomment %}
+
+
+
+{% comment %}  {% endcomment %}
+/* =========================================================
+   ALL RIDES ADDED BUTTON
+========================================================= */
+
+.ff-add-another-ride.all-rides-added,
+.ff-add-another-ride:disabled {
+
+    cursor: default;
+
+    opacity: 0.72;
+
+    border-color:
+        #dfe4e8;
+
+    color:
+        #67717c;
+
+    background:
+        #f5f6f7;
+
+    box-shadow: none;
+}
+
+
+.ff-add-another-ride.all-rides-added span,
+.ff-add-another-ride:disabled span {
+
+    color:
+        #ffffff;
+
+    background:
+        var(--ff-green);
+}
+
+
+.ff-add-another-ride:disabled:hover {
+
+    transform: none;
+
+    box-shadow: none;
+}
+{% comment %}  {% endcomment %}
+
+
+{% comment %} back to review button css start {% endcomment %}
+/* =========================================================
+   BACK TO BOOKING REVIEW BUTTON
+========================================================= */
+
+.ff-wizard-review-return {
+
+    display: inline-flex;
+
+    min-height: 46px;
+
+    padding:
+        10px
+        18px;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.22);
+
+    border-radius: 14px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    color:
+        var(--ff-red);
+
+    background:
+        #fff8f7;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        0.2s ease;
+}
+
+
+.ff-wizard-review-return:hover {
+
+    color:
+        #ffffff;
+
+    background:
+        var(--ff-red);
+
+    border-color:
+        var(--ff-red);
+
+    transform:
+        translateY(-1px);
+}
+
+
+@media (max-width: 575px) {
+
+    .ff-wizard-back-row {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .ff-wizard-back-row
+    .ff-wizard-back-btn,
+
+    .ff-wizard-back-row
+    .ff-wizard-review-return {
+
+        width: 100%;
+    }
+
+}
+{% comment %} back to review button css end  {% endcomment %}
+
+
+
+
+{% comment %} review title stay css start {% endcomment %}
+/* =========================================================
+   MOBILE REVIEW HEADER
+   STICK INSIDE SCROLLING BOOKING CARD
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-review-step-head {
+
+        position:
+            sticky;
+
+        top:
+            -1px;
+
+        z-index:
+            20;
+
+        margin:
+            -1px
+            0
+            18px;
+
+        padding:
+            4px
+            0
+            12px;
+
+        background:
+            #ffffff;
+    }
+
+}
+{% comment %} review title stay css end {% endcomment %}
+
+
+
+{% comment %} start {% endcomment %}
+@media (max-width: 991px) {
+
+    .ff-booking-form-card::-webkit-scrollbar {
+
+        display:
+            block;
+
+        width:
+            4px;
+    }
+
+
+    .ff-booking-form-card::-webkit-scrollbar-track {
+
+        background:
+            transparent;
+    }
+
+
+    .ff-booking-form-card::-webkit-scrollbar-thumb {
+
+        border-radius:
+            10px;
+
+        background:
+            rgba(
+                25,
+                39,
+                54,
+                0.18
+            );
+    }
+
+}
+{% comment %} end  {% endcomment %}
 </style>
 {% endblock %}
 
@@ -5894,7 +7436,7 @@ body.ff-message-open {
 
                     <input type="hidden" name="booking_items_json" id="bookingItemsJson">
 
-                    <div class="ff-form-top">
+                    <div class="ff-form-top" id="bookingFormTop">
                         <span>Adventure Booking</span>
                         <h2>Choose Your Experience</h2>
                         <p>
@@ -5932,13 +7474,26 @@ body.ff-message-open {
 
 
 
-                    <!-- =================================================
-                         VISIT DATE - SELECT ONCE
-                    ================================================== -->
-                    <section
-                        class="ff-panel open active"
-                        id="datePanel"
-                    >
+                 <!-- =================================================
+     BOOKING WIZARD STAGE
+     Only one booking step will be shown at a time
+================================================== -->
+
+<div
+    class="ff-booking-stage"
+    id="bookingStage"
+>
+
+
+    <!-- =================================================
+         VISIT DATE - SELECT ONCE
+    ================================================== -->
+
+    <section
+        class="ff-panel open active ff-booking-step"
+        id="datePanel"
+        data-booking-step="date"
+        >
                         <button
                             type="button"
                             class="ff-panel-head"
@@ -5973,14 +7528,6 @@ body.ff-message-open {
                                 <strong id="dateSelectedText">—</strong>
                                 <span>Applies to all selected adventures</span>
                             </div>
-
-                            <button
-                                type="button"
-                                class="ff-change-btn"
-                                data-open="datePanel"
-                            >
-                                Change
-                            </button>
                         </div>
 
                         <div class="ff-panel-body">
@@ -6029,6 +7576,22 @@ body.ff-message-open {
                                             >
                                         </div>
 
+                                        <div class="ff-date-time-action">
+
+    <button
+        type="button"
+        class="ff-premium-continue"
+        id="dateContinue"
+    >
+        Continue With This Date
+
+        <span>
+            <i class="fas fa-arrow-right"></i>
+        </span>
+    </button>
+
+</div>
+
                                     </div>
 
                                 </div>
@@ -6049,10 +7612,9 @@ body.ff-message-open {
                     <!-- =================================================
                          RIDE
                     ================================================== -->
-                    <section
-                        class="ff-panel locked"
-                        id="ridePanel"
-                    >
+                    <section class="ff-panel locked ff-booking-step"
+                             id="ridePanel"
+                            data-booking-step="ride" >
 
                         <button
                             type="button"
@@ -6107,6 +7669,30 @@ body.ff-message-open {
 
                         </div>
 
+
+                        <div class="ff-wizard-back-row">
+
+                           <button
+                                type="button"
+                                class="ff-wizard-back-btn"
+                                data-wizard-back="date">
+                               <i class="fas fa-arrow-left"></i>
+
+                                   Back to Visit Date
+                            </button>
+
+                            <button
+                                 type="button"
+                                class="ff-wizard-review-return"
+                                id="backToBookingReview"
+                                style="display:none;">
+                                <i class="fas fa-arrow-left"></i>
+
+                                Back to Booking Review
+                            </button>
+
+                        </div>
+
                     </section>
 
 
@@ -6114,9 +7700,9 @@ body.ff-message-open {
                          OFFERS
                     ================================================== -->
                     <section
-                        class="ff-panel locked"
+                        class="ff-panel locked ff-booking-step"
                         id="offerPanel"
-                    >
+                        data-booking-step="offer">
 
                         <button
                             type="button"
@@ -6159,14 +7745,6 @@ body.ff-message-open {
                                     Regular price
                                 </span>
                             </div>
-
-                            <button
-                                type="button"
-                                class="ff-change-btn"
-                                data-open="offerPanel"
-                            >
-                                Change
-                            </button>
                         </div>
 
 
@@ -6217,6 +7795,20 @@ body.ff-message-open {
 
                         </div>
 
+
+                        <div class="ff-wizard-back-row">
+
+                            <button
+                              type="button"
+                              class="ff-wizard-back-btn"
+                               data-wizard-back="ride">
+                              <i class="fas fa-arrow-left"></i>
+
+                                 Back to Ride
+                            </button>
+
+                        </div>
+
                     </section>
 
 
@@ -6228,8 +7820,9 @@ body.ff-message-open {
 ================================================== -->
 
 <section
-    class="ff-panel locked"
+    class="ff-panel locked ff-booking-step"
     id="participantPanel"
+    data-booking-step="participants"
 >
 
     <!-- PANEL HEADER -->
@@ -6297,15 +7890,6 @@ body.ff-message-open {
             </span>
 
         </div>
-
-
-        <button
-            type="button"
-            class="ff-change-btn"
-            data-open="participantPanel"
-        >
-            Change
-        </button>
 
     </div>
 
@@ -6402,7 +7986,7 @@ body.ff-message-open {
         </div>
 
     
-        <div class="ff-continue-slot-wrap">
+        {% comment %} <div class="ff-continue-slot-wrap">
             <button
                 type="button"
                 class="ff-continue-slot"
@@ -6415,7 +7999,36 @@ body.ff-message-open {
 
         <p class="ff-current-builder-note">
             After assigning all participant weight ranges, choose the starting time for this ride.
-        </p>
+        </p> {% endcomment %}
+
+</div>
+
+
+
+<div class="ff-wizard-action-row">
+
+    <button
+        type="button"
+        class="ff-wizard-back-btn"
+        data-wizard-back="offer"
+    >
+        <i class="fas fa-arrow-left"></i>
+
+        Back
+    </button>
+
+
+    <!-- KEEP YOUR EXISTING BUTTON -->
+
+    <button
+        type="button"
+        class="ff-continue-slot"
+        id="continueToSlot"
+    >
+        <i class="fas fa-clock"></i>
+
+        Choose Start Time
+    </button>
 
 </div>
 
@@ -6426,9 +8039,9 @@ body.ff-message-open {
                          RIDE START TIME
                     ================================================== -->
                     <section
-                        class="ff-panel locked"
+                        class="ff-panel locked ff-booking-step"
                         id="slotPanel"
-                    >
+                        data-booking-step="slot">
 
                         <button
                             type="button"
@@ -6465,14 +8078,6 @@ body.ff-message-open {
                                 <strong id="slotSelectedTime">—</strong>
                                 <span id="slotSelectedAllocation">Live capacity confirmed</span>
                             </div>
-
-                            <button
-                                type="button"
-                                class="ff-change-btn"
-                                data-open="slotPanel"
-                            >
-                                Change
-                            </button>
                         </div>
 
                         <div class="ff-panel-body">
@@ -6504,7 +8109,32 @@ body.ff-message-open {
                                 id="slotMessage"
                             ></div>
 
-                            <div class="ff-add-current-ride-wrap">
+                            <div class="ff-wizard-action-row">
+
+    <button
+        type="button"
+        class="ff-wizard-back-btn"
+        data-wizard-back="participants"
+    >
+        <i class="fas fa-arrow-left"></i>
+
+        Back
+    </button>
+
+
+    <button
+        type="button"
+        class="ff-add-current-ride"
+        id="addCurrentRide"
+    >
+        <i class="fas fa-plus"></i>
+
+        Add This Ride
+    </button>
+
+</div>
+
+                            {% comment %} <div class="ff-add-current-ride-wrap">
                                 <button
                                     type="button"
                                     class="ff-add-current-ride"
@@ -6513,15 +8143,52 @@ body.ff-message-open {
                                     <i class="fas fa-plus"></i>
                                     Add This Ride
                                 </button>
-                            </div>
-
-                            <p class="ff-current-builder-note">
-                                Availability is checked again by Django before the booking is finalized.
-                            </p>
+                            </div> {% endcomment %}
 
                         </div>
 
                     </section>
+
+
+
+
+                    <!-- =================================================
+                         END BOOKING WIZARD STAGE
+                    ================================================== -->
+
+                </div>    
+
+                   <!-- =================================================
+                    REVIEW STEP
+================================================== -->
+
+     <div
+        class="ff-booking-review-step"
+        id="reviewStep"
+        data-booking-step="review">
+
+
+
+<!-- =================================================
+     REVIEW STEP HEADING
+================================================== -->
+
+<div class="ff-review-step-head">
+
+    <span>
+        Booking Review
+    </span>
+
+    <h2>
+        Review Your Adventures
+    </h2>
+
+    <p>
+        Check your selected rides, participants,
+        time slots and total before continuing.
+    </p>
+
+</div>
 
 
 
@@ -6648,6 +8315,12 @@ body.ff-message-open {
                         </button>
 
                     </div>
+
+                     <!-- =================================================
+                         END REVIEW STEP
+                    ================================================== -->
+
+                </div>
 
                 </form>
             </div>
@@ -6991,6 +8664,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const offerPanel = document.getElementById("offerPanel");
     const participantPanel = document.getElementById("participantPanel");
     const slotPanel = document.getElementById("slotPanel");
+    const reviewStep = document.getElementById( "reviewStep");
+    const bookingFormTop = document.getElementById( "bookingFormTop");
 
     const datePanelButton = document.getElementById("datePanelButton");
     const ridePanelButton = document.getElementById("ridePanelButton");
@@ -7041,6 +8716,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedAdventures = document.getElementById("selectedAdventures");
     const selectedAdventureItems = document.getElementById("selectedAdventureItems");
     const addAnotherRide = document.getElementById("addAnotherRide");
+    const backToBookingReview = document.getElementById( "backToBookingReview");
+
 
     const summaryDate = document.getElementById("summaryDate");
     const summaryAdventures = document.getElementById("summaryAdventures");
@@ -7094,6 +8771,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentSlotResponse = null;
     let slotRequestController = null;
 
+    /* =========================================================
+   BOOKING WIZARD STATE
+========================================================= */
+
+    let currentBookingStep ="date";
+
     const slotAvailabilityUrl = "{% url 'booking_slot_availability' %}";
 
     const maximumParticipants = 10;
@@ -7134,6 +8817,417 @@ document.addEventListener("DOMContentLoaded", function () {
             icon.className = "fas fa-plus";
         }
     }
+
+
+    /* =========================================================
+   BOOKING WIZARD
+   SHOW ONLY ONE SCREEN
+========================================================= */
+
+function showBookingStep( step) {
+
+    /* =====================================================
+       MAP STEP NAME -> ELEMENT
+    ===================================================== */
+
+    const stepMap = {
+
+        date:
+            datePanel,
+
+        ride:
+            ridePanel,
+
+        offer:
+            offerPanel,
+
+        participants:
+            participantPanel,
+
+        slot:
+            slotPanel
+
+    };
+
+
+    /* =====================================================
+       HIDE ALL BUILDER PANELS
+    ===================================================== */
+
+    Object.values(
+        stepMap
+    ).forEach(
+
+        function (panel) {
+
+            if (!panel) {
+                return;
+            }
+
+            panel.classList.remove(
+                "ff-step-active"
+            );
+
+            panel.classList.remove(
+                "active"
+            );
+
+            panel.classList.remove(
+                "open"
+            );
+
+        }
+
+    );
+
+
+    /* =====================================================
+       HIDE REVIEW
+    ===================================================== */
+
+    reviewStep?.classList.remove(
+        "ff-step-active"
+    );
+
+
+    if (
+    step === "review"
+     ) {
+
+    /* -----------------------------------------
+       HIDE BACK TO REVIEW BUTTON
+
+       We are already on Review,
+       so this button must not be visible.
+    ----------------------------------------- */
+
+    if (
+        backToBookingReview
+    ) {
+
+        backToBookingReview.style.display =
+            "none";
+
+    }
+
+
+    /* -----------------------------------------
+       HIDE NORMAL BOOKING HEADING
+    ----------------------------------------- */
+
+    if (
+        bookingFormTop
+    ) {
+
+        bookingFormTop.style.display =
+            "none";
+
+    }
+
+
+    /* -----------------------------------------
+       SHOW REVIEW STEP
+    ----------------------------------------- */
+
+    reviewStep?.classList.add(
+        "ff-step-active"
+    );
+
+
+    /* -----------------------------------------
+       SAVE CURRENT WIZARD STEP
+    ----------------------------------------- */
+
+    currentBookingStep =
+        "review";
+
+
+    /* -----------------------------------------
+       UPDATE TOP PROGRESS BAR
+    ----------------------------------------- */
+
+    updateBookingProgress(
+        "review"
+    );
+
+
+    /* -----------------------------------------
+       MOBILE / TABLET
+       START REVIEW FROM TOP
+    ----------------------------------------- */
+
+    if (
+        window.innerWidth <= 991
+        &&
+        form
+    ) {
+
+        form.scrollTop =
+            0;
+
+    }
+
+
+    return;
+}
+
+
+
+
+/* =====================================================
+   NORMAL WIZARD SCREEN
+
+   If user leaves Review and goes back to
+   Ride / Date / Offer / Participants / Time,
+   show the normal heading again.
+===================================================== */
+
+if (
+    bookingFormTop
+) {
+
+    bookingFormTop.style.display =
+        "";
+
+}
+
+/* =====================================================
+   BACK TO BOOKING REVIEW BUTTON
+
+   Show only when:
+   1. Current screen is Ride
+   2. At least one completed ride already exists
+===================================================== */
+
+if (
+    backToBookingReview
+) {
+
+    if (
+        step === "ride"
+        &&
+        bookingState.items.length > 0
+    ) {
+
+        backToBookingReview.style.display =
+            "inline-flex";
+
+    }
+    else {
+
+        backToBookingReview.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+    /* =====================================================
+       FIND REQUESTED PANEL
+    ===================================================== */
+
+    const activePanel =
+        stepMap[
+            step
+        ];
+
+
+    if (!activePanel) {
+
+        console.warn(
+            "Unknown booking step:",
+            step
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       SHOW REQUESTED PANEL
+    ===================================================== */
+
+    activePanel.classList.remove(
+        "locked"
+    );
+
+    activePanel.classList.add(
+        "ff-step-active",
+        "active",
+        "open"
+    );
+
+
+    /* =====================================================
+       PANEL BODY ICON
+    ===================================================== */
+
+    const icon =
+        getPanelIcon(
+            activePanel
+        );
+
+    if (icon) {
+
+        icon.className =
+            "fas fa-minus";
+
+    }
+
+
+    currentBookingStep =
+        step;
+
+
+    /* =====================================================
+       UPDATE TOP PROGRESS
+    ===================================================== */
+
+    updateBookingProgress(
+        step
+    );
+
+}
+
+
+
+
+/* =========================================================
+   WIZARD PROGRESS BAR NAVIGATION
+
+   RULE:
+   - Current step can be clicked
+   - Previous/completed steps can be clicked
+   - Future steps cannot be clicked
+========================================================= */
+
+document.querySelectorAll(
+    ".ff-progress-step"
+).forEach(
+
+    function (progressStep) {
+
+        progressStep.addEventListener(
+            "click",
+            function () {
+
+                /* -----------------------------------------
+                   GET REQUESTED STEP
+                ----------------------------------------- */
+
+                const requestedStep =
+                    progressStep.dataset.step;
+
+
+                if (!requestedStep) {
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   FIND CURRENT + REQUESTED POSITIONS
+                ----------------------------------------- */
+
+                const currentIndex =
+                    bookingProgressOrder.indexOf(
+                        currentBookingStep
+                    );
+
+
+                const requestedIndex =
+                    bookingProgressOrder.indexOf(
+                        requestedStep
+                    );
+
+
+                if (
+                    currentIndex === -1
+                    ||
+                    requestedIndex === -1
+                ) {
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   DO NOT ALLOW FUTURE STEP
+                ----------------------------------------- */
+
+                if (
+                    requestedIndex
+                    >
+                    currentIndex
+                ) {
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   REVIEW REQUIRES AT LEAST ONE ADDED RIDE
+                ----------------------------------------- */
+
+                if (
+                    requestedStep === "review"
+                    &&
+                    bookingState.items.length === 0
+                ) {
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   OPEN REQUESTED COMPLETED STEP
+                ----------------------------------------- */
+
+                showBookingStep(
+                    requestedStep
+                );
+
+            }
+        );
+
+    }
+
+);
+
+
+
+/* =========================================================
+   WIZARD BACK BUTTONS
+========================================================= */
+
+document.querySelectorAll(
+    "[data-wizard-back]"
+).forEach(
+
+    function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const targetStep =
+                    button.dataset.wizardBack;
+
+
+                if (!targetStep) {
+                    return;
+                }
+
+
+                showBookingStep(
+                    targetStep
+                );
+
+            }
+        );
+
+    }
+
+);
 
     function lockPanel(panel, button) {
         if (!panel) return;
@@ -7262,7 +9356,7 @@ document.addEventListener("DOMContentLoaded", function () {
        PANEL HEADERS / CHANGE BUTTONS
     ========================================================= */
 
-    document.querySelectorAll(".ff-panel-head").forEach(
+    {% comment %} document.querySelectorAll(".ff-panel-head").forEach(
         function (button) {
             button.addEventListener(
                 "click",
@@ -7286,33 +9380,112 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             );
         }
-    );
+    ); {% endcomment %}
 
-    document.querySelectorAll("[data-open]").forEach(
-        function (button) {
-            button.addEventListener(
-                "click",
-                function () {
-                    const panel = document.getElementById(
-                        button.dataset.open
-                    );
+    /* =========================================================
+   CHANGE BUTTONS -> WIZARD NAVIGATION
+========================================================= */
 
-                    if (
-                        panel
-                        &&
-                        !panel.classList.contains("locked")
-                    ) {
-                        openPanel(panel);
+document.querySelectorAll(
+    "[data-open]"
+).forEach(
 
-                        panel.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start"
-                        });
-                    }
+    function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const panelId =
+                    button.dataset.open;
+
+
+                const stepMap = {
+
+                    datePanel:
+                        "date",
+
+                    ridePanel:
+                        "ride",
+
+                    offerPanel:
+                        "offer",
+
+                    participantPanel:
+                        "participants",
+
+                    slotPanel:
+                        "slot"
+
+                };
+
+
+                const targetStep =
+                    stepMap[
+                        panelId
+                    ];
+
+
+                if (!targetStep) {
+                    return;
                 }
-            );
-        }
-    );
+
+
+                showBookingStep(
+                    targetStep
+                );
+
+            }
+        );
+
+    }
+
+);
+
+
+
+
+/* =========================================================
+   BACK TO BOOKING REVIEW
+========================================================= */
+
+backToBookingReview?.addEventListener(
+    "click",
+    function () {
+
+        /* -----------------------------------------
+           DISCARD ONLY THE NEW RIDE CURRENTLY
+           BEING BUILT
+
+           Already-added rides remain untouched.
+        ----------------------------------------- */
+
+        resetCurrentRideBuilder(
+            false
+        );
+
+
+        /* -----------------------------------------
+           REFRESH SUMMARY / SELECTED RIDES
+        ----------------------------------------- */
+
+        renderSelectedAdventures();
+
+
+        updateBookingSummary();
+
+
+        /* -----------------------------------------
+           RETURN TO REVIEW
+        ----------------------------------------- */
+
+        showBookingStep(
+            "review"
+        );
+
+    }
+);
+
 
     /* =========================================================
        DATE
@@ -7379,24 +9552,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
             renderAvailableRides(
                 Array.isArray(data.rides) ? data.rides : []
-            );
-
-            closePanel(datePanel);
+            );  
 
             unlockPanel(
                 ridePanel,
                 ridePanelButton
             );
 
-            openPanel(ridePanel);
-
             updateBookingSummary();
 
-            ridePanel.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            /* =====================================================
+           WIZARD -> RIDE
+           ===================================================== */
 
+            showBookingStep(
+              "ride"
+            );
             return true;
         }
         catch (error) {
@@ -7412,68 +9583,191 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    bookingDate?.addEventListener(
+/* =========================================================
+   VISIT DATE CHANGE
+
+   IMPORTANT:
+   Selecting a date does NOT move to Ride automatically.
+   Customer must press Continue With This Date.
+========================================================= */
+
+bookingDate?.addEventListener(
     "change",
-    async function () {
+    function () {
+
+        const newDate =
+            bookingDate.value || "";
+
+
+        const oldDate =
+            bookingState.bookingDate || "";
+
+
+        /* -----------------------------------------
+           NO DATE
+        ----------------------------------------- */
+
+        if (!newDate) {
+
+            dateSelected?.classList.remove(
+                "show"
+            );
+
+            return;
+
+        }
+
+
+        /* -----------------------------------------
+           IF DATE REALLY CHANGED,
+           CLEAR PREVIOUS ADDED RIDES
+        ----------------------------------------- */
 
         if (
             bookingState.items.length
             &&
-            bookingState.bookingDate
+            oldDate
             &&
-            bookingState.bookingDate !== bookingDate.value
+            oldDate !== newDate
         ) {
-            bookingState.items = [];
+
+            bookingState.items =
+                [];
+
+
             renderSelectedAdventures();
+
 
             showBookingMessage(
                 "Your selected adventures were cleared because the visit date changed. Please add the rides again for the new date.",
                 "info",
                 "Visit Date Updated"
             );
+
         }
 
-        bookingState.bookingDate = bookingDate.value || "";
+
+        /* -----------------------------------------
+           SHOW SELECTED DATE
+        ----------------------------------------- */
 
         dateSelectedText.textContent =
-            formatDate(bookingState.bookingDate);
+            formatDate(
+                newDate
+            );
 
-        resetCurrentRideBuilder(false);
 
-        currentRideOffers = [];
+        dateSelected.classList.add(
+            "show"
+        );
 
-        if (rideList) {
-            rideList.innerHTML = `
-                <div class="ff-empty">
-                    Loading available rides...
-                </div>
-            `;
+
+        /* -----------------------------------------
+           IF USER CHANGED TO A DIFFERENT DATE,
+           RESET CURRENT RIDE BUILDER
+        ----------------------------------------- */
+
+        if (
+            oldDate
+            &&
+            oldDate !== newDate
+        ) {
+
+            resetCurrentRideBuilder(
+                false
+            );
+
+
+            currentRideOffers =
+                [];
+
+
+            if (rideList) {
+
+                rideList.innerHTML = `
+                    <div class="ff-empty">
+                        Press Continue to load rides for this visit date.
+                    </div>
+                `;
+
+            }
+
+
+            lockPanel(
+                ridePanel,
+                ridePanelButton
+            );
+
+
+            lockPanel(
+                offerPanel,
+                offerPanelButton
+            );
+
+
+            lockPanel(
+                participantPanel,
+                participantPanelButton
+            );
+
+
+            lockPanel(
+                slotPanel,
+                slotPanelButton
+            );
+
         }
 
-        lockPanel(
-            ridePanel,
-            ridePanelButton
-        );
-
-        lockPanel(
-            offerPanel,
-            offerPanelButton
-        );
-
-        lockPanel(
-            participantPanel,
-            participantPanelButton
-        );
 
         updateBookingSummary();
 
-        // Auto-continue: fetch rides and open the ride panel
-        // as soon as a valid date is picked.
-        if (bookingDate.value) {
-            await loadBookingOptionsForDate();
-        }
+
+        /* -----------------------------------------
+           IMPORTANT:
+           DO NOT CALL
+           loadBookingOptionsForDate()
+           HERE.
+        ----------------------------------------- */
+
     }
-    );
+);
+
+
+
+/* =========================================================
+   DATE CONTINUE
+
+   This is the ONLY action that moves
+   Date -> Ride
+========================================================= */
+
+dateContinue?.addEventListener(
+    "click",
+    async function () {
+
+        if (
+            !bookingDate.value
+        ) {
+
+            showError(
+                "Please select your visit date."
+            );
+
+            return;
+
+        }
+
+
+        /* -----------------------------------------
+           LOAD AVAILABLE RIDES
+           AND MOVE TO RIDE STEP
+        ----------------------------------------- */
+
+        await loadBookingOptionsForDate();
+
+    }
+);
+
 
     /* =========================================================
        RIDE SELECTION
@@ -7506,6 +9800,141 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         );
     }
+
+
+
+
+    /* =========================================================
+   CHECK IF ANOTHER RIDE CAN STILL BE ADDED
+========================================================= */
+
+function hasAnotherRideAvailable() {
+
+    const rideRadios =
+        document.querySelectorAll(
+            ".ff-ride-radio"
+        );
+
+
+    if (
+        rideRadios.length === 0
+    ) {
+        return false;
+    }
+
+
+    return Array.from(
+        rideRadios
+    ).some(
+        function (radio) {
+
+            return !rideAlreadyAdded(
+                radio.value
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   UPDATE "ADD ANOTHER RIDE" BUTTON
+========================================================= */
+
+function updateAddAnotherRideButton() {
+
+    if (
+        !addAnotherRide
+    ) {
+        return;
+    }
+
+
+    /* -----------------------------------------
+       NO RIDES IN BOOKING YET
+    ----------------------------------------- */
+
+    if (
+        bookingState.items.length === 0
+    ) {
+
+        addAnotherRide.disabled =
+            false;
+
+
+        addAnotherRide.classList.remove(
+            "all-rides-added"
+        );
+
+
+        addAnotherRide.innerHTML = `
+            <span>
+                <i class="fas fa-plus"></i>
+            </span>
+            Add Another Ride
+        `;
+
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       CHECK FOR UNUSED RIDES
+    ----------------------------------------- */
+
+    const anotherRideAvailable =
+        hasAnotherRideAvailable();
+
+
+    if (
+        anotherRideAvailable
+    ) {
+
+        addAnotherRide.disabled =
+            false;
+
+
+        addAnotherRide.classList.remove(
+            "all-rides-added"
+        );
+
+
+        addAnotherRide.innerHTML = `
+            <span>
+                <i class="fas fa-plus"></i>
+            </span>
+            Add Another Ride
+        `;
+
+    }
+    else {
+
+        addAnotherRide.disabled =
+            true;
+
+
+        addAnotherRide.classList.add(
+            "all-rides-added"
+        );
+
+
+        addAnotherRide.innerHTML = `
+            <span>
+                <i class="fas fa-check"></i>
+            </span>
+            All Rides Added
+        `;
+
+    }
+
+}
+
+
+
 
     function renderAvailableRides(rides) {
 
@@ -7559,21 +9988,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const radio = card.querySelector(".ff-ride-radio");
 
-                radio.addEventListener(
-                    "change",
-                    function () {
-                        selectRideFromServerData(
-                            ride,
-                            radio
-                        );
-                    }
-                );
+                /* =========================================================
+   RIDE CARD CLICK
+
+   IMPORTANT:
+   We use the CARD click instead of only radio "change"
+   so an already-selected ride can be selected again
+   after the user goes Back.
+========================================================= */
+
+card.addEventListener(
+    "click",
+    function (event) {
+
+        event.preventDefault();
+
+
+        /* -----------------------------------------
+           DO NOTHING IF RIDE IS REALLY DISABLED
+           BECAUSE IT WAS ALREADY ADDED TO BOOKING
+        ----------------------------------------- */
+
+        if (
+            radio.disabled
+        ) {
+            return;
+        }
+
+
+        /* -----------------------------------------
+           CHECK RADIO MANUALLY
+        ----------------------------------------- */
+
+        radio.checked =
+            true;
+
+
+        /* -----------------------------------------
+           RUN RIDE SELECTION EVERY TIME
+
+           This works even if this same ride was
+           already selected before going Back.
+        ----------------------------------------- */
+
+        selectRideFromServerData(
+            ride,
+            radio
+        );
+
+    }
+);
 
                 rideList.appendChild(card);
             }
         );
 
         refreshRideAvailability();
+        updateAddAnotherRideButton();
     }
 
     function selectRideFromServerData(ride, radio) {
@@ -7623,23 +10094,19 @@ document.addEventListener("DOMContentLoaded", function () {
         buildOffers();
         buildWeights();
 
-        closePanel(ridePanel);
-
         unlockPanel(
-          offerPanel,
-          offerPanelButton
-        );
-
-        openPanel(
-            offerPanel
+           offerPanel,
+           offerPanelButton
         );
 
 
-/* PROGRESS -> OFFER */
+/* =====================================================
+   WIZARD -> OFFER
+===================================================== */
 
-        updateBookingProgress(
-           "offer"
-        );
+showBookingStep(
+    "offer"
+);
 
 
         lockPanel(
@@ -7655,11 +10122,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         updateCurrentRidePreview();
-
-        offerPanel.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
     }
 
     /* =========================================================
@@ -8084,28 +10546,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         buildWeights();
 
-        closePanel(
-           offerPanel
-        );
-
-        openPanel(
-            participantPanel
-        );
-
-
-/* PROGRESS -> PARTICIPANTS */
-
-        updateBookingProgress(
-           "participants"
-        );
-
-
         updateCurrentRidePreview();
 
-        participantPanel.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+        /* =====================================================
+   WIZARD -> PARTICIPANTS
+===================================================== */
+
+        showBookingStep(
+            "participants"
+        );
     }
 
     function bindOffers() {
@@ -8435,25 +10884,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             setTimeout(
                 function () {
-                    closePanel(
-                        offerPanel
+                    /* =============================================
+                     WIZARD -> PARTICIPANTS
+                    ============================================= */
+
+                   showBookingStep(
+                        "participants"
                     );
-
-                    openPanel(
-                        participantPanel
-                    );
-
-
-                    /* PROGRESS -> PARTICIPANTS */
-
-                     updateBookingProgress(
-                          "participants"
-                    );
-
-                    participantPanel.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
                 },
                 250
             );
@@ -9538,13 +11975,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             slot;
 
 
-                        /* PROGRESS -> REVIEW */
-
-                        updateBookingProgress(
-                            "review"
-                        );
-
-
                         slotSelectedTime.textContent =
                             `${slot.start_label} - ${slot.end_label}`;
 
@@ -9677,19 +12107,15 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         if (openAfterLoad) {
-            closePanel(
-                participantPanel
+
+            /* =====================================================
+                 WIZARD -> TIME SLOT
+            ===================================================== */
+
+            showBookingStep(
+              "slot"
             );
-
-            openPanel(
-                slotPanel
-            );
-
-            /* PROGRESS -> TIME SLOT */
-
-             updateBookingProgress(
-                "slot"
-              );
+           
         }
 
         slotList.innerHTML = `
@@ -9737,14 +12163,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             renderSlotAvailability(data);
-
-            if (openAfterLoad) {
-                slotPanel.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            }
-
             return true;
         }
         catch (error) {
@@ -10327,54 +12745,6 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    {% comment %} addCurrentRide?.addEventListener(
-        "click",
-        function () {
-
-            const item =
-                buildCurrentRideItem();
-
-            if (!item) {
-                return;
-            }
-
-            if (
-                rideAlreadyAdded(
-                    item.rideId
-                )
-            ) {
-                showError(
-                    "This ride has already been added."
-                );
-
-                return;
-            }
-
-            bookingState.items.push(
-                item
-            );
-
-            renderSelectedAdventures();
-
-            resetCurrentRideBuilder(
-                false
-            );
-
-            updateBookingSummary();
-
-            showBookingMessage(
-                `${item.rideName} was added to your booking.`,
-                "success",
-                "Adventure Added"
-            );
-
-            selectedAdventures.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-        }
-    ); {% endcomment %}
-
     addCurrentRide?.addEventListener(
     "click",
     function () {
@@ -10430,15 +12800,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         updateBookingSummary();
 
-
         // -----------------------------------------
-        // SCROLL TO SELECTED ADVENTURES
+        // WIZARD -> REVIEW
         // -----------------------------------------
 
-        selectedAdventures.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+        showBookingStep(
+            "review"
+        );
 
     }
 );
@@ -10586,8 +12954,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 ridePanelButton
                             );
 
-                            openPanel(
-                                ridePanel
+                            showBookingStep(
+                               "ride"
                             );
                         }
                     }
@@ -10596,46 +12964,117 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         refreshRideAvailability();
+
+
+/* -----------------------------------------
+   UPDATE ADD ANOTHER RIDE BUTTON
+----------------------------------------- */
+
+        updateAddAnotherRideButton();
     }
 
-    addAnotherRide?.addEventListener(
-        "click",
-        function () {
+/* =========================================================
+   ADD ANOTHER RIDE
+========================================================= */
 
-            resetCurrentRideBuilder(
-                false
+addAnotherRide?.addEventListener(
+    "click",
+    function () {
+
+        /* -----------------------------------------
+           REFRESH RIDE AVAILABILITY FIRST
+        ----------------------------------------- */
+
+        refreshRideAvailability();
+
+
+        /* -----------------------------------------
+           CHECK IF ANY UNUSED RIDE REMAINS
+        ----------------------------------------- */
+
+        if (
+            !hasAnotherRideAvailable()
+        ) {
+
+            showBookingMessage(
+                "You have already added every available ride for this visit date.",
+                "info",
+                "All Rides Added"
             );
 
-            unlockPanel(
-                ridePanel,
-                ridePanelButton
+
+            /* IMPORTANT:
+               Stay on Review.
+            */
+
+            showBookingStep(
+                "review"
             );
 
-            openPanel(
-                ridePanel
-            );
 
-            lockPanel(
-                offerPanel,
-                offerPanelButton
-            );
+            return;
 
-            lockPanel(
-                participantPanel,
-                participantPanelButton
-            );
-
-            lockPanel(
-                slotPanel,
-                slotPanelButton
-            );
-
-            ridePanel.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
         }
-    );
+
+
+        /* -----------------------------------------
+           RESET ONLY CURRENT RIDE BUILDER
+        ----------------------------------------- */
+
+        resetCurrentRideBuilder(
+            false
+        );
+
+
+        /* -----------------------------------------
+           ALLOW RIDE STEP
+        ----------------------------------------- */
+
+        unlockPanel(
+            ridePanel,
+            ridePanelButton
+        );
+
+
+        /* -----------------------------------------
+           LOCK LATER STEPS
+        ----------------------------------------- */
+
+        lockPanel(
+            offerPanel,
+            offerPanelButton
+        );
+
+
+        lockPanel(
+            participantPanel,
+            participantPanelButton
+        );
+
+
+        lockPanel(
+            slotPanel,
+            slotPanelButton
+        );
+
+
+        /* -----------------------------------------
+           REFRESH DISABLED RIDES
+        ----------------------------------------- */
+
+        refreshRideAvailability();
+
+
+        /* -----------------------------------------
+           WIZARD -> RIDE
+        ----------------------------------------- */
+
+        showBookingStep(
+            "ride"
+        );
+
+    }
+);
 
     /* =========================================================
        RESET CURRENT RIDE BUILDER
@@ -11053,8 +13492,8 @@ row.innerHTML = `
        INITIAL STATE
     ========================================================= */
 
-    openPanel(
-        datePanel
+    showBookingStep(
+    "date"
     );
 
     lockPanel(
@@ -11081,4 +13520,326 @@ row.innerHTML = `
 });
 </script>
 
+
+{% comment %} navbar hide js start {% endcomment %}
+<script>
+    /* =========================================================
+   BOOKING PAGE NAVBAR
+   HIDE ON SCROLL DOWN
+   SHOW ON SCROLL UP
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const bookingNavbar =
+            document.querySelector(
+                "header"
+            );
+
+
+        if (!bookingNavbar) {
+            return;
+        }
+
+
+        bookingNavbar.classList.add(
+            "ff-booking-smart-navbar"
+        );
+
+
+        let lastScrollY =
+            window.scrollY;
+
+        let ticking =
+            false;
+
+
+        function updateBookingNavbar() {
+
+            const currentScrollY =
+                window.scrollY;
+
+
+            /* -----------------------------------------
+               ALWAYS SHOW NEAR TOP OF PAGE
+            ----------------------------------------- */
+
+            if (
+                currentScrollY
+                <=
+                80
+            ) {
+
+                bookingNavbar.classList.remove(
+                    "ff-navbar-hidden"
+                );
+
+                lastScrollY =
+                    currentScrollY;
+
+                ticking =
+                    false;
+
+                return;
+            }
+
+
+            /* -----------------------------------------
+               SCROLLING DOWN
+               HIDE NAVBAR
+            ----------------------------------------- */
+
+            if (
+                currentScrollY
+                >
+                lastScrollY
+                +
+                5
+            ) {
+
+                bookingNavbar.classList.add(
+                    "ff-navbar-hidden"
+                );
+
+            }
+
+
+            /* -----------------------------------------
+               SCROLLING UP
+               SHOW NAVBAR
+            ----------------------------------------- */
+
+            else if (
+                currentScrollY
+                <
+                lastScrollY
+                -
+                5
+            ) {
+
+                bookingNavbar.classList.remove(
+                    "ff-navbar-hidden"
+                );
+
+            }
+
+
+            lastScrollY =
+                currentScrollY;
+
+            ticking =
+                false;
+
+        }
+
+
+        window.addEventListener(
+            "scroll",
+            function () {
+
+                if (
+                    ticking
+                ) {
+                    return;
+                }
+
+
+                window.requestAnimationFrame(
+                    updateBookingNavbar
+                );
+
+
+                ticking =
+                    true;
+
+            },
+            {
+                passive: true
+            }
+        );
+
+    }
+);
+</script>
+{% comment %} navbar js end  {% endcomment %}
+
+
+{% comment %} mobile view screen has fixed height js  start {% endcomment %}
+<script>
+    /* =========================================================
+   MOBILE / TABLET BOOKING CARD HEIGHT
+
+   Keeps the right booking card completely inside
+   the visible screen and lets the card itself scroll.
+========================================================= */
+
+(function () {
+
+    const bookingFormCard =
+        document.querySelector(
+            ".ff-booking-form-card"
+        );
+
+
+    if (
+        !bookingFormCard
+    ) {
+        return;
+    }
+
+
+    let resizeFrame =
+        null;
+
+
+    function updateMobileBookingHeight() {
+
+        /* -----------------------------------------
+           DESKTOP
+
+           Remove mobile calculated height.
+        ----------------------------------------- */
+
+        if (
+            window.innerWidth
+            >
+            991
+        ) {
+
+            bookingFormCard.style.removeProperty(
+                "--ff-mobile-booking-height"
+            );
+
+            return;
+        }
+
+
+        /* -----------------------------------------
+           GET CURRENT CARD POSITION
+        ----------------------------------------- */
+
+        const cardRect =
+            bookingFormCard.getBoundingClientRect();
+
+
+        /*
+           window.innerHeight:
+           visible browser viewport height
+
+           cardRect.top:
+           distance from top of visible screen
+           to booking card
+
+           12:
+           small safety gap at bottom
+        */
+
+        const bottomGap =
+            12;
+
+
+        let availableHeight =
+            window.innerHeight
+            -
+            cardRect.top
+            -
+            bottomGap;
+
+
+        /* -----------------------------------------
+           SAFETY MINIMUM
+        ----------------------------------------- */
+
+        availableHeight =
+            Math.max(
+                availableHeight,
+                300
+            );
+
+
+        /* -----------------------------------------
+           APPLY HEIGHT TO CSS
+        ----------------------------------------- */
+
+        bookingFormCard.style.setProperty(
+            "--ff-mobile-booking-height",
+            `${availableHeight}px`
+        );
+
+    }
+
+
+    /* =====================================================
+       RESIZE / ORIENTATION
+    ===================================================== */
+
+    function requestBookingHeightUpdate() {
+
+        if (
+            resizeFrame
+        ) {
+
+            cancelAnimationFrame(
+                resizeFrame
+            );
+
+        }
+
+
+        resizeFrame =
+            requestAnimationFrame(
+                function () {
+
+                    updateMobileBookingHeight();
+
+                    resizeFrame =
+                        null;
+
+                }
+            );
+
+    }
+
+
+    /* -----------------------------------------
+       FIRST LOAD
+    ----------------------------------------- */
+
+    updateMobileBookingHeight();
+
+
+    /* -----------------------------------------
+       WINDOW RESIZE
+    ----------------------------------------- */
+
+    window.addEventListener(
+        "resize",
+        requestBookingHeightUpdate,
+        {
+            passive: true
+        }
+    );
+
+
+    /* -----------------------------------------
+       PHONE ROTATION
+    ----------------------------------------- */
+
+    window.addEventListener(
+        "orientationchange",
+        function () {
+
+            setTimeout(
+                requestBookingHeightUpdate,
+                120
+            );
+
+        }
+    );
+
+})();
+</script>
+{% comment %} mobile view screen has fixed height js  end {% endcomment %}
 {% endblock %}

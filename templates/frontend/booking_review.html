@@ -2800,39 +2800,6 @@
 
 
 
-        {% comment %}  {% endcomment %}
-.ff-billing-card {
-    position: sticky;
-    top: 24px;
-    align-self: flex-start;
-    height: auto; /* was height: 100% */
-}
-
-.ff-review-card {
-    height: auto; /* was height: 100% — JS will set this explicitly */
-    display: flex;
-    flex-direction: column;
-}
-
-
-.ff-review-scroll-area {
-    overflow-y: auto;
-    flex: 1 1 auto;
-    min-height: 0; /* without this, flex children refuse to scroll */
-}
-
-@media (max-width: 991px) {
-    .ff-billing-card {
-        position: static;
-    }
-    .ff-review-scroll-area {
-        overflow: visible;
-    }
-}
-        {% comment %}  {% endcomment %}
-
-
-
         {% comment %} terms and condition css start {% endcomment %}
 /* =========================================================
    TERMS & CONDITIONS RIGHT SIDE DRAWER
@@ -3480,6 +3447,1103 @@ body.ff-terms-open {
 {% comment %} otp verification css end {% endcomment %}
 
 
+
+
+{% comment %} hieght fixing css start {% endcomment %}
+/* =========================================================
+   BOOKING REVIEW
+   DESKTOP FIXED VIEWPORT CARDS
+========================================================= */
+
+@media (min-width: 992px) {
+
+    /* ---------------------------------------------------------
+       BOTH BOOTSTRAP COLUMNS
+    --------------------------------------------------------- */
+
+    .ff-review-page
+    .row.g-4.align-items-start
+    > .col-lg-6 {
+
+        display: flex;
+
+        min-width: 0;
+    }
+
+
+    /* ---------------------------------------------------------
+       BOTH LEFT + RIGHT CARDS
+       SAME VIEWPORT-BASED HEIGHT
+    --------------------------------------------------------- */
+
+    .ff-review-card,
+    .ff-billing-card {
+
+        width: 100%;
+
+        height:
+            var(
+                --ff-review-card-height,
+                600px
+            );
+
+        max-height:
+            var(
+                --ff-review-card-height,
+                600px
+            );
+
+        min-height: 0;
+
+        overflow: hidden;
+
+        align-self: flex-start;
+    }
+
+
+    /* ---------------------------------------------------------
+       LEFT REVIEW CARD
+    --------------------------------------------------------- */
+
+    .ff-review-card {
+
+        display: flex;
+
+        flex-direction: column;
+    }
+
+
+    .ff-review-scroll-area {
+
+        min-height: 0;
+
+        flex:
+            1
+            1
+            auto;
+
+        overflow-x: hidden;
+
+        overflow-y: auto;
+
+        overscroll-behavior:
+            contain;
+
+        scrollbar-width:
+            thin;
+    }
+
+
+    /* ---------------------------------------------------------
+       RIGHT BILLING CARD
+
+       Billing card itself becomes the scroll container.
+       No HTML/form changes required.
+    --------------------------------------------------------- */
+
+    .ff-billing-card {
+
+        display: block;
+
+        overflow-x:
+            hidden;
+
+        overflow-y:
+            auto;
+
+        overscroll-behavior:
+            contain;
+
+        scrollbar-width:
+            thin;
+    }
+
+}
+
+
+/* =========================================================
+   REVIEW CARD SCROLLBARS
+========================================================= */
+
+@media (min-width: 992px) {
+
+    .ff-review-scroll-area::-webkit-scrollbar,
+    .ff-billing-card::-webkit-scrollbar {
+
+        width: 5px;
+    }
+
+
+    .ff-review-scroll-area::-webkit-scrollbar-track,
+    .ff-billing-card::-webkit-scrollbar-track {
+
+        background:
+            transparent;
+    }
+
+
+    .ff-review-scroll-area::-webkit-scrollbar-thumb,
+    .ff-billing-card::-webkit-scrollbar-thumb {
+
+        border-radius:
+            20px;
+
+        background:
+            rgba(
+                25,
+                39,
+                54,
+                0.17
+            );
+    }
+
+}
+
+
+
+/* =========================================================
+   TABLET / MOBILE REVIEW PAGE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-review-card,
+    .ff-billing-card {
+
+        width: 100%;
+
+        height: auto !important;
+
+        max-height: none !important;
+
+        overflow: visible;
+    }
+
+
+    .ff-review-scroll-area {
+
+        overflow:
+            visible;
+
+        max-height:
+            none;
+    }
+
+}
+
+{% comment %} hieght fixing css end {% endcomment %}
+
+
+
+
+
+
+{% comment %} right side combactible css start {% endcomment %}
+/* =========================================================
+   BOOKING REVIEW
+   COMPACT DESKTOP CONTENT
+   DOES NOT CHANGE ANY LOGIC
+========================================================= */
+
+@media (min-width: 992px) {
+
+    /* =====================================================
+       GENERAL CARD BODY
+    ===================================================== */
+
+    .ff-card-body {
+
+        padding:
+            24px
+            28px;
+    }
+
+
+    /* =====================================================
+       RIGHT SIDE - BILLING HEADING
+    ===================================================== */
+
+    .ff-billing-heading {
+
+        margin-bottom:
+            17px;
+    }
+
+
+    .ff-billing-heading > span {
+
+        font-size:
+            9px;
+
+        letter-spacing:
+            0.7px;
+    }
+
+
+    .ff-billing-heading h2 {
+
+        margin-top:
+            4px;
+
+        font-size:
+            23px;
+
+        line-height:
+            1.15;
+    }
+
+
+    .ff-billing-heading p {
+
+        margin-top:
+            5px;
+
+        font-size:
+            10px;
+
+        line-height:
+            1.45;
+    }
+
+
+    /* =====================================================
+       BILLING FORM SPACING
+    ===================================================== */
+
+    .ff-billing-form {
+
+        gap:
+            11px;
+    }
+
+
+    /* =====================================================
+       LABELS
+    ===================================================== */
+
+    .ff-field label {
+
+        margin-bottom:
+            5px;
+
+        font-size:
+            10px;
+    }
+
+
+    /* =====================================================
+       STANDARD INPUTS
+    ===================================================== */
+
+    .ff-field input {
+
+        min-height:
+            49px;
+
+        height:
+            49px;
+
+        padding:
+            9px
+            14px;
+
+        border-radius:
+            12px;
+
+        font-size:
+            12px;
+    }
+
+
+    /* =====================================================
+       INTERNATIONAL PHONE INPUT
+
+       Must override its separate 61px rule too.
+    ===================================================== */
+
+    .ff-international-phone
+    .iti input {
+
+        min-height:
+            49px !important;
+
+        height:
+            49px !important;
+
+        padding-top:
+            8px;
+
+        padding-bottom:
+            8px;
+
+        font-size:
+            12px;
+    }
+
+
+    /* =====================================================
+       OTP BUTTONS
+    ===================================================== */
+
+    .ff-otp-send-button,
+    .ff-otp-verify-button {
+
+        min-height:
+            38px;
+
+        padding:
+            8px
+            15px;
+
+        border-radius:
+            20px;
+
+        gap:
+            6px;
+
+        font-size:
+            10px;
+    }
+
+
+    #bookingOtpInputWrap {
+
+        gap:
+            8px;
+    }
+
+
+    /* =====================================================
+       PHONE VERIFIED / ERROR MESSAGE
+    ===================================================== */
+
+    .ff-phone-verified {
+
+        margin-top:
+            4px;
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-phone-error {
+
+        margin-top:
+            4px;
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-booking-otp-success,
+    .ff-booking-otp-error {
+
+        font-size:
+            9px;
+    }
+
+
+    /* =====================================================
+       TERMS
+    ===================================================== */
+
+    .ff-check-row {
+
+        margin-top:
+            2px;
+
+        gap:
+            8px;
+
+        font-size:
+            10px;
+
+        line-height:
+            1.45;
+    }
+
+
+    .ff-check-row input {
+
+        width:
+            17px;
+
+        height:
+            17px;
+    }
+
+
+    /* =====================================================
+       SECURE PAYMENT NOTE
+    ===================================================== */
+
+    .ff-secure-payment-note {
+
+        padding:
+            10px
+            12px;
+
+        border-radius:
+            10px;
+
+        gap:
+            8px;
+
+        font-size:
+            9px;
+
+        line-height:
+            1.4;
+    }
+
+
+    .ff-secure-payment-note i {
+
+        font-size:
+            14px;
+    }
+
+
+    /* =====================================================
+       PAYMENT AREA
+    ===================================================== */
+
+    .ff-submit-area {
+
+        margin:
+            8px
+            -28px
+            -24px;
+
+        padding:
+            15px
+            28px;
+    }
+
+
+    .ff-payment-total {
+
+        margin-bottom:
+            10px;
+    }
+
+
+    .ff-payment-total span {
+
+        font-size:
+            10px;
+    }
+
+
+    .ff-payment-total strong {
+
+        font-size:
+            16px;
+    }
+
+
+    .ff-submit-button {
+
+        min-height:
+            47px;
+
+        border-radius:
+            25px;
+
+        gap:
+            8px;
+
+        font-size:
+            12px;
+    }
+
+}
+{% comment %} right side combactible css end  {% endcomment %}
+
+
+{% comment %} LEFT REVIEW SIDE COMPACT DESKTOP CONTENT start {% endcomment %}
+/* =========================================================
+   LEFT REVIEW SIDE
+   COMPACT DESKTOP CONTENT
+========================================================= */
+
+@media (min-width: 992px) {
+
+    /* =====================================================
+       TOP REVIEW HEADING
+    ===================================================== */
+
+    .ff-review-heading {
+
+        margin-bottom:
+            18px;
+
+        gap:
+            11px;
+    }
+
+
+    .ff-review-heading h1 {
+
+        font-size:
+            24px;
+    }
+
+
+    .ff-back-button {
+
+        width:
+            40px;
+
+        height:
+            40px;
+    }
+
+
+    /* =====================================================
+       DATE / ADVENTURE / RIDER OVERVIEW
+    ===================================================== */
+
+    .ff-overview-grid {
+
+        margin-bottom:
+            17px;
+
+        padding:
+            15px;
+
+        gap:
+            10px;
+
+        border-radius:
+            15px;
+    }
+
+
+    .ff-overview-icon {
+
+        width:
+            31px;
+
+        height:
+            31px;
+
+        margin-bottom:
+            7px;
+    }
+
+
+    .ff-overview-item small {
+
+        margin-bottom:
+            3px;
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-overview-item strong {
+
+        font-size:
+            13px;
+    }
+
+
+    .ff-overview-item span {
+
+        margin-top:
+            3px;
+
+        font-size:
+            9px;
+    }
+
+
+    /* =====================================================
+       BOOKING SUMMARY
+    ===================================================== */
+
+    .ff-ticket-summary {
+
+        padding:
+            18px;
+
+        border-radius:
+            17px;
+    }
+
+
+    .ff-summary-heading-row {
+
+        margin-bottom:
+            13px;
+    }
+
+
+    .ff-summary-heading-row h3 {
+
+        font-size:
+            17px;
+    }
+
+
+    .ff-summary-heading-row p {
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-adventure-count-badge {
+
+        padding:
+            5px
+            9px;
+
+        font-size:
+            8px;
+    }
+
+
+    /* =====================================================
+       EACH RIDE
+    ===================================================== */
+
+    .ff-multi-ride-review-item {
+
+        margin-bottom:
+            12px;
+
+        padding:
+            14px;
+
+        border-radius:
+            14px;
+    }
+
+
+    .ff-ride-review-number {
+
+        width:
+            32px;
+
+        height:
+            32px;
+
+        flex-basis:
+            32px;
+
+        font-size:
+            10px;
+    }
+
+
+    .ff-ride-review-title strong {
+
+        font-size:
+            13px;
+    }
+
+
+    .ff-ride-review-title span {
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-ride-review-subtotal strong {
+
+        font-size:
+            14px;
+    }
+
+
+    /* =====================================================
+       PARTICIPANT WEIGHT DETAILS
+    ===================================================== */
+
+    .ff-weight-review-section {
+
+        margin-top:
+            13px;
+
+        padding:
+            13px;
+
+        border-radius:
+            13px;
+    }
+
+
+    .ff-weight-review-heading {
+
+        margin-bottom:
+            10px;
+
+        gap:
+            8px;
+    }
+
+
+    .ff-weight-review-heading > span {
+
+        width:
+            34px;
+
+        height:
+            34px;
+
+        flex-basis:
+            34px;
+    }
+
+
+    .ff-weight-review-heading strong {
+
+        font-size:
+            11px;
+    }
+
+
+    .ff-weight-review-heading small {
+
+        font-size:
+            8px;
+    }
+
+
+    .ff-weight-review-row,
+    .ff-weight-review-total {
+
+        min-height:
+            38px;
+
+        padding:
+            7px
+            11px;
+    }
+
+
+    /* =====================================================
+       OFFER / REGULAR TICKET
+    ===================================================== */
+
+    .ff-review-offer-row {
+
+        margin-top:
+            12px;
+
+        padding:
+            12px;
+
+        border-radius:
+            12px;
+    }
+
+
+    .ff-regular-ticket-row {
+
+        margin-top:
+            11px;
+
+        padding:
+            10px
+            12px;
+    }
+
+
+    /* =====================================================
+       PRICE SUMMARY
+    ===================================================== */
+
+    .ff-price-summary {
+
+        padding:
+            18px
+            28px;
+    }
+
+
+    .ff-price-row {
+
+        margin-bottom:
+            9px;
+
+        font-size:
+            11px;
+    }
+
+
+    .ff-grand-total {
+
+        margin-top:
+            13px;
+
+        padding-top:
+            13px;
+    }
+
+
+    .ff-grand-total span {
+
+        font-size:
+            15px;
+    }
+
+
+    .ff-grand-total strong {
+
+        font-size:
+            19px;
+    }
+
+}
+
+
+
+@media (min-width: 992px) {
+
+    .ff-review-page {
+
+        padding:
+            30px
+            0
+            25px;
+    }
+
+
+    .ff-booking-progress {
+
+        margin-bottom:
+            28px;
+
+        padding:
+            17px
+            22px
+            15px;
+    }
+
+}
+{% comment %} LEFT REVIEW SIDE COMPACT DESKTOP CONTENT end  {% endcomment %}
+
+
+
+
+
+{% comment %} left side summery fix css start {% endcomment %}
+
+/* =========================================================
+   DESKTOP ONLY
+   LEFT REVIEW CARD
+   SCROLLABLE DETAILS + FIXED PRICE SUMMARY
+========================================================= */
+
+@media (min-width: 992px) {
+
+    /* ---------------------------------------------------------
+       WHOLE LEFT CARD
+    --------------------------------------------------------- */
+
+    .ff-review-card {
+
+        display: flex;
+
+        flex-direction: column;
+
+        overflow: hidden;
+    }
+
+
+    /* ---------------------------------------------------------
+       TOP BOOKING DETAILS
+
+       Only this section scrolls.
+    --------------------------------------------------------- */
+
+    .ff-review-scroll-area {
+
+        flex:
+            1
+            1
+            auto;
+
+        min-height: 0;
+
+        overflow-x:
+            hidden;
+
+        overflow-y:
+            auto;
+
+        overscroll-behavior:
+            contain;
+
+        scrollbar-width:
+            thin;
+    }
+
+
+    /* ---------------------------------------------------------
+       FIXED PRICE AREA AT BOTTOM
+    --------------------------------------------------------- */
+
+    .ff-review-card
+    > .ff-price-summary {
+
+        flex:
+            0
+            0
+            auto;
+
+        width:
+            100%;
+
+        margin:
+            0;
+
+        padding:
+            14px
+            28px
+            16px;
+
+        border-top:
+            1px
+            solid
+            var(--ff-border);
+
+        background:
+            #ffffff;
+
+        box-shadow:
+            0
+            -8px
+            22px
+            rgba(
+                25,
+                39,
+                54,
+                0.05
+            );
+
+        z-index:
+            5;
+    }
+
+
+    /* ---------------------------------------------------------
+       COMPACT PRICE ROWS
+    --------------------------------------------------------- */
+
+    .ff-review-card
+    > .ff-price-summary
+    .ff-price-row {
+
+        margin-bottom:
+            7px;
+
+        font-size:
+            10px;
+    }
+
+
+    .ff-review-card
+    > .ff-price-summary
+    .ff-price-row.discount {
+
+        padding:
+            7px
+            10px;
+
+        border-radius:
+            9px;
+    }
+
+
+    .ff-review-card
+    > .ff-price-summary
+    .ff-price-row
+    span small {
+
+        margin-top:
+            2px;
+
+        font-size:
+            8px;
+    }
+
+
+    /* ---------------------------------------------------------
+       GRAND TOTAL
+    --------------------------------------------------------- */
+
+    .ff-review-card
+    > .ff-price-summary
+    .ff-grand-total {
+
+        margin-top:
+            9px;
+
+        padding-top:
+            9px;
+    }
+
+
+    .ff-review-card
+    > .ff-price-summary
+    .ff-grand-total span {
+
+        font-size:
+            14px;
+    }
+
+
+    .ff-review-card
+    > .ff-price-summary
+    .ff-grand-total strong {
+
+        font-size:
+            18px;
+    }
+
+
+    /* ---------------------------------------------------------
+       THIN SCROLLBAR
+    --------------------------------------------------------- */
+
+    .ff-review-scroll-area::-webkit-scrollbar {
+
+        width:
+            5px;
+    }
+
+
+    .ff-review-scroll-area::-webkit-scrollbar-track {
+
+        background:
+            transparent;
+    }
+
+
+    .ff-review-scroll-area::-webkit-scrollbar-thumb {
+
+        border-radius:
+            10px;
+
+        background:
+            rgba(
+                25,
+                39,
+                54,
+                0.18
+            );
+    }
+
+}
+{% comment %} left side summery fix css end  {% endcomment %}
 </style>
 
 </head>
@@ -4031,7 +5095,8 @@ body.ff-terms-open {
 
                     </div>
 
-
+                </div>
+                <!-- END .ff-review-scroll-area -->
                     <!-- =========================================
                          COMBINED PRICE SUMMARY
                     ========================================== -->
@@ -4067,8 +5132,7 @@ body.ff-terms-open {
                         </div>
 
                     </div>
-
-                 </div>  
+ 
 
                 </section>
 
@@ -6014,27 +7078,6 @@ if (phoneError) {
 
 
 
-function syncReviewCardHeight() {
-    const billingCard = document.querySelector('.ff-billing-card');
-    const reviewCard = document.querySelector('.ff-review-card');
-    if (!billingCard || !reviewCard) return;
-
-    if (window.innerWidth >= 992) {
-        reviewCard.style.height = billingCard.offsetHeight + 'px';
-    } else {
-        reviewCard.style.height = 'auto';
-    }
-}
-
-syncReviewCardHeight();
-window.addEventListener('load', syncReviewCardHeight);
-window.addEventListener('resize', syncReviewCardHeight);
-
-
-
-
-
-
 
 
 
@@ -6818,6 +7861,226 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 });
+
+
+
+{% comment %} hieght fixing js start {% endcomment %}
+/* =========================================================
+   BOOKING REVIEW
+   KEEP LEFT + RIGHT CARDS INSIDE VIEWPORT
+========================================================= */
+
+(function () {
+
+    const reviewCard =
+        document.querySelector(
+            ".ff-review-card"
+        );
+
+
+    const billingCard =
+        document.querySelector(
+            ".ff-billing-card"
+        );
+
+
+    if (
+        !reviewCard
+        ||
+        !billingCard
+    ) {
+
+        return;
+
+    }
+
+
+    let reviewResizeFrame =
+        null;
+
+
+    function updateReviewCardHeight() {
+
+        /* =====================================================
+           MOBILE / TABLET
+
+           Do not force two stacked cards into one desktop-style
+           height system.
+        ===================================================== */
+
+        if (
+            window.innerWidth
+            <
+            992
+        ) {
+
+            document.documentElement
+                .style
+                .removeProperty(
+                    "--ff-review-card-height"
+                );
+
+
+            return;
+
+        }
+
+
+        /* =====================================================
+           GET CARD TOP POSITION
+
+           Both cards start on the same Bootstrap row.
+        ===================================================== */
+
+        const reviewRect =
+            reviewCard
+                .getBoundingClientRect();
+
+
+        const billingRect =
+            billingCard
+                .getBoundingClientRect();
+
+
+        const cardTop =
+            Math.min(
+                reviewRect.top,
+                billingRect.top
+            );
+
+
+        /* =====================================================
+           BOTTOM GAP
+        ===================================================== */
+
+        const bottomGap =
+            20;
+
+
+        /* =====================================================
+           AVAILABLE SCREEN HEIGHT
+        ===================================================== */
+
+        let availableHeight =
+            window.innerHeight
+            -
+            cardTop
+            -
+            bottomGap;
+
+
+        /* =====================================================
+           SAFETY
+
+           Avoid invalid/tiny cards on unusual viewport states.
+        ===================================================== */
+
+        availableHeight =
+            Math.max(
+                availableHeight,
+                320
+            );
+
+
+        /* =====================================================
+           APPLY SAME HEIGHT TO BOTH CARDS
+        ===================================================== */
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--ff-review-card-height",
+                `${availableHeight}px`
+            );
+
+    }
+
+
+    /* =====================================================
+       THROTTLED UPDATE
+    ===================================================== */
+
+    function requestReviewCardHeightUpdate() {
+
+        if (
+            reviewResizeFrame
+        ) {
+
+            cancelAnimationFrame(
+                reviewResizeFrame
+            );
+
+        }
+
+
+        reviewResizeFrame =
+            requestAnimationFrame(
+                function () {
+
+                    updateReviewCardHeight();
+
+
+                    reviewResizeFrame =
+                        null;
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       INITIAL LOAD
+    ===================================================== */
+
+    updateReviewCardHeight();
+
+
+    /* =====================================================
+       PAGE FULLY LOADED
+    ===================================================== */
+
+    window.addEventListener(
+        "load",
+        requestReviewCardHeightUpdate
+    );
+
+
+    /* =====================================================
+       RESIZE
+    ===================================================== */
+
+    window.addEventListener(
+        "resize",
+        requestReviewCardHeightUpdate,
+        {
+            passive: true
+        }
+    );
+
+
+    /* =====================================================
+       ORIENTATION
+    ===================================================== */
+
+    window.addEventListener(
+        "orientationchange",
+        function () {
+
+            setTimeout(
+                requestReviewCardHeightUpdate,
+                120
+            );
+
+        }
+    );
+
+})();
+{% comment %} hieght fixing js end {% endcomment %}
+
+
+
+
 </script>
 
 </body>
