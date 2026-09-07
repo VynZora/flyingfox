@@ -45,10 +45,6 @@ from django.contrib.auth import (
 
 import re
 
-# chatbot updation 
-from .chatbot.engine import process_message
-from .chatbot.languages import SUPPORTED_LANGUAGES
-
 
 import unicodedata
 
@@ -5881,6 +5877,25 @@ def user_bookings(request):
 
 
     # =====================================================
+    # CURRENT LOCAL DATE
+    # =====================================================
+    #
+    # Used only for ticket expiry/display logic.
+    #
+    # Example:
+    #
+    # today = 07 Sep 2026
+    #
+    # booking date 06 Sep 2026 -> expired
+    # booking date 07 Sep 2026 -> valid
+    # booking date 08 Sep 2026 -> valid
+    #
+    # =====================================================
+
+    today = timezone.localdate()
+
+
+    # =====================================================
     # PREPARE BOOKING INFORMATION
     # =====================================================
 
@@ -5939,6 +5954,48 @@ def user_bookings(request):
             item.display_slots = (
                 display_slots
             )
+
+
+        # =================================================
+        # VISIT DATE / TICKET DOWNLOAD STATE
+        # =================================================
+        #
+        # Past visit date:
+        #   ticket should no longer be downloadable.
+        #
+        # Today's visit:
+        #   ticket is still downloadable.
+        #
+        # Future visit:
+        #   ticket is downloadable.
+        #
+        # =================================================
+
+        booking.visit_expired = (
+            booking.booking_date < today
+        )
+
+
+        booking.can_download_ticket = (
+
+            hasattr(
+                booking,
+                "ticket",
+            )
+
+            and
+
+            booking.ticket is not None
+
+            and
+
+            booking.status != "cancelled"
+
+            and
+
+            booking.booking_date >= today
+
+        )
 
 
         # ---------------------------------------------
@@ -6073,7 +6130,6 @@ def user_bookings(request):
 # =========================================================
 # USER TICKETS
 # =========================================================
-
 def user_tickets(request):
 
     user_id = request.session.get(
@@ -6117,6 +6173,13 @@ def user_tickets(request):
         )
 
     )
+
+
+    # =====================================================
+    # CURRENT LOCAL DATE
+    # =====================================================
+
+    today = timezone.localdate()
 
 
     # =====================================================
@@ -6175,6 +6238,40 @@ def user_tickets(request):
         )
 
 
+        # ---------------------------------------------
+        # VISIT DATE EXPIRED
+        # ---------------------------------------------
+        #
+        # Example:
+        #
+        # Today: 07 Sep 2026
+        #
+        # 06 Sep 2026 -> expired
+        # 07 Sep 2026 -> still valid
+        # 08 Sep 2026 -> still valid
+        #
+        # ---------------------------------------------
+
+        ticket.visit_expired = (
+            booking.booking_date < today
+        )
+
+
+        # ---------------------------------------------
+        # TICKET DOWNLOAD PERMISSION
+        # ---------------------------------------------
+
+        ticket.can_download = (
+
+            booking.status != "cancelled"
+
+            and
+
+            booking.booking_date >= today
+
+        )
+
+
     return render(
         request,
         "authenticate/user_tickets.html",
@@ -6189,9 +6286,6 @@ def user_tickets(request):
                 "tickets",
         }
     )
-
-
-
 
 # =========================================================
 # USER SUPPORT
@@ -18952,13 +19046,27 @@ Munnar, Kerala
 
 
 
+
 def gallery(request, page=1):
+
+    # All gallery categories for filter buttons
+    categories = GalleryCategory.objects.all()
+
+    # Current selected category from URL:
+    # /gallery/?category=zipline
+    selected_category = request.GET.get("category", "").strip()
 
     gallery_queryset = (
         GalleryItem.objects
         .select_related("category")
         .order_by("-uploaded_at")
     )
+
+    # Apply category filter
+    if selected_category:
+        gallery_queryset = gallery_queryset.filter(
+            category__slug=selected_category
+        )
 
     paginator = Paginator(
         gallery_queryset,
@@ -18972,6 +19080,8 @@ def gallery(request, page=1):
         "frontend/gallery.html",
         {
             "gallery_items": gallery_items,
+            "categories": categories,
+            "selected_category": selected_category,
         },
     )
 
@@ -19706,7 +19816,169 @@ def chatbot_message(request):
 
 
     # =====================================================
-    # 3. LANGUAGE SELECTION
+    # CHANGE LANGUAGE AT ANY TIME
+    # =====================================================
+
+    change_language = (
+        payload.get("change_language") is True
+    )
+
+
+    if (
+        change_language
+        and chat_session.onboarding_step != "language"
+    ):
+
+        selected_language = str(
+            payload.get("language", "")
+        ).strip().lower()
+
+
+        # -------------------------------------------------
+        # Validate selected language
+        # -------------------------------------------------
+
+        if (
+            selected_language
+            not in SUPPORTED_CHAT_LANGUAGES
+        ):
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": "Invalid language.",
+                },
+                status=400,
+            )
+
+
+        # -------------------------------------------------
+        # Save only language
+        #
+        # IMPORTANT:
+        # Do not reset name / phone / email /
+        # onboarding_step.
+        # -------------------------------------------------
+
+        chat_session.language = selected_language
+
+        chat_session.save(
+            update_fields=[
+                "language",
+                "updated_at",
+            ]
+        )
+
+
+        # -------------------------------------------------
+        # Save user language change
+        # -------------------------------------------------
+
+        ChatMessage.objects.create(
+            session=chat_session,
+            sender="user",
+            message=SUPPORTED_CHAT_LANGUAGES[
+                selected_language
+            ],
+            translated_message="",
+            language=selected_language,
+            intent="language_changed",
+        )
+
+
+        # -------------------------------------------------
+        # Response in new language
+        # -------------------------------------------------
+
+        if selected_language == "en":
+
+            bot_response = (
+                "Language changed to English. "
+                "How can I help you?"
+            )
+
+
+        elif selected_language == "ml":
+
+            bot_response = (
+                "ഭാഷ മലയാളത്തിലേക്ക് മാറ്റി. "
+                "ഞാൻ നിങ്ങളെ എങ്ങനെയാണ് സഹായിക്കേണ്ടത്?"
+            )
+
+
+        elif selected_language == "hi":
+
+            bot_response = (
+                "भाषा हिंदी में बदल दी गई है। "
+                "मैं आपकी कैसे मदद कर सकता हूँ?"
+            )
+
+
+        elif selected_language == "ta":
+
+            bot_response = (
+                "மொழி தமிழாக மாற்றப்பட்டது. "
+                "நான் உங்களுக்கு எப்படி உதவலாம்?"
+            )
+
+
+        else:
+
+            bot_response = (
+                "Language changed successfully."
+            )
+
+
+        # -------------------------------------------------
+        # Save bot language-change response
+        # -------------------------------------------------
+
+        ChatMessage.objects.create(
+            session=chat_session,
+            sender="bot",
+            message=bot_response,
+            translated_message="",
+            language=selected_language,
+            intent="language_changed",
+        )
+
+
+        # -------------------------------------------------
+        # Return response
+        # -------------------------------------------------
+
+        return JsonResponse(
+            {
+                "success": True,
+
+                "response": bot_response,
+
+                "response_type": "text",
+
+                "language": selected_language,
+
+                "onboarding_step":
+                    chat_session.onboarding_step,
+
+                "show_language_options": False,
+
+                "show_quick_replies": (
+                    chat_session.onboarding_step
+                    == "completed"
+                ),
+
+                "customer_name":
+                    chat_session.customer_name,
+
+                "session_id": str(
+                    chat_session.session_id
+                ),
+            }
+        )
+
+
+    # =====================================================
+    # 3. INITIAL LANGUAGE SELECTION
     # =====================================================
 
     if chat_session.onboarding_step == "language":
@@ -19761,7 +20033,10 @@ def chatbot_message(request):
             )
 
 
-        # Save language
+        # -------------------------------------------------
+        # Save first selected language
+        # -------------------------------------------------
+
         chat_session.language = selected_language
         chat_session.onboarding_step = "name"
 
@@ -19774,6 +20049,10 @@ def chatbot_message(request):
         )
 
 
+        # -------------------------------------------------
+        # Save language selection
+        # -------------------------------------------------
+
         ChatMessage.objects.create(
             session=chat_session,
             sender="user",
@@ -19785,9 +20064,9 @@ def chatbot_message(request):
         )
 
 
-        # IMPORTANT:
-        # Direct local multilingual response.
-        # NO TRANSLATOR.
+        # -------------------------------------------------
+        # Ask for name
+        # -------------------------------------------------
 
         bot_response = get_response(
             "ask_name",
@@ -19840,7 +20119,10 @@ def chatbot_message(request):
         full_name = user_message.strip()
 
 
+        # -------------------------------------------------
         # Minimum length
+        # -------------------------------------------------
+
         if len(full_name) < 2:
 
             bot_response = get_response(
@@ -19871,7 +20153,10 @@ def chatbot_message(request):
             )
 
 
+        # -------------------------------------------------
         # Multilingual validation
+        # -------------------------------------------------
+
         if not is_valid_multilingual_name(
             full_name
         ):
@@ -19904,7 +20189,10 @@ def chatbot_message(request):
             )
 
 
+        # -------------------------------------------------
         # Save name
+        # -------------------------------------------------
+
         chat_session.customer_name = full_name
         chat_session.onboarding_step = "phone"
 
@@ -19916,6 +20204,10 @@ def chatbot_message(request):
             ]
         )
 
+
+        # -------------------------------------------------
+        # Ask phone
+        # -------------------------------------------------
 
         bot_response = get_response(
             "ask_phone",
@@ -19987,7 +20279,10 @@ def chatbot_message(request):
             )
 
 
+        # -------------------------------------------------
         # Save phone
+        # -------------------------------------------------
+
         chat_session.customer_phone = phone
         chat_session.onboarding_step = "email"
 
@@ -19999,6 +20294,10 @@ def chatbot_message(request):
             ]
         )
 
+
+        # -------------------------------------------------
+        # Ask email
+        # -------------------------------------------------
 
         bot_response = get_response(
             "ask_email",
@@ -20122,7 +20421,10 @@ def chatbot_message(request):
             )
 
 
+        # -------------------------------------------------
         # Complete onboarding
+        # -------------------------------------------------
+
         chat_session.onboarding_step = "completed"
 
         chat_session.save(
@@ -20134,11 +20436,15 @@ def chatbot_message(request):
         )
 
 
+        # -------------------------------------------------
+        # Onboarding complete response
+        # -------------------------------------------------
+
         bot_response = get_response(
-    "onboarding_complete",
-    chat_session.language,
-    name=chat_session.customer_name or "",
-)
+            "onboarding_complete",
+            chat_session.language,
+            name=chat_session.customer_name or "",
+        )
 
 
         ChatMessage.objects.create(
@@ -20297,6 +20603,7 @@ def chatbot_message(request):
             ),
         }
     )
+
 
 
 
@@ -21574,7 +21881,7 @@ def verify_ticket(
     )
 
     # =====================================================
-    # LOAD TICKET + FULL MULTI-RIDE BOOKING
+    # LOAD TICKET + BOOKING
     # =====================================================
 
     ticket = get_object_or_404(
@@ -21596,8 +21903,24 @@ def verify_ticket(
         qr_token=qr_token,
     )
 
-    booking = (
-        ticket.booking
+    booking = ticket.booking
+
+    # =====================================================
+    # CURRENT DATE
+    # =====================================================
+
+    today = timezone.localdate()
+
+    is_past_booking = (
+        booking.booking_date < today
+    )
+
+    is_today_booking = (
+        booking.booking_date == today
+    )
+
+    is_future_booking = (
+        booking.booking_date > today
     )
 
     # =====================================================
@@ -21618,9 +21941,7 @@ def verify_ticket(
             "payment"
         )
         and
-        booking.payment.status
-        ==
-        "paid"
+        booking.payment.status == "paid"
     )
 
     # =====================================================
@@ -21644,18 +21965,6 @@ def verify_ticket(
     )
 
     # =====================================================
-    # OVERALL VALIDITY
-    # =====================================================
-
-    is_valid = (
-        is_payment_valid
-        and
-        is_booking_valid
-        and
-        has_rides
-    )
-
-    # =====================================================
     # CHECK-IN COUNTS
     # =====================================================
 
@@ -21667,12 +21976,9 @@ def verify_ticket(
 
         1
 
-        for item
-        in ride_items
+        for item in ride_items
 
-        if item.status
-        ==
-        "checked_in"
+        if item.status == "checked_in"
     )
 
     pending_ride_count = (
@@ -21684,9 +21990,7 @@ def verify_ticket(
     all_rides_checked_in = (
         total_ride_count > 0
         and
-        checked_in_ride_count
-        ==
-        total_ride_count
+        checked_in_ride_count == total_ride_count
     )
 
     some_rides_checked_in = (
@@ -21696,10 +22000,25 @@ def verify_ticket(
     )
 
     # =====================================================
-    # SYNC LEGACY TICKET USED STATE
+    # OVERALL CHECK-IN VALIDITY
     #
-    # Ticket becomes fully used only when every ride
-    # in this booking has been checked in.
+    # Normal check-in is allowed ONLY on the visit date.
+    # =====================================================
+
+    is_valid = (
+        is_payment_valid
+        and
+        is_booking_valid
+        and
+        has_rides
+        and
+        is_today_booking
+        and
+        not all_rides_checked_in
+    )
+
+    # =====================================================
+    # SYNC FULLY USED TICKET
     # =====================================================
 
     if (
@@ -21731,45 +22050,30 @@ def verify_ticket(
         request,
         "staff/ticket_verify.html",
         {
-            "ticket":
-                ticket,
+            "ticket": ticket,
+            "booking": booking,
+            "ride_items": ride_items,
 
-            "booking":
-                booking,
+            "is_valid": is_valid,
 
-            "ride_items":
-                ride_items,
+            "is_past_booking": is_past_booking,
+            "is_today_booking": is_today_booking,
+            "is_future_booking": is_future_booking,
 
-            "is_valid":
-                is_valid,
+            "total_ride_count": total_ride_count,
+            "checked_in_ride_count": checked_in_ride_count,
+            "pending_ride_count": pending_ride_count,
 
-            "total_ride_count":
-                total_ride_count,
-
-            "checked_in_ride_count":
-                checked_in_ride_count,
-
-            "pending_ride_count":
-                pending_ride_count,
-
-            "all_rides_checked_in":
-                all_rides_checked_in,
-
-            "some_rides_checked_in":
-                some_rides_checked_in,
+            "all_rides_checked_in": all_rides_checked_in,
+            "some_rides_checked_in": some_rides_checked_in,
         },
     )
-
-
-
-
 
 
 
 # =========================================================
 # CHECK IN ONE BOOKING RIDE ITEM
 # =========================================================
-
 @permission_required(
     "flyingfox_app.verify_ticket",
     login_url="ticket_staff_login",
@@ -21790,7 +22094,6 @@ def ticket_check_in(
             "ticket_scanner"
         )
 
-
     # =====================================================
     # LOCK RIDE ITEM
     # =====================================================
@@ -21807,11 +22110,7 @@ def ticket_check_in(
         pk=booking_item_id,
     )
 
-
-    booking = (
-        booking_item.booking
-    )
-
+    booking = booking_item.booking
 
     # =====================================================
     # LOCK TICKET
@@ -21825,6 +22124,52 @@ def ticket_check_in(
         booking=booking,
     )
 
+    # =====================================================
+    # VISIT DATE VALIDATION
+    # =====================================================
+
+    today = timezone.localdate()
+
+    # -----------------------------------------------------
+    # PAST BOOKING
+    # -----------------------------------------------------
+
+    if booking.booking_date < today:
+
+        messages.error(
+            request,
+            (
+                f"This ticket was booked for "
+                f"{booking.booking_date.strftime('%d %b %Y')}. "
+                "The visit date has already passed. "
+                "Check-in is no longer available."
+            )
+        )
+
+        return redirect(
+            "verify_ticket",
+            qr_token=ticket.qr_token,
+        )
+
+    # -----------------------------------------------------
+    # FUTURE BOOKING
+    # -----------------------------------------------------
+
+    if booking.booking_date > today:
+
+        messages.warning(
+            request,
+            (
+                f"This ticket is booked for "
+                f"{booking.booking_date.strftime('%d %b %Y')}. "
+                "Check-in is only available on the visit date."
+            )
+        )
+
+        return redirect(
+            "verify_ticket",
+            qr_token=ticket.qr_token,
+        )
 
     # =====================================================
     # PAYMENT
@@ -21838,13 +22183,10 @@ def ticket_check_in(
         .first()
     )
 
-
     if (
         payment is None
         or
-        payment.status
-        !=
-        "paid"
+        payment.status != "paid"
     ):
 
         messages.error(
@@ -21857,10 +22199,8 @@ def ticket_check_in(
 
         return redirect(
             "verify_ticket",
-            qr_token=
-                ticket.qr_token,
+            qr_token=ticket.qr_token,
         )
-
 
     # =====================================================
     # BOOKING STATUS
@@ -21881,20 +22221,14 @@ def ticket_check_in(
 
         return redirect(
             "verify_ticket",
-            qr_token=
-                ticket.qr_token,
+            qr_token=ticket.qr_token,
         )
-
 
     # =====================================================
     # ALREADY CHECKED IN
     # =====================================================
 
-    if (
-        booking_item.status
-        ==
-        "checked_in"
-    ):
+    if booking_item.status == "checked_in":
 
         messages.warning(
             request,
@@ -21906,26 +22240,20 @@ def ticket_check_in(
 
         return redirect(
             "verify_ticket",
-            qr_token=
-                ticket.qr_token,
+            qr_token=ticket.qr_token,
         )
-
 
     # =====================================================
     # CHECK IN THIS RIDE
     # =====================================================
 
-    booking_item.status = (
-        "checked_in"
-    )
-
+    booking_item.status = "checked_in"
 
     booking_item.save(
         update_fields=[
             "status",
         ]
     )
-
 
     # =====================================================
     # CHECK ALL RIDE ITEMS
@@ -21940,22 +22268,16 @@ def ticket_check_in(
         )
     )
 
-
     all_checked_in = (
         bool(
             all_booking_items
         )
         and
         all(
-            item.status
-            ==
-            "checked_in"
-
-            for item
-            in all_booking_items
+            item.status == "checked_in"
+            for item in all_booking_items
         )
     )
-
 
     # =====================================================
     # ALL RIDES CHECKED IN
@@ -21964,9 +22286,8 @@ def ticket_check_in(
     if all_checked_in:
 
         # Parent booking
-        booking.status = (
-            "checked_in"
-        )
+
+        booking.status = "checked_in"
 
         booking.save(
             update_fields=[
@@ -21975,8 +22296,8 @@ def ticket_check_in(
             ]
         )
 
-
         # Parent ticket
+
         ticket.is_used = True
 
         ticket.checked_in_at = (
@@ -21990,7 +22311,6 @@ def ticket_check_in(
             ]
         )
 
-
         messages.success(
             request,
             (
@@ -22000,25 +22320,15 @@ def ticket_check_in(
             )
         )
 
-
     # =====================================================
     # SOME RIDES STILL PENDING
     # =====================================================
 
     else:
 
-        # Keep parent booking confirmed until
-        # every ride is checked in.
+        if booking.status == "checked_in":
 
-        if (
-            booking.status
-            ==
-            "checked_in"
-        ):
-
-            booking.status = (
-                "confirmed"
-            )
+            booking.status = "confirmed"
 
             booking.save(
                 update_fields=[
@@ -22027,10 +22337,7 @@ def ticket_check_in(
                 ]
             )
 
-
-        # Ticket must remain usable
         ticket.is_used = False
-
         ticket.checked_in_at = None
 
         ticket.save(
@@ -22040,7 +22347,6 @@ def ticket_check_in(
             ]
         )
 
-
         messages.success(
             request,
             (
@@ -22049,20 +22355,14 @@ def ticket_check_in(
             )
         )
 
-
     # =====================================================
     # RETURN TO SAME TICKET
     # =====================================================
 
     return redirect(
         "verify_ticket",
-        qr_token=
-            ticket.qr_token,
+        qr_token=ticket.qr_token,
     )
-
-
-
-
 
 
 # =========================================================

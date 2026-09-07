@@ -22,22 +22,128 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
 {% endblock %}
 
 
- <!-- Canonical URL -->
+ 
+<!-- Canonical URL -->
+
+{% if selected_category %}
+
     {% if gallery_items.number == 1 %}
+
+        <link
+            rel="canonical"
+            href="https://flyingfoxadventuremunnar.com/gallery/?category={{ selected_category }}"
+        >
+
+    {% else %}
+
+        <link
+            rel="canonical"
+            href="https://flyingfoxadventuremunnar.com/gallery/page/{{ gallery_items.number }}/?category={{ selected_category }}"
+        >
+
+    {% endif %}
+
+{% else %}
+
+    {% if gallery_items.number == 1 %}
+
         <link
             rel="canonical"
             href="https://flyingfoxadventuremunnar.com/gallery/"
         >
+
     {% else %}
+
         <link
             rel="canonical"
             href="https://flyingfoxadventuremunnar.com/gallery/page/{{ gallery_items.number }}/"
         >
+
     {% endif %}
+
+{% endif %}
 
 
 
 {% block nav_gallery %}active{% endblock %}
+
+
+{% block extra_css %}
+ <style>
+
+    .gallery-filter-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 45px;
+}
+
+.gallery-filter-btn {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+
+    color: #333333;
+    background: #ffffff;
+
+    border: 1px solid rgba(195, 17, 3, 0.18);
+    border-radius: 50px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.gallery-filter-btn:hover {
+    color: #c31103;
+    background: #fff5f3;
+    border-color: rgba(195, 17, 3, 0.35);
+    transform: translateY(-1px);
+}
+
+.gallery-filter-btn.active {
+    color: #ffffff;
+    background: #c31103;
+    border-color: #c31103;
+    box-shadow: 0 8px 20px rgba(195, 17, 3, 0.18);
+}
+
+@media (max-width: 767px) {
+
+    .gallery-filter-wrap {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+
+        margin-bottom: 30px;
+        padding-bottom: 5px;
+
+        scrollbar-width: none;
+    }
+
+    .gallery-filter-wrap::-webkit-scrollbar {
+        display: none;
+    }
+
+    .gallery-filter-btn {
+        flex: 0 0 auto;
+        min-height: 40px;
+        padding: 8px 18px;
+        font-size: 12px;
+    }
+}
+ </style>
+{% endblock %}
+
 
 {% block content %}
   <!-- breadcrumb -->
@@ -106,6 +212,40 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
                 </div>
             </div>
         </div>
+
+
+
+<!-- ==========================================
+     GALLERY CATEGORY FILTER
+=========================================== -->
+
+<div class="gallery-filter-wrap">
+
+    <!-- ALL -->
+    <a
+        href="{% url 'gallery' %}"
+        class="gallery-filter-btn
+        {% if not selected_category %}active{% endif %}"
+    >
+        All
+    </a>
+
+    <!-- CATEGORIES -->
+    {% for category in categories %}
+
+        <a
+            href="{% url 'gallery' %}?category={{ category.slug }}"
+            class="gallery-filter-btn
+            {% if selected_category == category.slug %}active{% endif %}"
+        >
+            {{ category.name }}
+        </a>
+
+    {% endfor %}
+
+</div>
+
+
 
 
         <div class="row g-4 popup-gallery">
@@ -191,7 +331,6 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
         <!-- ==========================================
              PAGINATION
         =========================================== -->
-
 {% if gallery_items.has_other_pages %}
 
 <div class="pagination-area">
@@ -200,68 +339,74 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
 
         <!-- Previous -->
         {% if gallery_items.has_previous %}
-            <li class="page-item">
+        <li class="page-item">
 
-                {% if gallery_items.previous_page_number == 1 %}
-                    <a
-                        class="page-link"
-                        href="{% url 'gallery' %}"
-                    >
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                {% else %}
-                    <a
-                        class="page-link"
-                        href="{% url 'gallery_page' gallery_items.previous_page_number %}"
-                    >
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                {% endif %}
+            {% if gallery_items.previous_page_number == 1 %}
 
-            </li>
+                <a
+                    class="page-link"
+                    href="{% url 'gallery' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+
+            {% else %}
+
+                <a
+                    class="page-link"
+                    href="{% url 'gallery_page' gallery_items.previous_page_number %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+
+            {% endif %}
+
+        </li>
         {% endif %}
 
 
         <!-- Page numbers -->
         {% for page in gallery_items.paginator.page_range %}
 
-            <li class="page-item {% if gallery_items.number == page %}active{% endif %}">
+        <li class="page-item {% if gallery_items.number == page %}active{% endif %}">
 
-                {% if page == 1 %}
-                    <a
-                        class="page-link"
-                        href="{% url 'gallery' %}"
-                    >
-                        {{ page }}
-                    </a>
-                {% else %}
-                    <a
-                        class="page-link"
-                        href="{% url 'gallery_page' page %}"
-                    >
-                        {{ page }}
-                    </a>
-                {% endif %}
+            {% if page == 1 %}
 
-            </li>
+                <a
+                    class="page-link"
+                    href="{% url 'gallery' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+                >
+                    {{ page }}
+                </a>
+
+            {% else %}
+
+                <a
+                    class="page-link"
+                    href="{% url 'gallery_page' page %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+                >
+                    {{ page }}
+                </a>
+
+            {% endif %}
+
+        </li>
 
         {% endfor %}
 
 
         <!-- Next -->
         {% if gallery_items.has_next %}
+        <li class="page-item">
 
-            <li class="page-item">
+            <a
+                class="page-link"
+                href="{% url 'gallery_page' gallery_items.next_page_number %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+            >
+                <i class="fas fa-arrow-right"></i>
+            </a>
 
-                <a
-                    class="page-link"
-                    href="{% url 'gallery_page' gallery_items.next_page_number %}"
-                >
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-
-            </li>
-
+        </li>
         {% endif %}
 
     </ul>

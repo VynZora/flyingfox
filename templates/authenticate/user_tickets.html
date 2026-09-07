@@ -104,25 +104,37 @@ My Tickets | Flying Fox
 
                             {% if ticket.booking_cancelled %}
 
-                                <div class="ff-ticket-cancelled-badge">
+    <div class="ff-ticket-cancelled-badge">
 
-                                    <i class="fas fa-ban"></i>
+        <i class="fas fa-ban"></i>
 
-                                    Ticket Cancelled
+        Ticket Cancelled
 
-                                </div>
+    </div>
 
-                            {% else %}
 
-                                <div class="ff-ticket-active-badge">
+{% elif ticket.visit_expired %}
 
-                                    <i class="fas fa-check-circle"></i>
+    <div class="ff-ticket-expired-badge">
 
-                                    Active Ticket
+        <i class="fas fa-check-circle"></i>
 
-                                </div>
+        Visit Completed
 
-                            {% endif %}
+    </div>
+
+
+{% else %}
+
+    <div class="ff-ticket-active-badge">
+
+        <i class="fas fa-check-circle"></i>
+
+        Active Ticket
+
+    </div>
+
+{% endif %}
 
 
                         </div>
@@ -217,31 +229,43 @@ My Tickets | Flying Fox
 
                         <div class="ff-user-ticket-actions">
 
+                        {% if ticket.can_download %}
 
-                            {% if not ticket.booking_cancelled %}
+    <a
+        href="{% url 'download_ticket' ticket.ticket_id %}"
+    >
 
-                                <a
-                                    href="{% url 'download_ticket' ticket.ticket_id %}"
-                                >
+        <i class="fas fa-download"></i>
 
-                                    <i class="fas fa-download"></i>
+        Download PDF
 
-                                    Download PDF
+    </a>
 
-                                </a>
 
-                            {% else %}
+{% elif ticket.booking_cancelled %}
 
-                                <div class="ff-ticket-cancelled-message">
+    <div class="ff-ticket-cancelled-message">
 
-                                    <i class="fas fa-circle-info"></i>
+        <i class="fas fa-circle-info"></i>
 
-                                    This ticket is no longer valid because
-                                    the booking was cancelled.
+        This ticket is no longer valid because
+        the booking was cancelled.
 
-                                </div>
+    </div>
 
-                            {% endif %}
+
+{% elif ticket.visit_expired %}
+
+    <div class="ff-ticket-expired-message">
+
+        <i class="fas fa-check-circle"></i>
+
+        This visit has been completed.
+        Ticket download is no longer available.
+
+    </div>
+
+{% endif %}
 
 
                         </div>
@@ -862,6 +886,71 @@ My Tickets | Flying Fox
     }
 
 }
+
+
+
+
+
+
+
+
+{% comment %} booking status css start {% endcomment %}
+/* =====================================================
+   EXPIRED / COMPLETED TICKET BADGE
+===================================================== */
+
+.ff-ticket-expired-badge {
+
+    display: inline-flex;
+
+    margin-top: 10px;
+
+    min-height: 28px;
+
+    padding:
+        0
+        10px;
+
+    border-radius: 16px;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #5f6872;
+
+    background: #f1f3f5;
+
+    font-size: 9px;
+
+    font-weight: 900;
+}
+
+/* =====================================================
+   EXPIRED TICKET MESSAGE
+===================================================== */
+
+.ff-ticket-expired-message {
+
+    width: 100%;
+
+    padding:
+        11px
+        13px;
+
+    border-radius: 12px;
+
+    color: #5f6872;
+
+    background: #f1f3f5;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    line-height: 1.6;
+}
+{% comment %} booking css end  {% endcomment %}
 
 </style>
 

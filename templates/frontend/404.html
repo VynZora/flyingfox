@@ -1,175 +1,262 @@
-{% extends "frontend/base.html" %}
 {% load static %}
 
-{% block title %}
-Page Not Found | Flying Fox Adventures
-{% endblock %}
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"
+    >
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Page Not Found | Flying Fox Adventure
+    </title>
+
+    <!-- Prevent indexing of 404 page -->
+    <meta
+        name="robots"
+        content="noindex, follow"
+    >
+
+    <!-- Favicon -->
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="{% static 'frontend/assets/img/favicon/favicon.ico' %}"
+    >
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'frontend/assets/img/favicon/favicon.svg' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="{% static 'frontend/assets/img/favicon/apple-touch-icon.png' %}"
+    >
 
 
-{% block content %}
+    <!-- Only CSS needed by this page -->
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/bootstrap.min.css' %}"
+    >
 
-<section class="ff-error-page">
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}"
+    >
 
-    <div class="container">
+    <link
+        rel="stylesheet"
+        href="{% static 'frontend/assets/css/style.css' %}"
+    >
 
-        <div class="ff-error-content text-center">
 
-            <div class="ff-error-code">
-                404
+    <style>
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
+
+        .ff-error-page {
+            position: relative;
+
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100svh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 60px 20px;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(195, 17, 3, 0.08),
+                    transparent 55%
+                ),
+                #ffffff;
+        }
+
+
+        .ff-error-content {
+            position: relative;
+
+            width: 100%;
+            max-width: 750px;
+
+            margin: 0 auto;
+        }
+
+
+        .ff-error-code {
+            margin-bottom: -25px;
+
+            color: rgba(195, 17, 3, 0.08);
+
+            font-size: clamp(150px, 24vw, 300px);
+            font-weight: 900;
+            line-height: 0.85;
+
+            user-select: none;
+        }
+
+
+        .ff-error-content .site-title-tagline {
+            position: relative;
+
+            display: inline-block;
+
+            margin-bottom: 15px;
+
+            color: #c31103;
+
+            font-weight: 700;
+        }
+
+
+        .ff-error-content h1 {
+            margin-bottom: 18px;
+
+            color: #191919;
+
+            font-size: clamp(38px, 5vw, 62px);
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+
+        .ff-error-content h1 span {
+            color: #c31103;
+        }
+
+
+        .ff-error-content p {
+            max-width: 600px;
+
+            margin: 0 auto 30px;
+
+            color: #666666;
+
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+
+        @media (max-width: 767px) {
+
+            .ff-error-page {
+                padding: 40px 20px;
+            }
+
+
+            .ff-error-code {
+                margin-bottom: -10px;
+
+                font-size: 140px;
+            }
+
+
+            .ff-error-content h1 {
+                font-size: 38px;
+            }
+
+
+            .ff-error-content p {
+                font-size: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <main>
+
+        <section class="ff-error-page">
+
+            <div class="container">
+
+                <div class="ff-error-content text-center">
+
+                    <div class="ff-error-code">
+                        404
+                    </div>
+
+
+                    <span class="site-title-tagline">
+
+                        <i class="far fa-mountain"></i>
+
+                        Oops! Lost on the Trail?
+
+                    </span>
+
+
+                    <h1>
+
+                        Page Not
+
+                        <span>
+                            Found
+                        </span>
+
+                    </h1>
+
+
+                    <p>
+                        The page you're looking for may have been moved,
+                        deleted, or never existed. Don't worry — your
+                        adventure doesn't have to end here.
+                    </p>
+
+
+                    <a
+                        href="{% url 'home' %}"
+                        class="theme-btn"
+                    >
+
+                        <span class="far fa-home"></span>
+
+                        Back To Home
+
+                    </a>
+
+                </div>
+
             </div>
 
-            <span class="site-title-tagline">
-                <i class="far fa-mountain"></i>
-                Oops! Lost on the Trail?
-            </span>
+        </section>
 
-            <h1>
-                Page Not
-                <span>Found</span>
-            </h1>
-
-            <p>
-                The page you're looking for may have been moved,
-                deleted, or never existed. Don't worry — your
-                adventure doesn't have to end here.
-            </p>
-
-            <a
-                href="{% url 'home' %}"
-                class="theme-btn"
-            >
-                <span class="far fa-home"></span>
-                Back To Home
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-{% endblock %}
+    </main>
 
 
-{% block extra_css %}
+</body>
 
-<style>
-
-.ff-error-page {
-    position: relative;
-
-    min-height: 75vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 120px 0;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(195, 17, 3, 0.08),
-            transparent 55%
-        ),
-        #ffffff;
-}
-
-
-.ff-error-content {
-    position: relative;
-
-    max-width: 750px;
-
-    margin: 0 auto;
-}
-
-
-.ff-error-code {
-    margin-bottom: -25px;
-
-    color: rgba(195, 17, 3, 0.08);
-
-    font-size: clamp(150px, 24vw, 300px);
-    font-weight: 900;
-    line-height: 0.85;
-
-    user-select: none;
-}
-
-
-.ff-error-content .site-title-tagline {
-    position: relative;
-
-    display: inline-block;
-
-    margin-bottom: 15px;
-
-    color: #c31103;
-
-    font-weight: 700;
-}
-
-
-.ff-error-content h1 {
-    margin-bottom: 18px;
-
-    color: #191919;
-
-    font-size: clamp(38px, 5vw, 62px);
-    font-weight: 800;
-    line-height: 1.1;
-}
-
-
-.ff-error-content h1 span {
-    color: #c31103;
-}
-
-
-.ff-error-content p {
-    max-width: 600px;
-
-    margin:
-        0 auto
-        30px;
-
-    color: #666666;
-
-    font-size: 16px;
-    line-height: 1.8;
-}
-
-
-@media (max-width: 767px) {
-
-    .ff-error-page {
-        min-height: 70vh;
-
-        padding: 90px 20px;
-    }
-
-
-    .ff-error-code {
-        margin-bottom: -10px;
-
-        font-size: 140px;
-    }
-
-
-    .ff-error-content h1 {
-        font-size: 38px;
-    }
-
-
-    .ff-error-content p {
-        font-size: 15px;
-    }
-
-}
-
-</style>
-
-{% endblock %}
+</html>

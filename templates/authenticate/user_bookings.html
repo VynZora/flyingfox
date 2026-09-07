@@ -199,22 +199,24 @@ My Bookings | Flying Fox
 <div class="ff-user-booking-actions">
 
 
-    <!-- DOWNLOAD TICKET -->
+<!-- =================================================
+     DOWNLOAD TICKET
+================================================== -->
 
-    {% if booking.ticket and booking.status != "cancelled" %}
+{% if booking.can_download_ticket %}
 
-        <a
-            class="ff-booking-action-primary"
-            href="{% url 'download_ticket' booking.ticket.ticket_id %}"
-        >
+    <a
+        class="ff-booking-action-primary"
+        href="{% url 'download_ticket' booking.ticket.ticket_id %}"
+    >
 
-            <i class="fas fa-download"></i>
+        <i class="fas fa-download"></i>
 
-            Download Ticket
+        Download Ticket
 
-        </a>
+    </a>
 
-    {% endif %}
+{% endif %}
 
 
 

@@ -1298,6 +1298,132 @@
     }
 }
 
+
+
+
+{% comment %} status css start {% endcomment %}
+/* =====================================================
+   EXPIRED BOOKING
+===================================================== */
+
+.ff-ticket-status.expired
+.ff-status-icon {
+    color: #ffffff;
+    background: #c31103;
+}
+
+
+/* =====================================================
+   FUTURE BOOKING
+===================================================== */
+
+.ff-ticket-status.future
+.ff-status-icon {
+    color: #ffffff;
+    background: #2563eb;
+}
+
+
+
+
+/* =====================================================
+   EXPIRED CHECK-IN MESSAGE
+===================================================== */
+
+.ff-expired-box {
+    display: flex;
+
+    width: 100%;
+
+    padding: 14px 16px;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    border-radius: 12px;
+
+    color: #991b1b;
+
+    background: #fef2f2;
+
+    font-size: 12px;
+}
+
+.ff-expired-box > i {
+    margin-top: 2px;
+
+    font-size: 17px;
+}
+
+.ff-expired-box strong,
+.ff-expired-box span {
+    display: block;
+}
+
+.ff-expired-box strong {
+    margin-bottom: 4px;
+
+    color: #991b1b;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.ff-expired-box span {
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   FUTURE CHECK-IN MESSAGE
+===================================================== */
+
+.ff-future-box {
+    display: flex;
+
+    width: 100%;
+
+    padding: 14px 16px;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    border-radius: 12px;
+
+    color: #1d4ed8;
+
+    background: #eff6ff;
+
+    font-size: 12px;
+}
+
+.ff-future-box > i {
+    margin-top: 2px;
+
+    font-size: 17px;
+}
+
+.ff-future-box strong,
+.ff-future-box span {
+    display: block;
+}
+
+.ff-future-box strong {
+    margin-bottom: 4px;
+
+    color: #1d4ed8;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.ff-future-box span {
+    line-height: 1.6;
+}
+{% comment %} status css end  {% endcomment %}
+
     </style>
 
 </head>
@@ -1385,127 +1511,171 @@
              TICKET STATUS
         ================================================== -->
 
-        {% if all_rides_checked_in %}
+        <!-- =================================================
+     TICKET STATUS
+================================================== -->
 
-            <div class="ff-ticket-status used">
+{% if all_rides_checked_in %}
 
-                <div class="ff-status-icon">
+    <div class="ff-ticket-status used">
 
-                    <i class="fas fa-circle-check"></i>
+        <div class="ff-status-icon">
+            <i class="fas fa-circle-check"></i>
+        </div>
 
-                </div>
+        <h1>
+            Fully Checked In
+        </h1>
 
+        <p>
 
-                <h1>
-                    Fully Checked In
-                </h1>
+            All adventures in this ticket
+            have been checked in.
 
+            {% if ticket.checked_in_at %}
 
-                <p>
+                <br>
 
-                    All adventures in this ticket
-                    have been checked in.
+                Final check-in:
 
-                    {% if ticket.checked_in_at %}
+                {{ ticket.checked_in_at|date:"d M Y, h:i A" }}
 
-                        <br>
+            {% endif %}
 
-                        Final check-in:
+        </p>
 
-                        {{ ticket.checked_in_at|date:"d M Y, h:i A" }}
-
-                    {% endif %}
-
-                </p>
-
-            </div>
-
-
-        {% elif some_rides_checked_in and is_valid %}
-
-            <div class="ff-ticket-status partial">
-
-                <div class="ff-status-icon">
-
-                    <i class="fas fa-list-check"></i>
-
-                </div>
+    </div>
 
 
-                <h1>
-                    Partially Checked In
-                </h1>
+{% elif is_past_booking %}
+
+    <div class="ff-ticket-status expired">
+
+        <div class="ff-status-icon">
+            <i class="fas fa-calendar-xmark"></i>
+        </div>
+
+        <h1>
+            Visit Date Passed
+        </h1>
+
+        <p>
+
+            This ticket was booked for
+
+            <strong>
+                {{ booking.booking_date|date:"d M Y" }}
+            </strong>.
+
+            <br>
+
+            Standard check-in is no longer available.
+
+        </p>
+
+    </div>
 
 
-                <p>
+{% elif is_future_booking %}
 
-                    {{ checked_in_ride_count }}
+    <div class="ff-ticket-status future">
 
-                    of
+        <div class="ff-status-icon">
+            <i class="fas fa-calendar-day"></i>
+        </div>
 
-                    {{ total_ride_count }}
+        <h1>
+            Upcoming Visit
+        </h1>
 
-                    adventures have been checked in.
+        <p>
 
-                </p>
+            This ticket is booked for
 
-            </div>
+            <strong>
+                {{ booking.booking_date|date:"d M Y" }}
+            </strong>.
 
+            <br>
 
-        {% elif is_valid %}
+            Check-in will be available on the visit date.
 
-            <div class="ff-ticket-status valid">
+        </p>
 
-                <div class="ff-status-icon">
-
-                    <i class="fas fa-circle-check"></i>
-
-                </div>
-
-
-                <h1>
-                    Valid Ticket
-                </h1>
+    </div>
 
 
-                <p>
+{% elif some_rides_checked_in and is_valid %}
 
-                    Booking and payment are confirmed.
+    <div class="ff-ticket-status partial">
 
-                    Select an adventure below
-                    to check in the riders.
+        <div class="ff-status-icon">
+            <i class="fas fa-list-check"></i>
+        </div>
 
-                </p>
+        <h1>
+            Partially Checked In
+        </h1>
 
-            </div>
+        <p>
 
+            {{ checked_in_ride_count }}
 
-        {% else %}
+            of
 
-            <div class="ff-ticket-status invalid">
+            {{ total_ride_count }}
 
-                <div class="ff-status-icon">
+            adventures have been checked in.
 
-                    <i class="fas fa-circle-xmark"></i>
+        </p>
 
-                </div>
-
-
-                <h1>
-                    Invalid Ticket
-                </h1>
+    </div>
 
 
-                <p>
+{% elif is_valid %}
 
-                    This ticket cannot currently
-                    be checked in.
+    <div class="ff-ticket-status valid">
 
-                </p>
+        <div class="ff-status-icon">
+            <i class="fas fa-circle-check"></i>
+        </div>
 
-            </div>
+        <h1>
+            Valid Ticket
+        </h1>
 
-        {% endif %}
+        <p>
+
+            Booking and payment are confirmed.
+
+            Select an adventure below
+            to check in the riders.
+
+        </p>
+
+    </div>
+
+
+{% else %}
+
+    <div class="ff-ticket-status invalid">
+
+        <div class="ff-status-icon">
+            <i class="fas fa-circle-xmark"></i>
+        </div>
+
+        <h1>
+            Invalid Ticket
+        </h1>
+
+        <p>
+            This ticket cannot currently
+            be checked in.
+        </p>
+
+    </div>
+
+{% endif %}
 
 
         <!-- =================================================
@@ -2165,73 +2335,114 @@
 
 
                     <!-- =====================================
-                         CHECK-IN ACTION
-                    ====================================== -->
+     CHECK-IN ACTION
+====================================== -->
 
-                    <div class="ff-ride-checkin-action">
-
-
-                        {% if item.status == "checked_in" %}
+<div class="ff-ride-checkin-action">
 
 
-                            <div class="ff-used-box">
+    {% if item.status == "checked_in" %}
 
-                                <i class="fas fa-circle-check"></i>
+        <div class="ff-used-box">
 
-                                {{ item.ride.name }}
-                                is already checked in.
+            <i class="fas fa-circle-check"></i>
 
-                            </div>
+            {{ item.ride.name }}
+            is already checked in.
 
-
-                        {% elif is_valid %}
-
-
-                            <form
-                                method="POST"
-                                action="{% url 'ticket_check_in' item.id %}"
-                                class="ff-ride-checkin-form"
-                                id="rideCheckinForm{{ item.id }}"
-                            >
-
-                                {% csrf_token %}
+        </div>
 
 
-                                <button
-                                    type="button"
-                                    class="
-                                        ff-checkin-button
-                                        ff-open-ride-checkin
-                                    "
-                                    data-form-id="rideCheckinForm{{ item.id }}"
-                                    data-ride-name="{{ item.ride.name }}"
-                                >
+    {% elif is_past_booking %}
 
-                                    <i class="fas fa-circle-check"></i>
+        <div class="ff-expired-box">
 
-                                    Check In {{ item.ride.name }}
+            <i class="fas fa-calendar-xmark"></i>
 
-                                </button>
+            <div>
 
+                <strong>
+                    Visit Date Passed
+                </strong>
 
-                            </form>
+                <span>
+                    This adventure was booked for
+                    {{ booking.booking_date|date:"d M Y" }}.
+                    Check-in is no longer available.
+                </span>
 
+            </div>
 
-                        {% else %}
-
-
-                            <div class="ff-invalid-box">
-
-                                Check-in is unavailable
-                                for this adventure.
-
-                            </div>
+        </div>
 
 
-                        {% endif %}
+    {% elif is_future_booking %}
+
+        <div class="ff-future-box">
+
+            <i class="fas fa-calendar-day"></i>
+
+            <div>
+
+                <strong>
+                    Upcoming Visit
+                </strong>
+
+                <span>
+                    Check-in will be available on
+                    {{ booking.booking_date|date:"d M Y" }}.
+                </span>
+
+            </div>
+
+        </div>
 
 
-                    </div>
+    {% elif is_valid %}
+
+        <form
+            method="POST"
+            action="{% url 'ticket_check_in' item.id %}"
+            class="ff-ride-checkin-form"
+            id="rideCheckinForm{{ item.id }}"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="button"
+                class="
+                    ff-checkin-button
+                    ff-open-ride-checkin
+                "
+                data-form-id="rideCheckinForm{{ item.id }}"
+                data-ride-name="{{ item.ride.name }}"
+            >
+
+                <i class="fas fa-circle-check"></i>
+
+                Check In {{ item.ride.name }}
+
+            </button>
+
+        </form>
+
+
+    {% else %}
+
+        <div class="ff-invalid-box">
+
+            <i class="fas fa-circle-xmark"></i>
+
+            Check-in is unavailable
+            for this adventure.
+
+        </div>
+
+    {% endif %}
+
+
+</div>
 
 
                 </div>

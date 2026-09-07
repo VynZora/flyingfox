@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatbotWindow = document.getElementById("ffChatbotWindow");
 
   const chatbotClose = document.getElementById("ffChatbotClose");
+  const changeLanguageButton = document.getElementById(
+    "ffChatbotChangeLanguage",
+  );
 
   const chatbotForm = document.getElementById("ffChatbotForm");
 
@@ -36,6 +39,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const notificationBadge = document.querySelector(".ff-chatbot-alert");
 
   let chatbotInitialized = false;
+
+  /*
+   * Current onboarding state returned by Django.
+   *
+   * Possible values:
+   * language
+   * name
+   * phone
+   * email
+   * completed
+   */
+  let currentOnboardingStep = null;
+
+  /*
+   * False = first-time language selection
+   * True  = user is changing an existing language
+   */
+  let changingLanguage = false;
 
   if (
     !chatbotToggle ||
@@ -136,6 +157,18 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       chatbotInput.placeholder = "Type your message...";
     }
+  }
+
+  /* =========================================
+   SHOW / HIDE CHANGE LANGUAGE BUTTON
+========================================= */
+
+  function setChangeLanguageButtonVisible(visible) {
+    if (!changeLanguageButton) {
+      return;
+    }
+
+    changeLanguageButton.hidden = !visible;
   }
 
   /* =========================================
@@ -294,6 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
         body: JSON.stringify({
           message: languageCode,
           language: languageCode,
+          change_language: changingLanguage,
         }),
       });
 
@@ -323,6 +357,24 @@ document.addEventListener("DOMContentLoaded", function () {
        * നിങ്ങളുടെ മുഴുവൻ പേര് അറിയാമോ?"
        */
       addMessage(data.response, "bot");
+
+      /*
+       * Update current state from Django.
+       */
+      if (data.onboarding_step) {
+        currentOnboardingStep = data.onboarding_step;
+      }
+
+      /*
+       * Language selection/change completed.
+       */
+      changingLanguage = false;
+
+      /*
+       * Once an initial language exists,
+       * allow the user to change it later.
+       */
+      setChangeLanguageButtonVisible(currentOnboardingStep !== "language");
 
       /*
        * Django normally returns false here because
@@ -410,12 +462,19 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const data = await response.json();
-
       removeTypingIndicator();
 
       if (!response.ok || !data.success) {
         throw new Error(data.error || "Unable to start chatbot.");
       }
+
+      currentOnboardingStep = data.onboarding_step || null;
+
+      /*
+       * Hide change-language button only while
+       * the visitor has not selected a language yet.
+       */
+      setChangeLanguageButtonVisible(currentOnboardingStep !== "language");
 
       /*
        * Remove the static welcome message
@@ -557,6 +616,12 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error(data.error || "Unable to send message.");
       }
 
+      if (data.onboarding_step) {
+        currentOnboardingStep = data.onboarding_step;
+      }
+
+      setChangeLanguageButtonVisible(currentOnboardingStep !== "language");
+
       /*
        * Quick options remain hidden while
        * collecting name, phone and email.
@@ -581,8 +646,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* =========================================
-           OPEN / CLOSE EVENTS
-  ========================================= */
+         OPEN / CLOSE EVENTS
+========================================= */
 
   chatbotToggle.addEventListener("click", function () {
     if (chatbotWindow.classList.contains("is-open")) {
@@ -597,8 +662,64 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* =========================================
-           FORM SUBMIT
-  ========================================= */
+         CHANGE LANGUAGE EVENT
+========================================= */
+
+  if (changeLanguageButton) {
+    changeLanguageButton.addEventListener("click", function () {
+      /*
+       * If the user is still doing the original
+       * first-time language selection, do nothing.
+       */
+      if (currentOnboardingStep === "language") {
+        return;
+      }
+
+      /*
+       * If language options are already open,
+       * clicking the language icon again closes them.
+       */
+      if (changingLanguage) {
+        changingLanguage = false;
+
+        setLanguageOptionsVisible(false);
+
+        /*
+         * Show quick replies again only when
+         * onboarding has already been completed.
+         */
+        setQuickRepliesVisible(currentOnboardingStep === "completed");
+
+        chatbotInput.focus();
+
+        return;
+      }
+
+      /*
+       * User wants to change language.
+       */
+      changingLanguage = true;
+
+      /*
+       * Temporarily hide normal quick replies.
+       */
+      setQuickRepliesVisible(false);
+
+      /*
+       * Show your existing language buttons:
+       *
+       * English
+       * Malayalam
+       * Hindi
+       * Tamil
+       */
+      setLanguageOptionsVisible(true);
+    });
+  }
+
+  /* =========================================
+         FORM SUBMIT
+========================================= */
 
   chatbotForm.addEventListener("submit", function (event) {
     event.preventDefault();

@@ -730,7 +730,7 @@ def process_message(
                 "തീർച്ചയായും 😊 ഞങ്ങളുടെ Flying Fox ടീമുമായി "
                 "നേരിട്ട് ബന്ധപ്പെടാം.\n\n"
                 "📞 +91 7907219198\n"
-                "✉️ adventureflyingfox@gmail.com"
+                "✉️ support@flyingfoxadventuremunnar.com "
             )
 
         elif language == "hi":
@@ -739,7 +739,7 @@ def process_message(
                 "ज़रूर 😊 आप हमारी Flying Fox टीम से "
                 "सीधे संपर्क कर सकते हैं।\n\n"
                 "📞 +91 7907219198\n"
-                "✉️ adventureflyingfox@gmail.com"
+                "✉️ support@flyingfoxadventuremunnar.com "
             )
 
         elif language == "ta":
@@ -748,7 +748,7 @@ def process_message(
                 "நிச்சயமாக 😊 எங்கள் Flying Fox குழுவை "
                 "நேரடியாக தொடர்பு கொள்ளலாம்.\n\n"
                 "📞 +91 7907219198\n"
-                "✉️ adventureflyingfox@gmail.com"
+                "✉️ support@flyingfoxadventuremunnar.com"
             )
 
         else:
@@ -756,7 +756,7 @@ def process_message(
             response = (
                 "Sure 😊 You can contact our Flying Fox team directly.\n\n"
                 "📞 +91 7907219198\n"
-                "✉️ adventureflyingfox@gmail.com"
+                "✉️ support@flyingfoxadventuremunnar.com"
             )
 
         update_context(
