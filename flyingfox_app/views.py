@@ -2414,7 +2414,6 @@ def ride_media_delete(request, pk):
 # ==========================================
 # RIDE PRICE CRUD
 # ==========================================
-
 @login_required(login_url="admin_login")
 def ride_price_list(request):
 
@@ -2425,22 +2424,76 @@ def ride_price_list(request):
         .order_by("-start_date")
     )
 
+
     paginator = Paginator(
         prices_qs,
         10
     )
 
+
     page_number = request.GET.get(
         "page"
     )
+
 
     prices = paginator.get_page(
         page_number
     )
 
+
     rides = Ride.objects.all().order_by(
         "name"
     )
+
+
+    # =====================================================
+    # CURRENT LOCAL DATE
+    # =====================================================
+
+    today = timezone.localdate()
+
+
+    # =====================================================
+    # CALCULATE DISPLAY STATUS
+    # =====================================================
+
+    for price in prices:
+
+        # ---------------------------------------------
+        # ADMIN MANUALLY DISABLED
+        # ---------------------------------------------
+
+        if not price.is_active:
+
+            price.display_status = "inactive"
+
+
+        # ---------------------------------------------
+        # PRICE HAS NOT STARTED YET
+        # ---------------------------------------------
+
+        elif today < price.start_date:
+
+            price.display_status = "upcoming"
+
+
+        # ---------------------------------------------
+        # PRICE DATE RANGE HAS FINISHED
+        # ---------------------------------------------
+
+        elif today > price.end_date:
+
+            price.display_status = "expired"
+
+
+        # ---------------------------------------------
+        # CURRENTLY ACTIVE
+        # ---------------------------------------------
+
+        else:
+
+            price.display_status = "active"
+
 
     return render(
         request,
@@ -2455,9 +2508,32 @@ def ride_price_list(request):
 @login_required(login_url="admin_login")
 def ride_price_create(request):
 
-    rides = Ride.objects.filter(
-        is_active=True
-    ).order_by("name")
+    # =====================================================
+    # ONLY ACTIVE RIDES WITHOUT AN EXISTING PRICE
+    # =====================================================
+
+    priced_ride_ids = (
+        RidePrice.objects
+        .values_list(
+            "ride_id",
+            flat=True
+        )
+    )
+
+
+    rides = (
+        Ride.objects
+        .filter(
+            is_active=True
+        )
+        .exclude(
+            id__in=priced_ride_ids
+        )
+        .order_by(
+            "name"
+        )
+    )
+
 
     if request.method == "POST":
 
@@ -2483,6 +2559,10 @@ def ride_price_create(request):
         )
 
 
+        # =================================================
+        # RIDE REQUIRED
+        # =================================================
+
         if not ride_id:
 
             messages.error(
@@ -2498,6 +2578,42 @@ def ride_price_create(request):
                 }
             )
 
+
+        # =================================================
+        # GET RIDE
+        # =================================================
+
+        ride = get_object_or_404(
+            Ride,
+            pk=ride_id
+        )
+
+
+        # =================================================
+        # PREVENT DUPLICATE RIDE PRICE
+        # =================================================
+
+        if RidePrice.objects.filter(
+            ride=ride
+        ).exists():
+
+            messages.error(
+                request,
+                (
+                    f"A ride price already exists for "
+                    f"{ride.name}. Please update the "
+                    f"existing price instead."
+                )
+            )
+
+            return redirect(
+                "ride_price_list"
+            )
+
+
+        # =================================================
+        # DATE REQUIRED
+        # =================================================
 
         if not start_date or not end_date:
 
@@ -2515,6 +2631,10 @@ def ride_price_create(request):
             )
 
 
+        # =================================================
+        # DATE VALIDATION
+        # =================================================
+
         if end_date < start_date:
 
             messages.error(
@@ -2530,6 +2650,10 @@ def ride_price_create(request):
                 }
             )
 
+
+        # =================================================
+        # PRICE REQUIRED
+        # =================================================
 
         if not price:
 
@@ -2547,11 +2671,9 @@ def ride_price_create(request):
             )
 
 
-        ride = get_object_or_404(
-            Ride,
-            pk=ride_id
-        )
-
+        # =================================================
+        # CREATE
+        # =================================================
 
         RidePrice.objects.create(
             ride=ride,
@@ -2581,6 +2703,7 @@ def ride_price_create(request):
     )
 
 
+
 @login_required(login_url="admin_login")
 def ride_price_update(request, pk):
 
@@ -2588,6 +2711,7 @@ def ride_price_update(request, pk):
         RidePrice,
         pk=pk
     )
+
 
     if request.method == "POST":
 
@@ -2618,6 +2742,44 @@ def ride_price_update(request, pk):
             messages.error(
                 request,
                 "Please select a ride."
+            )
+
+            return redirect(
+                "ride_price_list"
+            )
+
+
+        ride = get_object_or_404(
+            Ride,
+            pk=ride_id
+        )
+
+
+        # =================================================
+        # PREVENT DUPLICATE RIDE PRICE
+        # =================================================
+
+        duplicate_exists = (
+            RidePrice.objects
+            .filter(
+                ride=ride
+            )
+            .exclude(
+                pk=ride_price.pk
+            )
+            .exists()
+        )
+
+
+        if duplicate_exists:
+
+            messages.error(
+                request,
+                (
+                    f"A ride price already exists for "
+                    f"{ride.name}. Each ride can have "
+                    f"only one price."
+                )
             )
 
             return redirect(
@@ -2661,14 +2823,14 @@ def ride_price_update(request, pk):
             )
 
 
-        ride_price.ride = get_object_or_404(
-            Ride,
-            pk=ride_id
-        )
+        ride_price.ride = ride
 
         ride_price.start_date = start_date
+
         ride_price.end_date = end_date
+
         ride_price.price = price
+
         ride_price.is_active = is_active
 
         ride_price.save()
@@ -2678,6 +2840,7 @@ def ride_price_update(request, pk):
             request,
             "Ride price updated successfully."
         )
+
 
     return redirect(
         "ride_price_list"

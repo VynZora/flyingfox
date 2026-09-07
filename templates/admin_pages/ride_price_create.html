@@ -29,194 +29,245 @@ Add Ride Price | FlyingFox Admin
 
                     <div class="col-12">
 
-                        <form
-                            method="POST"
-                            class="form-wrapper"
-                            id="priceForm"
-                        >
+                       <form
+    method="POST"
+    class="form-wrapper"
+    id="priceForm"
+>
 
-                            {% csrf_token %}
-
-
-                            <!-- Ride -->
-                            <div class="mb-4">
-
-                                <label
-                                    for="ride"
-                                    class="form-label"
-                                >
-                                    Ride
-
-                                    <span class="text-danger">
-                                        *
-                                    </span>
-                                </label>
+    {% csrf_token %}
 
 
-                                <select
-                                    name="ride"
-                                    id="ride"
-                                    class="form-select modern-input"
-                                    required
-                                >
-
-                                    <option value="">
-                                        -- Select Ride --
-                                    </option>
+    {% if rides %}
 
 
-                                    {% for ride in rides %}
+        <!-- =================================================
+             RIDE
+        ================================================== -->
 
-                                    <option value="{{ ride.id }}">
+        <div class="mb-4">
 
-                                        {{ ride.name }}
+            <label
+                for="ride"
+                class="form-label"
+            >
+                Ride
 
-                                    </option>
-
-                                    {% endfor %}
-
-                                </select>
-
-                            </div>
-
-
-                            <!-- Date row -->
-                            <div class="row">
-
-
-                                <!-- Start Date -->
-                                <div class="col-md-6 mb-4">
-
-                                    <label
-                                        for="startDate"
-                                        class="form-label"
-                                    >
-                                        Start Date
-
-                                        <span class="text-danger">
-                                            *
-                                        </span>
-                                    </label>
-
-                                    <input
-                                        type="date"
-                                        name="start_date"
-                                        id="startDate"
-                                        class="form-control modern-input"
-                                        required
-                                    >
-
-                                </div>
+                <span class="text-danger">
+                    *
+                </span>
+            </label>
 
 
-                                <!-- End Date -->
-                                <div class="col-md-6 mb-4">
+            <select
+                name="ride"
+                id="ride"
+                class="form-select modern-input"
+                required
+            >
 
-                                    <label
-                                        for="endDate"
-                                        class="form-label"
-                                    >
-                                        End Date
-
-                                        <span class="text-danger">
-                                            *
-                                        </span>
-                                    </label>
-
-                                    <input
-                                        type="date"
-                                        name="end_date"
-                                        id="endDate"
-                                        class="form-control modern-input"
-                                        required
-                                    >
-
-                                </div>
-
-                            </div>
+                <option value="">
+                    -- Select Ride --
+                </option>
 
 
-                            <!-- Price -->
-                            <div class="mb-4">
+                {% for ride in rides %}
 
-                                <label
-                                    for="price"
-                                    class="form-label"
-                                >
-                                    Price
+                    <option value="{{ ride.id }}">
 
-                                    <span class="text-danger">
-                                        *
-                                    </span>
-                                </label>
+                        {{ ride.name }}
 
+                    </option>
 
-                                <div class="input-group">
+                {% endfor %}
 
-                                    <span class="input-group-text">
-                                        ₹
-                                    </span>
+            </select>
 
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        id="price"
-                                        class="form-control modern-input"
-                                        min="0"
-                                        max="99999999.99"
-                                        step="0.01"
-                                        placeholder="Enter price"
-                                        required
-                                    >
-
-                                </div>
-
-                            </div>
+        </div>
 
 
-                            <!-- Active -->
-                            <div class="form-check mb-4">
+        <!-- =================================================
+             DATE ROW
+        ================================================== -->
 
-                                <input
-                                    type="checkbox"
-                                    name="is_active"
-                                    id="isActive"
-                                    class="form-check-input"
-                                    checked
-                                >
-
-                                <label
-                                    for="isActive"
-                                    class="form-check-label"
-                                >
-                                    Active
-                                </label>
-
-                            </div>
+        <div class="row">
 
 
-                            <!-- Buttons -->
-                            <div class="dashboard__form__button">
+            <!-- START DATE -->
 
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                >
-                                    Add Price
-                                </button>
+            <div class="col-md-6 mb-4">
 
+                <label
+                    for="startDate"
+                    class="form-label"
+                >
+                    Start Date
 
-                                <a
-                                    href="{% url 'ride_price_list' %}"
-                                    class="btn btn-secondary"
-                                >
-                                    Cancel
-                                </a>
-
-                            </div>
+                    <span class="text-danger">
+                        *
+                    </span>
+                </label>
 
 
-                        </form>
+                <input
+                    type="date"
+                    name="start_date"
+                    id="startDate"
+                    class="form-control modern-input"
+                    required
+                >
+
+            </div>
+
+
+            <!-- END DATE -->
+
+            <div class="col-md-6 mb-4">
+
+                <label
+                    for="endDate"
+                    class="form-label"
+                >
+                    End Date
+
+                    <span class="text-danger">
+                        *
+                    </span>
+                </label>
+
+
+                <input
+                    type="date"
+                    name="end_date"
+                    id="endDate"
+                    class="form-control modern-input"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PRICE
+        ================================================== -->
+
+        <div class="mb-4">
+
+            <label
+                for="price"
+                class="form-label"
+            >
+                Price
+
+                <span class="text-danger">
+                    *
+                </span>
+            </label>
+
+
+            <div class="input-group">
+
+                <span class="input-group-text">
+                    ₹
+                </span>
+
+
+                <input
+                    type="number"
+                    name="price"
+                    id="price"
+                    class="form-control modern-input"
+                    min="0.01"
+                    max="99999999.99"
+                    step="0.01"
+                    placeholder="Enter price"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIVE
+        ================================================== -->
+
+        <div class="form-check mb-4">
+
+            <input
+                type="checkbox"
+                name="is_active"
+                id="isActive"
+                class="form-check-input"
+                checked
+            >
+
+            <label
+                for="isActive"
+                class="form-check-label"
+            >
+                Active
+            </label>
+
+        </div>
+
+
+        <!-- =================================================
+             BUTTONS
+        ================================================== -->
+
+        <div class="dashboard__form__button">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Add Price
+            </button>
+
+
+            <a
+                href="{% url 'ride_price_list' %}"
+                class="btn btn-secondary"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- =================================================
+             NO AVAILABLE RIDES
+        ================================================== -->
+
+        <div class="alert alert-info">
+
+            <i class="fas fa-circle-info me-2"></i>
+
+            All active rides already have a price.
+            Please update an existing ride price instead.
+
+        </div>
+
+
+        <a
+            href="{% url 'ride_price_list' %}"
+            class="btn btn-secondary"
+        >
+            Back to Ride Prices
+        </a>
+
+
+    {% endif %}
+
+
+</form>
 
                     </div>
 
@@ -274,6 +325,11 @@ document.addEventListener(
             document.getElementById(
                 "endDate"
             );
+
+
+        if (!startDate || !endDate) {
+            return;
+        }
 
 
         startDate.addEventListener(

@@ -138,29 +138,38 @@ Ride Prices | FlyingFox Admin
 
 
                     <!-- Status -->
-                    <td>
+<td>
+
+    {% if price.display_status == "active" %}
+
+        <span class="badge bg-success">
+            Active
+        </span>
 
 
-                        {% if price.is_active %}
+    {% elif price.display_status == "upcoming" %}
 
-                        <span class="badge bg-success">
-
-                            Active
-
-                        </span>
-
-                        {% else %}
-
-                        <span class="badge bg-secondary">
-
-                            Inactive
-
-                        </span>
-
-                        {% endif %}
+        <span class="badge bg-primary">
+            Upcoming
+        </span>
 
 
-                    </td>
+    {% elif price.display_status == "expired" %}
+
+        <span class="badge bg-danger">
+            Expired
+        </span>
+
+
+    {% else %}
+
+        <span class="badge bg-secondary">
+            Inactive
+        </span>
+
+    {% endif %}
+
+</td>
 
 
                     <!-- Created -->
