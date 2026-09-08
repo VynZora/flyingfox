@@ -479,17 +479,39 @@ path(
 
 
 
+# =========================================================
+# GALLERY URLS
+# =========================================================
+
+# All gallery items - page 1
 path(
     "gallery/",
     views.gallery,
     name="gallery"
 ),
 
+# All gallery items - pagination
 path(
     "gallery/page/<int:page>/",
     views.gallery,
     name="gallery_page"
 ),
+
+# Category gallery - page 1
+path(
+    "gallery/<slug:category_slug>/",
+    views.gallery,
+    name="gallery_category"
+),
+
+# Category gallery - pagination
+path(
+    "gallery/<slug:category_slug>/page/<int:page>/",
+    views.gallery,
+    name="gallery_category_page"
+),
+
+
 
 path(
     "login/",

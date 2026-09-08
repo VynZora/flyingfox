@@ -5216,6 +5216,68 @@ def user_signup(request):
 
 
 
+# =========================================================
+# LOGIN OTP SETTINGS
+# =========================================================
+
+LOGIN_OTP_RESEND_SECONDS = 60
+
+# =========================================================
+# GET OTP RESEND WAIT TIME
+# =========================================================
+
+def _get_login_otp_resend_seconds(request):
+
+    last_sent_timestamp = (
+        request.session.get(
+            "login_otp_last_sent_at"
+        )
+    )
+
+    if not last_sent_timestamp:
+
+        return 0
+
+
+    try:
+
+        last_sent_timestamp = float(
+            last_sent_timestamp
+        )
+
+    except (
+        TypeError,
+        ValueError,
+    ):
+
+        return 0
+
+
+    now_timestamp = (
+        timezone.now()
+        .timestamp()
+    )
+
+
+    elapsed_seconds = (
+        now_timestamp
+        -
+        last_sent_timestamp
+    )
+
+
+    remaining_seconds = (
+        LOGIN_OTP_RESEND_SECONDS
+        -
+        int(elapsed_seconds)
+    )
+
+
+    return max(
+        0,
+        remaining_seconds,
+    )
+
 def user_signin(request):
 
     if request.session.get("user_id"):
@@ -5379,6 +5441,14 @@ def user_signin(request):
             )
 
         # ---------------------------------------------
+# SAVE OTP SENT TIME
+# ---------------------------------------------
+
+        request.session["login_otp_last_sent_at"] = (
+        timezone.now().timestamp()
+        )
+
+        # ---------------------------------------------
         # SAVE LOGIN SESSION
         # ---------------------------------------------
 
@@ -5445,15 +5515,16 @@ def user_signin(request):
     )
 
 
-
-       
 def verify_login_otp(request):
 
     # =====================================================
     # GET PHONE FROM SESSION
     # =====================================================
 
-    phone = request.session.get("login_phone")
+    phone = request.session.get(
+        "login_phone"
+    )
+
 
     if not phone:
 
@@ -5462,7 +5533,9 @@ def verify_login_otp(request):
             "Please enter your mobile number first."
         )
 
-        return redirect("user_signin")
+        return redirect(
+            "user_signin"
+        )
 
 
     # =====================================================
@@ -5472,7 +5545,7 @@ def verify_login_otp(request):
     if request.method == "POST":
 
         # -------------------------------------------------
-        # Get OTP from 6 input boxes
+        # GET OTP FROM 6 INPUT BOXES
         # -------------------------------------------------
 
         otp_1 = request.POST.get(
@@ -5507,7 +5580,7 @@ def verify_login_otp(request):
 
 
         # -------------------------------------------------
-        # Combine OTP
+        # COMBINE OTP
         # -------------------------------------------------
 
         entered_otp = (
@@ -5521,7 +5594,7 @@ def verify_login_otp(request):
 
 
         # -------------------------------------------------
-        # Validate OTP format
+        # VALIDATE OTP FORMAT
         # -------------------------------------------------
 
         if (
@@ -5538,13 +5611,19 @@ def verify_login_otp(request):
                 request,
                 "authenticate/verify_otp.html",
                 {
-                    "phone": phone
+                    "phone":
+                        phone,
+
+                    "resend_seconds":
+                        _get_login_otp_resend_seconds(
+                            request
+                        ),
                 }
             )
 
 
         # -------------------------------------------------
-        # Verify OTP from OTPVerification model
+        # VERIFY OTP FROM OTPVerification MODEL
         # -------------------------------------------------
 
         success, message = verify_otp(
@@ -5554,7 +5633,7 @@ def verify_login_otp(request):
 
 
         # -------------------------------------------------
-        # Invalid / expired / too many attempts
+        # INVALID / EXPIRED / TOO MANY ATTEMPTS
         # -------------------------------------------------
 
         if not success:
@@ -5568,7 +5647,13 @@ def verify_login_otp(request):
                 request,
                 "authenticate/verify_otp.html",
                 {
-                    "phone": phone
+                    "phone":
+                        phone,
+
+                    "resend_seconds":
+                        _get_login_otp_resend_seconds(
+                            request
+                        ),
                 }
             )
 
@@ -5586,8 +5671,10 @@ def verify_login_otp(request):
         # FIND OR CREATE USER PROFILE
         # =================================================
 
-        user, created = UserProfile.objects.get_or_create(
-            phone=phone
+        user, created = (
+            UserProfile.objects.get_or_create(
+                phone=phone
+            )
         )
 
 
@@ -5614,11 +5701,13 @@ def verify_login_otp(request):
             "user_id"
         ] = user.id
 
+
         request.session[
             "user_name"
         ] = (
             user.full_name
-            or "Flying Fox User"
+            or
+            "Flying Fox User"
         )
 
 
@@ -5651,6 +5740,11 @@ def verify_login_otp(request):
             None
         )
 
+        request.session.pop(
+            "login_otp_last_sent_at",
+            None
+        )
+
 
         # =================================================
         # SUCCESS
@@ -5672,14 +5766,20 @@ def verify_login_otp(request):
 
 
     # =====================================================
-    # GET
+    # GET - SHOW OTP PAGE
     # =====================================================
 
     return render(
         request,
         "authenticate/verify_otp.html",
         {
-            "phone": phone
+            "phone":
+                phone,
+
+            "resend_seconds":
+                _get_login_otp_resend_seconds(
+                    request
+                ),
         }
     )
 
@@ -5688,18 +5788,33 @@ def verify_login_otp(request):
 def resend_login_otp(request):
 
     # =====================================================
-    # GET PHONE FROM SESSION
+    # ONLY POST
     # =====================================================
 
-    phone = request.session.get(
-        "login_phone"
+    if request.method != "POST":
+
+        return redirect(
+            "verify_login_otp"
+        )
+
+
+    # =====================================================
+    # GET PHONE FROM LOGIN SESSION
+    # =====================================================
+
+    phone = (
+        request.session.get(
+            "login_phone"
+        )
     )
+
 
     if not phone:
 
         messages.error(
             request,
-            "Please enter your mobile number first."
+            "Your login session has expired. "
+            "Please enter your mobile number again."
         )
 
         return redirect(
@@ -5708,10 +5823,26 @@ def resend_login_otp(request):
 
 
     # =====================================================
-    # ONLY ALLOW POST
+    # CHECK RESEND COOLDOWN
     # =====================================================
 
-    if request.method != "POST":
+    remaining_seconds = (
+        _get_login_otp_resend_seconds(
+            request
+        )
+    )
+
+
+    if remaining_seconds > 0:
+
+        messages.error(
+            request,
+            (
+                f"Please wait "
+                f"{remaining_seconds} seconds "
+                f"before requesting another OTP."
+            )
+        )
 
         return redirect(
             "verify_login_otp"
@@ -5724,25 +5855,63 @@ def resend_login_otp(request):
 
     try:
 
-        otp_record, response = send_otp(
-            phone
+        otp_record, response = (
+            send_otp(
+                phone
+            )
         )
 
     except Exception as e:
 
         print(
-            "RESEND OTP ERROR:",
-            e
+            "\n"
+            "========================================"
         )
+
+        print(
+            "RESEND LOGIN OTP FAILED"
+        )
+
+        print(
+            "PHONE:",
+            phone
+        )
+
+        print(
+            "ERROR:",
+            repr(e)
+        )
+
+        print(
+            "========================================"
+            "\n"
+        )
+
 
         messages.error(
             request,
-            "Unable to send OTP. Please try again."
+            "Unable to resend OTP. "
+            "Please try again."
         )
 
         return redirect(
             "verify_login_otp"
         )
+
+
+    # =====================================================
+    # SAVE NEW SENT TIME
+    # =====================================================
+
+    request.session[
+        "login_otp_last_sent_at"
+    ] = (
+        timezone.now()
+        .timestamp()
+    )
+
+
+    request.session.modified = True
 
 
     # =====================================================
@@ -5755,11 +5924,34 @@ def resend_login_otp(request):
     )
 
 
-    return redirect(
-        "verify_login_otp"
+    print(
+        "\n"
+        "========================================"
+    )
+
+    print(
+        "LOGIN OTP RESENT SUCCESSFULLY"
+    )
+
+    print(
+        "PHONE:",
+        phone
+    )
+
+    print(
+        "OTP RECORD ID:",
+        otp_record.id
+    )
+
+    print(
+        "========================================"
+        "\n"
     )
 
 
+    return redirect(
+        "verify_login_otp"
+    )
 
 
 
@@ -19209,15 +19401,22 @@ Munnar, Kerala
 
 
 
+def gallery(
+    request,
+    category_slug=None,
+    page=1,
+):
 
-def gallery(request, page=1):
+    # =====================================================
+    # ALL GALLERY CATEGORIES
+    # =====================================================
 
-    # All gallery categories for filter buttons
     categories = GalleryCategory.objects.all()
 
-    # Current selected category from URL:
-    # /gallery/?category=zipline
-    selected_category = request.GET.get("category", "").strip()
+
+    # =====================================================
+    # BASE GALLERY QUERYSET
+    # =====================================================
 
     gallery_queryset = (
         GalleryItem.objects
@@ -19225,18 +19424,44 @@ def gallery(request, page=1):
         .order_by("-uploaded_at")
     )
 
-    # Apply category filter
-    if selected_category:
-        gallery_queryset = gallery_queryset.filter(
-            category__slug=selected_category
+
+    # =====================================================
+    # SELECTED CATEGORY
+    # =====================================================
+
+    selected_category = None
+
+    if category_slug:
+
+        category = get_object_or_404(
+            GalleryCategory,
+            slug=category_slug,
         )
+
+        selected_category = category.slug
+
+        gallery_queryset = gallery_queryset.filter(
+            category=category
+        )
+
+
+    # =====================================================
+    # PAGINATION
+    # =====================================================
 
     paginator = Paginator(
         gallery_queryset,
         12,
     )
 
-    gallery_items = paginator.get_page(page)
+    gallery_items = paginator.get_page(
+        page
+    )
+
+
+    # =====================================================
+    # RENDER TEMPLATE
+    # =====================================================
 
     return render(
         request,

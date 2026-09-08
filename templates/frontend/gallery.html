@@ -24,7 +24,7 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
 
  
 <!-- Canonical URL -->
-
+{% comment %} 
 {% if selected_category %}
 
     {% if gallery_items.number == 1 %}
@@ -61,7 +61,7 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
 
     {% endif %}
 
-{% endif %}
+{% endif %} {% endcomment %}
 
 
 
@@ -222,6 +222,7 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
 <div class="gallery-filter-wrap">
 
     <!-- ALL -->
+
     <a
         href="{% url 'gallery' %}"
         class="gallery-filter-btn
@@ -230,11 +231,13 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
         All
     </a>
 
+
     <!-- CATEGORIES -->
+
     {% for category in categories %}
 
         <a
-            href="{% url 'gallery' %}?category={{ category.slug }}"
+            href="{% url 'gallery_category' category.slug %}"
             class="gallery-filter-btn
             {% if selected_category == category.slug %}active{% endif %}"
         >
@@ -328,65 +331,122 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
         </div>
 
 
-        <!-- ==========================================
-             PAGINATION
-        =========================================== -->
+<!-- ==========================================
+     PAGINATION
+=========================================== -->
+
 {% if gallery_items.has_other_pages %}
 
 <div class="pagination-area">
 
     <ul class="pagination">
 
-        <!-- Previous -->
+        <!-- PREVIOUS -->
+
         {% if gallery_items.has_previous %}
+
         <li class="page-item">
 
             {% if gallery_items.previous_page_number == 1 %}
 
-                <a
-                    class="page-link"
-                    href="{% url 'gallery' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
-                >
-                    <i class="fas fa-arrow-left"></i>
-                </a>
+                {% if selected_category %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery_category' selected_category %}"
+                    >
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+
+                {% else %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery' %}"
+                    >
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+
+                {% endif %}
 
             {% else %}
 
-                <a
-                    class="page-link"
-                    href="{% url 'gallery_page' gallery_items.previous_page_number %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
-                >
-                    <i class="fas fa-arrow-left"></i>
-                </a>
+                {% if selected_category %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery_category_page' selected_category gallery_items.previous_page_number %}"
+                    >
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+
+                {% else %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery_page' gallery_items.previous_page_number %}"
+                    >
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+
+                {% endif %}
 
             {% endif %}
 
         </li>
+
         {% endif %}
 
 
-        <!-- Page numbers -->
+        <!-- PAGE NUMBERS -->
+
         {% for page in gallery_items.paginator.page_range %}
 
         <li class="page-item {% if gallery_items.number == page %}active{% endif %}">
 
             {% if page == 1 %}
 
-                <a
-                    class="page-link"
-                    href="{% url 'gallery' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
-                >
-                    {{ page }}
-                </a>
+                {% if selected_category %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery_category' selected_category %}"
+                    >
+                        {{ page }}
+                    </a>
+
+                {% else %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery' %}"
+                    >
+                        {{ page }}
+                    </a>
+
+                {% endif %}
 
             {% else %}
 
-                <a
-                    class="page-link"
-                    href="{% url 'gallery_page' page %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
-                >
-                    {{ page }}
-                </a>
+                {% if selected_category %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery_category_page' selected_category page %}"
+                    >
+                        {{ page }}
+                    </a>
+
+                {% else %}
+
+                    <a
+                        class="page-link"
+                        href="{% url 'gallery_page' page %}"
+                    >
+                        {{ page }}
+                    </a>
+
+                {% endif %}
 
             {% endif %}
 
@@ -395,18 +455,34 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
         {% endfor %}
 
 
-        <!-- Next -->
+        <!-- NEXT -->
+
         {% if gallery_items.has_next %}
+
         <li class="page-item">
 
-            <a
-                class="page-link"
-                href="{% url 'gallery_page' gallery_items.next_page_number %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
-            >
-                <i class="fas fa-arrow-right"></i>
-            </a>
+            {% if selected_category %}
+
+                <a
+                    class="page-link"
+                    href="{% url 'gallery_category_page' selected_category gallery_items.next_page_number %}"
+                >
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            {% else %}
+
+                <a
+                    class="page-link"
+                    href="{% url 'gallery_page' gallery_items.next_page_number %}"
+                >
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            {% endif %}
 
         </li>
+
         {% endif %}
 
     </ul>
@@ -415,10 +491,7 @@ Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featur
 
 {% endif %}
 
-    </div>
 
-</div>
-<!-- gallery-area end -->
 {% endblock %}
 
 

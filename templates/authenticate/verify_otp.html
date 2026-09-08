@@ -1081,6 +1081,123 @@
 
         }
 
+
+        {% comment %} resend otp css start {% endcomment %}
+          /* =========================================================
+   RESEND OTP
+========================================================= */
+
+.ff-otp-resend {
+
+    margin-top:
+        15px;
+
+    text-align:
+        center;
+}
+
+
+.ff-otp-resend p {
+
+    margin:
+        0
+        0
+        6px;
+
+    color:
+        #888888;
+
+    font-size:
+        11px;
+}
+
+
+.ff-otp-resend form {
+
+    display:
+        inline-block;
+
+    margin:
+        0;
+}
+
+
+.ff-resend-button {
+
+    display:
+        inline-flex;
+
+    padding:
+        5px
+        8px;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        #222222;
+
+    background:
+        transparent;
+
+    font-family:
+        inherit;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.ff-resend-button:hover:not(:disabled) {
+
+    color:
+        var(--ff-red);
+}
+
+
+.ff-resend-button:disabled {
+
+    color:
+        #9ca3aa;
+
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.85;
+}
+
+
+.ff-resend-button:not(:disabled)
+.fa-rotate-right {
+
+    color:
+        var(--ff-red);
+}
+        {% comment %} resend otp css end  {% endcomment %}
+
     </style>
 
 </head>
@@ -1423,28 +1540,50 @@
 
 
 
-                    <!-- =================================================
-                         RESEND OTP
-                    ================================================== -->
+                     <!-- =================================================
+     RESEND OTP
+================================================== -->
 
-                    <div class="ff-otp-resend">
+<div class="ff-otp-resend">
 
-                        <p>
-                            Didn't receive your OTP?
-                        </p>
+    <p id="ffResendMessage">
+        Didn't receive your OTP?
+    </p>
 
 
-                        <a
-                            href="{% url 'resend_login_otp' %}"
-                        >
+    <form
+        method="POST"
+        action="{% url 'resend_login_otp' %}"
+        id="ffResendOtpForm"
+    >
 
-                            <i class="fas fa-rotate-right"></i>
+        {% csrf_token %}
 
-                            Resend OTP
 
-                        </a>
+        <button
+            type="submit"
+            class="ff-resend-button"
+            id="ffResendOtpButton"
+            data-seconds="{{ resend_seconds|default:0 }}"
+        >
 
-                    </div>
+            <i
+                class="fas fa-rotate-right"
+                id="ffResendIcon"
+            ></i>
+
+
+            <span id="ffResendButtonText">
+
+                Resend OTP
+
+            </span>
+
+        </button>
+
+    </form>
+
+</div>
 
 
 
@@ -1814,6 +1953,201 @@ document.addEventListener(
 
             }
         );
+
+
+        /* =====================================================
+   RESEND OTP COUNTDOWN
+===================================================== */
+
+const resendButton =
+    document.getElementById(
+        "ffResendOtpButton"
+    );
+
+
+const resendButtonText =
+    document.getElementById(
+        "ffResendButtonText"
+    );
+
+
+const resendForm =
+    document.getElementById(
+        "ffResendOtpForm"
+    );
+
+
+let resendTimer =
+    null;
+
+
+function startResendCountdown(
+    seconds
+) {
+
+    if (
+        !resendButton ||
+        !resendButtonText
+    ) {
+
+        return;
+
+    }
+
+
+    let remaining =
+        parseInt(
+            seconds,
+            10
+        );
+
+
+    if (
+        Number.isNaN(
+            remaining
+        )
+    ) {
+
+        remaining =
+            0;
+
+    }
+
+
+    /*
+     * OTP can already be resent.
+     */
+
+    if (remaining <= 0) {
+
+        resendButton.disabled =
+            false;
+
+        resendButtonText.textContent =
+            "Resend OTP";
+
+        return;
+
+    }
+
+
+    /*
+     * Disable during countdown.
+     */
+
+    resendButton.disabled =
+        true;
+
+
+    function updateTimer() {
+
+        if (remaining <= 0) {
+
+            clearInterval(
+                resendTimer
+            );
+
+
+            resendButton.disabled =
+                false;
+
+
+            resendButtonText.textContent =
+                "Resend OTP";
+
+
+            return;
+
+        }
+
+
+        resendButtonText.textContent =
+            `Resend OTP in ${remaining}s`;
+
+
+        remaining -=
+            1;
+
+    }
+
+
+    /*
+     * Show immediately.
+     */
+
+    updateTimer();
+
+
+    resendTimer =
+        setInterval(
+            updateTimer,
+            1000
+        );
+
+}
+
+
+/* =====================================================
+   INITIAL RESEND TIMER
+===================================================== */
+
+if (resendButton) {
+
+    const initialSeconds =
+        resendButton.dataset.seconds ||
+        "0";
+
+
+    startResendCountdown(
+        initialSeconds
+    );
+
+}
+
+
+/* =====================================================
+   RESEND FORM SUBMIT
+===================================================== */
+
+resendForm?.addEventListener(
+    "submit",
+    function () {
+
+        if (!resendButton) {
+
+            return;
+
+        }
+
+
+        resendButton.disabled =
+            true;
+
+
+        if (resendButtonText) {
+
+            resendButtonText.textContent =
+                "Sending OTP...";
+
+        }
+
+
+        const resendIcon =
+            document.getElementById(
+                "ffResendIcon"
+            );
+
+
+        if (resendIcon) {
+
+            resendIcon.classList.add(
+                "fa-spin"
+            );
+
+        }
+
+    }
+);
 
 
 
