@@ -727,8 +727,8 @@ def process_message(
         if language == "ml":
 
             response = (
-                "തീർച്ചയായും 😊 ഞങ്ങളുടെ Flying Fox ടീമുമായി "
-                "നേരിട്ട് ബന്ധപ്പെടാം.\n\n"
+                "തീർച്ചയായും 😊 ഞങ്ങളുടെ Flying Fox ടീം നിങ്ങളെ സഹായിക്കാൻ ഇവിടെയുണ്ട്."
+                "നേരിട്ട് സംസാരിക്കാം!\n\n"
                 "📞 +91 7907219198\n"
                 "✉️ support@flyingfoxadventuremunnar.com "
             )
