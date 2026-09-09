@@ -12018,6 +12018,255 @@ b small {
 }
 {% comment %} font size increasing css end  {% endcomment %}
 
+{% comment %} offers card css start {% endcomment %}
+
+/* =========================================================
+   OFFER CARD
+   REMOVE SELECTED TEXT BADGE
+========================================================= */
+
+#offerPanel
+.ff-offer-card.selected::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* =========================================================
+   OFFER SELECTED STATE
+   KEEP CARD DESIGN SAME
+   ONLY RADIO SHOWS SELECTION
+========================================================= */
+
+#offerPanel
+.ff-offer-card.selected {
+    border: 0 !important;
+
+    background:
+        linear-gradient(
+            120deg,
+            #ff8a54 0%,
+            #ed4937 42%,
+            #c31103 100%
+        ) !important;
+
+    box-shadow:
+        0 12px 30px rgba(195, 17, 3, 0.15) !important;
+}
+
+/* =========================================================
+   HIDE OLD CHECK INDICATOR
+   RADIO IS THE ONLY SELECTION INDICATOR
+========================================================= */
+
+#offerPanel
+.ff-offer-choice-indicator {
+    display: none !important;
+}
+
+/* =========================================================
+   REGULAR TICKET
+   USE EXACT SAME CARD STYLE AS PROMOTIONAL OFFERS
+========================================================= */
+
+#offerPanel
+.ff-offer-card.none {
+    color: #ffffff !important;
+
+    border: 0 !important;
+
+    background:
+        linear-gradient(
+            120deg,
+            #ff8a54 0%,
+            #ed4937 42%,
+            #c31103 100%
+        ) !important;
+
+    box-shadow:
+        0 12px 30px rgba(195, 17, 3, 0.15) !important;
+}
+
+
+/* KEEP DECORATIVE CIRCLES SAME */
+
+#offerPanel
+.ff-offer-card.none::before {
+    display: block !important;
+}
+
+#offerPanel
+.ff-offer-card.none::after {
+    display: block !important;
+}
+
+
+/* TITLE */
+
+#offerPanel
+.ff-offer-card.none h4 {
+    color: #ffffff !important;
+}
+
+
+/* DESCRIPTION */
+
+#offerPanel
+.ff-offer-card.none p {
+    color: rgba(255,255,255,.88) !important;
+}
+
+
+/* META RULE */
+
+#offerPanel
+.ff-offer-card.none
+.ff-offer-rule {
+    color: rgba(255,255,255,.75) !important;
+}
+
+
+/* META BADGE */
+
+#offerPanel
+.ff-offer-card.none
+.ff-offer-label {
+    color: #ffffff !important;
+
+    background:
+        rgba(255,255,255,.15) !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.25) !important;
+}
+
+
+/* ICON */
+
+#offerPanel
+.ff-offer-card.none
+.ff-offer-icon {
+    color: #ffffff !important;
+
+    background:
+        rgba(255,255,255,.16) !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.22) !important;
+}
+
+/* =========================================================
+   OFFER CONTENT ALIGNMENT
+   SAME FOR EVERY OFFER TYPE
+========================================================= */
+
+#offerPanel
+.ff-offer-card {
+    display: flex;
+    align-items: center;
+}
+
+#offerPanel
+.ff-offer-main {
+    width: 100%;
+    align-items: center;
+}
+
+#offerPanel
+.ff-offer-content {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* =========================================================
+   VIEW DETAILS
+   REAL BUTTON DESIGN
+========================================================= */
+
+#offerPanel
+.ff-offer-details-link {
+    display: inline-flex;
+
+    min-height: 36px;
+
+    margin-top: 12px;
+
+    padding:
+        8px
+        14px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.42);
+
+    border-radius:
+        18px;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    color:
+        #ffffff !important;
+
+    background:
+        rgba(255,255,255,.12);
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    line-height:
+        1;
+
+    text-decoration:
+        none !important;
+
+    cursor:
+        pointer;
+
+    backdrop-filter:
+        blur(4px);
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+
+#offerPanel
+.ff-offer-details-link:hover {
+    color:
+        var(--ff-red) !important;
+
+    background:
+        #ffffff;
+
+    border-color:
+        #ffffff;
+
+    opacity:
+        1;
+
+    transform:
+        translateY(-1px);
+}
+{% comment %} offers card css end {% endcomment %}
+
 </style>
 {% endblock %}
 
