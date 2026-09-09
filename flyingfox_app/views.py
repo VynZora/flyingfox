@@ -29,6 +29,7 @@ from datetime import datetime, time
 
 
 import razorpay
+import requests
 
 
 
@@ -19210,6 +19211,11 @@ def blog_single(request):
     return render(request, "frontend/blog-single.html")
 
 
+
+
+
+import requests
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage
@@ -19218,91 +19224,209 @@ from django.shortcuts import render, redirect
 from .forms import ContactEnquiryForm
 
 
+def verify_turnstile_token(
+    token,
+    remote_ip=None,
+):
+
+    if not token:
+        return False
+
+
+    if not settings.TURNSTILE_SECRET_KEY:
+
+        print(
+            "TURNSTILE SECRET KEY MISSING"
+        )
+
+        return False
+
+
+    payload = {
+
+        "secret":
+            settings.TURNSTILE_SECRET_KEY,
+
+        "response":
+            token,
+
+    }
+
+
+    if remote_ip:
+
+        payload["remoteip"] = remote_ip
+
+
+    try:
+
+        response = requests.post(
+
+            (
+                "https://challenges.cloudflare.com/"
+                "turnstile/v0/siteverify"
+            ),
+
+            data=payload,
+
+            timeout=5,
+
+        )
+
+
+        response.raise_for_status()
+
+
+        result = response.json()
+
+
+    except Exception as error:
+
+        print(
+            "TURNSTILE ERROR:",
+            repr(error)
+        )
+
+        return False
+
+
+    if not result.get("success"):
+
+        print(
+            "TURNSTILE FAILED:",
+            result.get(
+                "error-codes",
+                []
+            )
+        )
+
+        return False
+
+
+    if (
+        result.get("action")
+        !=
+        "contact_enquiry"
+    ):
+
+        print(
+            "TURNSTILE ACTION MISMATCH:",
+            result.get("action")
+        )
+
+        return False
+
+
+    return True
+
+
+
+
 def contact(request):
 
+    # =====================================================
+    # POST
+    # =====================================================
+
     if request.method == "POST":
+
+        # =================================================
+        # HONEYPOT
+        # =================================================
+
+        if request.POST.get(
+            "website",
+            ""
+        ).strip():
+
+            return redirect(
+                "contact"
+            )
+
+
+        # =================================================
+        # TURNSTILE
+        # =================================================
+
+        turnstile_token = request.POST.get(
+            "cf-turnstile-response",
+            ""
+        )
+
+
+        client_ip = request.META.get(
+            "REMOTE_ADDR"
+        )
+
+
+        if not verify_turnstile_token(
+            token=turnstile_token,
+            remote_ip=client_ip,
+        ):
+
+            messages.error(
+                request,
+                (
+                    "Security verification failed. "
+                    "Please try again."
+                )
+            )
+
+
+            form = ContactEnquiryForm(
+                request.POST
+            )
+
+
+            return render(
+                request,
+                "frontend/contact.html",
+                {
+                    "form": form,
+
+                    "turnstile_site_key":
+                        settings.TURNSTILE_SITE_KEY,
+                }
+            )
+
+
+        # =================================================
+        # FORM VALIDATION
+        # =================================================
 
         form = ContactEnquiryForm(
             request.POST
         )
 
+
         if form.is_valid():
 
-            # ==================================
-            # SAVE TO DATABASE FIRST
-            # ==================================
+            # =============================================
+            # SAVE DATABASE
+            # =============================================
 
             enquiry = form.save(
                 commit=False
             )
 
+
             enquiry.email_sent = False
+
 
             enquiry.save()
 
 
+            # =============================================
+            # SEND ONLY CUSTOMER CONFIRMATION
+            # =============================================
+
             try:
-
-                # ==================================
-                # EMAIL 1:
-                # SEND ENQUIRY TO FLYING FOX
-                # ==================================
-
-                admin_email = EmailMessage(
-
-                    subject=(
-                        f"Flying Fox Enquiry: "
-                        f"{enquiry.subject}"
-                    ),
-
-                    body=f"""
-New Contact Enquiry
-
-Name:
-{enquiry.name}
-
-Email:
-{enquiry.email}
-
-Subject:
-{enquiry.subject}
-
-Message:
-{enquiry.message}
-
-Enquiry ID:
-#{enquiry.id}
-""",
-
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-
-                    to=[
-                        settings.CONTACT_RECEIVER_EMAIL
-                    ],
-
-                    # Clicking Reply in Gmail
-                    # replies directly to customer
-                    reply_to=[
-                        enquiry.email
-                    ],
-
-                )
-
-
-                admin_email.send(
-                    fail_silently=False
-                )
-
-
-                # ==================================
-                # EMAIL 2:
-                # CONFIRMATION TO CUSTOMER
-                # ==================================
 
                 customer_email = EmailMessage(
 
                     subject=(
-                        "We received your Flying Fox enquiry"
+                        "We received your "
+                        "Flying Fox enquiry"
                     ),
 
                     body=f"""
@@ -19314,19 +19438,18 @@ We have received your enquiry regarding:
 
 {enquiry.subject}
 
-Our adventure team will review your message
-and get back to you as soon as possible.
+Our team will review your message and get back to you as soon as possible.
 
 Your Enquiry ID:
 #{enquiry.id}
 
 Regards,
-
 Flying Fox Adventure
 Munnar, Kerala
 """,
 
-                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    from_email=
+                        settings.DEFAULT_FROM_EMAIL,
 
                     to=[
                         enquiry.email
@@ -19340,25 +19463,13 @@ Munnar, Kerala
                 )
 
 
-                # ==================================
-                # BOTH EMAILS SENT
-                # ==================================
-
                 enquiry.email_sent = True
+
 
                 enquiry.save(
                     update_fields=[
                         "email_sent"
                     ]
-                )
-
-
-                messages.success(
-                    request,
-                    (
-                        "Thank you! Your enquiry "
-                        "has been submitted successfully."
-                    )
                 )
 
 
@@ -19369,16 +19480,15 @@ Munnar, Kerala
                     repr(error)
                 )
 
-                # The database enquiry remains saved
-                # even when email fails.
 
-                messages.warning(
-                    request,
-                    (
-                        "Your enquiry has been saved. "
-                        "Our team will contact you shortly."
-                    )
+            messages.success(
+                request,
+                (
+                    "Thank you! "
+                    "Your enquiry has been "
+                    "submitted successfully."
                 )
+            )
 
 
             return redirect(
@@ -19386,18 +19496,31 @@ Munnar, Kerala
             )
 
 
+    # =====================================================
+    # GET
+    # =====================================================
+
     else:
 
         form = ContactEnquiryForm()
 
+
+    # =====================================================
+    # RENDER
+    # =====================================================
 
     return render(
         request,
         "frontend/contact.html",
         {
             "form": form,
+
+            "turnstile_site_key":
+                settings.TURNSTILE_SITE_KEY,
         }
     )
+
+
 
 
 

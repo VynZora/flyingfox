@@ -63,6 +63,32 @@ active
 {% endblock %}
 
 
+{% block extra_css %}
+<style>
+.ff-contact-honeypot {
+    position: absolute !important;
+    left: -10000px !important;
+    top: auto !important;
+
+    width: 1px !important;
+    height: 1px !important;
+
+    overflow: hidden !important;
+
+    opacity: 0 !important;
+
+    pointer-events: none !important;
+}
+
+.ff-turnstile-wrapper {
+    margin-top: 20px;
+    margin-bottom: 25px;
+
+    max-width: 100%;
+} 
+</style>
+{% endblock %}
+
 {% block content %}
   <!-- breadcrumb -->
   {% comment %} <div class="site-breadcrumb" style="background: url({% static 'frontend/assets/img/about/img-6.jpeg' %})">
@@ -266,6 +292,33 @@ active
     {% csrf_token %}
 
 
+    <!-- =====================================================
+         BOT HONEYPOT
+
+         Real users never see this field.
+         Simple spam bots often fill it automatically.
+    ====================================================== -->
+
+    <div
+        class="ff-contact-honeypot"
+        aria-hidden="true"
+    >
+
+        <label for="website">
+            Website
+        </label>
+
+        <input
+            type="text"
+            name="website"
+            id="website"
+            tabindex="-1"
+            autocomplete="off"
+        >
+
+    </div>
+
+
     <!-- FORM MESSAGES -->
 
     {% if messages %}
@@ -451,6 +504,25 @@ active
     </div>
 
 
+
+<!-- =====================================================
+     HUMAN VERIFICATION
+====================================================== -->
+
+<div class="ff-turnstile-wrapper">
+
+    <div
+        class="cf-turnstile"
+        data-sitekey="{{ turnstile_site_key }}"
+        data-theme="light"
+        data-size="flexible"
+        data-action="contact_enquiry"
+    ></div>
+
+</div>
+
+
+
     <!-- BUTTON -->
 
     <button
@@ -485,6 +557,13 @@ active
 {% endblock %}
 
 {% block extra_js %}
+
+
+<script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+></script>
 
 
   {% comment %} hero pattern js start {% endcomment %}
