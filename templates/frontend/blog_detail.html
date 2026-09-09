@@ -13,6 +13,7 @@ active
 {% endblock %}
 
 
+
 {% block content %}
 
 
@@ -176,7 +177,7 @@ active
 
                     <div class="ff-blog-detail-description">
 
-                        {{ blog.description|striptags|linebreaksbr }}
+                        {{ blog.description|safe }}
 
                     </div>
 
@@ -239,9 +240,8 @@ active
                  RIGHT SIDE - SIDEBAR
             ================================================== -->
 
-            <div class="col-lg-4">
-
-                <aside class="blog-sidebar">
+            <div class="col-lg-4 ff-sticky-sidebar-column">
+                <aside class="blog-sidebar ff-sticky-sidebar">
 
 
                     <!-- =========================================
@@ -875,6 +875,175 @@ active
 
 }
 
+
+
+
+
+
+
+{% comment %} description css start {% endcomment %}
+/* Blog rich text */
+
+.ff-blog-detail-description h1,
+.ff-blog-detail-description h2,
+.ff-blog-detail-description h3,
+.ff-blog-detail-description h4,
+.ff-blog-detail-description h5,
+.ff-blog-detail-description h6 {
+    margin-top: 30px;
+    margin-bottom: 16px;
+    color: var(--color-dark);
+    line-height: 1.3;
+}
+
+.ff-blog-detail-description h1 {
+    font-size: 34px;
+}
+
+.ff-blog-detail-description h2 {
+    font-size: 30px;
+}
+
+.ff-blog-detail-description h3 {
+    font-size: 25px;
+}
+
+.ff-blog-detail-description p {
+    margin-bottom: 22px;
+}
+
+.ff-blog-detail-description ul,
+.ff-blog-detail-description ol {
+    margin-bottom: 22px;
+    padding-left: 28px;
+}
+
+.ff-blog-detail-description li {
+    margin-bottom: 8px;
+}
+
+.ff-blog-detail-description strong {
+    font-weight: 700;
+}
+
+.ff-blog-detail-description a {
+    color: #c31103;
+    text-decoration: underline;
+}
+
+
+/* Tables */
+
+.ff-blog-detail-description table {
+    width: 100%;
+    margin: 25px 0;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.ff-blog-detail-description table th,
+.ff-blog-detail-description table td {
+    padding: 14px 16px;
+    border: 1px solid #dddddd;
+    text-align: left;
+    vertical-align: top;
+}
+
+.ff-blog-detail-description table th {
+    font-weight: 700;
+    background: #f7f7f7;
+    color: var(--color-dark);
+}
+
+.ff-blog-detail-description table tr:nth-child(even) td {
+    background: #fafafa;
+}
+
+
+/* Images inside blog content */
+
+.ff-blog-detail-description img {
+    max-width: 100%;
+    height: auto;
+    margin: 25px 0;
+    border-radius: 16px;
+}
+{% comment %} description css end  {% endcomment %}
+
+
+
+{% comment %} right side sticky start {% endcomment %}
+/* =========================================================
+   BLOG SIDEBAR
+========================================================= */
+
+@media (min-width: 992px) {
+
+    .ff-sticky-sidebar-column {
+        position: relative;
+    }
+
+    .ff-sticky-sidebar {
+        width: 100%;
+    }
+
+    .ff-sticky-sidebar.is-fixed {
+        position: fixed;
+        top: 150px;
+        z-index: 10;
+    }
+
+    .ff-sticky-sidebar.is-bottom {
+        position: absolute;
+        top: auto;
+        bottom: 0;
+    }
+
+}
+
+
+
+/* =========================================================
+   FOLLOWING / STICKY BLOG SIDEBAR
+========================================================= */
+
+@media (min-width: 992px) {
+
+    .blog-single > .container > .row {
+        align-items: stretch;
+    }
+
+
+    .ff-sticky-sidebar-column {
+        position: relative;
+        align-self: stretch;
+    }
+
+
+    .ff-sticky-sidebar {
+        width: 100%;
+    }
+
+
+    /* Following the user while scrolling */
+    .ff-sticky-sidebar.is-fixed {
+        position: fixed;
+        top: 150px;
+        z-index: 10;
+    }
+
+
+    /* Stop beside the end of the article */
+    .ff-sticky-sidebar.is-bottom {
+        position: absolute;
+        top: auto;
+        bottom: 0;
+    }
+
+}
+{% comment %} right side sticky end  {% endcomment %}
+
 </style>
 
 {% endblock %}
@@ -882,6 +1051,153 @@ active
 
 
 {% block extra_js%}
+
+{% comment %} right side sticky js start {% endcomment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sidebarColumn =
+        document.querySelector(".ff-sticky-sidebar-column");
+
+    const sidebar =
+        document.querySelector(".ff-sticky-sidebar");
+
+    if (!sidebarColumn || !sidebar) {
+        return;
+    }
+
+
+    const TOP_OFFSET = 150;
+
+    let originalTop = 0;
+
+
+    function setSidebarWidth() {
+
+        /*
+         * Fixed elements leave the Bootstrap column,
+         * so explicitly preserve its width.
+         */
+        sidebar.style.width =
+            sidebarColumn.clientWidth + "px";
+    }
+
+
+    function updateSidebar() {
+
+        if (window.innerWidth < 992) {
+
+            sidebar.classList.remove(
+                "is-fixed",
+                "is-bottom"
+            );
+
+            sidebar.style.width = "";
+
+            return;
+        }
+
+
+        const columnRect =
+            sidebarColumn.getBoundingClientRect();
+
+        const sidebarHeight =
+            sidebar.offsetHeight;
+
+        const columnTop =
+            window.scrollY + columnRect.top;
+
+        const columnBottom =
+            columnTop + sidebarColumn.offsetHeight;
+
+        const scrollTop =
+            window.scrollY;
+
+        /*
+         * Position where sidebar would end
+         * while fixed to the viewport.
+         */
+        const fixedBottom =
+            scrollTop +
+            TOP_OFFSET +
+            sidebarHeight;
+
+
+        /*
+         * BEFORE reaching sidebar
+         */
+        if (scrollTop + TOP_OFFSET <= columnTop) {
+
+            sidebar.classList.remove(
+                "is-fixed",
+                "is-bottom"
+            );
+
+            sidebar.style.width = "";
+
+        }
+
+        /*
+         * ARTICLE END REACHED
+         *
+         * Stop sidebar at bottom of article column.
+         */
+        else if (fixedBottom >= columnBottom) {
+
+            sidebar.classList.remove("is-fixed");
+
+            sidebar.classList.add("is-bottom");
+
+            sidebar.style.width =
+                sidebarColumn.clientWidth + "px";
+
+        }
+
+        /*
+         * NORMAL STICKY/FOLLOWING STATE
+         */
+        else {
+
+            sidebar.classList.remove("is-bottom");
+
+            sidebar.classList.add("is-fixed");
+
+            setSidebarWidth();
+
+        }
+
+    }
+
+
+    window.addEventListener(
+        "scroll",
+        updateSidebar,
+        { passive: true }
+    );
+
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            sidebar.classList.remove(
+                "is-fixed",
+                "is-bottom"
+            );
+
+            sidebar.style.width = "";
+
+            updateSidebar();
+
+        }
+    );
+
+
+    updateSidebar();
+
+});
+</script>
+{% comment %} right side sticky js end  {% endcomment %}
 
   {% comment %} hero pattern js start {% endcomment %}
 <script>
