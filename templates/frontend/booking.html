@@ -11421,6 +11421,603 @@ b small {
 }
 {% comment %} offers section card css end {% endcomment %}
 
+
+
+{% comment %} edit button css start {% endcomment %}
+/* =========================================================
+   REVIEW - EDIT RIDE BUTTON
+========================================================= */
+
+.ff-edit-added-ride {
+    display: inline-flex;
+    min-height: 38px;
+    padding: 8px 15px;
+    border: 1px solid rgba(195, 17, 3, .25);
+    border-radius: 22px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    color: var(--ff-red);
+    background: #fff8f7;
+
+    font-size: 10px;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.ff-edit-added-ride:hover {
+    color: #ffffff;
+    border-color: var(--ff-red);
+    background: var(--ff-red);
+    transform: translateY(-1px);
+}
+
+.ff-edit-added-ride i {
+    font-size: 10px;
+}
+
+.ff-added-ride-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+
+
+
+/* =========================================================
+   REVIEW EDIT MODE
+   LOCK DATE + RIDE PROGRESS STEPS
+========================================================= */
+
+.ff-progress-step.ff-edit-locked {
+    pointer-events: none;
+    cursor: default;
+    opacity: .45;
+}
+{% comment %} edit button css end  {% endcomment %}
+
+
+
+{% comment %} font size increasing css start {% endcomment %}
+/* =========================================================
+   FLYING FOX BOOKING
+   COMPLETE DESKTOP TYPOGRAPHY IMPROVEMENT
+
+   IMPORTANT:
+   - FONT SIZE ONLY
+   - NO WIDTH CHANGES
+   - NO HEIGHT CHANGES
+   - NO GRID CHANGES
+   - NO CARD STRUCTURE CHANGES
+   - MOBILE / TABLET REMAIN UNCHANGED
+========================================================= */
+
+@media (min-width: 992px) {
+
+    /* =====================================================
+       LEFT INFORMATION COLUMN
+    ===================================================== */
+
+    .ff-booking-small-title {
+        font-size: 13px;
+    }
+
+    .ff-booking-title-row h1 {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+
+    .ff-booking-intro {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+
+    /* LOCATION / HOURS / DETAILS */
+
+    .ff-booking-detail-item small {
+        font-size: 12px;
+    }
+
+    .ff-booking-detail-item strong {
+        font-size: 15px;
+    }
+
+
+    /* IMPORTANT INFORMATION */
+
+    .ff-important-heading {
+        font-size: 15px;
+    }
+
+    .ff-important-info li {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+
+    /* HELP SECTION */
+
+    .ff-left-help small {
+        font-size: 11px;
+    }
+
+    .ff-left-help strong {
+        font-size: 14px;
+    }
+
+
+    /* =====================================================
+       TOP PROGRESS BAR
+    ===================================================== */
+
+    .ff-progress-label {
+        font-size: 11px;
+        line-height: 1.25;
+    }
+
+    .ff-progress-icon {
+        font-size: 15px;
+    }
+
+
+    /* =====================================================
+       RIGHT FORM MAIN HEADING
+    ===================================================== */
+
+    .ff-form-top span {
+        font-size: 12px;
+    }
+
+    .ff-form-top h2 {
+        font-size: 27px;
+        line-height: 1.2;
+    }
+
+    .ff-form-top p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .ff-form-error {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+
+    /* =====================================================
+       PANEL / SECTION HEADINGS
+    ===================================================== */
+
+    .ff-panel-heading h3 {
+        font-size: 18px;
+    }
+
+    .ff-panel-heading p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .ff-panel-toggle {
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+       SELECTED INFORMATION BARS
+    ===================================================== */
+
+    .ff-selected-bar small {
+        font-size: 11px;
+    }
+
+    .ff-selected-bar strong {
+        font-size: 15px;
+    }
+
+    .ff-selected-bar span {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .ff-change-btn {
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+       DATE SECTION
+    ===================================================== */
+
+    .ff-date-time-intro strong {
+        font-size: 17px;
+    }
+
+    .ff-date-time-intro span {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .ff-premium-field-top small {
+        font-size: 10px;
+    }
+
+    .ff-premium-field-top strong {
+        font-size: 15px;
+    }
+
+    .ff-premium-control input,
+    .ff-premium-control select {
+        font-size: 15px;
+    }
+
+    .ff-date-time-note p {
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .ff-premium-continue {
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+       RIDE SELECTION
+    ===================================================== */
+
+    .ff-panel-body .ff-ride-copy > strong {
+        font-size: 26px !important;
+    }
+
+    .ff-panel-body .ff-ride-copy > small {
+        font-size: 14px !important;
+        line-height: 1.5;
+    }
+
+    .ff-panel-body .ff-ride-copy > b {
+        font-size: 29px !important;
+    }
+
+    .ff-panel-body .ff-ride-copy > b em {
+        font-size: 12px;
+    }
+
+    .ff-panel-body .ff-ride-select {
+        font-size: 13px !important;
+    }
+
+
+    /* =====================================================
+       OFFER SECTION
+    ===================================================== */
+
+    .ff-offer-card h4 {
+        font-size: 17px;
+        line-height: 1.3;
+    }
+
+    .ff-offer-card p {
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .ff-offer-label {
+        font-size: 10px;
+    }
+
+    .ff-offer-rule {
+        font-size: 10px;
+    }
+
+    .ff-offer-more,
+    .ff-offer-select-btn {
+        font-size: 10px;
+    }
+
+    .ff-coupon-message {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+
+    /* OFFER ACCORDION / MULTI-RIDE CONFIGURATION */
+
+    .ff-multi-config-head small {
+        font-size: 11px;
+    }
+
+    .ff-multi-config-head strong {
+        font-size: 17px;
+        line-height: 1.3;
+    }
+
+    .ff-multi-config-head b {
+        font-size: 14px;
+    }
+
+
+    /* =====================================================
+       OFFER DETAILS DRAWER
+    ===================================================== */
+
+    .ff-offer-drawer-kicker {
+        font-size: 11px;
+    }
+
+    .ff-offer-drawer-head h3 {
+        font-size: 25px;
+    }
+
+    .ff-offer-drawer-badge {
+        font-size: 12px;
+    }
+
+    .ff-offer-drawer-description {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .ff-offer-detail-item span {
+        font-size: 12px;
+    }
+
+    .ff-offer-detail-item strong {
+        font-size: 13px;
+    }
+
+    .ff-offer-drawer-select {
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+       RIDERS / PARTICIPANTS
+    ===================================================== */
+
+    .ff-weight-copy strong {
+        font-size: 15px;
+    }
+
+    .ff-weight-copy small {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .ff-counter input {
+        font-size: 16px;
+    }
+
+    .ff-counter button {
+        font-size: 15px;
+    }
+
+    .ff-weight-total {
+        font-size: 12px;
+    }
+
+    .ff-offer-status {
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .ff-add-weight-range {
+        font-size: 11px;
+    }
+
+    .ff-weight-allocation-message {
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+
+    /* =====================================================
+       TIME SLOT SECTION
+    ===================================================== */
+
+    .ff-slot-intro strong {
+        font-size: 15px;
+    }
+
+    .ff-slot-intro span {
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .ff-preferred-slot-card strong {
+        font-size: 14px;
+    }
+
+    .ff-preferred-slot-card small {
+        font-size: 10px;
+    }
+
+    .ff-slot-card strong {
+        font-size: 14px;
+    }
+
+    .ff-slot-card small,
+    .ff-slot-card span {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .ff-slot-message {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .ff-auto-schedule-copy small {
+        font-size: 10px;
+    }
+
+    .ff-auto-schedule-copy strong {
+        font-size: 14px;
+    }
+
+    .ff-auto-schedule-copy span {
+        font-size: 11px;
+    }
+
+    .ff-auto-schedule-result strong {
+        font-size: 11px;
+    }
+
+    .ff-auto-schedule-result small {
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       REVIEW HEADING
+    ===================================================== */
+
+    .ff-review-step-head span {
+        font-size: 12px;
+    }
+
+    .ff-review-step-head h2 {
+        font-size: 27px;
+    }
+
+    .ff-review-step-head p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       SELECTED ADVENTURES / REVIEW CARDS
+    ===================================================== */
+
+    .ff-selected-adventures-head small {
+        font-size: 10px;
+    }
+
+    .ff-selected-adventures-head h3 {
+        font-size: 19px;
+    }
+
+    .ff-added-ride-main small {
+        font-size: 10px;
+    }
+
+    .ff-added-ride-main strong {
+        font-size: 16px;
+        line-height: 1.3;
+    }
+
+    .ff-added-ride-main span {
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .ff-added-ride-price strong {
+        font-size: 19px;
+    }
+
+    .ff-added-ride-price span {
+        font-size: 10px;
+    }
+
+    .ff-added-weight-chip {
+        font-size: 10px;
+    }
+
+    .ff-edit-added-ride,
+    .ff-remove-added-ride {
+        font-size: 11px;
+    }
+
+    .ff-add-another-ride {
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+       BOOKING SUMMARY
+    ===================================================== */
+
+    .ff-booking-summary h3 {
+        font-size: 20px;
+    }
+
+    .ff-summary-row {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .ff-summary-row span small {
+        font-size: 10px;
+    }
+
+    .ff-summary-row strong {
+        font-size: 13px;
+    }
+
+    .ff-summary-adventure-row span {
+        font-size: 11px;
+    }
+
+    .ff-summary-adventure-row span small {
+        font-size: 10px;
+    }
+
+    .ff-summary-adventure-row strong {
+        font-size: 12px;
+    }
+
+    .ff-summary-weight-title {
+        font-size: 11px;
+    }
+
+    .ff-summary-weight-item {
+        font-size: 11px;
+    }
+
+    .ff-summary-total span {
+        font-size: 12px;
+    }
+
+    .ff-summary-total strong {
+        font-size: 28px;
+    }
+
+    .ff-review-button {
+        font-size: 13px;
+    }
+
+    .ff-summary-warning {
+        font-size: 10px;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       GENERIC BUTTONS
+    ===================================================== */
+
+    .ff-wizard-back-btn {
+        font-size: 12px;
+    }
+
+    .ff-wizard-next-btn {
+        font-size: 13px;
+    }
+
+}
+{% comment %} font size increasing css end  {% endcomment %}
+
 </style>
 {% endblock %}
 
@@ -13124,6 +13721,15 @@ let drawerOfferSelectAction =
 
     let currentBookingStep ="date";
 
+
+    /* =========================================================
+   REVIEW RIDE EDIT MODE
+========================================================= */
+
+let editingRideIndex = null;
+
+let editingRideBackup = null;
+
     const slotAvailabilityUrl = "{% url 'booking_slot_availability' %}";
     const maximumParticipants =10;
     /* =========================================================
@@ -13170,6 +13776,28 @@ let drawerOfferSelectAction =
 ========================================================= */
 
 function showBookingStep( step) {
+
+
+        /* =====================================================
+       EDIT MODE NAVIGATION PROTECTION
+
+       While editing one completed ride,
+       customer must NOT return to Date or Ride selection.
+    ===================================================== */
+
+    if (
+        editingRideIndex !== null
+        &&
+        (
+            step === "date"
+            ||
+            step === "ride"
+        )
+    ) {
+
+        return;
+
+    }
 
     /* =====================================================
        MAP STEP NAME -> ELEMENT
@@ -13472,6 +14100,29 @@ document.querySelectorAll(
                 }
 
 
+                /* =====================================================
+   EDIT MODE PROGRESS PROTECTION
+
+   While editing one ride:
+   - Date cannot be opened
+   - Ride cannot be opened
+===================================================== */
+
+if (
+    editingRideIndex !== null
+    &&
+    (
+        requestedStep === "date"
+        ||
+        requestedStep === "ride"
+    )
+) {
+
+    return;
+
+}
+
+
                 /* -----------------------------------------
                    FIND CURRENT + REQUESTED POSITIONS
                 ----------------------------------------- */
@@ -13559,9 +14210,61 @@ document.querySelectorAll(
 
 
                 if (!targetStep) {
+
                     return;
+
                 }
 
+
+                /* =================================================
+                   EDIT MODE
+
+                   If customer is editing a completed ride and
+                   presses Back from the Offer screen, cancel the
+                   edit and safely return to Review.
+
+                   DO NOT return to Ride Selection.
+                ================================================= */
+
+                if (
+                    editingRideIndex !== null
+                    &&
+                    currentBookingStep === "offer"
+                    &&
+                    targetStep === "ride"
+                ) {
+
+                    cancelReviewRideEdit();
+
+                    return;
+
+                }
+
+
+                /* =================================================
+                   EXTRA EDIT MODE SAFETY
+
+                   Never allow Date or Ride Selection while editing.
+                ================================================= */
+
+                if (
+                    editingRideIndex !== null
+                    &&
+                    (
+                        targetStep === "date"
+                        ||
+                        targetStep === "ride"
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                /* =================================================
+                   NORMAL BOOKING NAVIGATION
+                ================================================= */
 
                 showBookingStep(
                     targetStep
@@ -14122,7 +14825,42 @@ dateContinue?.addEventListener(
     }
 );
 
+/* =========================================================
+   UPDATE PROGRESS BAR FOR REVIEW EDIT MODE
+========================================================= */
 
+function updateReviewEditNavigationState() {
+
+    document.querySelectorAll(
+        ".ff-progress-step"
+    ).forEach(
+        function (
+            progressStep
+        ) {
+
+            const step =
+                progressStep.dataset.step;
+
+
+            const shouldLock =
+                editingRideIndex !== null
+                &&
+                (
+                    step === "date"
+                    ||
+                    step === "ride"
+                );
+
+
+            progressStep.classList.toggle(
+                "ff-edit-locked",
+                shouldLock
+            );
+
+        }
+    );
+
+}
 
 
 
@@ -15189,6 +15927,60 @@ function resetRideAfterOfferChange(
 }
 
 
+/* =========================================================
+   RIDES VISIBLE IN CURRENT WIZARD MODE
+
+   NORMAL MODE:
+   -> return every selected ride
+
+   EDIT MODE:
+   -> return only the ride being edited
+========================================================= */
+
+function getWizardRideItems() {
+
+    /* -----------------------------------------
+       NORMAL BOOKING MODE
+    ----------------------------------------- */
+
+    if (
+        editingRideIndex === null
+    ) {
+
+        return bookingState.items;
+
+    }
+
+
+    /* -----------------------------------------
+       EDIT MODE SAFETY CHECK
+    ----------------------------------------- */
+
+    if (
+        editingRideIndex < 0
+        ||
+        editingRideIndex >= bookingState.items.length
+    ) {
+
+        return [];
+
+    }
+
+
+    /* -----------------------------------------
+       ONLY THE RIDE BEING EDITED
+    ----------------------------------------- */
+
+    return [
+        bookingState.items[
+            editingRideIndex
+        ]
+    ];
+
+}
+
+
+
 
 /* =========================================================
    RENDER OFFERS FOR ALL SELECTED RIDES
@@ -15212,26 +16004,54 @@ function renderOffersForSelectedRides() {
         "";
 
 
+    const offerRideItems = getWizardRideItems();    
+
+
     /* =====================================================
        IF NOTHING IS EXPANDED,
        OPEN FIRST SELECTED RIDE
     ===================================================== */
 
     if (
-        expandedOfferRideId === null
-        &&
-        bookingState.items.length > 0
+    offerRideItems.length > 0
+) {
+
+    /*
+     * EDIT MODE:
+     * Always open the ride being edited.
+     */
+
+    if (
+        editingRideIndex !== null
     ) {
 
         expandedOfferRideId =
             String(
-                bookingState.items[0].rideId
+                offerRideItems[0].rideId
             );
 
     }
 
+    /*
+     * NORMAL MODE:
+     * Keep existing accordion behaviour.
+     */
 
-    bookingState.items.forEach(
+    else if (
+        expandedOfferRideId === null
+    ) {
+
+        expandedOfferRideId =
+            String(
+                offerRideItems[0].rideId
+            );
+
+    }
+
+}
+
+
+    offerRideItems.forEach(
         function (
             item,
             index
@@ -16457,7 +17277,7 @@ continueToParticipants?.addEventListener(
         for (
             const item
             of
-            bookingState.items
+            getWizardRideItems()
         ) {
 
             const selectedOffer =
@@ -17567,7 +18387,7 @@ function renderParticipantsForSelectedRides() {
     }
 
 
-    bookingState.items.forEach(
+    getWizardRideItems().forEach(
         function (
             item
         ) {
@@ -20187,7 +21007,7 @@ async function loadAllRideSlots() {
 for (
     const item
     of
-    bookingState.items
+    getWizardRideItems()
 ) {
 
     const data =
@@ -20773,7 +21593,7 @@ function assignSlotsFromPreferredTime(
     for (
         const item
         of
-        bookingState.items
+        getWizardRideItems()
     ) {
 
         const slots =
@@ -21144,12 +21964,22 @@ function saveAssignedSlotToRide(
 
 
 /* =========================================================
-   CLEAR ALL AUTOMATIC SLOT ASSIGNMENTS
+   CLEAR SLOT ASSIGNMENTS FOR CURRENT WIZARD RIDES
+
+   NORMAL MODE:
+   -> clears all selected rides
+
+   EDIT MODE:
+   -> clears ONLY the ride being edited
 ========================================================= */
 
 function clearAutomaticSlotAssignments() {
 
-    bookingState.items.forEach(
+    const slotRideItems =
+        getWizardRideItems();
+
+
+    slotRideItems.forEach(
         function (
             item
         ) {
@@ -21439,6 +22269,9 @@ function renderAutomaticSchedule(
 /* =========================================================
    TIME SLOT -> REVIEW
 ========================================================= */
+/* =========================================================
+   TIME SLOT -> REVIEW
+========================================================= */
 
 continueToReview?.addEventListener(
     "click",
@@ -21457,18 +22290,24 @@ continueToReview?.addEventListener(
             );
 
             return;
-
         }
 
 
         /* -----------------------------------------
-           EVERY RIDE MUST HAVE AN ASSIGNED SLOT
+           EVERY CURRENT WIZARD RIDE
+           MUST HAVE AN ASSIGNED SLOT
+
+           NORMAL MODE:
+           -> checks all rides
+
+           EDIT MODE:
+           -> checks only edited ride
         ----------------------------------------- */
 
         for (
             const item
             of
-            bookingState.items
+            getWizardRideItems()
         ) {
 
             if (
@@ -21480,7 +22319,6 @@ continueToReview?.addEventListener(
                 );
 
                 return;
-
             }
 
 
@@ -21495,17 +22333,51 @@ continueToReview?.addEventListener(
                 );
 
                 return;
-
             }
 
         }
 
 
+        /* =================================================
+           COMPLETE REVIEW EDIT
+
+           IMPORTANT:
+           The edited ride already contains its new:
+           - offer
+           - participants
+           - quantity
+           - weight groups
+           - time slot
+
+           So we KEEP those changes and only leave edit mode.
+        ================================================= */
+
+        if (
+            editingRideIndex !== null
+        ) {
+
+            completeReviewRideEdit();
+
+        }
+
+
+        /* -----------------------------------------
+           REBUILD REVIEW
+        ----------------------------------------- */
+
         renderSelectedAdventures();
 
 
+        /* -----------------------------------------
+           UPDATE TOTALS
+        ----------------------------------------- */
+
         updateBookingSummary();
 
+
+        /* -----------------------------------------
+           RETURN TO REVIEW
+        ----------------------------------------- */
 
         showBookingStep(
             "review"
@@ -22728,6 +23600,343 @@ function calculateOfferForItem(
     }
 );
 
+
+
+/* =========================================================
+   LOAD REVIEW RIDE INTO EDIT MODE
+========================================================= */
+
+function loadReviewRideForEditing(
+    item
+) {
+
+    if (!item) {
+        return false;
+    }
+
+
+    /* -----------------------------------------
+       CURRENT RIDE
+    ----------------------------------------- */
+
+    rideId =
+        String(
+            item.rideId
+        );
+
+    rideName =
+        item.rideName || "";
+
+    ridePrice =
+        Number(
+            item.price || 0
+        );
+
+
+    return true;
+}
+
+
+
+
+/* =========================================================
+   COMPLETE REVIEW RIDE EDIT
+
+   IMPORTANT:
+
+   The edited ride has already been changed directly inside
+   bookingState.items.
+
+   So on successful completion we DO NOT restore the backup.
+
+   We only:
+   1. Leave edit mode
+   2. Delete the old backup
+   3. Clear temporary edit UI state
+   4. Restore normal progress navigation
+========================================================= */
+
+function completeReviewRideEdit() {
+
+    /* -----------------------------------------
+       NOT IN EDIT MODE
+    ----------------------------------------- */
+
+    if (
+        editingRideIndex === null
+    ) {
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       IMPORTANT
+
+       DO NOT restore editingRideBackup here.
+
+       The current ride inside bookingState.items
+       now contains the customer's NEW:
+
+       - offer
+       - participant information
+       - quantity
+       - weight groups
+       - time slot
+
+       Therefore we KEEP the current item.
+    ----------------------------------------- */
+
+
+    /* -----------------------------------------
+       CLEAR EDIT MODE
+    ----------------------------------------- */
+
+    editingRideIndex =
+        null;
+
+
+    /* -----------------------------------------
+       OLD BACKUP IS NO LONGER NEEDED
+
+       The edit was successful.
+    ----------------------------------------- */
+
+    editingRideBackup =
+        null;
+
+
+    /* -----------------------------------------
+       CLEAR TEMPORARY OFFER ACCORDION STATE
+    ----------------------------------------- */
+
+    expandedOfferRideId =
+        null;
+
+
+    /* -----------------------------------------
+       RESTORE NORMAL PROGRESS NAVIGATION
+    ----------------------------------------- */
+
+    updateReviewEditNavigationState();
+
+}
+
+
+/* =========================================================
+   CANCEL REVIEW RIDE EDIT
+
+   Restores the original ride exactly as it was
+   before the customer clicked Edit.
+========================================================= */
+
+function cancelReviewRideEdit() {
+
+    /* -----------------------------------------
+       NOT IN EDIT MODE
+    ----------------------------------------- */
+
+    if (
+        editingRideIndex === null
+    ) {
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       RESTORE ORIGINAL RIDE FROM BACKUP
+    ----------------------------------------- */
+
+    if (
+        editingRideBackup
+        &&
+        editingRideIndex >= 0
+        &&
+        editingRideIndex < bookingState.items.length
+    ) {
+
+        bookingState.items[
+            editingRideIndex
+        ] =
+            JSON.parse(
+                JSON.stringify(
+                    editingRideBackup
+                )
+            );
+
+    }
+
+
+    /* -----------------------------------------
+       CLEAR EDIT MODE
+    ----------------------------------------- */
+
+    editingRideIndex =
+        null;
+
+    editingRideBackup =
+        null;
+    updateReviewEditNavigationState();
+
+    /* -----------------------------------------
+       CLEAR EDIT OFFER ACCORDION STATE
+    ----------------------------------------- */
+
+    expandedOfferRideId =
+        null;
+
+
+    /* -----------------------------------------
+       REFRESH REVIEW
+    ----------------------------------------- */
+
+    renderSelectedAdventures();
+
+    updateBookingSummary();
+
+
+    /* -----------------------------------------
+       RETURN TO REVIEW
+    ----------------------------------------- */
+
+    showBookingStep(
+        "review"
+    );
+
+}
+
+
+/* =========================================================
+   START EDITING ONE REVIEW RIDE
+========================================================= */
+
+function startEditingReviewRide(
+    index
+) {
+
+    /* -----------------------------------------
+       VALIDATE INDEX
+    ----------------------------------------- */
+
+    if (
+        !Number.isInteger(index)
+        ||
+        index < 0
+        ||
+        index >= bookingState.items.length
+    ) {
+
+        showError(
+            "Unable to edit this ride."
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       GET ORIGINAL RIDE
+    ----------------------------------------- */
+
+    const item =
+        bookingState.items[index];
+
+
+    if (!item) {
+
+        showError(
+            "Ride information could not be found."
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       REMEMBER WHICH RIDE IS BEING EDITED
+    ----------------------------------------- */
+
+    editingRideIndex =
+        index;
+
+
+
+    updateReviewEditNavigationState();    
+
+
+    /* -----------------------------------------
+       KEEP SAFE BACKUP
+
+       IMPORTANT:
+       We are NOT removing the original ride.
+    ----------------------------------------- */
+
+    editingRideBackup =
+        JSON.parse(
+            JSON.stringify(
+                item
+            )
+        );
+
+
+        /* -----------------------------------------
+   LOAD RIDE INTO CURRENT EDIT CONTEXT
+----------------------------------------- */
+
+const loaded =
+    loadReviewRideForEditing(
+        item
+    );
+
+
+if (!loaded) {
+
+    editingRideIndex =
+        null;
+
+    editingRideBackup =
+        null;
+
+    showError(
+        "Unable to load this ride for editing."
+    );
+
+    return;
+}    
+
+   /* -----------------------------------------
+   EXPAND ONLY THE EDITED RIDE
+----------------------------------------- */
+
+expandedOfferRideId =
+    String(
+        item.rideId
+    );
+
+
+/* -----------------------------------------
+   RENDER ONLY EDITED RIDE
+----------------------------------------- */
+
+renderOffersForSelectedRides();
+
+
+    /* -----------------------------------------
+       OPEN OFFER STEP
+
+       We will populate the existing ride data
+       in the next part.
+    ----------------------------------------- */
+
+    showBookingStep(
+        "offer"
+    );
+}
+
+
+
     /* =========================================================
        SELECTED ADVENTURES
     ========================================================= */
@@ -22808,18 +24017,25 @@ function calculateOfferForItem(
 
                     </div>
 
-                    <div class="ff-added-ride-actions">
+<div class="ff-added-ride-actions">
 
-                        <button
-                            type="button"
-                            class="ff-remove-added-ride"
-                            data-index="${index}"
-                        >
-                            <i class="fas fa-trash"></i>
-                            Remove
-                        </button>
+    <button
+        type="button"
+        class="ff-edit-added-ride"
+        data-index="${index}">
+        <i class="fas fa-pen"></i>
+        Edit
+    </button>
 
-                    </div>
+    <button
+        type="button"
+        class="ff-remove-added-ride"
+        data-index="${index}">
+        <i class="fas fa-trash"></i>
+        Remove
+    </button>
+
+</div>
                 `;
 
                 selectedAdventureItems.appendChild(
@@ -22832,6 +24048,37 @@ function calculateOfferForItem(
          "show",
          bookingState.items.length > 0
         );
+
+
+
+        /* =====================================================
+   EDIT REVIEW RIDE
+===================================================== */
+
+document.querySelectorAll(
+    ".ff-edit-added-ride"
+).forEach(
+    function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const index =
+                    Number(
+                        button.dataset.index
+                    );
+
+
+                startEditingReviewRide(
+                    index
+                );
+
+            }
+        );
+
+    }
+);
 
 
         document.querySelectorAll(
