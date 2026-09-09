@@ -1,13 +1,67 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 
-{% block title %} Zipline in Munnar | Superman & Normal Rides | Flying Fox{% endblock %}
 
-{% block meta_description %}
- Book a zipline in Munnar at Flying Fox Adventure. Enjoy 1.5 KM Superman and Normal rides with scenic valley views and online booking.
+{# =========================================================
+   SEO
+========================================================= #}
+
+{% block title %}
+Zipline in Munnar | Superman & Normal Rides | Flying Fox
 {% endblock %}
 
-{% block nav_rides %}active{% endblock %}
+
+{% block meta_description %}
+Book a zipline in Munnar at Flying Fox Adventure. Enjoy 1.5 KM Superman and Normal rides with scenic valley views and online booking.
+{% endblock %}
+
+
+{# =========================================================
+   OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
+========================================================= #}
+
+{% block og_title %}
+1.5 KM Flying Fox Adventure Above Munnar
+{% endblock %}
+
+
+{% block og_description %}
+Take flight across Munnar's valley on a 1.5 KM aerial ride. Choose your preferred experience and enjoy views of the surrounding hills and greenery.
+{% endblock %}
+
+
+{% block og_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   X / TWITTER
+========================================================= #}
+
+{% block twitter_title %}
+1.5 KM Flying Fox Adventure Above Munnar
+{% endblock %}
+
+
+{% block twitter_description %}
+Take flight across Munnar's valley on a 1.5 KM aerial ride. Choose your preferred experience and enjoy views of the surrounding hills and greenery.
+{% endblock %}
+
+
+{% block twitter_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   NAVIGATION
+========================================================= #}
+
+{% block nav_rides %}
+active
+{% endblock %}
+
 
 {% block content %}
   <!-- breadcrumb -->

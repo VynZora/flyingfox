@@ -1,13 +1,67 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 
-{% block title %}Contact Us - Flying Fox Adventure{% endblock %}
+
+{# =========================================================
+   SEO
+========================================================= #}
+
+{% block title %}
+Contact Us - Flying Fox Adventure
+{% endblock %}
+
 
 {% block meta_description %}
 Contact Flying Fox Adventure Munnar for questions about zipline rides, bookings, timings, location and adventure experiences.
 {% endblock %}
 
-{% block nav_contact %}active{% endblock %}
+
+{# =========================================================
+   OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
+========================================================= #}
+
+{% block og_title %}
+Contact Flying Fox Adventure Munnar | Zipline Bookings & Enquiries
+{% endblock %}
+
+
+{% block og_description %}
+Get in touch with Flying Fox Adventure Munnar for zipline bookings, ride timings, location details and questions about your adventure experience.
+{% endblock %}
+
+
+{% block og_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   X / TWITTER
+========================================================= #}
+
+{% block twitter_title %}
+Contact Flying Fox Adventure Munnar | Zipline Bookings & Enquiries
+{% endblock %}
+
+
+{% block twitter_description %}
+Get in touch with Flying Fox Adventure Munnar for zipline bookings, ride timings, location details and questions about your adventure experience.
+{% endblock %}
+
+
+{% block twitter_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   NAVIGATION
+========================================================= #}
+
+{% block nav_contact %}
+active
+{% endblock %}
+
 
 {% block content %}
   <!-- breadcrumb -->

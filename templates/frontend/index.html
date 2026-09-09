@@ -1,14 +1,62 @@
 {% extends "frontend/base.html" %}
-{% load static %} 
-{% block title %}Munnar Zipline | 1.5 KM Zipline Experience | Flying Fox{% endblock %}
+{% load static %}
+
+
+{% block title %}
+Munnar Zipline | 1.5 KM Zipline Experience | Flying Fox
+{% endblock %}
+
 
 {% block meta_description %}
 Try the Munnar zipline at Flying Fox Adventure. Fly 1.5 KM above the valley on Superman or Normal rides and reserve your ride online.
 {% endblock %}
 
-{% block nav_home %}active{% endblock %} 
+
+{# ========================= #}
+{# OPEN GRAPH / FACEBOOK     #}
+{# ========================= #}
+
+{% block og_title %}
+Flying Fox Munnar | Your Adventure Starts Above the Valley
+{% endblock %}
+
+
+{% block og_description %}
+Take flight over Munnar's hills on a 1.5 KM Flying Fox ride, with safety equipment, trained operators and open views of the surrounding valley.
+{% endblock %}
+
+
+{% block og_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# ========================= #}
+{# TWITTER / X               #}
+{# ========================= #}
+
+{% block twitter_title %}
+Flying Fox Munnar | Your Adventure Starts Above the Valley
+{% endblock %}
+
+
+{% block twitter_description %}
+Take flight over Munnar's hills on a 1.5 KM Flying Fox ride, with safety equipment, trained operators and open views of the surrounding valley.
+{% endblock %}
+
+
+{% block twitter_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{% block nav_home %}
+active
+{% endblock %}
+
 
 {% block content %}
+
 
 <!-- hero area -->
 <!-- =========================================================

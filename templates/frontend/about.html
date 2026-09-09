@@ -1,15 +1,70 @@
 {% extends "frontend/base.html" %}
 {% load static %}
 
-{% block title %}About Flying Fox Adventure | Adventure Activities in Munnar{% endblock %}
 
-{% block meta_description %}
- Learn about Flying Fox Adventure Munnar, our 10+ years of experience, safety-focused team and exciting adventure activities in Munnar.
+{# =========================================================
+   SEO
+========================================================= #}
+
+{% block title %}
+About Flying Fox Adventure | Adventure Activities in Munnar
 {% endblock %}
 
-{% block nav_about %}active{% endblock %}
+
+{% block meta_description %}
+Learn about Flying Fox Adventure Munnar, our 10+ years of experience, safety-focused team and exciting adventure activities in Munnar.
+{% endblock %}
+
+
+{# =========================================================
+   OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
+========================================================= #}
+
+{% block og_title %}
+About Flying Fox Adventure Munnar | Adventure Activities
+{% endblock %}
+
+
+{% block og_description %}
+Discover Flying Fox Adventure Munnar, a destination for adventure activities and outdoor experiences, with 10+ years of experience and trained operators.
+{% endblock %}
+
+
+{% block og_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   X / TWITTER
+========================================================= #}
+
+{% block twitter_title %}
+About Flying Fox Adventure Munnar | Adventure Activities
+{% endblock %}
+
+
+{% block twitter_description %}
+Discover Flying Fox Adventure Munnar, a destination for adventure activities and outdoor experiences, with 10+ years of experience and trained operators.
+{% endblock %}
+
+
+{% block twitter_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   NAVIGATION
+========================================================= #}
+
+{% block nav_about %}
+active
+{% endblock %}
+
 
 {% block content %}
+
 
       <!-- breadcrumb -->
 

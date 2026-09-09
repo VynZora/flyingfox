@@ -2,14 +2,61 @@
 {% load static %}
 
 
+{# =========================================================
+   SEO
+========================================================= #}
+
 {% block title %}
 Offers & Deals | Flying Fox Adventure
 {% endblock %}
+
 
 {% block meta_description %}
 Save on your Munnar zipline adventure with the latest Flying Fox offers and deals. Check available discounts, choose your ride and book online.
 {% endblock %}
 
+
+{# =========================================================
+   OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
+========================================================= #}
+
+{% block og_title %}
+Munnar Zipline Offers & Deals | Flying Fox Adventure
+{% endblock %}
+
+
+{% block og_description %}
+Check the latest Flying Fox Adventure Munnar offers and deals. Choose your preferred zipline ride, find available discounts and book your adventure online.
+{% endblock %}
+
+
+{% block og_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   X / TWITTER
+========================================================= #}
+
+{% block twitter_title %}
+Munnar Zipline Offers & Deals | Flying Fox Adventure
+{% endblock %}
+
+
+{% block twitter_description %}
+Check the latest Flying Fox Adventure Munnar offers and deals. Choose your preferred zipline ride, find available discounts and book your adventure online.
+{% endblock %}
+
+
+{% block twitter_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   NAVIGATION
+========================================================= #}
 
 {% block nav_offers %}
 active

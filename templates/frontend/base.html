@@ -1,18 +1,104 @@
 {% load static %}
 
+{% load static %}
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- meta tags -->
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="" />
 
-    <!-- title -->
-    <title>{% block title %}Flying Fox Adventure{% endblock %}</title>
+<head>
 
-    <!-- favicon -->
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+
+    <!-- =====================================================
+         PRIMARY SEO
+    ====================================================== -->
+
+    <title>
+        {% block title %}
+            Flying Fox Adventure Munnar
+        {% endblock %}
+    </title>
+
+
+
+    <meta
+        name="keywords"
+        content="{% block meta_keywords %}Flying Fox Munnar, Zipline Munnar, Adventure Activities Munnar, Munnar Zipline{% endblock %}"
+    >
+
+
+    <!-- =====================================================
+         OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
+    ====================================================== -->
+
+    <meta
+        property="og:title"
+        content="{% block og_title %}Flying Fox Adventure Munnar{% endblock %}"
+    >
+
+    <meta
+        property="og:description"
+        content="{% block og_description %}Experience exciting Flying Fox and zipline adventures in Munnar, Kerala.{% endblock %}"
+    >
+
+    <meta
+        property="og:type"
+        content="{% block og_type %}website{% endblock %}"
+    >
+
+    <meta
+        property="og:url"
+        content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}"
+    >
+
+    <meta
+        property="og:image"
+        content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}{% endblock %}"
+    >
+
+    <meta
+        property="og:site_name"
+        content="Flying Fox Adventure"
+    >
+
+    <meta
+        property="og:locale"
+        content="en_IN"
+    >
+
+
+    <!-- =====================================================
+         X / TWITTER CARD
+    ====================================================== -->
+
+    <meta
+        name="twitter:card"
+        content="summary_large_image"
+    >
+
+    <meta
+        name="twitter:title"
+        content="{% block twitter_title %}Flying Fox Adventure Munnar{% endblock %}"
+    >
+
+    <meta
+        name="twitter:description"
+        content="{% block twitter_description %}Experience exciting Flying Fox and zipline adventures in Munnar, Kerala.{% endblock %}"
+    >
+
+    <meta
+        name="twitter:image"
+        content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}{% endblock %}"
+    >
+
 
 
  <meta
@@ -1124,7 +1210,7 @@
 
                 <span class="ff-footer-credit">
                     Designed by
-                    <a href="#">
+                    <a href="https://vynzora.com/">
                         Vynzora
                     </a>
                 </span>

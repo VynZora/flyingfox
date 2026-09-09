@@ -1,71 +1,98 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 
+
+{# =========================================================
+   SEO TITLE
+========================================================= #}
+
 {% block title %}
+
 {% if gallery_items.number == 1 %}
+
 Gallery | Flying Fox Adventure
+
 {% else %}
+
 Gallery {{ gallery_items.number }} - Flying Fox Adventure Munnar
+
 {% endif %}
+
 {% endblock %}
+
+
+{# =========================================================
+   META DESCRIPTION
+========================================================= #}
 
 {% block meta_description %}
+
 {% if gallery_items.number == 1 %}
-Explore Gallery 1 of Flying Fox Adventure Munnar featuring exciting zipline adventures, scenic views and memorable outdoor experiences.
+
+Explore Flying Fox Adventure Munnar through photos and videos of zipline rides, scenic valley views and unforgettable adventure moments.
+
 {% elif gallery_items.number == 2 %}
+
 Explore Gallery 2 of Flying Fox Adventure Munnar featuring more adventure moments, zipline experiences and beautiful Munnar scenery.
+
 {% elif gallery_items.number == 3 %}
+
 Explore Gallery 3 of Flying Fox Adventure Munnar with thrilling rides, adventure photography and memorable experiences in Munnar.
+
 {% else %}
+
 Explore Gallery {{ gallery_items.number }} of Flying Fox Adventure Munnar featuring photos and videos from our exciting adventure activities.
+
 {% endif %}
+
 {% endblock %}
 
 
- 
-<!-- Canonical URL -->
-{% comment %} 
-{% if selected_category %}
+{# =========================================================
+   OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
+========================================================= #}
 
-    {% if gallery_items.number == 1 %}
-
-        <link
-            rel="canonical"
-            href="https://flyingfoxadventuremunnar.com/gallery/?category={{ selected_category }}"
-        >
-
-    {% else %}
-
-        <link
-            rel="canonical"
-            href="https://flyingfoxadventuremunnar.com/gallery/page/{{ gallery_items.number }}/?category={{ selected_category }}"
-        >
-
-    {% endif %}
-
-{% else %}
-
-    {% if gallery_items.number == 1 %}
-
-        <link
-            rel="canonical"
-            href="https://flyingfoxadventuremunnar.com/gallery/"
-        >
-
-    {% else %}
-
-        <link
-            rel="canonical"
-            href="https://flyingfoxadventuremunnar.com/gallery/page/{{ gallery_items.number }}/"
-        >
-
-    {% endif %}
-
-{% endif %} {% endcomment %}
+{% block og_title %}
+Flying Fox Adventure Munnar | Zipline Photos & Gallery
+{% endblock %}
 
 
+{% block og_description %}
+See the Flying Fox experience through photos and videos of zipline rides, Munnar's scenic valleys and memorable moments from above.
+{% endblock %}
 
-{% block nav_gallery %}active{% endblock %}
+
+{% block og_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   X / TWITTER
+========================================================= #}
+
+{% block twitter_title %}
+Flying Fox Adventure Munnar | Zipline Photos & Gallery
+{% endblock %}
+
+
+{% block twitter_description %}
+See the Flying Fox experience through photos and videos of zipline rides, Munnar's scenic valleys and memorable moments from above.
+{% endblock %}
+
+
+{% block twitter_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   NAVIGATION
+========================================================= #}
+
+{% block nav_gallery %}
+active
+{% endblock %}
 
 
 {% block extra_css %}

@@ -1,14 +1,67 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 
-{% block title %} Munnar Adventure Blog | Zipline Tips, Guides & Updates{% endblock %}
+
+{# =========================================================
+   SEO
+========================================================= #}
+
+{% block title %}
+Munnar Adventure Blog | Zipline Tips, Guides & Updates
+{% endblock %}
 
 
 {% block meta_description %}
- Explore the Flying Fox Adventure Munnar blog for zipline guides, safety tips, Munnar adventure ideas, booking information and the latest updates.
+Explore the Flying Fox Adventure Munnar blog for zipline guides, safety tips, Munnar adventure ideas, booking information and the latest updates.
 {% endblock %}
 
-{% block nav_blog %}active{% endblock %}
+
+{# =========================================================
+   OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
+========================================================= #}
+
+{% block og_title %}
+Flying Fox Adventure Munnar Blog | Zipline & Adventure Guides
+{% endblock %}
+
+
+{% block og_description %}
+Get practical zipline guides, safety tips, booking information and ideas for adventure activities in Munnar from Flying Fox Adventure.
+{% endblock %}
+
+
+{% block og_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   X / TWITTER
+========================================================= #}
+
+{% block twitter_title %}
+Flying Fox Adventure Munnar Blog | Zipline & Adventure Guides
+{% endblock %}
+
+
+{% block twitter_description %}
+Get practical zipline guides, safety tips, booking information and ideas for adventure activities in Munnar from Flying Fox Adventure.
+{% endblock %}
+
+
+{% block twitter_image %}
+{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}
+{% endblock %}
+
+
+{# =========================================================
+   NAVIGATION
+========================================================= #}
+
+{% block nav_blog %}
+active
+{% endblock %}
+
 
 {% block content %}
   <!-- breadcrumb -->
