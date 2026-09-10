@@ -6815,7 +6815,7 @@ def home(request):
             video__isnull=False
         )
         .exclude(video="")
-        .order_by("-uploaded_at")[:10]
+        .order_by("-uploaded_at")[:5]
     )
 
 
@@ -6955,9 +6955,9 @@ def home(request):
     # -----------------------------------------
 
     testimonials = (
-        Testimonial.objects
-        .all()
-        .order_by("-created_at")
+    Testimonial.objects
+    .all()
+    .order_by("-created_at")[:10]
     )
 
 

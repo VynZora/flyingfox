@@ -132,7 +132,8 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
-                        alt="flying fox adventure"
+                        alt="flying fox adventure"  loading="lazy"
+    decoding="async"
                       >
 
                     </div>
@@ -150,7 +151,7 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/calendar-pen.svg' %}"
-                        alt="flying fox adventure"
+                        alt="flying fox adventure" 
                       >
 
                     </div>
@@ -327,7 +328,7 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
-                        alt="flying fox adventure"
+                        alt="flying fox adventure"  
                       >
 
                     </div>
@@ -345,7 +346,7 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/calendar-pen.svg' %}"
-                        alt="flying fox adventure"
+                        alt="flying fox adventure"  
                       >
 
                     </div>
@@ -523,7 +524,7 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
-                        alt="flying fox adventure"
+                        alt="flying fox adventure"  
                       >
 
                     </div>
@@ -541,7 +542,7 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/calendar-pen.svg' %}"
-                        alt="flying fox adventure"
+                        alt="flying fox adventure"  
                       >
 
                     </div>
@@ -800,6 +801,8 @@ active
         <img
           src="{% static 'frontend/assets/img/superman/img-4.webp' %}"
           alt="Superman Zipline Flying Fox Adventure Munnar"
+           loading="lazy"
+            decoding="async"
         />
         <span class="ff-superman-image-badge">
           <i class="fas fa-star"></i>
@@ -913,6 +916,8 @@ active
         <img
           src="{% static 'frontend/assets/img/superman/img-2.webp' %}"
           alt="Superman Zipline Munnar"
+           loading="lazy"
+           decoding="async"
         />
         <span class="ff-superman-image-badge">
           <i class="fas fa-calendar"></i>
@@ -925,7 +930,9 @@ active
       <div class="ff-superman-feature-image wow fadeInLeft">
         <img
           src="{% static 'frontend/assets/img/superman/img-5.webp' %}"
-          alt="Superman Zipline Photography and Videography"
+          alt="Superman Zipline Photography and Videography" 
+           loading="lazy"
+    decoding="async"
         />
         <span class="ff-superman-image-badge">
           <i class="fas fa-camera"></i>
@@ -1063,6 +1070,8 @@ active
               class="shape"
               src="{% static 'frontend/assets/img/shape/01.webp' %}"
               alt="flying fox adventure munnar"
+               loading="lazy"
+    decoding="async"
             />
 
             <div class="tour-btn">
@@ -1665,7 +1674,8 @@ active
               <div class="safety-equipment-image">
                 <img
                   src="{% static 'frontend/assets/img/safety/safety-helmet.webp' %}"
-                  alt="Flying Fox safety helmet"
+                  alt="Flying Fox safety helmet" loading="lazy"
+    decoding="async"
                 />
               </div>
 
@@ -1692,6 +1702,8 @@ active
                 <img
                   src="{% static 'frontend/assets/img/safety/harness.webp' %}"
                   alt="Full body safety harness"
+                   loading="lazy"
+    decoding="async"
                 />
               </div>
 
@@ -1718,6 +1730,8 @@ active
                 <img
                   src="{% static 'frontend/assets/img/safety/trolley.webp' %}"
                   alt="Professional zipline trolley"
+                   loading="lazy"
+    decoding="async"
                 />
               </div>
 
@@ -1744,6 +1758,8 @@ active
                 <img
                   src="{% static 'frontend/assets/img/safety/carabiners.webp' %}"
                   alt="Double locking safety carabiners"
+                   loading="lazy"
+    decoding="async"
                 />
               </div>
 
@@ -1770,6 +1786,8 @@ active
                 <img
                   src="{% static 'frontend/assets/img/safety/gloves.webp' %}"
                   alt="Protective adventure gloves"
+                   loading="lazy"
+                    decoding="async"
                 />
               </div>
 
@@ -1796,6 +1814,8 @@ active
                 <img
                   src="{% static 'frontend/assets/img/safety/lanyard.webp' %}"
                   alt="Zipline safety lanyard"
+                   loading="lazy"
+    decoding="async"
                 />
               </div>
 
@@ -2237,6 +2257,8 @@ active
                     <img
                       src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
                       alt="flying fox adventure"
+                       loading="lazy"
+    decoding="async"
                     />
                   </div>
                   <div>
@@ -2260,6 +2282,8 @@ active
                     <img
                       src="{% static 'frontend/assets/img/icon/mountains.svg' %}"
                       alt="flying fox adventure munnar hills and valley"
+                       loading="lazy"
+    decoding="async"
                     />
                   </div>
                   <div>
@@ -2283,6 +2307,8 @@ active
                     <img
                       src="{% static 'frontend/assets/img/icon/shield-check.svg' %}"
                       alt="flying fox adventure safety and security"
+                       loading="lazy"
+    decoding="async"
                     />
                   </div>
                   <div>
@@ -2306,6 +2332,8 @@ active
                     <img
                       src="{% static 'frontend/assets/img/icon/user-headset.svg' %}"
                       alt="flying fox adventure customer support"
+                       loading="lazy"
+    decoding="async"
                     />
                   </div>
                   <div>
@@ -2765,6 +2793,8 @@ active
               <img
                 src="{% static 'frontend/assets/img/home/img-7.webp' %}"
                 alt="Flying Fox Adventure Munnar Safety Instructions"
+                 loading="lazy"
+    decoding="async"
               />
             </div>
 
@@ -2823,7 +2853,8 @@ active
           <div class="blog-img">
             <div class="ani-img">
               {% if blog.image %}
-              <img src="{{ blog.image.url }}" alt="{{ blog.title }}" />
+              <img src="{{ blog.image.url }}" alt="{{ blog.title }}"  loading="lazy"
+    decoding="async" />
               {% endif %}
             </div>
           </div>
@@ -3641,6 +3672,8 @@ active
                             <img
                               src="{% static 'frontend/assets/img/icon/guide.svg' %}"
                               alt="Professional Flying Fox Operators"
+                               loading="lazy"
+    decoding="async"
                             />
                           </div>
                           <h4>Professional Operators</h4>
@@ -3666,6 +3699,8 @@ active
                             <img
                               src="{% static 'frontend/assets/img/icon/trip.svg' %}"
                               alt="Munnar Mountain Views"
+                               loading="lazy"
+    decoding="async"
                             />
                           </div>
                           <h4>Spectacular Munnar Views</h4>
@@ -3695,7 +3730,8 @@ active
               <div class="choose-img wow fadeInRight" data-wow-delay=".1s">
                 <img
                   src="{% static 'frontend/assets/img/home/img-5.webp' %}"
-                  alt="Flying Fox Zipline Adventure in Munnar"
+                  alt="Flying Fox Zipline Adventure in Munnar" loading="lazy"
+    decoding="async"
                 />
               </div>
             </div>
@@ -3713,6 +3749,8 @@ active
                 src="{% static 'frontend/assets/img/home/img-6.webp' %}"
                 class="ff-process-zipline-shape"
                 alt="Flying Fox Zipline Adventure Process"
+                 loading="lazy"
+    decoding="async"
               />
             </div>
 
@@ -3740,12 +3778,14 @@ active
                   <div class="img">
                     <img
                       src="{% static 'frontend/assets/img/step/01.webp' %}"
-                      alt="Choose Flying Fox Ride"
+                      alt="Choose Flying Fox Ride"  loading="lazy"
+    decoding="async"
                     />
                     <div class="icon">
                       <img
                         src="{% static 'frontend/assets/img/icon/user-roadmap.svg' %}"
-                        alt="Choose Ride"
+                        alt="Choose Ride"  loading="lazy"
+    decoding="async"
                       />
                     </div>
                   </div>
@@ -3766,12 +3806,14 @@ active
                   <div class="img">
                     <img
                       src="{% static 'frontend/assets/img/step/02.webp' %}"
-                      alt="Book Flying Fox Adventure"
+                      alt="Book Flying Fox Adventure"  loading="lazy"
+    decoding="async"
                     />
                     <div class="icon">
                       <img
                         src="{% static 'frontend/assets/img/icon/booking.svg' %}"
-                        alt="Online Booking"
+                        alt="Online Booking"  loading="lazy"
+    decoding="async"
                       />
                     </div>
                   </div>
@@ -3796,7 +3838,8 @@ active
                     <div class="icon">
                       <img
                         src="{% static 'frontend/assets/img/icon/plane-globe.svg' %}"
-                        alt="Start Adventure"
+                        alt="Start Adventure"  loading="lazy"
+    decoding="async"
                       />
                     </div>
                   </div>
