@@ -1,3 +1,5 @@
+import math
+
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 from django.utils import timezone
@@ -144,9 +146,19 @@ class BlogPageSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return [
-            2,
-        ]
+        blogs_per_page = 6
+
+        total_blogs = Blog.objects.count()
+
+        total_pages = math.ceil(
+            total_blogs / blogs_per_page
+        )
+
+        # Page 1 is already included through StaticViewSitemap as "blog"
+        return range(2, total_pages + 1)
 
     def location(self, page):
-        return f"{reverse('blog')}?page={page}"
+        return reverse(
+            "blog_page",
+            kwargs={"page": page},
+        )

@@ -2197,7 +2197,12 @@ active
                 <div class="ff-testimonial-quote-icon">
                   <i class="fas fa-quote-left"></i>
                 </div>
-                <p>{{ testimonial.review|striptags|truncatewords:32 }}</p>
+
+                <div class="ff-testimonial-review-wrap">
+                  <p class="ff-testimonial-review">
+                    {{ testimonial.review|striptags }}
+                  </p>
+                </div>
 
                 <div class="ff-testimonial-author">
                   <div>
@@ -5524,5 +5529,485 @@ document.addEventListener(
 );
 </script>
 {% comment %} gallery video load end {% endcomment %}
+
+{% comment %} testimonial expand js start {% endcomment %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const slider = document.querySelector(
+        ".ff-testimonial-slider"
+    );
+
+    if (!slider) {
+        return;
+    }
+
+
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+
+    function getAllCards() {
+        return slider.querySelectorAll(
+            ".ff-testimonial-card"
+        );
+    }
+
+
+    function collapseCard(card) {
+
+        if (!card) {
+            return;
+        }
+
+        card.classList.remove(
+            "is-expanded"
+        );
+
+        card.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        const reviewWrap =
+            card.querySelector(
+                ".ff-testimonial-review-wrap"
+            );
+
+        if (reviewWrap) {
+            reviewWrap.scrollTop = 0;
+        }
+    }
+
+
+    function collapseAllCards(exceptCard = null) {
+
+        getAllCards().forEach(
+            function (card) {
+
+                if (card !== exceptCard) {
+                    collapseCard(card);
+                }
+
+            }
+        );
+    }
+
+
+    function expandCard(card) {
+
+        if (!card) {
+            return;
+        }
+
+        collapseAllCards(card);
+
+        card.classList.add(
+            "is-expanded"
+        );
+
+        card.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+
+        /*
+         * Pause Owl autoplay while someone
+         * is reading the testimonial.
+         */
+        if (
+            window.jQuery &&
+            window.jQuery.fn &&
+            window.jQuery.fn.owlCarousel
+        ) {
+
+            window.jQuery(slider)
+                .trigger(
+                    "stop.owl.autoplay"
+                );
+        }
+    }
+
+
+    function resumeAutoplay() {
+
+        if (
+            window.jQuery &&
+            window.jQuery.fn &&
+            window.jQuery.fn.owlCarousel
+        ) {
+
+            window.jQuery(slider)
+                .trigger(
+                    "play.owl.autoplay",
+                    [5000]
+                );
+        }
+    }
+
+
+    /* =========================================================
+       PREPARE ACCESSIBILITY
+       Includes Owl clones too.
+    ========================================================= */
+
+    function prepareCards() {
+
+        getAllCards().forEach(
+            function (card) {
+
+                card.setAttribute(
+                    "tabindex",
+                    "0"
+                );
+
+                card.setAttribute(
+                    "role",
+                    "button"
+                );
+
+                if (
+                    !card.hasAttribute(
+                        "aria-expanded"
+                    )
+                ) {
+                    card.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+                }
+
+            }
+        );
+    }
+
+
+    prepareCards();
+
+
+    /* =========================================================
+       CLICK — EVENT DELEGATION
+       Works with Owl Carousel cloned cards.
+    ========================================================= */
+
+    slider.addEventListener(
+        "click",
+        function (event) {
+
+            const card =
+                event.target.closest(
+                    ".ff-testimonial-card"
+                );
+
+            if (!card) {
+                return;
+            }
+
+
+            /*
+             * Ignore actual links/buttons.
+             */
+            if (
+                event.target.closest(
+                    "a, button"
+                )
+            ) {
+                return;
+            }
+
+
+            const reviewWrap =
+                event.target.closest(
+                    ".ff-testimonial-review-wrap"
+                );
+
+
+            /*
+             * IMPORTANT:
+             * When expanded, allow clicking/dragging/
+             * selecting/scrolling inside the review
+             * without closing it.
+             */
+            if (
+                card.classList.contains(
+                    "is-expanded"
+                ) &&
+                reviewWrap
+            ) {
+                return;
+            }
+
+
+            if (
+                card.classList.contains(
+                    "is-expanded"
+                )
+            ) {
+
+                collapseCard(card);
+                resumeAutoplay();
+
+            } else {
+
+                expandCard(card);
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       KEYBOARD SUPPORT
+    ========================================================= */
+
+    slider.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key !== "Enter" &&
+                event.key !== " "
+            ) {
+                return;
+            }
+
+            const card =
+                event.target.closest(
+                    ".ff-testimonial-card"
+                );
+
+            if (!card) {
+                return;
+            }
+
+            event.preventDefault();
+
+
+            if (
+                card.classList.contains(
+                    "is-expanded"
+                )
+            ) {
+
+                collapseCard(card);
+                resumeAutoplay();
+
+            } else {
+
+                expandCard(card);
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       OWL CAROUSEL EVENTS
+       Collapse old card when changing slide.
+    ========================================================= */
+
+    if (
+        window.jQuery &&
+        window.jQuery.fn &&
+        window.jQuery.fn.owlCarousel
+    ) {
+
+        const $slider =
+            window.jQuery(slider);
+
+
+        /*
+         * When carousel starts moving,
+         * close expanded testimonial.
+         */
+        $slider.on(
+            "translate.owl.carousel",
+            function () {
+
+                collapseAllCards();
+
+            }
+        );
+
+
+        /*
+         * Owl may generate/re-generate clones.
+         * Prepare those cards too.
+         */
+        $slider.on(
+            "initialized.owl.carousel refreshed.owl.carousel translated.owl.carousel",
+            function () {
+
+                prepareCards();
+
+            }
+        );
+    }
+
+
+    /* =========================================================
+       AUTO COLLAPSE WHEN PAGE SCROLLS AWAY
+    ========================================================= */
+
+    let pageScrollTimer = null;
+
+
+    window.addEventListener(
+        "scroll",
+        function () {
+
+            clearTimeout(
+                pageScrollTimer
+            );
+
+
+            pageScrollTimer =
+                setTimeout(
+                    function () {
+
+                        const expandedCards =
+                            slider.querySelectorAll(
+                                ".ff-testimonial-card.is-expanded"
+                            );
+
+
+                        expandedCards.forEach(
+                            function (card) {
+
+                                const rect =
+                                    card.getBoundingClientRect();
+
+
+                                const visibleTop =
+                                    Math.max(
+                                        rect.top,
+                                        0
+                                    );
+
+
+                                const visibleBottom =
+                                    Math.min(
+                                        rect.bottom,
+                                        window.innerHeight
+                                    );
+
+
+                                const visibleHeight =
+                                    Math.max(
+                                        0,
+                                        visibleBottom -
+                                        visibleTop
+                                    );
+
+
+                                const visibleRatio =
+                                    rect.height > 0
+                                        ? visibleHeight /
+                                          rect.height
+                                        : 0;
+
+
+                                /*
+                                 * Only collapse once most
+                                 * of the card has left viewport.
+                                 */
+                                if (
+                                    visibleRatio < 0.35
+                                ) {
+
+                                    collapseCard(
+                                        card
+                                    );
+
+                                    resumeAutoplay();
+
+                                }
+
+                            }
+                        );
+
+                    },
+                    120
+                );
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    /* =========================================================
+       DO NOT LET INTERNAL REVIEW SCROLL
+       BUBBLE TO OWL / PAGE LOGIC
+    ========================================================= */
+
+    slider.addEventListener(
+        "wheel",
+        function (event) {
+
+            const reviewWrap =
+                event.target.closest(
+                    ".ff-testimonial-review-wrap"
+                );
+
+
+            if (
+                !reviewWrap ||
+                !reviewWrap.closest(
+                    ".ff-testimonial-card.is-expanded"
+                )
+            ) {
+                return;
+            }
+
+
+            const canScroll =
+                reviewWrap.scrollHeight >
+                reviewWrap.clientHeight;
+
+
+            if (!canScroll) {
+                return;
+            }
+
+
+            const atTop =
+                reviewWrap.scrollTop <= 0;
+
+
+            const atBottom =
+                Math.ceil(
+                    reviewWrap.scrollTop +
+                    reviewWrap.clientHeight
+                ) >=
+                reviewWrap.scrollHeight;
+
+
+            /*
+             * Keep wheel scrolling inside review
+             * while it still has content to scroll.
+             */
+            if (
+                (event.deltaY < 0 && !atTop) ||
+                (event.deltaY > 0 && !atBottom)
+            ) {
+
+                event.stopPropagation();
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+});
+</script>
+{% comment %} testimonial expand js end  {% endcomment %}
 
 {% endblock %}

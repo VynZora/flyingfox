@@ -44779,3 +44779,194 @@ and
 
 }
 /* navbar hieght reduce end  */
+
+
+
+
+
+/* testimonial expand css start */
+/* =========================================================
+   TESTIMONIAL EXPAND - STABLE VERSION
+========================================================= */
+
+.ff-testimonial-card {
+    cursor: pointer;
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+/* Normal review */
+
+.ff-testimonial-review-wrap {
+    position: relative;
+
+    margin:
+        12px
+        0
+        15px;
+
+    overflow: hidden;
+}
+
+
+.ff-testimonial-review {
+    margin: 0;
+
+    color: var(--body-text-color);
+
+    font-size: 14px;
+    line-height: 1.55;
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   EXPANDED CARD
+========================================================= */
+
+.ff-testimonial-card.is-expanded {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 28px 65px
+        rgba(84, 0, 0, 0.32);
+}
+
+
+/* Full review */
+
+.ff-testimonial-card.is-expanded
+.ff-testimonial-review {
+    display: block;
+
+    overflow: visible;
+
+    -webkit-line-clamp: unset;
+}
+
+
+/* Scroll only testimonial text */
+
+.ff-testimonial-card.is-expanded
+.ff-testimonial-review-wrap {
+    max-height: 190px;
+
+    padding-right: 8px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+
+    cursor: text;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.ff-testimonial-card.is-expanded
+.ff-testimonial-review-wrap::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.ff-testimonial-card.is-expanded
+.ff-testimonial-review-wrap::-webkit-scrollbar-track {
+    border-radius: 20px;
+
+    background:
+        rgba(195, 17, 3, 0.06);
+}
+
+
+.ff-testimonial-card.is-expanded
+.ff-testimonial-review-wrap::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+
+    background:
+        rgba(195, 17, 3, 0.45);
+}
+
+
+.ff-testimonial-card.is-expanded
+.ff-testimonial-review-wrap::-webkit-scrollbar-thumb:hover {
+    background:
+        var(--theme-color);
+}
+
+
+/* =========================================================
+   COLLAPSED FADE
+========================================================= */
+
+.ff-testimonial-card:not(.is-expanded)
+.ff-testimonial-review-wrap::after {
+    position: absolute;
+
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: 20px;
+
+    content: "";
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0),
+            #ffffff
+        );
+}
+
+
+.ff-testimonial-card.is-expanded
+.ff-testimonial-review-wrap::after {
+    display: none;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-testimonial-card.is-expanded
+    .ff-testimonial-review-wrap {
+        max-height: 220px;
+    }
+
+}
+
+
+@media (max-width: 575px) {
+
+    .ff-testimonial-review {
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+
+    .ff-testimonial-card.is-expanded
+    .ff-testimonial-review-wrap {
+        max-height: 200px;
+    }
+
+}
+/* testimonial expand css end  */
