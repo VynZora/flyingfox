@@ -116,6 +116,12 @@ path(
 ),
 
 path(
+    "dashboard/contact-enquiries/delete-all/",
+    views.contact_enquiry_delete_all,
+    name="contact_enquiry_delete_all",
+),
+
+path(
     "dashboard/contact-enquiries/<int:pk>/",
     views.contact_enquiry_detail,
     name="contact_enquiry_detail"
@@ -126,6 +132,8 @@ path(
     views.contact_enquiry_delete,
     name="contact_enquiry_delete"
 ),
+
+
 
 
 # ==========================================

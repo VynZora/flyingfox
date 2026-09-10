@@ -1416,7 +1416,56 @@ def contact_enquiry_delete(request, pk):
 
 
 
+def contact_enquiry_delete_all(request):
 
+    # =====================================================
+    # ONLY ALLOW POST
+    # =====================================================
+
+    if request.method != "POST":
+
+        messages.error(
+            request,
+            "Invalid request."
+        )
+
+        return redirect(
+            "contact_enquiry_list"
+        )
+
+
+    # =====================================================
+    # COUNT BEFORE DELETE
+    # =====================================================
+
+    total_contacts = (
+        ContactEnquiry.objects.count()
+    )
+
+
+    # =====================================================
+    # DELETE ALL CONTACT ENQUIRIES
+    # =====================================================
+
+    ContactEnquiry.objects.all().delete()
+
+
+    # =====================================================
+    # SUCCESS MESSAGE
+    # =====================================================
+
+    messages.success(
+        request,
+        (
+            f"{total_contacts} contact enquiries "
+            "deleted successfully."
+        )
+    )
+
+
+    return redirect(
+        "contact_enquiry_list"
+    )
 
 
 
