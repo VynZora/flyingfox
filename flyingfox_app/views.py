@@ -19213,7 +19213,6 @@ def blog_single(request):
 
 
 
-
 import requests
 
 from django.conf import settings
@@ -19224,16 +19223,37 @@ from django.shortcuts import render, redirect
 from .forms import ContactEnquiryForm
 
 
-def verify_turnstile_token(
-    token,
-    remote_ip=None,
-):
+# =========================================================
+# TURNSTILE VERIFICATION
+# =========================================================
+
+def verify_turnstile_token(token):
+
+    # =====================================================
+    # TOKEN
+    # =====================================================
 
     if not token:
+
+        print(
+            "TURNSTILE TOKEN MISSING"
+        )
+
         return False
 
 
-    if not settings.TURNSTILE_SECRET_KEY:
+    # =====================================================
+    # SECRET KEY
+    # =====================================================
+
+    secret_key = getattr(
+        settings,
+        "TURNSTILE_SECRET_KEY",
+        ""
+    )
+
+
+    if not secret_key:
 
         print(
             "TURNSTILE SECRET KEY MISSING"
@@ -19242,21 +19262,9 @@ def verify_turnstile_token(
         return False
 
 
-    payload = {
-
-        "secret":
-            settings.TURNSTILE_SECRET_KEY,
-
-        "response":
-            token,
-
-    }
-
-
-    if remote_ip:
-
-        payload["remoteip"] = remote_ip
-
+    # =====================================================
+    # VERIFY WITH CLOUDFLARE
+    # =====================================================
 
     try:
 
@@ -19267,7 +19275,10 @@ def verify_turnstile_token(
                 "turnstile/v0/siteverify"
             ),
 
-            data=payload,
+            data={
+                "secret": secret_key,
+                "response": token,
+            },
 
             timeout=5,
 
@@ -19283,14 +19294,20 @@ def verify_turnstile_token(
     except Exception as error:
 
         print(
-            "TURNSTILE ERROR:",
+            "TURNSTILE REQUEST ERROR:",
             repr(error)
         )
 
         return False
 
 
-    if not result.get("success"):
+    # =====================================================
+    # SUCCESS
+    # =====================================================
+
+    if not result.get(
+        "success"
+    ):
 
         print(
             "TURNSTILE FAILED:",
@@ -19303,22 +19320,61 @@ def verify_turnstile_token(
         return False
 
 
-    if (
-        result.get("action")
-        !=
-        "contact_enquiry"
-    ):
+    # =====================================================
+    # PRODUCTION SECURITY CHECKS
+    #
+    # Test Turnstile keys return testing values locally,
+    # so these checks are used only when DEBUG=False.
+    # =====================================================
 
-        print(
-            "TURNSTILE ACTION MISMATCH:",
+    if not settings.DEBUG:
+
+        # =================================================
+        # ACTION
+        # =================================================
+
+        if (
             result.get("action")
-        )
+            !=
+            "contact_enquiry"
+        ):
 
-        return False
+            print(
+                "TURNSTILE ACTION MISMATCH:",
+                result.get("action")
+            )
+
+            return False
+
+
+        # =================================================
+        # HOSTNAME
+        # =================================================
+
+        allowed_hostnames = {
+
+            "flyingfoxadventuremunnar.com",
+
+            "www.flyingfoxadventuremunnar.com",
+
+        }
+
+
+        if (
+            result.get("hostname")
+            not in
+            allowed_hostnames
+        ):
+
+            print(
+                "TURNSTILE HOSTNAME MISMATCH:",
+                result.get("hostname")
+            )
+
+            return False
 
 
     return True
-
 
 
 
@@ -19334,10 +19390,17 @@ def contact(request):
         # HONEYPOT
         # =================================================
 
-        if request.POST.get(
-            "website",
+        honeypot_value = request.POST.get(
+            "contact_company_website",
             ""
-        ).strip():
+        ).strip()
+
+
+        if honeypot_value:
+
+            print(
+                "CONTACT HONEYPOT BLOCKED REQUEST"
+            )
 
             return redirect(
                 "contact"
@@ -19354,14 +19417,8 @@ def contact(request):
         )
 
 
-        client_ip = request.META.get(
-            "REMOTE_ADDR"
-        )
-
-
         if not verify_turnstile_token(
-            token=turnstile_token,
-            remote_ip=client_ip,
+            turnstile_token
         ):
 
             messages.error(
@@ -19382,7 +19439,8 @@ def contact(request):
                 request,
                 "frontend/contact.html",
                 {
-                    "form": form,
+                    "form":
+                        form,
 
                     "turnstile_site_key":
                         settings.TURNSTILE_SITE_KEY,
@@ -19391,7 +19449,7 @@ def contact(request):
 
 
         # =================================================
-        # FORM VALIDATION
+        # FORM
         # =================================================
 
         form = ContactEnquiryForm(
@@ -19402,7 +19460,7 @@ def contact(request):
         if form.is_valid():
 
             # =============================================
-            # SAVE DATABASE
+            # 1. SAVE ENQUIRY TO DATABASE FIRST
             # =============================================
 
             enquiry = form.save(
@@ -19416,8 +19474,88 @@ def contact(request):
             enquiry.save()
 
 
+            print(
+                "CONTACT ENQUIRY SAVED:",
+                enquiry.id
+            )
+
+
             # =============================================
-            # SEND ONLY CUSTOMER CONFIRMATION
+            # 2. SEND ENQUIRY TO BUSINESS / ADMIN EMAIL
+            # =============================================
+
+            try:
+
+                admin_email = EmailMessage(
+
+                    subject=(
+                        "Flying Fox Enquiry: "
+                        f"{enquiry.subject}"
+                    ),
+
+                    body=f"""
+New website enquiry received.
+
+Enquiry ID:
+#{enquiry.id}
+
+Name:
+{enquiry.name}
+
+Email:
+{enquiry.email}
+
+Subject:
+{enquiry.subject}
+
+Message:
+
+{enquiry.message}
+
+----------------------------------------
+Flying Fox Adventure
+Website Contact Form
+""",
+
+                    from_email=
+                        settings.DEFAULT_FROM_EMAIL,
+
+                    to=[
+                        "booking@flyingfoxadventuremunnar.com"
+                    ],
+
+                    reply_to=[
+                        enquiry.email
+                    ],
+
+                )
+
+
+                admin_result = (
+                    admin_email.send(
+                        fail_silently=False
+                    )
+                )
+
+
+                print(
+                    "ADMIN ENQUIRY EMAIL SENT:",
+                    enquiry.id,
+                    admin_result
+                )
+
+
+            except Exception as error:
+
+                print(
+                    "ADMIN ENQUIRY EMAIL ERROR:",
+                    type(error).__name__,
+                    repr(error)
+                )
+
+
+            # =============================================
+            # 3. SEND CONFIRMATION TO CUSTOMER
             # =============================================
 
             try:
@@ -19434,8 +19572,9 @@ Hi {enquiry.name},
 
 Thank you for contacting Flying Fox Adventure.
 
-We have received your enquiry regarding:
+We have successfully received your enquiry.
 
+Subject:
 {enquiry.subject}
 
 Our team will review your message and get back to you as soon as possible.
@@ -19443,9 +19582,15 @@ Our team will review your message and get back to you as soon as possible.
 Your Enquiry ID:
 #{enquiry.id}
 
+Please keep this Enquiry ID for reference.
+
 Regards,
+
 Flying Fox Adventure
 Munnar, Kerala
+
+Email:
+booking@flyingfoxadventuremunnar.com
 """,
 
                     from_email=
@@ -19458,28 +19603,50 @@ Munnar, Kerala
                 )
 
 
-                customer_email.send(
-                    fail_silently=False
+                customer_result = (
+                    customer_email.send(
+                        fail_silently=False
+                    )
                 )
 
 
-                enquiry.email_sent = True
+                # =========================================
+                # CUSTOMER CONFIRMATION SUCCESS
+                # =========================================
+
+                if customer_result == 1:
+
+                    enquiry.email_sent = True
 
 
-                enquiry.save(
-                    update_fields=[
-                        "email_sent"
-                    ]
+                    enquiry.save(
+                        update_fields=[
+                            "email_sent"
+                        ]
+                    )
+
+
+                print(
+                    "CUSTOMER CONFIRMATION SENT:",
+                    enquiry.id,
+                    customer_result
                 )
 
 
             except Exception as error:
 
                 print(
-                    "CONTACT EMAIL ERROR:",
+                    "CUSTOMER EMAIL ERROR:",
+                    type(error).__name__,
                     repr(error)
                 )
 
+
+            # =============================================
+            # USER SUCCESS MESSAGE
+            #
+            # Enquiry has already been safely stored in DB.
+            # =============================================
 
             messages.success(
                 request,
@@ -19513,13 +19680,13 @@ Munnar, Kerala
         request,
         "frontend/contact.html",
         {
-            "form": form,
+            "form":
+                form,
 
             "turnstile_site_key":
                 settings.TURNSTILE_SITE_KEY,
         }
     )
-
 
 
 
