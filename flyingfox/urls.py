@@ -15,6 +15,8 @@ from flyingfox_app.sitemaps import (
     RideSitemap,
     BlogSitemap,
     OfferSitemap,
+    GalleryPageSitemap,
+    BlogPageSitemap,
 )
 
 
@@ -23,6 +25,8 @@ sitemaps = {
     "rides": RideSitemap,
     "blogs": BlogSitemap,
     "offers": OfferSitemap,
+    "gallery_pages": GalleryPageSitemap,
+    "blog_pages": BlogPageSitemap,
 }
 
 
