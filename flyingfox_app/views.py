@@ -19231,7 +19231,16 @@ def about(request):
 
 
 
+from django.core.paginator import Paginator, EmptyPage
+from django.http import Http404
+from django.shortcuts import render
+
+
 def blog(request, page=1):
+
+    # Do not allow old query-string pagination URLs
+    if "page" in request.GET:
+        raise Http404("Page not found")
 
     blogs_queryset = (
         Blog.objects
@@ -19244,7 +19253,10 @@ def blog(request, page=1):
         6,
     )
 
-    blogs = paginator.get_page(page)
+    try:
+        blogs = paginator.page(page)
+    except EmptyPage:
+        raise Http404("Page not found")
 
     return render(
         request,
