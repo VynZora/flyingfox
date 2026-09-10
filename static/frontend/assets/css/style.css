@@ -44307,3 +44307,52 @@ and
 
 }
 /* home faq end  */
+
+
+
+/* navbar hieght reduce start */
+/* ==========================================
+   REDUCE DESKTOP NAVBAR HEIGHT
+========================================== */
+
+@media (min-width: 992px) {
+
+    .header-2 .main-navigation .navbar > .container {
+        min-height: 70px !important;
+    }
+
+    .header-2 .main-navigation .navbar.fixed-top > .container {
+        min-height: 70px !important;
+    }
+}
+
+/* ==========================================
+   FINAL DESKTOP NAVBAR + LOGO FIT
+========================================== */
+@media (min-width: 992px) {
+
+    .header-2 .main-navigation .navbar > .container,
+    .header-2 .main-navigation .navbar.fixed-top > .container {
+        min-height: 70px !important;
+    }
+
+    /* Logo wrapper */
+    .header-2 .main-navigation .navbar .navbar-brand {
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin-right: 35px !important;
+        height: 70px !important;
+    }
+
+    /* Logo image */
+    .header-2 .main-navigation .navbar .navbar-brand img,
+    .header-2 .main-navigation .navbar.fixed-top .navbar-brand img {
+        width: 125px !important;
+        height: auto !important;
+        max-height: 52px !important;
+        object-fit: contain !important;
+        display: block !important;
+    }
+}
+/* navbar hieght reduce end  */
