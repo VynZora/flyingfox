@@ -4544,6 +4544,780 @@ body.ff-terms-open {
 
 }
 {% comment %} left side summery fix css end  {% endcomment %}
+
+
+{% comment %} responsive css start {% endcomment %}
+/* =========================================================
+   REVIEW PAGE
+   TABLET + MOBILE
+
+   <= 991px
+   - Hide complete left booking summary
+   - Show billing / payment section only
+   - Billing becomes full width
+========================================================= */
+
+@media (max-width: 991px) {
+
+    /* =====================================================
+       HIDE LEFT BOOKING SUMMARY COMPLETELY
+    ===================================================== */
+
+    .ff-review-summary-column {
+        display: none !important;
+    }
+
+
+    /* =====================================================
+       RIGHT BILLING COLUMN
+       TAKE COMPLETE AVAILABLE WIDTH
+    ===================================================== */
+
+    .ff-review-billing-column {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        flex:
+            0
+            0
+            100% !important;
+
+        margin-right: auto;
+        margin-left: auto;
+
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+
+    /* =====================================================
+       BILLING CARD
+    ===================================================== */
+
+    .ff-review-billing-column
+    .ff-billing-card {
+        display: block;
+
+        width: 100%;
+        max-width: 100%;
+
+        height: auto !important;
+        max-height: none !important;
+        min-height: 0;
+
+        overflow: visible !important;
+
+        margin: 0;
+    }
+
+
+    /* =====================================================
+       REMOVE DESKTOP FIXED-HEIGHT / SCROLL BEHAVIOR
+    ===================================================== */
+
+    .ff-review-billing-column
+    .ff-billing-card {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+    }
+
+
+    /* =====================================================
+       RIGHT CARD BODY
+    ===================================================== */
+
+    .ff-review-billing-column
+    .ff-card-body {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   Extra spacing adjustment
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-review-billing-column {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+
+    .ff-review-billing-column
+    .ff-billing-card {
+        border-radius: 20px;
+    }
+
+
+    .ff-review-billing-column
+    .ff-card-body {
+        padding:
+            22px
+            18px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 575px) {
+
+    .ff-review-billing-column
+    .ff-billing-card {
+        border-radius: 16px;
+    }
+
+
+    .ff-review-billing-column
+    .ff-card-body {
+        padding:
+            18px
+            14px;
+    }
+
+}
+{% comment %} responsive  {% endcomment %}
+
+
+
+{% comment %} side bar css start {% endcomment %}
+/* =========================================================
+   BOOKING REVIEW - FINAL RESPONSIVE PROGRESS BAR
+   Keeps all 6 steps inside the available width
+========================================================= */
+
+.ff-booking-progress {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto 32px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TRACK
+========================================================= */
+
+.ff-booking-progress .ff-progress-track {
+    display: flex;
+
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+
+    padding: 0;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 0;
+}
+
+
+/* =========================================================
+   EACH STEP GETS EXACTLY 1/6 WIDTH
+========================================================= */
+
+.ff-booking-progress .ff-progress-step {
+    position: relative;
+
+    width: 16.666666%;
+    min-width: 0;
+
+    flex:
+        0
+        0
+        16.666666%;
+
+    padding: 0 2px;
+
+    align-items: center;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CONNECTOR LINE
+========================================================= */
+
+.ff-booking-progress
+.ff-progress-step:not([data-step="review"])::after {
+
+    top: 22px;
+
+    left:
+        calc(
+            50% + 23px
+        );
+
+    width:
+        calc(
+            100% - 46px
+        );
+
+    height: 3px;
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 992px) {
+
+    .ff-booking-progress {
+        max-width: 720px;
+
+        padding:
+            22px
+            24px
+            20px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-icon {
+
+        width: 46px;
+        height: 46px;
+
+        flex:
+            0
+            0
+            46px;
+
+        font-size: 14px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-label {
+
+        margin-top: 9px;
+
+        font-size: 10px;
+
+        white-space: nowrap;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width: 56px;
+        height: 56px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .ff-booking-progress {
+        width: 100%;
+        max-width: 100%;
+
+        padding:
+            18px
+            14px
+            16px;
+
+        margin-bottom: 24px;
+
+        border-radius: 18px;
+
+        overflow: visible;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-track {
+
+        width: 100%;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step {
+
+        width: 16.666666%;
+        flex-basis: 16.666666%;
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-icon {
+
+        width: 40px;
+        height: 40px;
+
+        flex:
+            0
+            0
+            40px;
+
+        font-size: 12px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-label {
+
+        margin-top: 7px;
+
+        font-size: 9px;
+
+        white-space: nowrap;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step:not([data-step="review"])::after {
+
+        top: 19px;
+
+        left:
+            calc(
+                50% + 20px
+            );
+
+        width:
+            calc(
+                100% - 40px
+            );
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width: 48px;
+        height: 48px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-booking-progress {
+
+        width: 100%;
+        max-width: 100%;
+
+        padding:
+            15px
+            7px
+            13px;
+
+        margin:
+            0
+            auto
+            20px;
+
+        border-radius:
+            16px;
+
+        overflow:
+            visible;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-track {
+
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0;
+        padding: 0;
+
+        gap: 0;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step {
+
+        width:
+            16.666666%;
+
+        flex:
+            0
+            0
+            16.666666%;
+
+        padding:
+            0;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-icon {
+
+        width: 34px;
+        height: 34px;
+
+        flex:
+            0
+            0
+            34px;
+
+        font-size:
+            10px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-label {
+
+        margin-top:
+            6px;
+
+        font-size:
+            7.5px;
+
+        line-height:
+            1.15;
+
+        white-space:
+            nowrap;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step:not([data-step="review"])::after {
+
+        top:
+            16px;
+
+        left:
+            calc(
+                50% + 17px
+            );
+
+        width:
+            calc(
+                100% - 34px
+            );
+
+        height:
+            2px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width:
+            42px;
+
+        height:
+            42px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   <= 420px
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .ff-booking-progress {
+
+        padding:
+            14px
+            4px
+            12px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-icon {
+
+        width:
+            31px;
+
+        height:
+            31px;
+
+        flex-basis:
+            31px;
+
+        font-size:
+            9px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-label {
+
+        margin-top:
+            5px;
+
+        font-size:
+            6.8px;
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step:not([data-step="review"])::after {
+
+        top:
+            15px;
+
+        left:
+            calc(
+                50% + 15px
+            );
+
+        width:
+            calc(
+                100% - 30px
+            );
+    }
+
+
+    .ff-booking-progress
+    .ff-progress-step.active
+    .ff-progress-icon::after {
+
+        width:
+            39px;
+
+        height:
+            39px;
+    }
+
+}
+{% comment %} side bar css end  {% endcomment %}
+
+
+
+{% comment %} back to booking page css start {% endcomment %}
+/* =========================================================
+   REVIEW BACK BUTTON
+   MOBILE / TABLET ONLY
+========================================================= */
+
+.ff-mobile-review-back-wrap {
+    display: none;
+}
+
+
+@media (max-width: 991px) {
+
+    .ff-mobile-review-back-wrap {
+        display: block;
+
+        margin-bottom: 18px;
+    }
+
+
+    .ff-mobile-review-back {
+        display: inline-flex;
+
+        min-height: 42px;
+
+        padding:
+            9px
+            14px;
+
+        border:
+            1px solid
+            rgba(195, 17, 3, 0.22);
+
+        border-radius:
+            22px;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        color:
+            var(--ff-red);
+
+        background:
+            #fff8f7;
+
+        font-size:
+            11px;
+
+        font-weight:
+            900;
+
+        cursor:
+            pointer;
+
+        transition:
+            0.2s ease;
+    }
+
+
+    .ff-mobile-review-back:hover {
+        color:
+            #ffffff;
+
+        border-color:
+            var(--ff-red);
+
+        background:
+            var(--ff-red);
+    }
+
+}
+
+
+/* =========================================================
+   REVIEW PAGE BACK BUTTON
+   DESKTOP / TABLET / MOBILE
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   MOBILE BACK BUTTON HIDDEN ON DESKTOP
+--------------------------------------------------------- */
+
+.ff-mobile-review-back-wrap {
+    display: none;
+}
+
+
+/* ---------------------------------------------------------
+   RESET BUTTON DEFAULT STYLE
+   FOR DESKTOP CIRCLE BUTTON
+--------------------------------------------------------- */
+
+button.ff-back-button {
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   TABLET + MOBILE
+   <= 991px
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-mobile-review-back-wrap {
+        display: flex;
+
+        width: 100%;
+
+        margin-bottom: 20px;
+
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+
+    .ff-mobile-review-back {
+        display: inline-flex;
+
+        min-height: 42px;
+
+        padding:
+            9px
+            15px;
+
+        border:
+            1px solid
+            rgba(
+                195,
+                17,
+                3,
+                0.22
+            );
+
+        border-radius:
+            24px;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        color:
+            var(--ff-red);
+
+        background:
+            #fff7f5;
+
+        font-size:
+            11px;
+
+        font-weight:
+            800;
+
+        cursor:
+            pointer;
+
+        transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+
+    .ff-mobile-review-back:hover {
+        color:
+            #ffffff;
+
+        border-color:
+            var(--ff-red);
+
+        background:
+            var(--ff-red);
+
+        transform:
+            translateX(-2px);
+    }
+
+
+    .ff-mobile-review-back i {
+        font-size:
+            11px;
+    }
+
+}
+
+{% comment %} back to booking page end  {% endcomment %}
 </style>
 
 </head>
@@ -4752,7 +5526,7 @@ body.ff-terms-open {
                  LEFT SIDE
             ================================================== -->
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 ff-review-summary-column">
 
                 <section class="ff-review-card">
 
@@ -4768,15 +5542,14 @@ body.ff-terms-open {
 
                         <div class="ff-review-heading">
 
-                            <a
-                                href="{% url 'bookings' %}"
-                                class="ff-back-button"
-                                aria-label="Return to booking page"
-                            >
-
-                                <i class="fas fa-arrow-left"></i>
-
-                            </a>
+                            <button
+    type="button"
+    class="ff-back-button"
+    id="desktopReviewBackButton"
+    aria-label="Return to booking page"
+>
+    <i class="fas fa-arrow-left"></i>
+</button>
 
 
                             <h1>
@@ -5144,13 +5917,36 @@ body.ff-terms-open {
                  CUSTOMER / BILLING INFORMATION
             ================================================== -->
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 ff-review-billing-column">
 
 
                 <section class="ff-billing-card">
 
 
                     <div class="ff-card-body">
+
+
+
+
+                        <!-- =====================================================
+     MOBILE / TABLET BACK TO BOOKING
+===================================================== -->
+
+<div class="ff-mobile-review-back-wrap">
+
+    <button
+        type="button"
+        class="ff-mobile-review-back"
+        id="mobileReviewBackButton"
+    >
+        <i class="fas fa-arrow-left"></i>
+
+        <span>
+            Back to Booking
+        </span>
+    </button>
+
+</div>
 
 
                         <!-- =====================================
@@ -6211,6 +7007,64 @@ if (phoneInput) {
 
 
 
+/* =========================================================
+   REVIEW -> RETURN TO BOOKING EDITOR
+========================================================= */
+
+const desktopReviewBackButton =
+    document.getElementById(
+        "desktopReviewBackButton"
+    );
+
+
+const mobileReviewBackButton =
+    document.getElementById(
+        "mobileReviewBackButton"
+    );
+
+
+/* =========================================================
+   GO BACK TO BOOKING PAGE
+   AND REQUEST STATE RESTORE
+========================================================= */
+
+function returnToBookingEditor() {
+
+    window.location.href =
+        "{% url 'bookings' %}?restore_booking=1";
+
+}
+
+
+/* =========================================================
+   DESKTOP BACK
+========================================================= */
+
+desktopReviewBackButton?.addEventListener(
+    "click",
+    function () {
+
+        returnToBookingEditor();
+
+    }
+);
+
+
+/* =========================================================
+   TABLET / MOBILE BACK
+========================================================= */
+
+mobileReviewBackButton?.addEventListener(
+    "click",
+    function () {
+
+        returnToBookingEditor();
+
+    }
+);
+
+
+
 
 
         /* =====================================================
@@ -6933,17 +7787,27 @@ if (phoneError) {
 
 
                                     if (
-                                        verifyResponse.ok
-                                        &&
-                                        verifyData.success
-                                    ) {
+    verifyResponse.ok
+    &&
+    verifyData.success
+) {
 
-                                          window.location.href =
-                                             verifyData.redirect_url;
+    /* -----------------------------------------
+       BOOKING COMPLETED.
+       OLD EDIT/RESTORE STATE IS NO LONGER NEEDED.
+    ----------------------------------------- */
 
-                                        return;
+    sessionStorage.removeItem(
+        "ff_booking_restore"
+    );
 
-                                    }
+
+    window.location.href =
+        verifyData.redirect_url;
+
+
+    return;
+}
 
 
 
