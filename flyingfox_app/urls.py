@@ -472,6 +472,8 @@ path(
     name="blog"
 ),
 
+path("blog/page/<int:page>/", views.blog, name="blog_page"),
+
 path(
     "blog-single/",
     views.blog_single,

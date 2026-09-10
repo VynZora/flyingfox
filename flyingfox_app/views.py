@@ -19230,7 +19230,8 @@ def about(request):
 
 
 
-def blog(request):
+
+def blog(request, page=1):
 
     blogs_queryset = (
         Blog.objects
@@ -19243,9 +19244,7 @@ def blog(request):
         6,
     )
 
-    blogs = paginator.get_page(
-        request.GET.get("page")
-    )
+    blogs = paginator.get_page(page)
 
     return render(
         request,

@@ -7,12 +7,23 @@
 ========================================================= #}
 
 {% block title %}
+{% if blogs.number > 1 %}
+Munnar Adventure Blog - Page {{ blogs.number }} | Flying Fox
+{% else %}
 Munnar Adventure Blog | Zipline Tips, Guides & Updates
+{% endif %}
 {% endblock %}
 
 
+
+
+
 {% block meta_description %}
+{% if blogs.number > 1 %}
+Explore page {{ blogs.number }} of the Flying Fox Adventure Munnar blog for zipline guides, safety tips, adventure ideas, booking information and updates.
+{% else %}
 Explore the Flying Fox Adventure Munnar blog for zipline guides, safety tips, Munnar adventure ideas, booking information and the latest updates.
+{% endif %}
 {% endblock %}
 
 
@@ -303,94 +314,114 @@ active
 
         {% if blogs.paginator.num_pages > 1 %}
 
-        <div class="pagination-area">
+<div class="pagination-area">
 
-            <ul class="pagination">
+    <ul class="pagination">
 
-                {% if blogs.has_previous %}
+        {# PREVIOUS #}
+        {% if blogs.has_previous %}
 
-                <li class="page-item">
+        <li class="page-item">
 
-                    <a
-                        class="page-link"
-                        href="?page={{ blogs.previous_page_number }}"
-                        aria-label="Previous"
-                    >
+            {% if blogs.previous_page_number == 1 %}
 
-                        <span aria-hidden="true">
+                <a
+                    class="page-link"
+                    href="{% url 'blog' %}"
+                    aria-label="Previous"
+                >
+                    <span aria-hidden="true">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                </a>
 
-                            <i class="fas fa-arrow-left"></i>
+            {% else %}
 
-                        </span>
+                <a
+                    class="page-link"
+                    href="{% url 'blog_page' blogs.previous_page_number %}"
+                    aria-label="Previous"
+                >
+                    <span aria-hidden="true">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                </a>
 
-                    </a>
+            {% endif %}
+
+        </li>
+
+        {% endif %}
+
+
+        {# PAGE NUMBERS #}
+        {% for page_number in blogs.paginator.page_range %}
+
+            {% if page_number == blogs.number %}
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+                        {{ page_number }}
+                    </span>
 
                 </li>
 
-                {% endif %}
+            {% else %}
 
+                <li class="page-item">
 
-                {% for page_number in blogs.paginator.page_range %}
-
-                    {% if page_number == blogs.number %}
-
-                    <li class="page-item active">
-
-                        <span class="page-link">
-
-                            {{ page_number }}
-
-                        </span>
-
-                    </li>
-
-                    {% else %}
-
-                    <li class="page-item">
+                    {% if page_number == 1 %}
 
                         <a
                             class="page-link"
-                            href="?page={{ page_number }}"
+                            href="{% url 'blog' %}"
                         >
-
                             {{ page_number }}
-
                         </a>
 
-                    </li>
+                    {% else %}
+
+                        <a
+                            class="page-link"
+                            href="{% url 'blog_page' page_number %}"
+                        >
+                            {{ page_number }}
+                        </a>
 
                     {% endif %}
 
-                {% endfor %}
-
-
-                {% if blogs.has_next %}
-
-                <li class="page-item">
-
-                    <a
-                        class="page-link"
-                        href="?page={{ blogs.next_page_number }}"
-                        aria-label="Next"
-                    >
-
-                        <span aria-hidden="true">
-
-                            <i class="fas fa-arrow-right"></i>
-
-                        </span>
-
-                    </a>
-
                 </li>
 
-                {% endif %}
+            {% endif %}
 
-            </ul>
+        {% endfor %}
 
-        </div>
+
+        {# NEXT #}
+        {% if blogs.has_next %}
+
+        <li class="page-item">
+
+            <a
+                class="page-link"
+                href="{% url 'blog_page' blogs.next_page_number %}"
+                aria-label="Next"
+            >
+                <span aria-hidden="true">
+                    <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+        </li>
 
         {% endif %}
+
+    </ul>
+
+</div>
+
+{% endif %}
 
     </div>
 
