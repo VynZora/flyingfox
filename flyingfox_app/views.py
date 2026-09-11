@@ -2,6 +2,7 @@ import json
 import os
 import re
 import secrets
+import calendar
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -8372,6 +8373,585 @@ def booking_slot_availability(request):
         )
 
 
+
+
+# =========================================================
+# BOOKING CALENDAR AVAILABILITY
+#
+# Used only by the booking date calendar.
+#
+# STATUS:
+#
+# available
+#     Plenty of booking capacity remains.
+#
+# limited
+#     Some capacity remains, but availability is low.
+#
+# full
+#     Rides exist for this date, but no usable
+#     booking capacity remains.
+#
+# closed
+#     No active/priced/bookable ride exists for this date.
+#
+# past
+#     Date has already passed.
+# =========================================================
+
+@require_GET
+def booking_calendar_availability(request):
+
+    try:
+
+        # =====================================================
+        # 1. READ YEAR + MONTH
+        # =====================================================
+
+        year_raw = (
+            request.GET.get(
+                "year",
+                ""
+            )
+            .strip()
+        )
+
+        month_raw = (
+            request.GET.get(
+                "month",
+                ""
+            )
+            .strip()
+        )
+
+
+        try:
+
+            year = int(
+                year_raw
+            )
+
+            month = int(
+                month_raw
+            )
+
+        except (
+            TypeError,
+            ValueError,
+        ):
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid calendar month.",
+                    "dates": {},
+                },
+                status=400,
+            )
+
+
+        # =====================================================
+        # 2. VALIDATE YEAR + MONTH
+        # =====================================================
+
+        if (
+            year < 2000
+            or
+            year > 2100
+            or
+            month < 1
+            or
+            month > 12
+        ):
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Invalid calendar month.",
+                    "dates": {},
+                },
+                status=400,
+            )
+
+
+        today = timezone.localdate()
+
+
+        # =====================================================
+        # 3. GET NUMBER OF DAYS
+        # =====================================================
+
+        _first_weekday, days_in_month = (
+            calendar.monthrange(
+                year,
+                month,
+            )
+        )
+
+
+        # =====================================================
+        # 4. GET ACTIVE RIDES
+        # =====================================================
+
+        active_rides = list(
+
+            Ride.objects
+            .filter(
+                is_active=True
+            )
+            .order_by(
+                "name"
+            )
+
+        )
+
+
+        date_results = {}
+
+
+        # =====================================================
+        # 5. CHECK EVERY DATE
+        # =====================================================
+
+        for day in range(
+            1,
+            days_in_month + 1,
+        ):
+
+            booking_date = datetime(
+                year,
+                month,
+                day,
+            ).date()
+
+
+            date_key = (
+                booking_date.isoformat()
+            )
+
+
+            # =================================================
+            # PAST DATE
+            # =================================================
+
+            if (
+                booking_date < today
+            ):
+
+                date_results[
+                    date_key
+                ] = {
+                    "status": "past",
+                    "selectable": False,
+                    "remaining": 0,
+                    "capacity": 0,
+                    "available_rides": 0,
+                    "priced_rides": 0,
+                }
+
+                continue
+
+
+            # =================================================
+            # TOTALS FOR THIS DATE
+            # =================================================
+
+            total_capacity = 0
+
+            total_remaining = 0
+
+            available_ride_count = 0
+
+            priced_ride_count = 0
+
+            configured_slot_found = False
+
+
+            # =================================================
+            # CHECK EVERY ACTIVE RIDE
+            # =================================================
+
+            for ride in active_rides:
+
+                # =============================================
+                # VALID PRICE FOR DATE
+                # =============================================
+
+                ride_price_exists = (
+
+                    RidePrice.objects
+                    .filter(
+                        ride=ride,
+                        is_active=True,
+                        start_date__lte=
+                            booking_date,
+                        end_date__gte=
+                            booking_date,
+                    )
+                    .exists()
+
+                )
+
+
+                if (
+                    not ride_price_exists
+                ):
+
+                    continue
+
+
+                priced_ride_count += 1
+
+
+                # =============================================
+                # LOAD SLOT DATA USING EXISTING SLOT LOGIC
+                # =============================================
+
+                slot_data = (
+                    get_available_slots(
+                        ride=ride,
+                        booking_date=
+                            booking_date,
+                    )
+                )
+
+
+                if (
+                    not slot_data
+                ):
+
+                    continue
+
+
+                configured_slot_found = True
+
+
+                ride_has_remaining_capacity = (
+                    False
+                )
+
+
+                # =============================================
+                # CHECK EACH SLOT
+                # =============================================
+
+                for slot in slot_data:
+
+                    start_time = (
+                        slot.get(
+                            "start_time"
+                        )
+                    )
+
+
+                    if (
+                        not start_time
+                    ):
+
+                        continue
+
+
+                    # -----------------------------------------
+                    # TODAY:
+                    # IGNORE SLOT IF START TIME PASSED
+                    # -----------------------------------------
+
+                    if (
+                        _is_past_ride_start_time(
+                            booking_date=
+                                booking_date,
+                            start_time=
+                                start_time,
+                        )
+                    ):
+
+                        continue
+
+
+                    # -----------------------------------------
+                    # CAPACITY
+                    # -----------------------------------------
+
+                    try:
+
+                        slot_capacity = int(
+                            slot.get(
+                                "capacity",
+                                0
+                            )
+                            or
+                            0
+                        )
+
+                    except (
+                        TypeError,
+                        ValueError,
+                    ):
+
+                        slot_capacity = 0
+
+
+                    # -----------------------------------------
+                    # REMAINING
+                    # -----------------------------------------
+
+                    try:
+
+                        slot_remaining = int(
+                            slot.get(
+                                "remaining",
+                                0
+                            )
+                            or
+                            0
+                        )
+
+                    except (
+                        TypeError,
+                        ValueError,
+                    ):
+
+                        slot_remaining = 0
+
+
+                    slot_capacity = max(
+                        slot_capacity,
+                        0,
+                    )
+
+                    slot_remaining = max(
+                        slot_remaining,
+                        0,
+                    )
+
+
+                    total_capacity += (
+                        slot_capacity
+                    )
+
+                    total_remaining += (
+                        slot_remaining
+                    )
+
+
+                    if (
+                        slot_remaining > 0
+                    ):
+
+                        ride_has_remaining_capacity = (
+                            True
+                        )
+
+
+                if (
+                    ride_has_remaining_capacity
+                ):
+
+                    available_ride_count += 1
+
+
+            # =================================================
+            # 6. DETERMINE DATE STATUS
+            # =================================================
+
+            # -------------------------------------------------
+            # NO VALID PRICED RIDE
+            # -------------------------------------------------
+
+            if (
+                priced_ride_count == 0
+            ):
+
+                status = (
+                    "closed"
+                )
+
+                selectable = (
+                    False
+                )
+
+
+            # -------------------------------------------------
+            # PRICE EXISTS BUT NO SLOT DATA
+            # -------------------------------------------------
+
+            elif (
+                not configured_slot_found
+            ):
+
+                status = (
+                    "closed"
+                )
+
+                selectable = (
+                    False
+                )
+
+
+            # -------------------------------------------------
+            # SLOT DATA EXISTS BUT NO CAPACITY
+            # -------------------------------------------------
+
+            elif (
+                total_remaining <= 0
+                or
+                available_ride_count <= 0
+            ):
+
+                status = (
+                    "full"
+                )
+
+                selectable = (
+                    False
+                )
+
+
+            # -------------------------------------------------
+            # BOOKABLE
+            # -------------------------------------------------
+
+            else:
+
+                if (
+                    total_capacity > 0
+                ):
+
+                    remaining_ratio = (
+                        total_remaining
+                        /
+                        total_capacity
+                    )
+
+                else:
+
+                    remaining_ratio = (
+                        0
+                    )
+
+
+                # =============================================
+                # LIMITED AVAILABILITY
+                #
+                # Limited when:
+                # - only 5 or fewer total spaces remain
+                # OR
+                # - 25% or less capacity remains
+                # =============================================
+
+                if (
+                    total_remaining <= 5
+                    or
+                    remaining_ratio <= 0.25
+                ):
+
+                    status = (
+                        "limited"
+                    )
+
+                else:
+
+                    status = (
+                        "available"
+                    )
+
+
+                selectable = (
+                    True
+                )
+
+
+            # =================================================
+            # 7. SAVE DATE RESULT
+            # =================================================
+
+            date_results[
+                date_key
+            ] = {
+
+                "status":
+                    status,
+
+                "selectable":
+                    selectable,
+
+                "remaining":
+                    total_remaining,
+
+                "capacity":
+                    total_capacity,
+
+                "available_rides":
+                    available_ride_count,
+
+                "priced_rides":
+                    priced_ride_count,
+            }
+
+
+        # =====================================================
+        # 8. SUCCESS RESPONSE
+        # =====================================================
+
+        return JsonResponse(
+            {
+
+                "success":
+                    True,
+
+                "year":
+                    year,
+
+                "month":
+                    month,
+
+                "dates":
+                    date_results,
+            }
+        )
+
+
+    except Exception as error:
+
+        print(
+            "\n================================"
+        )
+
+        print(
+            "BOOKING CALENDAR AVAILABILITY ERROR"
+        )
+
+        print(
+            "TYPE:",
+            type(error).__name__
+        )
+
+        print(
+            "ERROR:",
+            repr(error)
+        )
+
+        print(
+            "================================\n"
+        )
+
+
+        return JsonResponse(
+            {
+                "success":
+                    False,
+
+                "message":
+                    (
+                        "Unable to load booking "
+                        "calendar availability."
+                    ),
+
+                "dates":
+                    {},
+            },
+            status=500,
+        )
 
     
 def _booking_user_profile(request):

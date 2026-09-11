@@ -26,10 +26,23 @@ Book your Flying Fox Adventure in Munnar and enjoy an exciting zipline experienc
 
 .ff-booking-page{
     min-height:100vh;
-    padding:180px 0 90px;
+
+    padding:
+        28px
+        0
+        70px;
+
     background:
-        radial-gradient(circle at 5% 10%, rgba(195,17,3,.055), transparent 28%),
-        radial-gradient(circle at 95% 90%, rgba(195,17,3,.035), transparent 30%),
+        radial-gradient(
+            circle at 5% 10%,
+            rgba(195,17,3,.055),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 95% 90%,
+            rgba(195,17,3,.035),
+            transparent 30%
+        ),
         #f8f9fa;
 }
 
@@ -2353,43 +2366,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 
-/* =========================================================
-   LEFT + RIGHT CARD
-========================================================= */
 
-.ff-booking-info-card,
-.ff-booking-form-card {
-
-    width:
-        100%;
-
-    height:
-        var(
-            --ff-booking-card-height,
-            650px
-        ) !important;
-
-    max-height:
-        var(
-            --ff-booking-card-height,
-            650px
-        ) !important;
-
-    overflow-x:
-        hidden !important;
-
-    overflow-y:
-        auto !important;
-
-    overscroll-behavior:
-        contain;
-
-    scrollbar-width:
-        thin;
-
-    -webkit-overflow-scrolling:
-        touch;
-}
 
 
 /* =========================================================
@@ -7008,37 +6985,6 @@ body.ff-message-open {
 
 
 
-{% comment %} navbar hide css start {% endcomment %}
-/* =========================================================
-   BOOKING PAGE SMART NAVBAR
-========================================================= */
-
-.ff-booking-smart-navbar {
-
-    transition:
-        transform 0.32s ease,
-        opacity 0.25s ease;
-
-    will-change:
-        transform;
-}
-
-
-.ff-booking-smart-navbar.ff-navbar-hidden {
-
-    transform:
-        translateY(
-            -115%
-        );
-
-    opacity: 0;
-
-    pointer-events: none;
-}
-{% comment %} navbar hide css end {% endcomment %}
-
-
-
 {% comment %}  {% endcomment %}
 /* =========================================================
    ALL RIDES ADDED BUTTON
@@ -9876,256 +9822,7 @@ strong {
 ========================================================= */
 
 
-/* =========================================================
-   PREFERRED TIME SECTION
-========================================================= */
 
-.ff-preferred-slot-section {
-
-    margin-top:
-        14px;
-
-    padding:
-        15px;
-
-    border:
-        1px solid
-        rgba(
-            195,
-            17,
-            3,
-            0.17
-        );
-
-    border-radius:
-        16px;
-
-    background:
-        #fffafa;
-}
-
-
-.ff-preferred-slot-heading {
-
-    margin-bottom:
-        12px;
-}
-
-
-.ff-preferred-slot-heading
-small {
-
-    display:
-        block;
-
-    margin-bottom:
-        3px;
-
-    color:
-        var(--ff-red);
-
-    font-size:
-        8px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        .5px;
-
-    text-transform:
-        uppercase;
-}
-
-
-.ff-preferred-slot-heading
-strong {
-
-    display:
-        block;
-
-    color:
-        var(--ff-dark);
-
-    font-size:
-        14px;
-
-    font-weight:
-        900;
-}
-
-
-/* =========================================================
-   PREFERRED TIME CARD
-========================================================= */
-
-.ff-preferred-slot-card {
-
-    position:
-        relative;
-
-    display:
-        flex;
-
-    min-width:
-        0;
-
-    min-height:
-        70px;
-
-    padding:
-        11px
-        34px
-        11px
-        12px;
-
-    border:
-        1px solid
-        #dfe4e8;
-
-    border-radius:
-        13px;
-
-    flex-direction:
-        column;
-
-    align-items:
-        flex-start;
-
-    justify-content:
-        center;
-
-    color:
-        var(--ff-dark);
-
-    background:
-        #ffffff;
-
-    cursor:
-        pointer;
-
-    transition:
-        .2s ease;
-}
-
-
-.ff-preferred-slot-card:hover {
-
-    border-color:
-        rgba(
-            195,
-            17,
-            3,
-            0.35
-        );
-
-    background:
-        #fff8f7;
-}
-
-
-.ff-preferred-slot-card.selected {
-
-    border:
-        2px solid
-        var(--ff-red);
-
-    background:
-        var(--ff-red-soft);
-
-    box-shadow:
-        0 0 0
-        3px
-        rgba(
-            195,
-            17,
-            3,
-            0.08
-        );
-}
-
-
-.ff-preferred-slot-card
-strong {
-
-    color:
-        var(--ff-dark);
-
-    font-size:
-        12px;
-
-    font-weight:
-        900;
-}
-
-
-.ff-preferred-slot-card
-small {
-
-    margin-top:
-        3px;
-
-    color:
-        #7f8994;
-
-    font-size:
-        7px;
-
-    font-weight:
-        700;
-}
-
-
-/* =========================================================
-   RADIO CIRCLE
-========================================================= */
-
-.ff-preferred-slot-radio {
-
-    position:
-        absolute;
-
-    top:
-        10px;
-
-    right:
-        10px;
-
-    width:
-        17px;
-
-    height:
-        17px;
-
-    border:
-        2px solid
-        #d0d5da;
-
-    border-radius:
-        50%;
-
-    background:
-        #ffffff;
-}
-
-
-.ff-preferred-slot-card.selected
-.ff-preferred-slot-radio {
-
-    border-color:
-        var(--ff-red);
-
-    background:
-        var(--ff-red);
-
-    box-shadow:
-        inset
-        0
-        0
-        0
-        4px
-        #ffffff;
-}
 
 
 /* =========================================================
@@ -10696,6 +10393,681 @@ span {
     line-height:
         1.45;
 }
+
+
+
+
+/* =========================================================
+   FINAL TIME SLOT UI FIX
+   KEEP THIS AT THE END OF booking.html CSS
+========================================================= */
+
+
+/* =========================================================
+   TIME SLOT SECTION
+========================================================= */
+
+.ff-preferred-slot-section {
+    width: 100%;
+    padding: 18px;
+    border: 1px solid rgba(195, 17, 3, 0.18);
+    border-radius: 18px;
+    background: #fffafa;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.ff-preferred-slot-heading {
+    margin-bottom: 18px;
+}
+
+.ff-preferred-slot-heading small {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--ff-red);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.ff-preferred-slot-heading strong {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--ff-dark);
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1.3;
+}
+
+.ff-preferred-slot-heading p {
+    margin: 0;
+    color: #697481;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   TIME GRID
+========================================================= */
+
+.ff-preferred-time-grid {
+    display: grid;
+    width: 100%;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+/* =========================================================
+   TIME CARD
+========================================================= */
+
+.ff-preferred-slot-card {
+    position: relative;
+
+    display: flex;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 82px;
+
+    padding:
+        15px
+        12px;
+
+    border:
+        1px solid
+        #9edaae;
+
+    border-radius:
+        14px;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap: 5px;
+
+    color:
+        #173326;
+
+    background:
+        #effbf3;
+
+    text-align:
+        center;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 4px 12px
+        rgba(22, 128, 58, 0.05);
+
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+
+/* =========================================================
+   TIME TEXT
+========================================================= */
+
+.ff-preferred-slot-card strong {
+    display: block;
+
+    margin: 0;
+
+    color:
+        inherit;
+
+    font-size:
+        15px;
+
+    font-weight:
+        900;
+
+    line-height:
+        1.2;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   SMALL STATUS TEXT
+========================================================= */
+
+.ff-preferred-slot-card small {
+    display: block;
+
+    margin: 0;
+
+    color:
+        #5f7566;
+
+    font-size:
+        8px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.35;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   GREEN STATUS DOT
+========================================================= */
+
+.ff-preferred-slot-card.available::after {
+    content: "";
+
+    position:
+        absolute;
+
+    right:
+        9px;
+
+    bottom:
+        9px;
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
+
+    background:
+        #1eb94e;
+}
+
+
+/* =========================================================
+   RADIO
+========================================================= */
+
+.ff-preferred-slot-radio {
+    position:
+        absolute;
+
+    top:
+        9px;
+
+    right:
+        9px;
+
+    width:
+        17px;
+
+    height:
+        17px;
+
+    border:
+        2px solid
+        #71c58a;
+
+    border-radius:
+        50%;
+
+    background:
+        #ffffff;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.ff-preferred-slot-card:hover {
+    border-color:
+        #39ad5a;
+
+    background:
+        #e8f9ed;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(22, 128, 58, 0.10);
+}
+
+
+/* =========================================================
+   SELECTED TIME
+========================================================= */
+
+.ff-preferred-slot-card.selected {
+    border:
+        2px solid
+        var(--ff-red);
+
+    color:
+        #ffffff;
+
+    background:
+        var(--ff-red);
+
+    box-shadow:
+        0 9px 22px
+        rgba(195, 17, 3, 0.20);
+
+    transform:
+        none;
+}
+
+
+.ff-preferred-slot-card.selected strong {
+    color:
+        #ffffff;
+}
+
+
+.ff-preferred-slot-card.selected small {
+    color:
+        rgba(255, 255, 255, 0.88);
+}
+
+
+.ff-preferred-slot-card.selected::after {
+    background:
+        #ffffff;
+}
+
+
+.ff-preferred-slot-card.selected
+.ff-preferred-slot-radio {
+    border-color:
+        #ffffff;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        inset
+        0
+        0
+        0
+        4px
+        var(--ff-red);
+}
+
+
+/* =========================================================
+   STATUS LEGEND
+========================================================= */
+
+.ff-time-status-legend {
+    display: flex;
+
+    width: 100%;
+
+    margin-top:
+        16px;
+
+    padding-top:
+        13px;
+
+    border-top:
+        1px solid
+        #e8eaed;
+
+    flex-wrap:
+        wrap;
+
+    align-items:
+        center;
+
+    gap:
+        10px
+        18px;
+}
+
+
+.ff-time-status-legend > span {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        #626d79;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+}
+
+
+.ff-time-dot {
+    display:
+        inline-block;
+
+    width:
+        9px;
+
+    height:
+        9px;
+
+    flex:
+        0
+        0
+        9px;
+
+    border-radius:
+        50%;
+}
+
+
+.ff-time-dot.available {
+    background:
+        #1eb94e;
+}
+
+
+.ff-time-dot.selected {
+    background:
+        var(--ff-red);
+}
+
+
+.ff-time-dot.unavailable {
+    background:
+        #8a9198;
+}
+
+
+/* =========================================================
+   TABLET
+   IMPORTANT: USE 2 COLUMNS, NOT 4
+========================================================= */
+
+@media (
+    max-width: 991px
+) {
+
+    .ff-preferred-time-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap:
+            10px;
+    }
+
+
+    .ff-preferred-slot-card {
+        min-height:
+            76px;
+    }
+
+
+    .ff-preferred-slot-card strong {
+        font-size:
+            14px;
+    }
+
+
+    .ff-preferred-slot-section {
+        padding:
+            16px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (
+    max-width: 575px
+) {
+
+    .ff-preferred-slot-section {
+        padding:
+            14px;
+    }
+
+
+    .ff-preferred-time-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap:
+            9px;
+    }
+
+
+    .ff-preferred-slot-card {
+        min-height:
+            68px;
+
+        padding:
+            12px
+            9px;
+    }
+
+
+    .ff-preferred-slot-card strong {
+        font-size:
+            13px;
+    }
+
+
+    .ff-preferred-slot-card small {
+        font-size:
+            8px;
+    }
+
+
+    .ff-time-status-legend {
+        gap:
+            8px
+            12px;
+    }
+
+
+    .ff-time-status-legend > span {
+        font-size:
+            9px;
+    }
+
+}
+
+
+
+
+/* =========================================================
+   TIME INFORMATION BOX FIX
+========================================================= */
+
+.ff-slot-intro {
+    display:
+        flex;
+
+    width:
+        100%;
+
+    margin-bottom:
+        16px;
+
+    padding:
+        15px
+        16px;
+
+    border:
+        1px solid
+        #e4e7eb;
+
+    border-radius:
+        15px;
+
+    align-items:
+        flex-start;
+
+    gap:
+        12px;
+
+    background:
+        #fafbfc;
+}
+
+
+.ff-slot-intro-icon {
+    display:
+        flex !important;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    min-width:
+        38px;
+
+    flex:
+        0
+        0
+        38px;
+
+    border-radius:
+        50%;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--ff-red);
+
+    background:
+        var(--ff-red-soft);
+
+    font-size:
+        14px;
+}
+
+
+.ff-slot-intro-icon i {
+    position:
+        static !important;
+
+    display:
+        block;
+
+    margin:
+        0 !important;
+
+    padding:
+        0 !important;
+
+    color:
+        inherit;
+
+    font-size:
+        14px;
+
+    line-height:
+        1;
+
+    transform:
+        none !important;
+}
+
+
+.ff-slot-intro > div {
+    min-width:
+        0;
+
+    flex:
+        1;
+}
+
+
+.ff-slot-intro strong {
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--ff-dark);
+
+    font-size:
+        13px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-slot-intro > div > span {
+    display:
+        block;
+
+    color:
+        #687281;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.55;
+}
+
+
+
+
+
+
 {% comment %} time slot css start {% endcomment %}
 
 
@@ -10706,44 +11078,7 @@ span {
    CONTENT SCROLLS INSIDE
 ========================================================= */
 
-/* =========================================================
-   LEFT + RIGHT CARDS
-   SAME FIXED AVAILABLE SCREEN HEIGHT
-========================================================= */
 
-.ff-booking-info-card,
-.ff-booking-form-card {
-
-    width:
-        100%;
-
-    height:
-        var(
-            --ff-booking-card-height,
-            650px
-        ) !important;
-
-    max-height:
-        var(
-            --ff-booking-card-height,
-            650px
-        ) !important;
-
-    overflow-x:
-        hidden !important;
-
-    overflow-y:
-        auto !important;
-
-    overscroll-behavior:
-        contain;
-
-    -webkit-overflow-scrolling:
-        touch;
-
-    scrollbar-width:
-        thin;
-}
 
 
 /* Chrome / Edge / Safari */
@@ -12949,6 +13284,654 @@ b small {
 }
 {% comment %} selected ride image css end  {% endcomment %}
 
+
+
+
+{% comment %} Date colonder css start {% endcomment %}
+/* =========================================================
+   BOOKING CALENDAR
+========================================================= */
+
+.ff-booking-calendar {
+    width: 100%;
+
+    padding: 18px;
+
+    border: 1px solid #e8edf2;
+    border-radius: 20px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.ff-calendar-head {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+
+.ff-calendar-head strong {
+    color: #102235;
+
+    font-size: 17px;
+    font-weight: 900;
+}
+
+
+.ff-calendar-nav {
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid #e1e7ed;
+    border-radius: 50%;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+
+    color: #c31103;
+
+    cursor: pointer;
+}
+
+
+.ff-calendar-nav:hover {
+    border-color: #c31103;
+    background: #fff3f1;
+}
+
+
+/* =========================================================
+   WEEKDAY LABELS
+========================================================= */
+
+.ff-calendar-weekdays {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    margin-bottom: 8px;
+}
+
+
+.ff-calendar-weekdays span {
+    text-align: center;
+
+    color: #7a8896;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   DATE GRID
+========================================================= */
+
+.ff-calendar-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   DATE BUTTON
+========================================================= */
+
+.ff-calendar-day {
+    position: relative;
+
+    min-height: 54px;
+
+    padding: 6px;
+
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f7f9fb;
+
+    color: #26384a;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.ff-calendar-day:hover:not(:disabled) {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 14px
+        rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   AVAILABLE
+========================================================= */
+
+.ff-calendar-day.available {
+    color: #0f7d32;
+
+    border-color: rgba(27, 181, 72, 0.35);
+
+    background: #ecfbf1;
+}
+
+
+.ff-calendar-day.available::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 5px;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #1ec64b;
+}
+
+
+/* =========================================================
+   LIMITED
+========================================================= */
+
+.ff-calendar-day.limited {
+    color: #856700;
+
+    border-color: rgba(231, 185, 22, 0.45);
+
+    background: #fff9db;
+}
+
+
+.ff-calendar-day.limited::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 5px;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #ffd500;
+}
+
+
+/* =========================================================
+   FULLY BOOKED
+========================================================= */
+
+.ff-calendar-day.full {
+    color: #b50000;
+
+    border-color: rgba(220, 35, 35, 0.35);
+
+    background: #fff0f0;
+
+    cursor: not-allowed;
+}
+
+
+.ff-calendar-day.full::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 5px;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #ff2a32;
+}
+
+
+/* =========================================================
+   CLOSED
+========================================================= */
+
+.ff-calendar-day.closed {
+    color: #ffffff;
+
+    border-color: #444;
+
+    background: #484848;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   PAST
+========================================================= */
+
+.ff-calendar-day.past {
+    color: #aeb6be;
+
+    border-color: #e5e8eb;
+
+    background: #f1f3f5;
+
+    cursor: not-allowed;
+
+    opacity: 0.65;
+}
+
+
+/* =========================================================
+   SELECTED
+========================================================= */
+
+.ff-calendar-day.selected {
+    color: #ffffff !important;
+
+    border-color: #c31103 !important;
+
+    background: #c31103 !important;
+
+    box-shadow:
+        0 6px 18px
+        rgba(195, 17, 3, 0.24);
+}
+
+
+.ff-calendar-day.selected::after {
+    background: #ffffff !important;
+}
+
+
+/* =========================================================
+   EMPTY GRID CELLS
+========================================================= */
+
+.ff-calendar-day.empty {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LEGEND
+========================================================= */
+
+.ff-calendar-legend {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px 16px;
+
+    margin-top: 16px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #edf0f3;
+}
+
+
+.ff-calendar-legend span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #667585;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+.ff-calendar-legend i {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+}
+
+
+.ff-calendar-legend .available {
+    background: #1ec64b;
+}
+
+
+.ff-calendar-legend .limited {
+    background: #ffd500;
+}
+
+
+.ff-calendar-legend .full {
+    background: #ff2a32;
+}
+
+
+.ff-calendar-legend .closed {
+    background: #484848;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 575px) {
+
+    .ff-booking-calendar {
+        padding: 12px;
+    }
+
+
+    .ff-calendar-grid {
+        gap: 5px;
+    }
+
+
+    .ff-calendar-day {
+        min-height: 42px;
+
+        padding: 4px;
+
+        border-radius: 9px;
+
+        font-size: 11px;
+    }
+
+
+    .ff-calendar-weekdays span {
+        font-size: 9px;
+    }
+
+
+    .ff-calendar-head strong {
+        font-size: 14px;
+    }
+
+}
+{% comment %} date calonder css end  {% endcomment %}
+
+
+
+
+{% comment %} desktop booking viewport start {% endcomment %}
+/* =========================================================
+   DESKTOP BOOKING VIEWPORT
+   PROGRESS BAR + BOOKING CARDS FIT SCREEN
+========================================================= */
+
+@media (min-width: 992px) {
+
+    /* -----------------------------------------
+       Progress is normal page content
+    ----------------------------------------- */
+
+    .ff-booking-progress {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        z-index: auto !important;
+
+        margin-bottom: 24px;
+    }
+
+
+    /* -----------------------------------------
+       Booking columns
+    ----------------------------------------- */
+
+    .ff-booking-row {
+        align-items: stretch;
+    }
+
+
+    .ff-booking-row > .col-lg-5,
+    .ff-booking-row > .col-lg-7 {
+        display: flex;
+        min-height: 0;
+    }
+
+
+    /* -----------------------------------------
+       LEFT + RIGHT CARDS
+
+       JavaScript calculates exact available
+       height from card top to viewport bottom.
+    ----------------------------------------- */
+
+    .ff-booking-info-card,
+    .ff-booking-form-card {
+        width: 100%;
+
+        height:
+            var(
+                --ff-desktop-booking-height,
+                500px
+            ) !important;
+
+        max-height:
+            var(
+                --ff-desktop-booking-height,
+                500px
+            ) !important;
+
+        min-height: 0 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        overscroll-behavior: contain;
+
+        scrollbar-width: thin;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    /* -----------------------------------------
+       Left side no longer sticky
+    ----------------------------------------- */
+
+    .ff-booking-info-card {
+        position: static !important;
+        top: auto !important;
+    }
+
+
+    /* -----------------------------------------
+       Scrollbars
+    ----------------------------------------- */
+
+    .ff-booking-info-card::-webkit-scrollbar,
+    .ff-booking-form-card::-webkit-scrollbar {
+        width: 5px;
+    }
+
+
+    .ff-booking-info-card::-webkit-scrollbar-track,
+    .ff-booking-form-card::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+
+    .ff-booking-info-card::-webkit-scrollbar-thumb,
+    .ff-booking-form-card::-webkit-scrollbar-thumb {
+        border-radius: 20px;
+        background: rgba(25, 39, 54, 0.18);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   FINAL BOOKING PAGE NAVBAR VISIBILITY
+========================================================= */
+
+
+/* =========================================================
+   DESKTOP
+   992px AND ABOVE
+   HIDE NAVBAR COMPLETELY
+========================================================= */
+
+@media (min-width: 992px) {
+
+    body header {
+        display: none !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET + MOBILE
+   991px AND BELOW
+   SHOW NORMAL NAVBAR
+========================================================= */
+
+@media (max-width: 991px) {
+
+    body header {
+        display: block !important;
+    }
+
+}
+
+@media (min-width: 992px) {
+
+    body header {
+        display: none !important;
+    }
+
+
+    .ff-booking-page {
+        padding-top: 20px !important;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+    body header {
+        display: block !important;
+    }
+
+
+    .ff-booking-page {
+        padding-top: 145px !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    body header {
+        display: block !important;
+    }
+
+
+    .ff-booking-page {
+        padding-top: 125px !important;
+    }
+
+}
+
+
+
+
+
+
+@media (max-width: 991px) {
+
+    .ff-booking-form-card {
+
+        width: 100%;
+
+        height:
+            var(
+                --ff-mobile-booking-height,
+                auto
+            ) !important;
+
+        max-height:
+            var(
+                --ff-mobile-booking-height,
+                none
+            ) !important;
+
+        min-height: 0 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        overscroll-behavior: contain;
+
+        -webkit-overflow-scrolling: touch;
+
+        scrollbar-width: thin;
+    }
+
+}
+
+{% comment %} desktop booking viewport end {% endcomment %}
+
+
 </style>
 {% endblock %}
 
@@ -13372,13 +14355,87 @@ b small {
                                         </div>
 
                                         <div class="ff-premium-control">
-                                            <input
-                                                type="date"
-                                                id="bookingDate"
-                                                name="booking_date"
-                                                min="{{ today|date:'Y-m-d' }}"
-                                                required
-                                            >
+                                           <input
+    type="hidden"
+    id="bookingDate"
+    name="booking_date"
+    required
+>
+
+
+<div class="ff-booking-calendar">
+
+    <div class="ff-calendar-head">
+
+        <button
+            type="button"
+            class="ff-calendar-nav"
+            id="calendarPrev"
+            aria-label="Previous month"
+        >
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <strong id="calendarMonthLabel">
+            Month Year
+        </strong>
+
+        <button
+            type="button"
+            class="ff-calendar-nav"
+            id="calendarNext"
+            aria-label="Next month"
+        >
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+    </div>
+
+
+    <div class="ff-calendar-weekdays">
+
+        <span>Sun</span>
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+
+    </div>
+
+
+    <div
+        class="ff-calendar-grid"
+        id="bookingCalendarGrid"
+    ></div>
+
+
+    <div class="ff-calendar-legend">
+
+        <span>
+            <i class="available"></i>
+            Available
+        </span>
+
+        <span>
+            <i class="limited"></i>
+            Limited
+        </span>
+
+        <span>
+            <i class="full"></i>
+            Fully Booked
+        </span>
+
+        <span>
+            <i class="closed"></i>
+            Closed
+        </span>
+
+    </div>
+
+</div>
                                         </div>
 
                                         <div class="ff-date-time-action">
@@ -13839,25 +14896,51 @@ b small {
 
         <div class="ff-preferred-slot-section">
 
-            <div class="ff-preferred-slot-heading">
+    <div class="ff-preferred-slot-heading">
 
-                <small>
-                    Preferred Start
-                </small>
+        <small>
+            START TIME
+        </small>
 
-                <strong>
-                    Select when you want to start
-                </strong>
+        <strong>
+            Select Available Time
+        </strong>
 
-            </div>
+        <p>
+            Choose your preferred starting time.
+            If a ride is unavailable at that exact time,
+            the next available time will be assigned automatically.
+        </p>
+
+    </div>
 
 
-            <div
-                class="ff-slot-list"
-                id="preferredSlotList"
-            ></div>
+    <div
+        class="ff-preferred-time-grid"
+        id="preferredSlotList"
+    ></div>
 
-        </div>
+
+    <div class="ff-time-status-legend">
+
+        <span>
+            <i class="ff-time-dot available"></i>
+            Available
+        </span>
+
+        <span>
+            <i class="ff-time-dot selected"></i>
+            Selected
+        </span>
+
+        <span>
+            <i class="ff-time-dot unavailable"></i>
+            Unavailable
+        </span>
+
+    </div>
+
+</div>
 
 
         <!-- =================================================
@@ -14514,7 +15597,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const bookingDate = document.getElementById("bookingDate");
     const dateContinue = document.getElementById("dateContinue");
-    const rideList = document.getElementById("rideList");
+    
+    
+
+    /* =========================================================
+   BOOKING CALENDAR ELEMENTS
+========================================================= */
+
+const bookingCalendarGrid =
+    document.getElementById(
+        "bookingCalendarGrid"
+    );
+
+
+const calendarMonthLabel =
+    document.getElementById(
+        "calendarMonthLabel"
+    );
+
+
+const calendarPrev =
+    document.getElementById(
+        "calendarPrev"
+    );
+
+
+const calendarNext =
+    document.getElementById(
+        "calendarNext"
+    );
 
 
 
@@ -14701,6 +15812,81 @@ const continueToReview =
 
 
 
+    /* =========================================================
+   BOOKING PREFERRED START TIMES
+
+   These are the start-time choices shown to customer.
+
+   IMPORTANT:
+   Actual ride availability still comes from Django.
+========================================================= */
+
+const preferredBookingTimes = [
+
+    {
+        value: "08:30",
+        label: "8:30 AM"
+    },
+
+    {
+        value: "09:30",
+        label: "9:30 AM"
+    },
+
+    {
+        value: "10:30",
+        label: "10:30 AM"
+    },
+
+    {
+        value: "11:30",
+        label: "11:30 AM"
+    },
+
+    {
+        value: "13:00",
+        label: "1:00 PM"
+    },
+
+    {
+        value: "14:00",
+        label: "2:00 PM"
+    },
+
+    {
+        value: "15:00",
+        label: "3:00 PM"
+    },
+
+    {
+        value: "16:00",
+        label: "4:00 PM"
+    }
+
+];
+
+
+    /* =========================================================
+   BOOKING CALENDAR STATE
+========================================================= */
+
+let calendarCurrentDate =
+    new Date();
+
+
+calendarCurrentDate =
+    new Date(
+        calendarCurrentDate.getFullYear(),
+        calendarCurrentDate.getMonth(),
+        1
+    );
+
+
+let calendarAvailability =
+    {};
+
+
+
 
     /* =========================================================
    SAVE BOOKING STATE BEFORE GOING TO REVIEW
@@ -14855,21 +16041,59 @@ let editingBookingItemsBackup =
     null;
 
 
-/*
- * Booking-wide date edit mode.
- *
- * We currently reset the complete booking
- * when the customer confirms a date change.
- */
+/* =========================================================
+   BOOKING-WIDE DATE EDIT STATE
+========================================================= */
+
 let editingBookingDate =
     false;
 
 
 /*
- * Kept for date-edit state.
+ * Complete backup before Date Edit.
+ *
+ * Used so the old booking stays safe while
+ * the customer is choosing another date.
  */
 let editingBookingDateBackup =
     null;
+
+
+/* =========================================================
+   BOOKING-WIDE TIME EDIT STATE
+
+   Used when customer clicks:
+
+   Review
+   -> Preferred Start
+   -> Edit
+========================================================= */
+
+let editingBookingTime =
+    false;
+
+
+/*
+ * Complete ride schedule before Time Edit.
+ *
+ * Needed so Back can restore the original schedule.
+ */
+let editingBookingTimeItemsBackup =
+    null;
+
+
+/*
+ * Original preferred start time.
+ */
+let editingBookingTimeStartBackup =
+    "";
+
+
+/*
+ * Original preferred start label.
+ */
+let editingBookingTimeLabelBackup =
+    "";    
 
 
     /* =========================================================
@@ -15055,6 +16279,36 @@ function restoreBookingFromReview() {
                 bookingState.bookingDate;
 
         }
+
+
+
+        /* =================================================
+   MOVE CALENDAR TO RESTORED BOOKING MONTH
+================================================= */
+
+if (
+    bookingState.bookingDate
+) {
+
+    const restoredDate =
+        new Date(
+            bookingState.bookingDate
+            +
+            "T12:00:00"
+        );
+
+
+    calendarCurrentDate =
+        new Date(
+            restoredDate.getFullYear(),
+            restoredDate.getMonth(),
+            1
+        );
+
+
+    loadBookingCalendarAvailability();
+
+}
 
 
         /* =================================================
@@ -15272,6 +16526,25 @@ function showBookingStep( step) {
         return;
 
     }
+
+    /* =====================================================
+   BOOKING-WIDE TIME EDIT PROTECTION
+
+   During Review -> Edit Time,
+   only Time and Review are valid destinations.
+===================================================== */
+
+if (
+    editingBookingTime
+    &&
+    step !== "slot"
+    &&
+    step !== "review"
+) {
+
+    return;
+
+}
 
     /* =====================================================
        MAP STEP NAME -> ELEMENT
@@ -15537,6 +16810,28 @@ if (
         step
     );
 
+
+    /* =====================================================
+   RESET INTERNAL FORM SCROLL WHEN CHANGING WIZARD STEP
+===================================================== */
+
+if (
+    form
+) {
+
+    requestAnimationFrame(
+        function () {
+
+            form.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
+
+}
+
 }
 
 
@@ -15572,6 +16867,32 @@ document.querySelectorAll(
                 if (!requestedStep) {
                     return;
                 }
+
+
+
+                /* =====================================================
+   BOOKING-WIDE TIME EDIT NAVIGATION
+
+   While editing only Preferred Start from Review,
+   do not allow progress bar navigation into
+   Date / Ride / Offer / Participants.
+
+   Customer should either:
+   - choose a new time and continue
+   - press Back to cancel and return to Review
+===================================================== */
+
+if (
+    editingBookingTime
+    &&
+    requestedStep !== "slot"
+    &&
+    requestedStep !== "review"
+) {
+
+    return;
+
+}
 
 
                 /* =====================================================
@@ -15683,7 +17004,9 @@ document.querySelectorAll(
                     button.dataset.wizardBack;
 
 
-                if (!targetStep) {
+                if (
+                    !targetStep
+                ) {
 
                     return;
 
@@ -15691,13 +17014,37 @@ document.querySelectorAll(
 
 
                 /* =================================================
-                   EDIT MODE
+                   CASE 1
+                   REVIEW -> EDIT PREFERRED TIME -> BACK
 
-                   If customer is editing a completed ride and
-                   presses Back from the Offer screen, cancel the
-                   edit and safely return to Review.
+                   IMPORTANT:
 
-                   DO NOT return to Ride Selection.
+                   Time is being edited as a BOOKING-WIDE value.
+
+                   DO NOT go to Participants.
+
+                   Restore the previous schedule
+                   and return directly to Review.
+                ================================================= */
+
+                if (
+                    editingBookingTime === true
+                    &&
+                    currentBookingStep === "slot"
+                ) {
+
+                    cancelBookingTimeEdit();
+
+                    return;
+
+                }
+
+
+                /* =================================================
+                   CASE 2
+                   EDIT ONE RIDE -> OFFER -> BACK
+
+                   Cancel that ride edit and return to Review.
                 ================================================= */
 
                 if (
@@ -15716,9 +17063,11 @@ document.querySelectorAll(
 
 
                 /* =================================================
-                   EXTRA EDIT MODE SAFETY
+                   CASE 3
+                   SINGLE-RIDE EDIT SAFETY
 
-                   Never allow Date or Ride Selection while editing.
+                   While editing one ride:
+                   Date and Ride selection are not allowed.
                 ================================================= */
 
                 if (
@@ -15737,7 +17086,15 @@ document.querySelectorAll(
 
 
                 /* =================================================
+                   CASE 4
                    NORMAL BOOKING NAVIGATION
+
+                   Examples:
+
+                   Ride -> Date
+                   Offer -> Ride
+                   Participants -> Offer
+                   Time -> Participants
                 ================================================= */
 
                 showBookingStep(
@@ -15750,6 +17107,7 @@ document.querySelectorAll(
     }
 
 );
+
 
     function lockPanel(panel, button) {
         if (!panel) return;
@@ -15788,6 +17146,674 @@ document.querySelectorAll(
             }
         );
     }
+
+
+    /* =========================================================
+   CALENDAR DATE KEY
+
+   Example:
+   2026-09-11
+========================================================= */
+
+function bookingCalendarDateKey(
+    year,
+    monthIndex,
+    day
+) {
+
+    return (
+        String(year)
+        +
+        "-"
+        +
+        String(
+            monthIndex + 1
+        ).padStart(
+            2,
+            "0"
+        )
+        +
+        "-"
+        +
+        String(day).padStart(
+            2,
+            "0"
+        )
+    );
+
+}
+
+
+/* =========================================================
+   CALENDAR PAST DATE
+========================================================= */
+
+function isCalendarPastDate(
+    year,
+    monthIndex,
+    day
+) {
+
+    const candidate =
+        new Date(
+            year,
+            monthIndex,
+            day
+        );
+
+
+    candidate.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    return candidate < today;
+
+}
+
+
+/* =========================================================
+   RENDER CALENDAR
+========================================================= */
+
+function renderBookingCalendar() {
+
+    if (
+        !bookingCalendarGrid
+        ||
+        !calendarMonthLabel
+    ) {
+
+        return;
+
+    }
+
+
+    const year =
+        calendarCurrentDate.getFullYear();
+
+
+    const monthIndex =
+        calendarCurrentDate.getMonth();
+
+
+    calendarMonthLabel.textContent =
+        new Date(
+            year,
+            monthIndex,
+            1
+        ).toLocaleDateString(
+            "en-IN",
+            {
+                month:
+                    "long",
+
+                year:
+                    "numeric"
+            }
+        );
+
+
+    bookingCalendarGrid.innerHTML =
+        "";
+
+
+    const firstWeekDay =
+        new Date(
+            year,
+            monthIndex,
+            1
+        ).getDay();
+
+
+    const daysInMonth =
+        new Date(
+            year,
+            monthIndex + 1,
+            0
+        ).getDate();
+
+
+    /* =====================================================
+       EMPTY CELLS
+    ===================================================== */
+
+    for (
+        let index = 0;
+        index < firstWeekDay;
+        index++
+    ) {
+
+        const emptyCell =
+            document.createElement(
+                "span"
+            );
+
+
+        emptyCell.className =
+            "ff-calendar-day empty";
+
+
+        bookingCalendarGrid.appendChild(
+            emptyCell
+        );
+
+    }
+
+
+    /* =====================================================
+       REAL DATES
+    ===================================================== */
+
+    for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+    ) {
+
+        const dateKey =
+            bookingCalendarDateKey(
+                year,
+                monthIndex,
+                day
+            );
+
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.type =
+            "button";
+
+
+        button.className =
+            "ff-calendar-day";
+
+
+        button.textContent =
+            day;
+
+
+        button.dataset.date =
+            dateKey;
+
+
+        /* =================================================
+           PAST
+        ================================================= */
+
+        if (
+            isCalendarPastDate(
+                year,
+                monthIndex,
+                day
+            )
+        ) {
+
+            button.classList.add(
+                "past"
+            );
+
+
+            button.disabled =
+                true;
+
+        }
+
+        else {
+
+            /* =================================================
+               GET SERVER STATUS
+            ================================================= */
+
+            const dateInfo =
+                calendarAvailability[
+                    dateKey
+                ]
+                ||
+                {
+                    status:
+                        "closed",
+
+                    selectable:
+                        false
+                };
+
+
+            const status =
+                dateInfo.status
+                ||
+                "closed";
+
+
+            button.classList.add(
+                status
+            );
+
+
+            /* =================================================
+               TOOLTIP
+            ================================================= */
+
+            if (
+                status === "available"
+            ) {
+
+                button.title =
+                    "Available for booking";
+
+            }
+
+            else if (
+                status === "limited"
+            ) {
+
+                button.title =
+                    "Limited availability";
+
+            }
+
+            else if (
+                status === "full"
+            ) {
+
+                button.title =
+                    "Fully booked";
+
+            }
+
+            else {
+
+                button.title =
+                    "Unavailable";
+
+            }
+
+
+            /* =================================================
+               CANNOT SELECT FULL / CLOSED
+            ================================================= */
+
+            if (
+                !dateInfo.selectable
+                ||
+                status === "full"
+                ||
+                status === "closed"
+            ) {
+
+                button.disabled =
+                    true;
+
+            }
+
+        }
+
+
+        /* =================================================
+           CURRENT SELECTED DATE
+        ================================================= */
+
+        if (
+            bookingDate
+            &&
+            bookingDate.value
+            ===
+            dateKey
+        ) {
+
+            button.classList.add(
+                "selected"
+            );
+
+        }
+
+
+        /* =================================================
+           SELECT DATE
+        ================================================= */
+
+        if (
+            !button.disabled
+        ) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        !bookingDate
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    bookingDate.value =
+                        dateKey;
+
+
+                    /*
+                     * Trigger your EXISTING bookingDate
+                     * change listener.
+                     *
+                     * This preserves all of your existing
+                     * booking reset/edit logic.
+                     */
+
+                    bookingDate.dispatchEvent(
+                        new Event(
+                            "change",
+                            {
+                                bubbles:
+                                    true
+                            }
+                        )
+                    );
+
+
+                    renderBookingCalendar();
+
+                }
+            );
+
+        }
+
+
+        bookingCalendarGrid.appendChild(
+            button
+        );
+
+    }
+
+
+    /* =====================================================
+       DISABLE PREVIOUS MONTH WHEN IT IS BEFORE CURRENT MONTH
+    ===================================================== */
+
+    if (
+        calendarPrev
+    ) {
+
+        const today =
+            new Date();
+
+
+        const thisMonth =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+
+        calendarPrev.disabled =
+            calendarCurrentDate
+            <=
+            thisMonth;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD MONTH AVAILABILITY
+========================================================= */
+
+async function loadBookingCalendarAvailability() {
+
+    if (
+        !bookingCalendarGrid
+    ) {
+
+        return;
+
+    }
+
+
+    const year =
+        calendarCurrentDate.getFullYear();
+
+
+    const month =
+        calendarCurrentDate.getMonth()
+        +
+        1;
+
+
+    bookingCalendarGrid.innerHTML = `
+
+        <div
+            style="
+                grid-column: 1 / -1;
+                padding: 24px;
+                text-align: center;
+                color: #73808d;
+                font-size: 12px;
+                font-weight: 700;
+            "
+        >
+
+            <i class="fas fa-spinner fa-spin"></i>
+
+            Loading availability...
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const url =
+            `{% url 'booking_calendar_availability' %}?year=${encodeURIComponent(year)}&month=${encodeURIComponent(month)}`;
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method:
+                        "GET",
+
+                    headers: {
+
+                        "X-Requested-With":
+                            "XMLHttpRequest"
+
+                    }
+                }
+            );
+
+
+        const contentType =
+            response.headers.get(
+                "content-type"
+            )
+            ||
+            "";
+
+
+        if (
+            !contentType.includes(
+                "application/json"
+            )
+        ) {
+
+            const responseText =
+                await response.text();
+
+
+            console.error(
+                "Calendar returned non-JSON response:",
+                response.status,
+                responseText
+            );
+
+
+            throw new Error(
+                "Unable to load calendar availability."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok
+            ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message
+                ||
+                "Unable to load calendar availability."
+            );
+
+        }
+
+
+        calendarAvailability =
+            data.dates
+            ||
+            {};
+
+
+        renderBookingCalendar();
+
+    }
+
+    catch (
+        error
+    ) {
+
+        console.error(
+            "BOOKING CALENDAR ERROR:",
+            error
+        );
+
+
+        calendarAvailability =
+            {};
+
+
+        bookingCalendarGrid.innerHTML = `
+
+            <div
+                style="
+                    grid-column: 1 / -1;
+                    padding: 20px;
+                    text-align: center;
+                    color: #c31103;
+                    font-size: 12px;
+                    font-weight: 700;
+                "
+            >
+
+                Unable to load calendar availability.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+
+/* =========================================================
+   PREVIOUS MONTH
+========================================================= */
+
+calendarPrev?.addEventListener(
+    "click",
+    function () {
+
+        const today =
+            new Date();
+
+
+        const currentMonth =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+
+        const previousMonth =
+            new Date(
+                calendarCurrentDate.getFullYear(),
+                calendarCurrentDate.getMonth() - 1,
+                1
+            );
+
+
+        if (
+            previousMonth < currentMonth
+        ) {
+
+            return;
+
+        }
+
+
+        calendarCurrentDate =
+            previousMonth;
+
+
+        loadBookingCalendarAvailability();
+
+    }
+);
+
+
+/* =========================================================
+   NEXT MONTH
+========================================================= */
+
+calendarNext?.addEventListener(
+    "click",
+    function () {
+
+        calendarCurrentDate =
+            new Date(
+                calendarCurrentDate.getFullYear(),
+                calendarCurrentDate.getMonth() + 1,
+                1
+            );
+
+
+        loadBookingCalendarAvailability();
+
+    }
+);
 
     /* =========================================================
        BOOKING MESSAGE POPUP
@@ -16003,8 +18029,6 @@ document.querySelectorAll(
                 if (!targetStep) {
                     return;
                 }
-
-
                 showBookingStep(
                     targetStep
                 );
@@ -16061,107 +18085,1064 @@ backToBookingReview?.addEventListener(
 );
 
 
-    /* =========================================================
-       DATE
-    ========================================================= */
+
+/* =========================================================
+   SMART BOOKING DATE CHANGE
+========================================================= */
+
+
+/* =========================================================
+   DEEP COPY
+========================================================= */
+
+function cloneBookingData(
+    value
+) {
+
+    return JSON.parse(
+        JSON.stringify(
+            value
+        )
+    );
+
+}
+
+
+/* =========================================================
+   FIND SERVER RIDE FOR OLD SELECTED RIDE
+========================================================= */
+
+function findAvailableRideForDate(
+    rides,
+    rideId
+) {
+
+    return (
+        rides.find(
+            function (
+                ride
+            ) {
+
+                return (
+                    String(
+                        ride.id
+                    )
+                    ===
+                    String(
+                        rideId
+                    )
+                );
+
+            }
+        )
+        ||
+        null
+    );
+
+}
+
+
+/* =========================================================
+   FIND OLD OFFER IN NEW DATE'S OFFER LIST
+========================================================= */
+
+function findOfferForNewDate(
+    ride,
+    offerId
+) {
+
+    if (
+        !ride
+        ||
+        !offerId
+    ) {
+
+        return null;
+
+    }
+
+
+    const offers =
+        Array.isArray(
+            ride.offers
+        )
+            ?
+            ride.offers
+            :
+            [];
+
+
+    return (
+        offers.find(
+            function (
+                offer
+            ) {
+
+                return (
+                    String(
+                        offer.id
+                    )
+                    ===
+                    String(
+                        offerId
+                    )
+                );
+
+            }
+        )
+        ||
+        null
+    );
+
+}
+
+
+/* =========================================================
+   RESET OFFER TO REGULAR TICKET
+
+   Used if old promotional offer is NOT available
+   on the newly selected date.
+========================================================= */
+
+function resetItemToRegularTicket(
+    item
+) {
+
+    item.selectedOfferData =
+        null;
+
+    item.offerId =
+        null;
+
+    item.offerName =
+        "Regular Ticket";
+
+    item.offerLabel =
+        "Regular price";
+
+    item.couponCode =
+        "";
+
+    item.couponValidated =
+        true;
+
+}
+
+
+/* =========================================================
+   CLEAR PARTICIPANTS FOR ONE RIDE
+
+   We use this only when the old promotional offer
+   cannot survive the date change.
+========================================================= */
+
+function clearItemParticipants(
+    item
+) {
+
+    item.weightGroups =
+        [];
+
+    item.quantity =
+        0;
+
+
+    item.subtotal =
+        0;
+
+    item.discount =
+        0;
+
+    item.total =
+        0;
+
+}
+
+
+/* =========================================================
+   CLEAR DATE-DEPENDENT SLOT DATA FOR ONE RIDE
+
+   Time allocation can NEVER be carried to another date.
+========================================================= */
+
+function clearItemDateSlotData(
+    item
+) {
+
+    item.selectedStart =
+        "";
+
+    item.selectedStartLabel =
+        "";
+
+    item.selectedEndLabel =
+        "";
+
+    item.slotAllocations =
+        [];
+
+}
+
+
+/* =========================================================
+   REBUILD OLD BOOKING AGAINST NEW DATE AVAILABILITY
+
+   RULES:
+
+   1. Ride unavailable
+      -> remove ride completely.
+
+   2. Ride available
+      -> preserve ride.
+
+   3. Promotional offer still available
+      -> preserve offer + participants.
+
+   4. Promotional offer unavailable
+      -> regular ticket + clear participants.
+
+   5. Regular ticket
+      -> keep participants.
+
+   6. Every surviving ride
+      -> clear old slot/time data.
+========================================================= */
+
+function reconcileBookingForNewDate(
+    rides
+) {
+
+    const availableRides =
+        Array.isArray(
+            rides
+        )
+            ?
+            rides
+            :
+            [];
+
+
+    const oldItems =
+        Array.isArray(
+            bookingState.items
+        )
+            ?
+            cloneBookingData(
+                bookingState.items
+            )
+            :
+            [];
+
+
+    const survivingItems =
+        [];
+
+
+    const removedRideNames =
+        [];
+
+
+    const resetOfferRideNames =
+        [];
+
+
+    oldItems.forEach(
+        function (
+            oldItem
+        ) {
+
+            /* -----------------------------------------
+               DOES OLD RIDE EXIST ON NEW DATE?
+            ----------------------------------------- */
+
+            const serverRide =
+                findAvailableRideForDate(
+                    availableRides,
+                    oldItem.rideId
+                );
+
+
+            /* -----------------------------------------
+               RIDE NO LONGER AVAILABLE
+            ----------------------------------------- */
+
+            if (
+                !serverRide
+            ) {
+
+                removedRideNames.push(
+                    oldItem.rideName
+                    ||
+                    "Ride"
+                );
+
+
+                return;
+
+            }
+
+
+            /* -----------------------------------------
+               START WITH OLD USER DATA
+            ----------------------------------------- */
+
+            const item =
+                cloneBookingData(
+                    oldItem
+                );
+
+
+            /* =================================================
+               UPDATE DATE-DEPENDENT RIDE INFORMATION
+               FROM SERVER
+
+               Important:
+               price may be different on new date.
+            ================================================= */
+
+            item.rideId =
+                Number(
+                    serverRide.id
+                );
+
+            item.rideName =
+                serverRide.name
+                ||
+                item.rideName
+                ||
+                "";
+
+            item.price =
+                Number(
+                    serverRide.price
+                    ||
+                    0
+                );
+
+            item.image =
+                serverRide.image
+                ||
+                "";
+
+
+            item.availableOffers =
+                Array.isArray(
+                    serverRide.offers
+                )
+                    ?
+                    serverRide.offers
+                    :
+                    [];
+
+
+            /* =================================================
+               CHECK OLD OFFER
+            ================================================= */
+
+            if (
+                oldItem.offerId
+            ) {
+
+                const serverOffer =
+                    findOfferForNewDate(
+                        serverRide,
+                        oldItem.offerId
+                    );
+
+
+                /* -----------------------------------------
+                   OLD OFFER STILL VALID
+                ----------------------------------------- */
+
+                if (
+                    serverOffer
+                ) {
+
+                    const normalizedOffer =
+                        offerDataFromServer(
+                            serverOffer
+                        );
+
+
+                    item.selectedOfferData =
+                        normalizedOffer;
+
+                    item.offerId =
+                        Number(
+                            serverOffer.id
+                        );
+
+                    item.offerName =
+                        normalizedOffer.name;
+
+                    item.offerLabel =
+                        normalizedOffer.label;
+
+
+                    /*
+                     * Keep existing coupon only when the
+                     * same offer survives.
+                     */
+
+                    if (
+                        normalizedOffer.couponRequired
+                    ) {
+
+                        const oldCoupon =
+                            String(
+                                oldItem.couponCode
+                                ||
+                                ""
+                            )
+                            .trim()
+                            .toUpperCase();
+
+
+                        const expectedCoupon =
+                            String(
+                                normalizedOffer.coupon
+                                ||
+                                ""
+                            )
+                            .trim()
+                            .toUpperCase();
+
+
+                        item.couponCode =
+                            oldCoupon;
+
+
+                        item.couponValidated =
+                            Boolean(
+                                oldCoupon
+                                &&
+                                expectedCoupon
+                                &&
+                                oldCoupon
+                                ===
+                                expectedCoupon
+                            );
+
+                    }
+                    else {
+
+                        item.couponCode =
+                            "";
+
+                        item.couponValidated =
+                            true;
+
+                    }
+
+                    /*
+                     * PARTICIPANTS REMAIN UNTOUCHED.
+                     *
+                     * This gives you exactly:
+                     * old ride + old offer valid
+                     * -> restore old riders/weights.
+                     */
+
+                }
+
+
+                /* -----------------------------------------
+                   OLD OFFER DOES NOT EXIST ON NEW DATE
+                ----------------------------------------- */
+
+                else {
+
+                    resetItemToRegularTicket(
+                        item
+                    );
+
+
+                    clearItemParticipants(
+                        item
+                    );
+
+
+                    resetOfferRideNames.push(
+                        item.rideName
+                    );
+
+                }
+
+            }
+
+
+            /* =================================================
+               OLD BOOKING USED REGULAR TICKET
+
+               Regular ticket remains valid while ride exists.
+               Preserve participants.
+            ================================================= */
+
+            else {
+
+                resetItemToRegularTicket(
+                    item
+                );
+
+            }
+
+
+            /* =================================================
+               DATE CHANGED:
+               OLD TIME CAN NEVER BE USED.
+            ================================================= */
+
+            clearItemDateSlotData(
+                item
+            );
+
+
+           /* =================================================
+   RECALCULATE PRICE USING NEW DATE PRICE
+
+   Participant quantity is preserved when valid.
+
+   Then run the existing offer calculator so a
+   surviving offer gets its correct discount using
+   the new ride price.
+================================================= */
+
+const quantity =
+    Number(
+        item.quantity
+        ||
+        0
+    );
+
+
+item.subtotal =
+    Number(
+        item.price
+        ||
+        0
+    )
+    *
+    quantity;
+
+
+if (
+    quantity > 0
+) {
+
+    const offerResult =
+        calculateOfferForItem(
+            item
+        );
+
+
+    item.discount =
+        Number(
+            offerResult.discount
+            ||
+            0
+        );
+
+
+    item.total =
+        Math.max(
+            0,
+            item.subtotal
+            -
+            item.discount
+        );
+
+}
+else {
+
+    item.discount =
+        0;
+
+    item.total =
+        0;
+
+}
+
+            survivingItems.push(
+                item
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       REPLACE BOOKING WITH ONLY VALID SURVIVORS
+    ===================================================== */
+
+    bookingState.items =
+        survivingItems;
+
+
+    /* =====================================================
+       OLD PREFERRED TIME IS INVALID ON NEW DATE
+    ===================================================== */
+
+    selectedPreferredStart =
+        "";
+
+    selectedPreferredLabel =
+        "";
+
+
+    rideSlotAvailability =
+        new Map();
+
+
+    /* =====================================================
+       RESET OFFER ACCORDION
+    ===================================================== */
+
+    expandedOfferRideId =
+        null;
+
+
+    /* =====================================================
+       RETURN CHANGE INFORMATION
+    ===================================================== */
+
+    return {
+
+        removedRideNames:
+            removedRideNames,
+
+        resetOfferRideNames:
+            resetOfferRideNames,
+
+        survivingCount:
+            survivingItems.length
+
+    };
+
+}
+
+
+
+
+
 
     async function loadBookingOptionsForDate() {
 
-        if (!bookingDate.value) {
-            showError(
-                "Please select your visit date."
-            );
-            return false;
+    if (
+        !bookingDate.value
+    ) {
+
+        showError(
+            "Please select your visit date."
+        );
+
+
+        return false;
+
+    }
+
+
+    const newDate =
+        bookingDate.value;
+
+
+    const oldDate =
+        bookingState.bookingDate
+        ||
+        "";
+
+
+    try {
+
+        if (
+            dateContinue
+        ) {
+
+            dateContinue.disabled =
+                true;
+
         }
 
-        try {
-            if (dateContinue) {
-                 dateContinue.disabled = true;
-                }
 
-            const url =
-                `{% url 'booking_options_for_date' %}?date=${encodeURIComponent(bookingDate.value)}`;
+        /* =====================================================
+           ASK DJANGO FOR VALID RIDES/OFFERS ON NEW DATE
+        ===================================================== */
 
-            const response = await fetch(
+        const url =
+            `{% url 'booking_options_for_date' %}?date=${encodeURIComponent(
+                newDate
+            )}`;
+
+
+        const response =
+            await fetch(
                 url,
                 {
-                    method: "GET",
+                    method:
+                        "GET",
+
                     headers: {
-                        "X-Requested-With": "XMLHttpRequest"
+                        "X-Requested-With":
+                            "XMLHttpRequest"
                     }
                 }
             );
 
-            const contentType =
-                response.headers.get("content-type") || "";
 
-            if (!contentType.includes("application/json")) {
-                const responseText = await response.text();
+        const contentType =
+            response.headers.get(
+                "content-type"
+            )
+            ||
+            "";
 
-                console.error(
-                    "Booking options returned non-JSON response:",
-                    response.status,
-                    responseText
-                );
 
-                throw new Error(
-                    "Unable to load rides for this date. Please check the Django server log."
-                );
-            }
+        if (
+            !contentType.includes(
+                "application/json"
+            )
+        ) {
 
-            const data = await response.json();
+            const responseText =
+                await response.text();
 
-            if (!response.ok || !data.success) {
-                throw new Error(
-                    data.message || "Unable to load available rides."
-                );
-            }
 
-            bookingState.bookingDate = bookingDate.value;
+            console.error(
+                "Booking options returned non-JSON response:",
+                response.status,
+                responseText
+            );
+
+
+            throw new Error(
+                "Unable to load rides for this date. Please check the Django server log."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok
+            ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message
+                ||
+                "Unable to load available rides."
+            );
+
+        }
+
+
+        /* =====================================================
+           SERVER RIDE DATA
+        ===================================================== */
+
+        availableRideData =
+            Array.isArray(
+                data.rides
+            )
+                ?
+                data.rides
+                :
+                [];
+
+
+        /* =====================================================
+           DETECT REAL DATE CHANGE
+        ===================================================== */
+
+        const dateActuallyChanged =
+            Boolean(
+                oldDate
+                &&
+                oldDate !== newDate
+            );
+
+
+        let reconciliationResult =
+            null;
+
+
+       /* =====================================================
+   RECONCILE EXISTING BOOKING WHEN DATE REALLY CHANGES
+
+   This must work for BOTH:
+
+   1. Review -> Edit Date
+   2. Normal wizard -> Back to Date
+
+   If selected rides already exist, validate them
+   against the newly loaded date.
+===================================================== */
+
+if (
+    dateActuallyChanged
+    &&
+    bookingState.items.length > 0
+) {
+
+    reconciliationResult =
+        reconcileBookingForNewDate(
+            availableRideData
+        );
+
+}
+
+
+        /* =====================================================
+           SET NEW BOOKING DATE ONLY AFTER SERVER SUCCESS
+        ===================================================== */
+
+        bookingState.bookingDate =
+            newDate;
+
+
+        /* =====================================================
+           DATE LABEL
+        ===================================================== */
+
+        if (
+            dateSelectedText
+        ) {
 
             dateSelectedText.textContent =
-                formatDate(bookingState.bookingDate);
+                formatDate(
+                    bookingState.bookingDate
+                );
 
-            dateSelected.classList.add("show");
+        }
 
-            availableRideData =
-            Array.isArray(
-               data.rides
-            )
-            ? data.rides
-            : [];
-            renderAvailableRides(
+
+        dateSelected?.classList.add(
+            "show"
+        );
+
+
+        /* =====================================================
+           DATE EDIT IS NOW COMMITTED
+        ===================================================== */
+
+        editingBookingDate =
+            false;
+
+
+        editingBookingDateBackup =
+            null;
+
+
+        /* =====================================================
+           OLD STORED REVIEW RESTORE DATA IS OUTDATED
+        ===================================================== */
+
+        sessionStorage.removeItem(
+            "ff_booking_restore"
+        );
+
+
+        /* =====================================================
+           SHOW ALL RIDES FOR NEW DATE
+
+           renderAvailableRides() already checks bookingState,
+           therefore surviving old rides automatically appear
+           SELECTED.
+        ===================================================== */
+
+        renderAvailableRides(
             availableRideData
-            );  
+        );
 
-            unlockPanel(
-                ridePanel,
-                ridePanelButton
-            );
 
-            updateBookingSummary();
+        /* =====================================================
+           REFRESH REVIEW DATA
+        ===================================================== */
 
-            /* =====================================================
-           WIZARD -> RIDE
-           ===================================================== */
+        renderSelectedAdventures();
 
-            showBookingStep(
-              "ride"
-            );
-            return true;
-        }
-        catch (error) {
-            showError(
-                error.message || "Unable to load available rides."
-            );
-            return false;
-        }
-        finally {
-           if (dateContinue) {
-                dateContinue.disabled = false;
+        updateBookingSummary();
+
+
+        /* =====================================================
+           UNLOCK RIDE STEP
+        ===================================================== */
+
+        unlockPanel(
+            ridePanel,
+            ridePanelButton
+        );
+
+
+        /*
+         * Later steps will be reached again naturally.
+         */
+
+        lockPanel(
+            offerPanel,
+            offerPanelButton
+        );
+
+
+        lockPanel(
+            participantPanel,
+            participantPanelButton
+        );
+
+
+        lockPanel(
+            slotPanel,
+            slotPanelButton
+        );
+
+
+        /* =====================================================
+           OPTIONAL INFORMATION ABOUT CHANGES
+        ===================================================== */
+
+        if (
+            reconciliationResult
+        ) {
+
+            const messages =
+                [];
+
+
+            if (
+                reconciliationResult
+                    .removedRideNames
+                    .length
+                >
+                0
+            ) {
+
+                messages.push(
+                    `${
+                        reconciliationResult
+                            .removedRideNames
+                            .join(", ")
+                    } ${
+                        reconciliationResult
+                            .removedRideNames
+                            .length === 1
+                            ?
+                            "is"
+                            :
+                            "are"
+                    } not available on the new date and ${
+                        reconciliationResult
+                            .removedRideNames
+                            .length === 1
+                            ?
+                            "was"
+                            :
+                            "were"
+                    } removed.`
+                );
+
             }
+
+
+            if (
+                reconciliationResult
+                    .resetOfferRideNames
+                    .length
+                >
+                0
+            ) {
+
+                messages.push(
+                    `The previous offer ${
+                        reconciliationResult
+                            .resetOfferRideNames
+                            .length === 1
+                            ?
+                            "is"
+                            :
+                            "are"
+                    } no longer available for ${
+                        reconciliationResult
+                            .resetOfferRideNames
+                            .join(", ")
+                    }. Please review the available offer again.`
+                );
+
+            }
+
+
+            if (
+                messages.length
+                >
+                0
+            ) {
+
+                showBookingMessage(
+                    messages.join(
+                        " "
+                    ),
+                    "warning",
+                    "Booking Updated"
+                );
+
+            }
+
         }
+
+
+        /* =====================================================
+           GO TO RIDE STEP
+        ===================================================== */
+
+        showBookingStep(
+            "ride"
+        );
+
+
+        return true;
+
     }
+
+
+    catch (
+        error
+    ) {
+
+        /*
+         * IMPORTANT:
+         *
+         * Because we didn't mutate bookingState before
+         * successful server response, the old booking
+         * remains safe when this request fails.
+         */
+
+        showError(
+            error.message
+            ||
+            "Unable to load available rides."
+        );
+
+
+        return false;
+
+    }
+
+
+    finally {
+
+        if (
+            dateContinue
+        ) {
+
+            dateContinue.disabled =
+                false;
+
+        }
+
+    }
+
+}
 
 /* =========================================================
    REVIEW -> EDIT DATE
@@ -16178,23 +19159,23 @@ editBookingDate?.addEventListener(
 
 
 /* =========================================================
-   VISIT DATE CHANGE
+   VISIT DATE INPUT CHANGE
 
-   Normal behavior:
-   If an existing unfinished booking changes its date,
-   all ride configuration is invalid and must restart.
+   IMPORTANT:
+   Selecting a candidate date does NOT mutate the booking.
+
+   Actual ride/offer reconciliation happens only after
+   Continue successfully gets availability from Django.
 ========================================================= */
 
 bookingDate?.addEventListener(
     "change",
     function () {
 
-        const newDate =
-            bookingDate.value || "";
-
-
-        const oldDate =
-            bookingState.bookingDate || "";
+        const candidateDate =
+            bookingDate.value
+            ||
+            "";
 
 
         /* -----------------------------------------
@@ -16202,57 +19183,15 @@ bookingDate?.addEventListener(
         ----------------------------------------- */
 
         if (
-            !newDate
+            !candidateDate
         ) {
 
             dateSelected?.classList.remove(
                 "show"
             );
 
+
             return;
-
-        }
-
-
-        /* =====================================================
-           DATE CHANGED WHILE BOOKING DATA EXISTS
-
-           Date is booking-wide, therefore previous selected
-           rides/offers/riders/slots are no longer retained.
-        ===================================================== */
-
-        if (
-            bookingState.items.length > 0
-            &&
-            oldDate
-            &&
-            oldDate !== newDate
-        ) {
-
-            bookingState.items =
-                [];
-
-
-            selectedPreferredStart =
-                "";
-
-            selectedPreferredLabel =
-                "";
-
-            rideSlotAvailability =
-                new Map();
-
-
-            renderSelectedAdventures();
-
-
-            resetCurrentRideBuilder(
-                false
-            );
-
-
-            currentRideOffers =
-                [];
 
         }
 
@@ -16267,7 +19206,7 @@ bookingDate?.addEventListener(
 
             dateSelectedText.textContent =
                 formatDate(
-                    newDate
+                    candidateDate
                 );
 
         }
@@ -16278,7 +19217,11 @@ bookingDate?.addEventListener(
         );
 
 
-        updateBookingSummary();
+        /* -----------------------------------------
+           REFRESH CALENDAR VISUAL SELECTION ONLY
+        ----------------------------------------- */
+
+        renderBookingCalendar();
 
     }
 );
@@ -16324,7 +19267,7 @@ dateContinue?.addEventListener(
 /* =========================================================
    REVIEW -> EDIT BOOKING TIME
 
-   Time is booking-wide.
+   This is a BOOKING-WIDE edit.
 
    Keep:
    - date
@@ -16335,7 +19278,11 @@ dateContinue?.addEventListener(
    - prices
 
    Recalculate:
+   - preferred start
    - ALL ride slots
+
+   IMPORTANT:
+   Save current schedule first so Back can cancel safely.
 ========================================================= */
 
 async function startEditingBookingTime() {
@@ -16353,9 +19300,41 @@ async function startEditingBookingTime() {
     }
 
 
-    /* -----------------------------------------
-       NOT A SINGLE-RIDE EDIT
-    ----------------------------------------- */
+    /* =====================================================
+       BACKUP CURRENT COMPLETE SCHEDULE
+    ===================================================== */
+
+    editingBookingTimeItemsBackup =
+        JSON.parse(
+            JSON.stringify(
+                bookingState.items
+            )
+        );
+
+
+    editingBookingTimeStartBackup =
+        selectedPreferredStart
+        ||
+        "";
+
+
+    editingBookingTimeLabelBackup =
+        selectedPreferredLabel
+        ||
+        "";
+
+
+    /* =====================================================
+       ENTER BOOKING-WIDE TIME EDIT MODE
+    ===================================================== */
+
+    editingBookingTime =
+        true;
+
+
+    /* =====================================================
+       THIS IS NOT A SINGLE-RIDE EDIT
+    ===================================================== */
 
     editingRideIndex =
         null;
@@ -16370,9 +19349,9 @@ async function startEditingBookingTime() {
     updateReviewEditNavigationState();
 
 
-    /* -----------------------------------------
+    /* =====================================================
        OPEN TIME STEP
-    ----------------------------------------- */
+    ===================================================== */
 
     unlockPanel(
         slotPanel,
@@ -16385,11 +19364,158 @@ async function startEditingBookingTime() {
     );
 
 
-    /* -----------------------------------------
-       LOAD ALL RIDES + CLEAR OLD ASSIGNMENTS
-    ----------------------------------------- */
+    /* =====================================================
+       LOAD CURRENT AVAILABILITY FOR ALL RIDES
+
+       This clears current assignments, but we have already
+       backed them up above.
+    ===================================================== */
 
     await loadAllRideSlots();
+
+}
+
+
+
+
+
+/* =========================================================
+   CANCEL BOOKING-WIDE TIME EDIT
+
+   Used when:
+   Review
+   -> Edit Time
+   -> Back
+
+   Restore:
+   - all old ride times
+   - preferred start
+   - preferred label
+========================================================= */
+
+function cancelBookingTimeEdit() {
+
+    if (
+        !editingBookingTime
+    ) {
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       RESTORE COMPLETE OLD RIDE SCHEDULE
+    ===================================================== */
+
+    if (
+        Array.isArray(
+            editingBookingTimeItemsBackup
+        )
+    ) {
+
+        bookingState.items =
+            JSON.parse(
+                JSON.stringify(
+                    editingBookingTimeItemsBackup
+                )
+            );
+
+    }
+
+
+    /* =====================================================
+       RESTORE OLD PREFERRED START
+    ===================================================== */
+
+    selectedPreferredStart =
+        editingBookingTimeStartBackup
+        ||
+        "";
+
+
+    selectedPreferredLabel =
+        editingBookingTimeLabelBackup
+        ||
+        "";
+
+
+    /* =====================================================
+       CLEAR TIME EDIT MODE
+    ===================================================== */
+
+    editingBookingTime =
+        false;
+
+
+    editingBookingTimeItemsBackup =
+        null;
+
+
+    editingBookingTimeStartBackup =
+        "";
+
+
+    editingBookingTimeLabelBackup =
+        "";
+
+
+    /* =====================================================
+       REBUILD REVIEW
+    ===================================================== */
+
+    renderSelectedAdventures();
+
+    updateBookingSummary();
+
+
+    /* =====================================================
+       RETURN DIRECTLY TO REVIEW
+    ===================================================== */
+
+    showBookingStep(
+        "review"
+    );
+
+}
+
+
+
+
+
+
+/* =========================================================
+   COMPLETE BOOKING-WIDE TIME EDIT
+
+   New schedule is valid.
+   Keep the new times and discard the old backup.
+========================================================= */
+
+function completeBookingTimeEdit() {
+
+    if (
+        !editingBookingTime
+    ) {
+
+        return;
+
+    }
+
+
+    editingBookingTime =
+        false;
+
+
+    editingBookingTimeItemsBackup =
+        null;
+
+
+    editingBookingTimeStartBackup =
+        "";
+
+
+    editingBookingTimeLabelBackup =
+        "";
 
 }
 
@@ -23009,6 +26135,11 @@ function getPreferredSlotChoices() {
 
 /* =========================================================
    RENDER COMMON PREFERRED TIMES
+
+   STATUS:
+   - available   = at least one selected ride can start
+                   at this time or continue from this time
+   - selected    = customer selected preferred start
 ========================================================= */
 
 function renderPreferredSlotChoices() {
@@ -23030,6 +26161,10 @@ function renderPreferredSlotChoices() {
         getPreferredSlotChoices();
 
 
+    /* =====================================================
+       NO START TIMES
+    ===================================================== */
+
     if (
         choices.length === 0
     ) {
@@ -23038,7 +26173,7 @@ function renderPreferredSlotChoices() {
 
             <div class="ff-slot-loading">
 
-                No start times are available
+                No available start times
                 for the selected date.
 
             </div>
@@ -23053,6 +26188,7 @@ function renderPreferredSlotChoices() {
             autoSlotMessage.textContent =
                 "No available start times were found.";
 
+
             autoSlotMessage.className =
                 "ff-slot-message show error";
 
@@ -23064,10 +26200,99 @@ function renderPreferredSlotChoices() {
     }
 
 
+    /* =====================================================
+       BUILD EACH TIME BUTTON
+    ===================================================== */
+
     choices.forEach(
         function (
             choice
         ) {
+
+            const normalizedTime =
+                normaliseSlotTime(
+                    choice.start_time
+                );
+
+
+            /* =================================================
+               CHECK HOW MANY RIDES HAVE THIS EXACT TIME
+               AVAILABLE
+            ================================================= */
+
+            let exactAvailableRideCount =
+                0;
+
+
+            let totalRideCount =
+                0;
+
+
+            rideSlotAvailability.forEach(
+                function (
+                    slots
+                ) {
+
+                    totalRideCount +=
+                        1;
+
+
+                    const exactSlot =
+                        (
+                            Array.isArray(
+                                slots
+                            )
+                                ?
+                                slots
+                                :
+                                []
+                        )
+                        .find(
+                            function (
+                                slot
+                            ) {
+
+                                return (
+                                    slot
+                                    &&
+                                    slot.available
+                                    &&
+                                    !slot.is_past
+                                    &&
+                                    normaliseSlotTime(
+                                        slot.start_time
+                                    )
+                                    ===
+                                    normalizedTime
+                                );
+
+                            }
+                        );
+
+
+                    if (
+                        exactSlot
+                    ) {
+
+                        exactAvailableRideCount +=
+                            1;
+
+                    }
+
+                }
+            );
+
+
+            /* =================================================
+               COMMON TIME IS STILL SELECTABLE
+
+               Your booking system can move an individual ride
+               to the next available time automatically.
+
+               Therefore we do NOT disable a preferred start
+               merely because every ride doesn't have that
+               exact start.
+            ================================================= */
 
             const button =
                 document.createElement(
@@ -23080,31 +26305,87 @@ function renderPreferredSlotChoices() {
 
 
             button.className =
-                "ff-preferred-slot-card";
+                "ff-preferred-slot-card available";
 
 
             button.dataset.startTime =
                 choice.start_time;
 
 
+            /* =================================================
+               DISPLAY STATUS
+            ================================================= */
+
+            let availabilityText =
+                "Available";
+
+
+            if (
+                totalRideCount > 0
+                &&
+                exactAvailableRideCount
+                ===
+                totalRideCount
+            ) {
+
+                availabilityText =
+                    "Available for all rides";
+
+            }
+
+            else if (
+                exactAvailableRideCount > 0
+            ) {
+
+                availabilityText =
+                    `${exactAvailableRideCount} ride${
+                        exactAvailableRideCount === 1
+                            ?
+                            ""
+                            :
+                            "s"
+                    } available here`;
+
+            }
+
+            else {
+
+                availabilityText =
+                    "Next available times will be assigned";
+
+            }
+
+
             button.innerHTML = `
 
-                <span class="ff-preferred-slot-radio"></span>
+                <span
+                    class="ff-preferred-slot-radio"
+                ></span>
 
 
                 <strong>
+
                     ${escapeHtml(
                         choice.start_label
                     )}
+
                 </strong>
 
 
                 <small>
-                    Preferred start
+
+                    ${escapeHtml(
+                        availabilityText
+                    )}
+
                 </small>
 
             `;
 
+
+            /* =================================================
+               SELECT TIME
+            ================================================= */
 
             button.addEventListener(
                 "click",
@@ -23963,6 +27244,19 @@ continueToReview?.addEventListener(
             completeReviewRideEdit();
 
         }
+
+
+        /* =================================================
+   COMPLETE BOOKING-WIDE TIME EDIT
+================================================= */
+
+if (
+    editingBookingTime
+) {
+
+    completeBookingTimeEdit();
+
+}
 
 
         /* -----------------------------------------
@@ -25736,23 +29030,22 @@ sessionStorage.removeItem(
 
 
     /* =====================================================
-       FOCUS DATE INPUT
-    ===================================================== */
+   RETURN CALENDAR TO CURRENT MONTH
+===================================================== */
 
-    if (
-        bookingDate
-    ) {
+const todayForCalendar =
+    new Date();
 
-        setTimeout(
-            function () {
 
-                bookingDate.focus();
+calendarCurrentDate =
+    new Date(
+        todayForCalendar.getFullYear(),
+        todayForCalendar.getMonth(),
+        1
+    );
 
-            },
-            100
-        );
 
-    }
+loadBookingCalendarAvailability();
 
 }
 
@@ -25763,10 +29056,12 @@ sessionStorage.removeItem(
 ========================================================= */
 
 /* =========================================================
-   START BOOKING DATE EDIT
+   START SMART BOOKING DATE EDIT
 
-   Date change is destructive by design.
-   Ask for confirmation before clearing anything.
+   Nothing is destroyed here.
+
+   We keep a complete backup and allow the customer
+   to choose another date.
 ========================================================= */
 
 function startEditingBookingDate() {
@@ -25779,13 +29074,14 @@ function startEditingBookingDate() {
             "date"
         );
 
+
         return;
 
     }
 
 
     /* -----------------------------------------
-       DO NOT CHANGE DATE DURING SINGLE RIDE EDIT
+       DO NOT CHANGE DATE DURING RIDE EDIT
     ----------------------------------------- */
 
     if (
@@ -25798,26 +29094,134 @@ function startEditingBookingDate() {
             "Finish Ride Edit First"
         );
 
+
         return;
 
     }
 
 
     /* -----------------------------------------
-       CONFIRM COMPLETE RESTART
+       DO NOT CHANGE DATE DURING TIME EDIT
     ----------------------------------------- */
 
-    showBookingMessage(
-        "Changing the visit date will clear all selected adventures, offers, riders, weight groups and time slots. You will need to configure the booking again for the new date.",
-        "warning",
-        "Change Visit Date?",
-        "Change Date",
-        function () {
+    if (
+        editingBookingTime
+    ) {
 
-            resetBookingForDateChange();
+        showBookingMessage(
+            "Finish or cancel the current time edit before changing the visit date.",
+            "warning",
+            "Finish Time Edit First"
+        );
 
-        }
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       BACK UP EVERYTHING
+    ===================================================== */
+
+    editingBookingDateBackup = {
+
+        bookingDate:
+            bookingState.bookingDate,
+
+        items:
+            cloneBookingData(
+                bookingState.items
+            ),
+
+        preferredStart:
+            selectedPreferredStart
+            ||
+            "",
+
+        preferredLabel:
+            selectedPreferredLabel
+            ||
+            ""
+
+    };
+
+
+    editingBookingDate =
+        true;
+
+
+    /* =====================================================
+       RESTORE CURRENT DATE INTO DATE CONTROL
+    ===================================================== */
+
+    if (
+        bookingDate
+    ) {
+
+        bookingDate.value =
+            bookingState.bookingDate;
+
+    }
+
+
+    if (
+        dateSelectedText
+    ) {
+
+        dateSelectedText.textContent =
+            formatDate(
+                bookingState.bookingDate
+            );
+
+    }
+
+
+    dateSelected?.classList.add(
+        "show"
     );
+
+
+    /* =====================================================
+       OPEN CALENDAR AT CURRENT BOOKING MONTH
+    ===================================================== */
+
+    const currentBookingDate =
+        new Date(
+            bookingState.bookingDate
+            +
+            "T12:00:00"
+        );
+
+
+    if (
+        !Number.isNaN(
+            currentBookingDate.getTime()
+        )
+    ) {
+
+        calendarCurrentDate =
+            new Date(
+                currentBookingDate.getFullYear(),
+                currentBookingDate.getMonth(),
+                1
+            );
+
+    }
+
+
+    /* =====================================================
+       OPEN DATE STEP
+
+       OLD BOOKING IS STILL COMPLETELY SAFE.
+    ===================================================== */
+
+    showBookingStep(
+        "date"
+    );
+
+
+    loadBookingCalendarAvailability();
 
 }
 
@@ -26692,12 +30096,7 @@ form?.addEventListener(
         }
     );
 
-    /* =========================================================
-   INITIAL STATE
-========================================================= */
-
-
-/* =========================================================
+ /* =========================================================
    FIRST CHECK:
    IS CUSTOMER RETURNING FROM BOOKING_REVIEW.HTML?
 ========================================================= */
@@ -26708,8 +30107,6 @@ const restoredFromReview =
 
 /* =========================================================
    NORMAL NEW BOOKING
-
-   Only run this when there is NO restore request.
 ========================================================= */
 
 if (
@@ -26726,7 +30123,7 @@ if (
 
 
     /* -----------------------------------------------------
-       LOCK RIDE
+       LOCK LATER STEPS
     ----------------------------------------------------- */
 
     lockPanel(
@@ -26735,29 +30132,17 @@ if (
     );
 
 
-    /* -----------------------------------------------------
-       LOCK OFFER
-    ----------------------------------------------------- */
-
     lockPanel(
         offerPanel,
         offerPanelButton
     );
 
 
-    /* -----------------------------------------------------
-       LOCK PARTICIPANTS
-    ----------------------------------------------------- */
-
     lockPanel(
         participantPanel,
         participantPanelButton
     );
 
-
-    /* -----------------------------------------------------
-       LOCK TIME
-    ----------------------------------------------------- */
 
     lockPanel(
         slotPanel,
@@ -26771,165 +30156,52 @@ if (
 
     updateBookingSummary();
 
+
+    /* =====================================================
+       CALENDAR
+       ALWAYS START WITH CURRENT MONTH
+    ===================================================== */
+
+    const todayForCalendar =
+        new Date();
+
+
+    calendarCurrentDate =
+        new Date(
+            todayForCalendar.getFullYear(),
+            todayForCalendar.getMonth(),
+            1
+        );
+
+
+    /* =====================================================
+       LOAD CURRENT MONTH AVAILABILITY
+    ===================================================== */
+
+    loadBookingCalendarAvailability();
+
 }
+
+
 });
 </script>
 
-
-{% comment %} navbar hide js start {% endcomment %}
-<script>
-    /* =========================================================
-   BOOKING PAGE NAVBAR
-   HIDE ON SCROLL DOWN
-   SHOW ON SCROLL UP
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        const bookingNavbar =
-            document.querySelector(
-                "header"
-            );
-
-
-        if (!bookingNavbar) {
-            return;
-        }
-
-
-        bookingNavbar.classList.add(
-            "ff-booking-smart-navbar"
-        );
-
-
-        let lastScrollY =
-            window.scrollY;
-
-        let ticking =
-            false;
-
-
-        function updateBookingNavbar() {
-
-            const currentScrollY =
-                window.scrollY;
-
-
-            /* -----------------------------------------
-               ALWAYS SHOW NEAR TOP OF PAGE
-            ----------------------------------------- */
-
-            if (
-                currentScrollY
-                <=
-                80
-            ) {
-
-                bookingNavbar.classList.remove(
-                    "ff-navbar-hidden"
-                );
-
-                lastScrollY =
-                    currentScrollY;
-
-                ticking =
-                    false;
-
-                return;
-            }
-
-
-            /* -----------------------------------------
-               SCROLLING DOWN
-               HIDE NAVBAR
-            ----------------------------------------- */
-
-            if (
-                currentScrollY
-                >
-                lastScrollY
-                +
-                5
-            ) {
-
-                bookingNavbar.classList.add(
-                    "ff-navbar-hidden"
-                );
-
-            }
-
-
-            /* -----------------------------------------
-               SCROLLING UP
-               SHOW NAVBAR
-            ----------------------------------------- */
-
-            else if (
-                currentScrollY
-                <
-                lastScrollY
-                -
-                5
-            ) {
-
-                bookingNavbar.classList.remove(
-                    "ff-navbar-hidden"
-                );
-
-            }
-
-
-            lastScrollY =
-                currentScrollY;
-
-            ticking =
-                false;
-
-        }
-
-
-        window.addEventListener(
-            "scroll",
-            function () {
-
-                if (
-                    ticking
-                ) {
-                    return;
-                }
-
-
-                window.requestAnimationFrame(
-                    updateBookingNavbar
-                );
-
-
-                ticking =
-                    true;
-
-            },
-            {
-                passive: true
-            }
-        );
-
-    }
-);
-</script>
-{% comment %} navbar js end  {% endcomment %}
 
 
 {% comment %} mobile view screen has fixed height js  start {% endcomment %}
 <script>
 /* =========================================================
-   LEFT + RIGHT BOOKING CARD RESPONSIVE HEIGHT
+   BOOKING CARD RESPONSIVE VIEWPORT HEIGHT
 
-   Both cards:
-   - always have exactly the same height
-   - fit inside the visible browser screen
-   - scroll internally when content is longer
+   DESKTOP:
+   - navbar hidden
+   - progress bar remains normal content
+   - booking row starts below progress
+   - cards fill ONLY remaining visible screen
+   - content scrolls inside cards
+
+   TABLET / MOBILE:
+   - handled separately
 ========================================================= */
 
 (function () {
@@ -26962,17 +30234,59 @@ document.addEventListener(
 
 
     /* =====================================================
-       CALCULATE AVAILABLE HEIGHT
+       GET VISIBLE VIEWPORT HEIGHT
     ===================================================== */
 
-    function updateBookingCardsHeight() {
+    function getVisibleViewportHeight() {
 
-        /*
-         * Both cards start on the same Bootstrap row.
-         *
-         * Use the smaller/top-most starting position
-         * just in case a few pixels differ.
-         */
+        if (
+            window.visualViewport
+            &&
+            window.visualViewport.height
+        ) {
+
+            return window.visualViewport.height;
+
+        }
+
+
+        return window.innerHeight;
+
+    }
+
+
+    /* =====================================================
+       DESKTOP
+    ===================================================== */
+
+    function updateDesktopBookingHeight() {
+
+        if (
+            window.innerWidth < 992
+        ) {
+
+            bookingInfoCard.style.removeProperty(
+                "--ff-desktop-booking-height"
+            );
+
+
+            bookingFormCard.style.removeProperty(
+                "--ff-desktop-booking-height"
+            );
+
+
+            return;
+
+        }
+
+
+        const viewportHeight =
+            getVisibleViewportHeight();
+
+
+        /* -----------------------------------------
+           Find actual booking-card position
+        ----------------------------------------- */
 
         const infoRect =
             bookingInfoCard
@@ -26984,6 +30298,14 @@ document.addEventListener(
                 .getBoundingClientRect();
 
 
+        /*
+         * Normally both start at same Y position.
+         *
+         * Math.max() ensures neither card can extend
+         * beyond the viewport if there is a small
+         * alignment difference.
+         */
+
         const cardTop =
             Math.max(
                 infoRect.top,
@@ -26991,28 +30313,17 @@ document.addEventListener(
             );
 
 
-        /*
-         * visualViewport gives the actual visible area
-         * on mobile/tablet.
-         *
-         * Desktop falls back safely to innerHeight.
-         */
-
-        const viewportHeight =
-            window.visualViewport
-                ?
-                window.visualViewport.height
-                :
-                window.innerHeight;
-
-
-        /*
-         * Small bottom breathing room.
-         */
+        /* -----------------------------------------
+           Space below card
+        ----------------------------------------- */
 
         const bottomGap =
             16;
 
+
+        /* -----------------------------------------
+           Exact available height
+        ----------------------------------------- */
 
         let availableHeight =
             viewportHeight
@@ -27023,10 +30334,10 @@ document.addEventListener(
 
 
         /*
-         * Safety only.
+         * Don't use a large minimum.
          *
-         * Don't force a large minimum because that could
-         * push the card outside a short browser viewport.
+         * Only protect against invalid/negative
+         * measurements during browser resize.
          */
 
         availableHeight =
@@ -27042,32 +30353,91 @@ document.addEventListener(
             )}px`;
 
 
-        /*
-         * SET THE SAME VARIABLE ON BOTH CARDS
-         */
-
         bookingInfoCard.style.setProperty(
-            "--ff-booking-card-height",
+            "--ff-desktop-booking-height",
             heightValue
         );
 
 
         bookingFormCard.style.setProperty(
-            "--ff-booking-card-height",
+            "--ff-desktop-booking-height",
             heightValue
         );
 
     }
 
 
+
     /* =====================================================
-       REQUEST SAFE UPDATE
+   MOBILE / TABLET HEIGHT
+===================================================== */
+
+function updateMobileBookingHeight() {
+
+    if (
+        window.innerWidth >= 992
+    ) {
+
+        bookingFormCard.style.removeProperty(
+            "--ff-mobile-booking-height"
+        );
+
+
+        return;
+
+    }
+
+
+    const viewportHeight =
+        getVisibleViewportHeight();
+
+
+    const formRect =
+        bookingFormCard
+            .getBoundingClientRect();
+
+
+    const cardTop =
+        formRect.top;
+
+
+    const bottomGap =
+        10;
+
+
+    let availableHeight =
+        viewportHeight
+        -
+        cardTop
+        -
+        bottomGap;
+
+
+    availableHeight =
+        Math.max(
+            availableHeight,
+            160
+        );
+
+
+    bookingFormCard.style.setProperty(
+        "--ff-mobile-booking-height",
+        `${Math.floor(
+            availableHeight
+        )}px`
+    );
+
+}
+
+
+    /* =====================================================
+       SAFE UPDATE
     ===================================================== */
 
     function requestBookingHeightUpdate() {
 
         if (
-            resizeFrame
+            resizeFrame !== null
         ) {
 
             cancelAnimationFrame(
@@ -27081,8 +30451,9 @@ document.addEventListener(
             requestAnimationFrame(
                 function () {
 
-                    updateBookingCardsHeight();
+                    updateDesktopBookingHeight();
 
+                    updateMobileBookingHeight();
 
                     resizeFrame =
                         null;
@@ -27094,25 +30465,46 @@ document.addEventListener(
 
 
     /* =====================================================
-       INITIAL LOAD
+       FIRST LOAD
     ===================================================== */
 
-    if (
-        document.readyState
-        ===
-        "loading"
-    ) {
+    function initialBookingHeightUpdate() {
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            requestBookingHeightUpdate
+        requestBookingHeightUpdate();
+
+
+        /*
+         * Do another measurement after layout,
+         * fonts and images settle.
+         */
+
+        setTimeout(
+            requestBookingHeightUpdate,
+            100
+        );
+
+
+        setTimeout(
+            requestBookingHeightUpdate,
+            300
         );
 
     }
 
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialBookingHeightUpdate
+        );
+
+    }
     else {
 
-        requestBookingHeightUpdate();
+        initialBookingHeightUpdate();
 
     }
 
@@ -27125,14 +30517,14 @@ document.addEventListener(
         "resize",
         requestBookingHeightUpdate,
         {
-            passive:
-                true
+            passive: true
         }
     );
 
 
     /* =====================================================
-       MOBILE VISIBLE VIEWPORT CHANGE
+       VISUAL VIEWPORT
+       IMPORTANT FOR DEVTOOLS / MOBILE
     ===================================================== */
 
     if (
@@ -27143,8 +30535,7 @@ document.addEventListener(
             "resize",
             requestBookingHeightUpdate,
             {
-                passive:
-                    true
+                passive: true
             }
         );
 
@@ -27152,7 +30543,7 @@ document.addEventListener(
 
 
     /* =====================================================
-       PHONE / TABLET ROTATION
+       DEVICE ROTATION
     ===================================================== */
 
     window.addEventListener(
@@ -27161,13 +30552,13 @@ document.addEventListener(
 
             setTimeout(
                 requestBookingHeightUpdate,
-                120
+                150
             );
 
         }
     );
 
 })();
-</script>
+</script>>
 {% comment %} mobile view screen has fixed height js  end {% endcomment %}
 {% endblock %}

@@ -397,6 +397,14 @@ path(
     views.booking_slot_availability,
     name="booking_slot_availability",
 ),
+
+
+path(
+    "booking/calendar-availability/",
+    views.booking_calendar_availability,
+    name="booking_calendar_availability",
+),
+
 path(
     "booking/review/",
     views.booking_review,

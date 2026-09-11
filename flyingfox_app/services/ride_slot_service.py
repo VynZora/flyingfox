@@ -17,10 +17,54 @@ RIDE_CLOSING_TIME = time(18, 30)
 
 
 # =========================================================
+# CUSTOMER BOOKING START TIMES
+#
+# These are the actual start times that can be offered
+# through the booking system.
+#
+# IMPORTANT:
+# Keep these as Python time objects because the rest of
+# the slot system already works with time objects.
+# =========================================================
+
+RIDE_START_TIMES = [
+
+    time(8, 30),
+
+    time(9, 30),
+
+    time(10, 30),
+
+    time(11, 30),
+
+    time(13, 0),
+
+    time(14, 0),
+
+    time(15, 0),
+
+    time(16, 0),
+
+]
+
+
+
+# =========================================================
 # GENERATE RIDE SLOTS
 # =========================================================
 
 def generate_ride_slots(ride):
+
+    # =====================================================
+    # SLOT DURATION
+    #
+    # Each ride can still have its own duration.
+    #
+    # Example:
+    # 60 minutes
+    # 30 minutes
+    # etc.
+    # =====================================================
 
     slot_duration = (
         ride.slot_duration_minutes
@@ -28,37 +72,70 @@ def generate_ride_slots(ride):
         60
     )
 
-    dummy_date = date.today()
 
-    current = datetime.combine(
-        dummy_date,
-        RIDE_OPENING_TIME,
+    dummy_date = (
+        date.today()
     )
 
-    closing = datetime.combine(
-        dummy_date,
-        RIDE_CLOSING_TIME,
+
+    closing_datetime = (
+        datetime.combine(
+            dummy_date,
+            RIDE_CLOSING_TIME,
+        )
     )
+
 
     slots = []
 
-    while current < closing:
 
-        end = current + timedelta(
-            minutes=slot_duration
+    # =====================================================
+    # BUILD SLOT FROM EACH CONFIGURED START TIME
+    # =====================================================
+
+    for start_time in RIDE_START_TIMES:
+
+        start_datetime = (
+            datetime.combine(
+                dummy_date,
+                start_time,
+            )
         )
 
-        if end > closing:
-            break
+
+        end_datetime = (
+            start_datetime
+            +
+            timedelta(
+                minutes=slot_duration
+            )
+        )
+
+
+        # =================================================
+        # SAFETY:
+        # DO NOT CREATE SLOT PAST CLOSING TIME
+        # =================================================
+
+        if (
+            end_datetime
+            >
+            closing_datetime
+        ):
+
+            continue
+
 
         slots.append(
             {
-                "start_time": current.time(),
-                "end_time": end.time(),
+                "start_time":
+                    start_datetime.time(),
+
+                "end_time":
+                    end_datetime.time(),
             }
         )
 
-        current = end
 
     return slots
 
@@ -184,7 +261,6 @@ def get_available_slots(
 
     return results
 
-
 # =========================================================
 # SPLIT PARTICIPANTS ACROSS CONSECUTIVE SLOTS
 # =========================================================
@@ -197,50 +273,146 @@ def allocate_participants_from_start_slot(
     selected_start_time,
 ):
 
+    # =====================================================
+    # VALIDATE QUANTITY
+    # =====================================================
+
     if requested_quantity <= 0:
 
         return {
-            "available": False,
-            "allocations": [],
-            "message": (
-                "Participant quantity must "
-                "be greater than zero."
-            ),
+            "available":
+                False,
+
+            "allocations":
+                [],
+
+            "message":
+                (
+                    "Participant quantity must "
+                    "be greater than zero."
+                ),
         }
 
-    available_slots = get_available_slots(
-        ride=ride,
-        booking_date=booking_date,
+
+    # =====================================================
+    # GET CURRENT LIVE AVAILABILITY
+    # =====================================================
+
+    available_slots = (
+        get_available_slots(
+            ride=ride,
+            booking_date=booking_date,
+        )
     )
 
-    remaining_people = requested_quantity
+
+    remaining_people = (
+        requested_quantity
+    )
+
 
     allocations = []
 
-    started = False
+
+    started = (
+        False
+    )
+
+
+    previous_end_time = (
+        None
+    )
+
+
+    # =====================================================
+    # WALK FORWARD FROM SELECTED START
+    # =====================================================
 
     for slot in available_slots:
+
+        # -------------------------------------------------
+        # FIND SELECTED START
+        # -------------------------------------------------
 
         if (
             slot["start_time"]
             ==
             selected_start_time
         ):
-            started = True
+
+            started = (
+                True
+            )
+
 
         if not started:
+
             continue
 
-        if remaining_people <= 0:
+
+        # -------------------------------------------------
+        # EVERYONE ALREADY ALLOCATED
+        # -------------------------------------------------
+
+        if (
+            remaining_people
+            <=
+            0
+        ):
+
             break
 
-        if slot["remaining"] <= 0:
+
+        # -------------------------------------------------
+        # IMPORTANT:
+        # AFTER FIRST ALLOCATION, NEXT SLOT MUST START
+        # EXACTLY WHEN PREVIOUS SLOT ENDED.
+        #
+        # This prevents:
+        #
+        # 11:30 - 12:30
+        # then
+        # 13:00 - 14:00
+        #
+        # from being treated as one continuous block.
+        # -------------------------------------------------
+
+        if (
+            previous_end_time
+            is not None
+            and
+            slot["start_time"]
+            !=
+            previous_end_time
+        ):
+
             break
 
-        allocated_count = min(
-            remaining_people,
-            slot["remaining"],
+
+        # -------------------------------------------------
+        # SLOT FULL
+        # -------------------------------------------------
+
+        if (
+            slot["remaining"]
+            <=
+            0
+        ):
+
+            break
+
+
+        # -------------------------------------------------
+        # ALLOCATE
+        # -------------------------------------------------
+
+        allocated_count = (
+            min(
+                remaining_people,
+                slot["remaining"],
+            )
         )
+
 
         allocations.append(
             {
@@ -255,21 +427,53 @@ def allocate_participants_from_start_slot(
             }
         )
 
-        remaining_people -= allocated_count
 
-    if remaining_people > 0:
+        remaining_people -= (
+            allocated_count
+        )
+
+
+        previous_end_time = (
+            slot["end_time"]
+        )
+
+
+    # =====================================================
+    # COULD NOT FIT COMPLETE GROUP
+    # =====================================================
+
+    if (
+        remaining_people
+        >
+        0
+    ):
 
         return {
-            "available": False,
-            "allocations": [],
-            "message": (
-                "There is not enough consecutive "
-                "slot capacity for all participants."
-            ),
+            "available":
+                False,
+
+            "allocations":
+                [],
+
+            "message":
+                (
+                    "There is not enough consecutive "
+                    "slot capacity for all participants."
+                ),
         }
 
+
+    # =====================================================
+    # SUCCESS
+    # =====================================================
+
     return {
-        "available": True,
-        "allocations": allocations,
-        "message": "",
+        "available":
+            True,
+
+        "allocations":
+            allocations,
+
+        "message":
+            "",
     }
