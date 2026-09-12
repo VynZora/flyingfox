@@ -9553,18 +9553,19 @@ def booking_review(request):
 
 
         return render(
-            request,
-            "frontend/booking_review.html",
-            {
+            request,"frontend/booking_review.html",{
                 "booking_data":
-                    booking_data,
+                booking_data,
+            "profile":_booking_user_profile(
+                request
+            ),
 
-                "profile":
-                    _booking_user_profile(
-                        request
-                    ),
-            },
-        )
+            "booking_otp_resend_seconds":
+               _get_booking_otp_resend_seconds(
+                request
+            ),
+              },
+            )
 
 
     # =====================================================
@@ -10836,16 +10837,21 @@ def booking_review(request):
     # =====================================================
 
     return render(
-        request,
-        "frontend/booking_review.html",
-        {
-            "booking_data":
-                booking_data,
+    request,
+    "frontend/booking_review.html",
+    {
+        "booking_data":
+            booking_data,
 
-            "profile":
-                user_profile,
-        },
-    )
+        "profile":
+            user_profile,
+
+        "booking_otp_resend_seconds":
+            _get_booking_otp_resend_seconds(
+                request
+            ),
+    },
+)
 
 
 
@@ -10853,11 +10859,81 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
 
+
+# =========================================================
+# BOOKING OTP RESEND SETTINGS
+# =========================================================
+
+BOOKING_OTP_RESEND_SECONDS = 60
+
+
+# =========================================================
+# GET BOOKING OTP RESEND WAIT TIME
+# =========================================================
+
+def _get_booking_otp_resend_seconds(request):
+
+    last_sent_timestamp = (
+        request.session.get(
+            "booking_otp_last_sent_at"
+        )
+    )
+
+
+    if not last_sent_timestamp:
+
+        return 0
+
+
+    try:
+
+        last_sent_timestamp = float(
+            last_sent_timestamp
+        )
+
+    except (
+        TypeError,
+        ValueError,
+    ):
+
+        return 0
+
+
+    now_timestamp = (
+        timezone.now()
+        .timestamp()
+    )
+
+
+    elapsed_seconds = (
+        now_timestamp
+        -
+        last_sent_timestamp
+    )
+
+
+    remaining_seconds = (
+        BOOKING_OTP_RESEND_SECONDS
+        -
+        int(
+            elapsed_seconds
+        )
+    )
+
+
+    return max(
+        0,
+        remaining_seconds,
+    )
+
+
+
+
 @require_POST
 def booking_send_otp(request):
 
     # =====================================================
-    # PHONE
+    # 1. PHONE
     # =====================================================
 
     phone_number = (
@@ -10874,16 +10950,19 @@ def booking_send_otp(request):
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
                     "Please enter your mobile number."
                 ),
+
+                "resend_seconds": 0,
             },
             status=400,
         )
 
 
     # =====================================================
-    # VALIDATE INTERNATIONAL PHONE FORMAT
+    # 2. VALIDATE INTERNATIONAL PHONE FORMAT
     #
     # Example:
     # +919633390345
@@ -10897,18 +10976,55 @@ def booking_send_otp(request):
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
                     "Please enter a valid mobile number."
                 ),
+
+                "resend_seconds": 0,
             },
             status=400,
         )
 
 
     # =====================================================
+    # 3. CHECK 60 SECOND RESEND COOLDOWN
+    #
     # IMPORTANT:
-    # Any previous booking OTP verification becomes invalid
-    # when a new OTP is requested.
+    # This must be checked on Django/server side.
+    #
+    # JavaScript countdown alone is NOT enough because
+    # customers could bypass it from DevTools.
+    # =====================================================
+
+    remaining_seconds = (
+        _get_booking_otp_resend_seconds(
+            request
+        )
+    )
+
+
+    if remaining_seconds > 0:
+
+        return JsonResponse(
+            {
+                "success": False,
+
+                "message": (
+                    f"Please wait "
+                    f"{remaining_seconds} seconds "
+                    f"before requesting another OTP."
+                ),
+
+                "resend_seconds":
+                    remaining_seconds,
+            },
+            status=429,
+        )
+
+
+    # =====================================================
+    # 4. A NEW OTP INVALIDATES PREVIOUS VERIFICATION
     # =====================================================
 
     request.session.pop(
@@ -10918,7 +11034,7 @@ def booking_send_otp(request):
 
 
     # =====================================================
-    # SEND OTP
+    # 5. SEND OTP
     # =====================================================
 
     try:
@@ -10930,28 +11046,82 @@ def booking_send_otp(request):
     except Exception as error:
 
         print(
-            "BOOKING OTP SEND ERROR:",
-            repr(error),
+            "\n"
+            "========================================"
         )
+
+        print(
+            "BOOKING OTP SEND ERROR"
+        )
+
+        print(
+            "PHONE:",
+            phone_number
+        )
+
+        print(
+            "ERROR:",
+            repr(
+                error
+            )
+        )
+
+        print(
+            "========================================"
+            "\n"
+        )
+
 
         return JsonResponse(
             {
                 "success": False,
+
                 "message": (
                     "Unable to send OTP. "
                     "Please try again."
                 ),
+
+                "resend_seconds": 0,
             },
             status=500,
         )
 
 
+    # =====================================================
+    # 6. SAVE OTP SENT TIME
+    # =====================================================
+
+    request.session[
+        "booking_otp_last_sent_at"
+    ] = (
+        timezone.now()
+        .timestamp()
+    )
+
+
+    # Also remember which number received it
+    request.session[
+        "booking_otp_last_sent_phone"
+    ] = phone_number
+
+
+    request.session.modified = True
+
+
+    # =====================================================
+    # 7. SUCCESS
+    # =====================================================
+
     return JsonResponse(
         {
             "success": True,
+
             "message": (
                 "OTP sent successfully."
             ),
+
+            "resend_seconds":
+                BOOKING_OTP_RESEND_SECONDS,
         }
     )
 

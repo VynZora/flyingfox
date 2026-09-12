@@ -7978,6 +7978,21 @@ const bookingPhoneVerified =
         "bookingPhoneVerified"
     );
 
+/* =========================================================
+   BOOKING OTP RESEND TIMER VARIABLES
+========================================================= */
+
+let bookingOtpResendTimer =
+    null;
+
+
+let bookingOtpResendSeconds =
+    Number(
+        "{{ booking_otp_resend_seconds|default:0 }}"
+    )
+    ||
+    0;    
+
 
 function setBookingOtpMessage(
     message,
@@ -7997,7 +8012,172 @@ function setBookingOtpMessage(
             : "ff-booking-otp-error";
 }
 
-  
+ 
+
+
+/* =========================================================
+   BOOKING OTP RESEND COUNTDOWN
+========================================================= */
+
+function startBookingOtpResendTimer(
+    seconds = 60
+) {
+
+    if (!sendBookingOtpButton) {
+
+        return;
+    }
+
+
+    /* =====================================================
+       STOP ANY OLD TIMER
+    ===================================================== */
+
+    if (bookingOtpResendTimer) {
+
+        clearInterval(
+            bookingOtpResendTimer
+        );
+
+        bookingOtpResendTimer =
+            null;
+    }
+
+
+    /* =====================================================
+       SET REMAINING SECONDS
+    ===================================================== */
+
+    bookingOtpResendSeconds =
+        Math.max(
+            0,
+            parseInt(
+                seconds,
+                10
+            )
+            ||
+            0
+        );
+
+
+    /* =====================================================
+       UPDATE BUTTON
+    ===================================================== */
+
+    function updateBookingOtpButton() {
+
+        /* ---------------------------------------------
+           ALREADY VERIFIED
+        --------------------------------------------- */
+
+        if (
+            bookingPhoneVerified
+            &&
+            bookingPhoneVerified.value
+            ===
+            "1"
+        ) {
+
+            sendBookingOtpButton.disabled =
+                true;
+
+            sendBookingOtpButton.innerHTML = `
+                <i class="fas fa-circle-check"></i>
+                Verified
+            `;
+
+            return;
+        }
+
+
+        /* ---------------------------------------------
+           COUNTDOWN RUNNING
+        --------------------------------------------- */
+
+        if (
+            bookingOtpResendSeconds
+            >
+            0
+        ) {
+
+            sendBookingOtpButton.disabled =
+                true;
+
+            sendBookingOtpButton.innerHTML = `
+                <i class="fas fa-clock"></i>
+                Resend OTP in ${bookingOtpResendSeconds}s
+            `;
+
+            return;
+        }
+
+
+        /* ---------------------------------------------
+           COUNTDOWN FINISHED
+        --------------------------------------------- */
+
+        sendBookingOtpButton.disabled =
+            false;
+
+        sendBookingOtpButton.innerHTML = `
+            <i class="fas fa-paper-plane"></i>
+            Resend OTP
+        `;
+
+    }
+
+
+    /* =====================================================
+       SHOW FIRST VALUE IMMEDIATELY
+    ===================================================== */
+
+    updateBookingOtpButton();
+
+
+    if (
+        bookingOtpResendSeconds
+        <=
+        0
+    ) {
+
+        return;
+    }
+
+
+    /* =====================================================
+       START COUNTDOWN
+    ===================================================== */
+
+    bookingOtpResendTimer =
+        setInterval(
+            function () {
+
+                bookingOtpResendSeconds -=
+                    1;
+
+
+                updateBookingOtpButton();
+
+
+                if (
+                    bookingOtpResendSeconds
+                    <=
+                    0
+                ) {
+
+                    clearInterval(
+                        bookingOtpResendTimer
+                    );
+
+                    bookingOtpResendTimer =
+                        null;
+                }
+
+            },
+            1000
+        );
+
+}
 
 
 
@@ -8095,11 +8275,11 @@ sendBookingOtpButton?.addEventListener(
                 await response.json();
 
 
-            if (
-               response.ok
-                &&
-                data.success
-                ) {
+           if (
+    response.ok
+    &&
+    data.success
+) {
 
     bookingPhoneVerified.value =
         "0";
@@ -8126,36 +8306,85 @@ sendBookingOtpButton?.addEventListener(
 
 
     bookingOtpInput.focus();
+
+
+    /* =================================================
+       START 60 SECOND RESEND TIMER
+    ================================================= */
+
+    startBookingOtpResendTimer(
+        data.resend_seconds
+        ||
+        60
+    );
+
 }
             else {
 
-                setBookingOtpMessage(
-                    data.message
-                    ||
-                    "Unable to send OTP."
-                );
-            }
+    setBookingOtpMessage(
+        data.message
+        ||
+        "Unable to send OTP."
+    );
+
+
+    /* =================================================
+       SERVER SAYS RESEND TIMER IS STILL RUNNING
+    ================================================= */
+
+    if (
+        data.resend_seconds
+        &&
+        Number(
+            data.resend_seconds
+        )
+        >
+        0
+    ) {
+
+        startBookingOtpResendTimer(
+            data.resend_seconds
+        );
+
+    }
+    else {
+
+        sendBookingOtpButton.disabled =
+            false;
+
+        sendBookingOtpButton.innerHTML = `
+            <i class="fas fa-paper-plane"></i>
+            Send OTP
+        `;
+
+    }
+
+}
 
         }
         catch (error) {
 
-            console.error(
-                error
-            );
+    console.error(
+        error
+    );
 
-            setBookingOtpMessage(
-                "Unable to send OTP. Please try again."
-            );
 
-        }
-        finally {
+    setBookingOtpMessage(
+        "Unable to send OTP. Please try again."
+    );
 
-            sendBookingOtpButton.disabled =
-                false;
 
-            sendBookingOtpButton.innerHTML =
-                '<i class="fas fa-paper-plane"></i> Resend OTP';
-        }
+    sendBookingOtpButton.disabled =
+        false;
+
+
+    sendBookingOtpButton.innerHTML = `
+        <i class="fas fa-paper-plane"></i>
+        Send OTP
+    `;
+
+}
+        
     }
 );
 
@@ -8381,6 +8610,24 @@ phoneInput?.addEventListener(
 );
 
 
+
+
+
+/* =========================================================
+   RESTORE OTP TIMER AFTER PAGE LOAD / REFRESH
+========================================================= */
+
+if (
+    bookingOtpResendSeconds
+    >
+    0
+) {
+
+    startBookingOtpResendTimer(
+        bookingOtpResendSeconds
+    );
+
+}
 
 
 {% comment %} send otp js end  {% endcomment %}
