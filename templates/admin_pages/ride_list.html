@@ -117,9 +117,7 @@ Rides List | FlyingFox Admin
                     Featured
                 </th>
 
-                <th>
-                    Status
-                </th>
+                
 
                 <th>
                     Created
@@ -176,26 +174,6 @@ Rides List | FlyingFox Admin
                     {% endif %}
 
                 </td>
-
-
-                <td>
-
-                    {% if ride.is_active %}
-
-                        <span class="badge bg-success">
-                            Active
-                        </span>
-
-                    {% else %}
-
-                        <span class="badge bg-secondary">
-                            Inactive
-                        </span>
-
-                    {% endif %}
-
-                </td>
-
 
                 <td>
                     {{ ride.created_at|date:"d M Y" }}

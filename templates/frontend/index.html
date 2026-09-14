@@ -803,6 +803,8 @@ active
           alt="Superman Zipline Flying Fox Adventure Munnar"
            loading="lazy"
             decoding="async"
+             width="1200"
+             height="900"
         />
         <span class="ff-superman-image-badge">
           <i class="fas fa-star"></i>
@@ -811,7 +813,9 @@ active
       </div>
 
       <div class="ff-superman-feature-content wow fadeInRight">
-        <h3 class="ff-superman-small-label"> Fly Like Superman </h3>
+        <span class="ff-superman-small-label">
+         Fly Like Superman
+        </span>
         <h3  class="ff-superman-content-title">
           Munnar's Thrilling
           <span>1.5 KM Superman Zipline</span>
@@ -865,10 +869,10 @@ active
     <div class="ff-superman-feature-row ff-superman-feature-row-reverse">
       <div class="ff-superman-feature-content wow fadeInLeft">
         <span class="ff-superman-small-label"> Ride Information </span>
-        <h2 class="ff-superman-content-title">
+        <h3 class="ff-superman-content-title">
             Adventure Available
             <span>Every Day</span>
-        </h2>
+        </h3>
         <p>
           Enjoy the Superman Zipline throughout the week. The attraction operates from morning until evening, making it easy to add a Munnar zipline experience to your Munnar itinerary.
         </p>
@@ -916,6 +920,8 @@ active
         <img
           src="{% static 'frontend/assets/img/superman/img-2.webp' %}"
           alt="Superman Zipline Munnar"
+           width="1200"
+           height="900"
            loading="lazy"
            decoding="async"
         />
@@ -926,13 +932,13 @@ active
       </div>
     </div>
 
-    <div class="ff-superman-feature-row">
+    {% comment %} <div class="ff-superman-feature-row">
       <div class="ff-superman-feature-image wow fadeInLeft">
         <img
           src="{% static 'frontend/assets/img/superman/img-5.webp' %}"
           alt="Superman Zipline Photography and Videography" 
            loading="lazy"
-    decoding="async"
+           decoding="async"
         />
         <span class="ff-superman-image-badge">
           <i class="fas fa-camera"></i>
@@ -940,7 +946,7 @@ active
         </span>
       </div>
 
-      <div class="ff-superman-feature-content wow fadeInRight">
+       <div class="ff-superman-feature-content wow fadeInRight">
         <h2 class="ff-superman-small-label"> Take the Memories Home </h2>
         <h3 class="ff-superman-content-title">
           Your Superman Flight
@@ -994,7 +1000,7 @@ active
 
         {% endif %}
 
-    </strong>
+        </strong>
         </div>
 
         <a href="{% url 'bookings' %}" class="theme-btn">
@@ -1003,8 +1009,8 @@ active
             <i class="fas fa-arrow-right"></i>
           </span>
         </a>
-      </div>
-    </div>
+      </div> 
+    </div> {% endcomment %}
   </div>
 </section> 
 
