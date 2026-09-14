@@ -13932,6 +13932,277 @@ b small {
 {% comment %} desktop booking viewport end {% endcomment %}
 
 
+{% comment %} time slot modal start {% endcomment %}
+/* =========================================================
+   UNAVAILABLE SLOT WARNING MODAL
+========================================================= */
+
+.ff-slot-warning-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+
+.ff-slot-warning-modal.show {
+    display: flex;
+}
+
+
+.ff-slot-warning-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background:
+        rgba(
+            15,
+            22,
+            30,
+            0.64
+        );
+
+    backdrop-filter:
+        blur(4px);
+}
+
+
+.ff-slot-warning-dialog {
+    position: relative;
+    z-index: 1;
+
+    width:
+        min(
+            500px,
+            100%
+        );
+
+    padding:
+        30px;
+
+    border-radius:
+        24px;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0
+        28px
+        80px
+        rgba(
+            10,
+            20,
+            30,
+            0.25
+        );
+
+    text-align:
+        center;
+}
+
+
+.ff-slot-warning-icon {
+    display: flex;
+
+    width: 60px;
+    height: 60px;
+
+    margin:
+        0
+        auto
+        17px;
+
+    border-radius:
+        50%;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        #c31103;
+
+    background:
+        #fff1ef;
+
+    font-size:
+        23px;
+}
+
+
+.ff-slot-warning-dialog h3 {
+    margin:
+        0
+        0
+        9px;
+
+    color:
+        #192736;
+
+    font-size:
+        21px;
+
+    font-weight:
+        900;
+}
+
+
+.ff-slot-warning-dialog > p {
+    margin:
+        0
+        0
+        18px;
+
+    color:
+        #687281;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.65;
+}
+
+
+.ff-slot-warning-rides {
+    display:
+        grid;
+
+    margin-bottom:
+        20px;
+
+    gap:
+        8px;
+}
+
+
+.ff-slot-warning-ride {
+    display:
+        flex;
+
+    padding:
+        12px
+        14px;
+
+    border:
+        1px solid
+        #f0d5d2;
+
+    border-radius:
+        12px;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    color:
+        #8f0c02;
+
+    background:
+        #fff7f5;
+
+    text-align:
+        left;
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+}
+
+
+.ff-slot-warning-actions {
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:
+        10px;
+}
+
+
+.ff-slot-warning-actions button {
+    min-height:
+        50px;
+
+    padding:
+        10px
+        15px;
+
+    border-radius:
+        25px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    cursor:
+        pointer;
+}
+
+
+.ff-slot-warning-date {
+    border:
+        1px solid
+        #dfe3e8;
+
+    color:
+        #192736;
+
+    background:
+        #ffffff;
+}
+
+
+.ff-slot-warning-continue {
+    border:
+        0;
+
+    color:
+        #ffffff;
+
+    background:
+        #c31103;
+}
+
+
+@media (
+    max-width: 575px
+) {
+
+    .ff-slot-warning-dialog {
+        padding:
+            23px
+            18px;
+    }
+
+
+    .ff-slot-warning-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+{% comment %} time slot modal css end  {% endcomment %}
+
+
 </style>
 {% endblock %}
 
@@ -14438,7 +14709,19 @@ b small {
 </div>
                                         </div>
 
-                                        <div class="ff-date-time-action">
+<div class="ff-wizard-action-row">
+
+    <button
+        type="button"
+        class="ff-wizard-back-btn"
+        id="cancelDateEdit"
+        style="display:none;"
+    >
+        <i class="fas fa-arrow-left"></i>
+
+        Back to Review
+    </button>
+
 
     <button
         type="button"
@@ -15039,6 +15322,87 @@ b small {
 
 
 
+
+<!-- =========================================================
+     UNAVAILABLE RIDE CONFIRMATION MODAL
+========================================================= -->
+
+<div
+    class="ff-slot-warning-modal"
+    id="slotWarningModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="ff-slot-warning-backdrop"
+        id="slotWarningBackdrop"
+    ></div>
+
+
+    <div
+        class="ff-slot-warning-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="slotWarningTitle"
+    >
+
+        <div class="ff-slot-warning-icon">
+
+            <i class="fas fa-triangle-exclamation"></i>
+
+        </div>
+
+
+        <h3 id="slotWarningTitle">
+            Some rides are unavailable
+        </h3>
+
+
+        <p id="slotWarningText">
+            Some selected rides could not be scheduled.
+        </p>
+
+
+        <div
+            class="ff-slot-warning-rides"
+            id="slotWarningRideList"
+        ></div>
+
+
+        <div class="ff-slot-warning-actions">
+
+            <button
+                type="button"
+                class="ff-slot-warning-date"
+                id="slotWarningChangeDate"
+            >
+
+                <i class="fas fa-calendar-days"></i>
+
+                Change Date
+
+            </button>
+
+
+            <button
+                type="button"
+                class="ff-slot-warning-continue"
+                id="slotWarningContinue"
+            >
+
+                Continue Without Ride
+
+                <i class="fas fa-arrow-right"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
                     <!-- =================================================
                          END BOOKING WIZARD STAGE
                     ================================================== -->
@@ -15598,7 +15962,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const bookingDate = document.getElementById("bookingDate");
     const dateContinue = document.getElementById("dateContinue");
     
+    const cancelDateEdit = document.getElementById(   "cancelDateEdit" );
     
+
+    /* =========================================================
+   DATE EDIT -> BACK TO REVIEW
+========================================================= */
+
+cancelDateEdit?.addEventListener(
+    "click",
+    function () {
+
+        cancelBookingDateEdit();
+
+    }
+);
+
 
     /* =========================================================
    BOOKING CALENDAR ELEMENTS
@@ -15703,6 +16082,48 @@ const continueToReview =
 
 
 
+
+    /* =========================================================
+   PARTIAL SLOT AVAILABILITY MODAL
+========================================================= */
+
+const slotWarningModal =
+    document.getElementById(
+        "slotWarningModal"
+    );
+
+
+const slotWarningBackdrop =
+    document.getElementById(
+        "slotWarningBackdrop"
+    );
+
+
+const slotWarningText =
+    document.getElementById(
+        "slotWarningText"
+    );
+
+
+const slotWarningRideList =
+    document.getElementById(
+        "slotWarningRideList"
+    );
+
+
+const slotWarningChangeDate =
+    document.getElementById(
+        "slotWarningChangeDate"
+    );
+
+
+const slotWarningContinue =
+    document.getElementById(
+        "slotWarningContinue"
+    );
+
+
+
     const dateSelected = document.getElementById("dateSelected");
     const dateSelectedText = document.getElementById("dateSelectedText");
 
@@ -15800,15 +16221,33 @@ const continueToReview =
 ========================================================= */
 
     let rideSlotAvailability =
-    new Map();
+new Map();
 
 
-    let selectedPreferredStart =
-    "";
+/*
+ * Rides that have NO available slot anywhere
+ * on the currently selected date.
+ */
+let unavailableSlotRideIds =
+new Set();
 
 
-    let selectedPreferredLabel =
-    "";
+/*
+ * Rides that cannot be scheduled using the
+ * customer's currently selected preferred start.
+ *
+ * This also includes rides from unavailableSlotRideIds.
+ */
+let skippedSlotRideIds =
+new Set();
+
+
+let selectedPreferredStart =
+"";
+
+
+let selectedPreferredLabel =
+"";
 
 
 
@@ -16057,6 +16496,153 @@ let editingBookingDate =
  */
 let editingBookingDateBackup =
     null;
+
+
+
+ /*
+ * Tells us whether Date Edit was opened because
+ * one or more rides had no suitable time slot.
+ */
+let editingDateFromSlotWarning =
+    false;   
+
+
+
+    /* =========================================================
+   CREATE SAFE DATE-CHANGE BACKUP
+
+   IMPORTANT:
+   This backup is created ONLY ONCE.
+
+   If customer tries:
+   Date A -> Date B -> Date C -> Date D
+
+   we continue protecting the original booking instead
+   of replacing the backup every time.
+========================================================= */
+
+function ensureBookingDateBackup() {
+
+    /*
+     * Already have an active original backup.
+     * NEVER overwrite it.
+     */
+    if (
+        editingBookingDate
+        &&
+        editingBookingDateBackup
+    ) {
+
+        return;
+
+    }
+
+
+    let backupItems =
+        cloneBookingData(
+            bookingState.items
+        );
+
+
+    let backupPreferredStart =
+        selectedPreferredStart
+        ||
+        "";
+
+
+    let backupPreferredLabel =
+        selectedPreferredLabel
+        ||
+        "";
+
+
+    /* =====================================================
+       CUSTOMER CAME FROM REVIEW -> EDIT TIME
+
+       loadAllRideSlots() may already have cleared the
+       visible/current slot assignments.
+
+       Therefore use the OLD time-edit backup as the
+       safest original booking state.
+    ===================================================== */
+
+    if (
+        editingBookingTime
+        &&
+        Array.isArray(
+            editingBookingTimeItemsBackup
+        )
+    ) {
+
+        backupItems =
+            cloneBookingData(
+                editingBookingTimeItemsBackup
+            );
+
+
+        backupPreferredStart =
+            editingBookingTimeStartBackup
+            ||
+            "";
+
+
+        backupPreferredLabel =
+            editingBookingTimeLabelBackup
+            ||
+            "";
+
+    }
+
+
+    /* =====================================================
+       CUSTOMER CAME FROM SINGLE RIDE EDIT
+
+       If a full booking backup exists, prefer it.
+    ===================================================== */
+
+    else if (
+        editingRideIndex !== null
+        &&
+        Array.isArray(
+            editingBookingItemsBackup
+        )
+    ) {
+
+        backupItems =
+            cloneBookingData(
+                editingBookingItemsBackup
+            );
+
+    }
+
+
+    /* =====================================================
+       CREATE ORIGINAL SAFE SNAPSHOT
+    ===================================================== */
+
+    editingBookingDateBackup = {
+
+        bookingDate:
+            bookingState.bookingDate
+            ||
+            "",
+
+        items:
+            backupItems,
+
+        preferredStart:
+            backupPreferredStart,
+
+        preferredLabel:
+            backupPreferredLabel
+
+    };
+
+
+    editingBookingDate =
+        true;
+
+}
 
 
 /* =========================================================
@@ -18198,30 +18784,47 @@ function findOfferForNewDate(
 
 
 /* =========================================================
-   RESET OFFER TO REGULAR TICKET
+   RESET ONLY OFFER TO REGULAR TICKET
 
-   Used if old promotional offer is NOT available
-   on the newly selected date.
+   IMPORTANT:
+   DO NOT CLEAR:
+   - quantity
+   - weightGroups
+   - participant information
 ========================================================= */
 
 function resetItemToRegularTicket(
     item
 ) {
 
+    if (
+        !item
+    ) {
+
+        return;
+
+    }
+
+
     item.selectedOfferData =
         null;
+
 
     item.offerId =
         null;
 
+
     item.offerName =
         "Regular Ticket";
+
 
     item.offerLabel =
         "Regular price";
 
+
     item.couponCode =
         "";
+
 
     item.couponValidated =
         true;
@@ -18283,7 +18886,6 @@ function clearItemDateSlotData(
 
 }
 
-
 /* =========================================================
    REBUILD OLD BOOKING AGAINST NEW DATE AVAILABILITY
 
@@ -18299,13 +18901,59 @@ function clearItemDateSlotData(
       -> preserve offer + participants.
 
    4. Promotional offer unavailable
-      -> regular ticket + clear participants.
+      -> reset to Regular Ticket.
+      -> KEEP participant quantity.
+      -> KEEP participant weight groups.
 
    5. Regular ticket
       -> keep participants.
 
-   6. Every surviving ride
-      -> clear old slot/time data.
+   6. Update ride price from the new date.
+
+   7. Recalculate:
+      -> subtotal
+      -> discount
+      -> total
+
+   8. Every surviving ride
+      -> clear OLD slot/time data.
+
+========================================================= */
+
+/* =========================================================
+   REBUILD OLD BOOKING AGAINST NEW DATE
+
+   RULES:
+
+   1. Use editingBookingDateBackup.items whenever
+      we are editing the booking date.
+
+   2. If old ride exists on new date:
+      KEEP the ride.
+
+   3. Keep participant quantity + weight groups.
+
+   4. If old promotional offer still exists:
+      KEEP that offer.
+
+   5. If old promotional offer disappeared:
+      switch only that ride to Regular Ticket.
+      PARTICIPANTS ARE NOT CLEARED.
+
+   6. Update ride price using new date price.
+
+   7. Recalculate subtotal / discount / total.
+
+   8. Old time slots are cleared because they belong
+      to the previous date.
+
+   9. If ride does not exist on new date:
+      do not include it in the candidate new booking.
+
+      IMPORTANT:
+      the original ride still remains safely inside
+      editingBookingDateBackup until the date change
+      is successfully committed.
 ========================================================= */
 
 function reconcileBookingForNewDate(
@@ -18322,16 +18970,57 @@ function reconcileBookingForNewDate(
             [];
 
 
-    const oldItems =
+    /* =====================================================
+       IMPORTANT
+
+       WHILE EDITING DATE, ALWAYS START FROM THE ORIGINAL
+       BACKUP, NOT FROM A PREVIOUS CANDIDATE DATE.
+
+       Example:
+
+       Old date:
+       Mega + Superman + Spider Man
+
+       User tries Sep 20:
+       Superman unavailable
+
+       Then user tries Sep 21:
+       Superman available again
+
+       Because we use the original backup here,
+       Superman can return on Sep 21.
+    ===================================================== */
+
+    let sourceItems =
+        [];
+
+
+    if (
+        editingBookingDate
+        &&
+        editingBookingDateBackup
+        &&
         Array.isArray(
-            bookingState.items
+            editingBookingDateBackup.items
         )
-            ?
+    ) {
+
+        sourceItems =
+            cloneBookingData(
+                editingBookingDateBackup.items
+            );
+
+    }
+    else {
+
+        sourceItems =
             cloneBookingData(
                 bookingState.items
-            )
-            :
-            [];
+                ||
+                []
+            );
+
+    }
 
 
     const survivingItems =
@@ -18346,14 +19035,14 @@ function reconcileBookingForNewDate(
         [];
 
 
-    oldItems.forEach(
+    sourceItems.forEach(
         function (
             oldItem
         ) {
 
-            /* -----------------------------------------
-               DOES OLD RIDE EXIST ON NEW DATE?
-            ----------------------------------------- */
+            /* =================================================
+               FIND SAME RIDE ON NEW DATE
+            ================================================= */
 
             const serverRide =
                 findAvailableRideForDate(
@@ -18362,9 +19051,13 @@ function reconcileBookingForNewDate(
                 );
 
 
-            /* -----------------------------------------
-               RIDE NO LONGER AVAILABLE
-            ----------------------------------------- */
+            /* =================================================
+               RIDE NOT AVAILABLE ON NEW DATE
+
+               Do not add it to the candidate booking.
+
+               But do not destroy the backup.
+            ================================================= */
 
             if (
                 !serverRide
@@ -18382,9 +19075,17 @@ function reconcileBookingForNewDate(
             }
 
 
-            /* -----------------------------------------
-               START WITH OLD USER DATA
-            ----------------------------------------- */
+            /* =================================================
+               COPY COMPLETE OLD ITEM
+
+               THIS PRESERVES:
+               - participants
+               - quantity
+               - weight groups
+               - offer
+               - coupon
+               - etc.
+            ================================================= */
 
             const item =
                 cloneBookingData(
@@ -18393,17 +19094,14 @@ function reconcileBookingForNewDate(
 
 
             /* =================================================
-               UPDATE DATE-DEPENDENT RIDE INFORMATION
-               FROM SERVER
-
-               Important:
-               price may be different on new date.
+               UPDATE RIDE INFORMATION FOR NEW DATE
             ================================================= */
 
             item.rideId =
                 Number(
                     serverRide.id
                 );
+
 
             item.rideName =
                 serverRide.name
@@ -18412,6 +19110,7 @@ function reconcileBookingForNewDate(
                 ||
                 "";
 
+
             item.price =
                 Number(
                     serverRide.price
@@ -18419,8 +19118,11 @@ function reconcileBookingForNewDate(
                     0
                 );
 
+
             item.image =
                 serverRide.image
+                ||
+                item.image
                 ||
                 "";
 
@@ -18436,7 +19138,7 @@ function reconcileBookingForNewDate(
 
 
             /* =================================================
-               CHECK OLD OFFER
+               OLD PROMOTIONAL OFFER
             ================================================= */
 
             if (
@@ -18450,9 +19152,9 @@ function reconcileBookingForNewDate(
                     );
 
 
-                /* -----------------------------------------
-                   OLD OFFER STILL VALID
-                ----------------------------------------- */
+                /* =============================================
+                   SAME OFFER STILL AVAILABLE
+                ============================================= */
 
                 if (
                     serverOffer
@@ -18467,22 +19169,25 @@ function reconcileBookingForNewDate(
                     item.selectedOfferData =
                         normalizedOffer;
 
+
                     item.offerId =
                         Number(
                             serverOffer.id
                         );
 
+
                     item.offerName =
                         normalizedOffer.name;
+
 
                     item.offerLabel =
                         normalizedOffer.label;
 
 
-                    /*
-                     * Keep existing coupon only when the
-                     * same offer survives.
-                     */
+                    /* -----------------------------------------
+                       KEEP OLD COUPON IF THIS SAME OFFER
+                       STILL USES THE SAME VALID COUPON
+                    ----------------------------------------- */
 
                     if (
                         normalizedOffer.couponRequired
@@ -18529,34 +19234,40 @@ function reconcileBookingForNewDate(
                         item.couponCode =
                             "";
 
+
                         item.couponValidated =
                             true;
 
                     }
 
+
                     /*
-                     * PARTICIPANTS REMAIN UNTOUCHED.
+                     * IMPORTANT:
                      *
-                     * This gives you exactly:
-                     * old ride + old offer valid
-                     * -> restore old riders/weights.
+                     * DO NOT touch:
+                     *
+                     * item.weightGroups
+                     * item.quantity
+                     *
+                     * Existing participants remain.
                      */
 
                 }
 
 
-                /* -----------------------------------------
-                   OLD OFFER DOES NOT EXIST ON NEW DATE
-                ----------------------------------------- */
+                /* =============================================
+                   OLD OFFER NO LONGER EXISTS
+                ============================================= */
 
                 else {
 
+                    /*
+                     * Switch only the offer.
+                     *
+                     * This function MUST NOT clear participants.
+                     */
+
                     resetItemToRegularTicket(
-                        item
-                    );
-
-
-                    clearItemParticipants(
                         item
                     );
 
@@ -18571,10 +19282,7 @@ function reconcileBookingForNewDate(
 
 
             /* =================================================
-               OLD BOOKING USED REGULAR TICKET
-
-               Regular ticket remains valid while ride exists.
-               Preserve participants.
+               OLD BOOKING ALREADY USED REGULAR TICKET
             ================================================= */
 
             else {
@@ -18587,8 +19295,7 @@ function reconcileBookingForNewDate(
 
 
             /* =================================================
-               DATE CHANGED:
-               OLD TIME CAN NEVER BE USED.
+               CLEAR OLD DATE'S SLOT INFORMATION ONLY
             ================================================= */
 
             clearItemDateSlotData(
@@ -18596,70 +19303,82 @@ function reconcileBookingForNewDate(
             );
 
 
-           /* =================================================
-   RECALCULATE PRICE USING NEW DATE PRICE
+            /* =================================================
+               KEEP OLD PARTICIPANT QUANTITY
+            ================================================= */
 
-   Participant quantity is preserved when valid.
-
-   Then run the existing offer calculator so a
-   surviving offer gets its correct discount using
-   the new ride price.
-================================================= */
-
-const quantity =
-    Number(
-        item.quantity
-        ||
-        0
-    );
+            const quantity =
+                Number(
+                    item.quantity
+                    ||
+                    0
+                );
 
 
-item.subtotal =
-    Number(
-        item.price
-        ||
-        0
-    )
-    *
-    quantity;
+            /* =================================================
+               RECALCULATE PRICE USING NEW DATE PRICE
+            ================================================= */
+
+            item.subtotal =
+                Number(
+                    item.price
+                    ||
+                    0
+                )
+                *
+                quantity;
 
 
-if (
-    quantity > 0
-) {
+            if (
+                quantity > 0
+            ) {
 
-    const offerResult =
-        calculateOfferForItem(
-            item
-        );
-
-
-    item.discount =
-        Number(
-            offerResult.discount
-            ||
-            0
-        );
+                const offerResult =
+                    calculateOfferForItem(
+                        item
+                    );
 
 
-    item.total =
-        Math.max(
-            0,
-            item.subtotal
-            -
-            item.discount
-        );
+                /*
+                 * If Regular Ticket:
+                 * discount = 0
+                 *
+                 * If surviving offer:
+                 * recalculate using new price.
+                 */
 
-}
-else {
+                item.discount =
+                    item.selectedOfferData
+                        ?
+                        Number(
+                            offerResult.discount
+                            ||
+                            0
+                        )
+                        :
+                        0;
 
-    item.discount =
-        0;
 
-    item.total =
-        0;
+                item.total =
+                    Math.max(
+                        0,
+                        item.subtotal
+                        -
+                        item.discount
+                    );
 
-}
+            }
+            else {
+
+                item.discount =
+                    0;
+
+
+                item.total =
+                    0;
+
+            }
+
 
             survivingItems.push(
                 item
@@ -18670,7 +19389,7 @@ else {
 
 
     /* =====================================================
-       REPLACE BOOKING WITH ONLY VALID SURVIVORS
+       SET CANDIDATE BOOKING FOR NEW DATE
     ===================================================== */
 
     bookingState.items =
@@ -18678,31 +19397,52 @@ else {
 
 
     /* =====================================================
-       OLD PREFERRED TIME IS INVALID ON NEW DATE
+       OLD PREFERRED TIME CANNOT BE COMMITTED DIRECTLY
+
+       We will try to restore it later in the Time step.
     ===================================================== */
 
-    selectedPreferredStart =
-        "";
+    if (
+        editingBookingDateBackup
+    ) {
 
-    selectedPreferredLabel =
-        "";
+        selectedPreferredStart =
+            editingBookingDateBackup
+                .preferredStart
+            ||
+            "";
 
+
+        selectedPreferredLabel =
+            editingBookingDateBackup
+                .preferredLabel
+            ||
+            "";
+
+    }
+    else {
+
+        selectedPreferredStart =
+            "";
+
+
+        selectedPreferredLabel =
+            "";
+
+    }
+
+
+    /* =====================================================
+       OLD LIVE AVAILABILITY BELONGS TO OLD DATE
+    ===================================================== */
 
     rideSlotAvailability =
         new Map();
 
 
-    /* =====================================================
-       RESET OFFER ACCORDION
-    ===================================================== */
-
     expandedOfferRideId =
         null;
 
-
-    /* =====================================================
-       RETURN CHANGE INFORMATION
-    ===================================================== */
 
     return {
 
@@ -18880,10 +19620,43 @@ else {
    against the newly loaded date.
 ===================================================== */
 
+const hasOriginalDateEditItems =
+    Boolean(
+        editingBookingDate
+        &&
+        editingBookingDateBackup
+        &&
+        Array.isArray(
+            editingBookingDateBackup.items
+        )
+        &&
+        editingBookingDateBackup.items.length > 0
+    );
+
+
+const hasCurrentBookingItems =
+    Array.isArray(
+        bookingState.items
+    )
+    &&
+    bookingState.items.length > 0;
+
+
+/* =====================================================
+   RECONCILE DATE
+
+   During date edit, ORIGINAL backup is the source,
+   even when a previous candidate date had zero rides.
+===================================================== */
+
 if (
     dateActuallyChanged
     &&
-    bookingState.items.length > 0
+    (
+        hasCurrentBookingItems
+        ||
+        hasOriginalDateEditItems
+    )
 ) {
 
     reconciliationResult =
@@ -18922,17 +19695,6 @@ if (
             "show"
         );
 
-
-        /* =====================================================
-           DATE EDIT IS NOW COMMITTED
-        ===================================================== */
-
-        editingBookingDate =
-            false;
-
-
-        editingBookingDateBackup =
-            null;
 
 
         /* =====================================================
@@ -21203,6 +21965,22 @@ function renderOffersForSelectedRides() {
                     }
 
 
+                    const alreadyRegular =
+            !item.selectedOfferData
+            &&
+            item.offerId === null;
+
+        if (
+            alreadyRegular
+        ) {
+
+            expandedOfferRideId =
+                rideId;
+
+            return;
+        }
+
+
                     item.selectedOfferData =
                         null;
 
@@ -21315,6 +22093,23 @@ function renderOffersForSelectedRides() {
                         item,
                         regularOffer,
                         function () {
+
+
+
+                            const alreadyRegular =
+            !item.selectedOfferData
+            &&
+            item.offerId === null;
+
+        if (
+            alreadyRegular
+        ) {
+
+            expandedOfferRideId =
+                rideId;
+
+            return;
+        }
 
                             item.selectedOfferData =
                                 null;
@@ -21621,6 +22416,12 @@ function renderOffersForSelectedRides() {
 
 /* =========================================================
    SELECT ONE OFFER FOR ONE RIDE
+
+   IMPORTANT:
+   Clicking the SAME already-selected offer must NOT
+   clear participants or slot data.
+
+   Only a REAL offer change resets dependent data.
 ========================================================= */
 
 function selectMultiRideOffer(
@@ -21638,6 +22439,47 @@ function selectMultiRideOffer(
 
     }
 
+
+    /* =====================================================
+       SAME OFFER ALREADY SELECTED
+
+       Keep:
+       - participants
+       - weight groups
+       - quantities
+       - current ride data
+    ===================================================== */
+
+    const sameOffer =
+        item.offerId !== null
+        &&
+        String(
+            item.offerId
+        )
+        ===
+        String(
+            offer.id
+        );
+
+
+    if (
+        sameOffer
+    ) {
+
+        expandedOfferRideId =
+            String(
+                item.rideId
+            );
+
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       REAL OFFER CHANGE
+    ===================================================== */
 
     item.selectedOfferData =
         offer;
@@ -21669,23 +22511,28 @@ function selectMultiRideOffer(
             "";
 
     }
+    else {
+
+        /*
+         * Different coupon offer selected.
+         * Old coupon must not automatically carry over.
+         */
+
+        item.couponCode =
+            "";
+
+    }
 
 
-    /*
-     * Offer change invalidates
-     * participant/slot data as before.
-     */
+    /* =====================================================
+       ONLY A REAL OFFER CHANGE INVALIDATES PARTICIPANTS
+       AND TIME DATA.
+    ===================================================== */
 
     resetRideAfterOfferChange(
         item
     );
 
-
-    /*
-     * DO NOT JUMP TO ANOTHER RIDE.
-     *
-     * Keep currently edited ride expanded.
-     */
 
     expandedOfferRideId =
         String(
@@ -25639,21 +26486,50 @@ async function loadAllRideSlots() {
     ) {
 
         return;
-
     }
 
 
+
     /* =====================================================
-       RESET
+   REMEMBER PREFERRED TIME BEFORE RESETTING SLOT UI
+
+   During Date Edit this contains the customer's old
+   preferred booking start time.
+
+   Example:
+   old date preferred start = 10:30 AM
+
+   After changing the date we will try 10:30 AM first.
+===================================================== */
+
+const previousPreferredStart =
+    selectedPreferredStart
+    ||
+    "";
+
+
+const previousPreferredLabel =
+    selectedPreferredLabel
+    ||
+    "";
+
+
+    /* =====================================================
+       RESET CURRENT DATE SLOT STATE
     ===================================================== */
 
     rideSlotAvailability =
         new Map();
 
+    unavailableSlotRideIds =
+        new Set();
+
+    skippedSlotRideIds =
+        new Set();
+
 
     selectedPreferredStart =
         "";
-
 
     selectedPreferredLabel =
         "";
@@ -25716,132 +26592,140 @@ async function loadAllRideSlots() {
     }
 
 
-    /* =====================================================
-       CLEAR OLD ASSIGNED SLOT DATA
-    ===================================================== */
-
+    /*
+     * Old date/time assignments must never remain
+     * after loading availability for another date.
+     */
     clearAutomaticSlotAssignments();
 
 
     try {
 
+        const slotRideItems =
+            getSlotRideItems();
+
+
         /* =================================================
-           FETCH SLOT DATA FOR EVERY RIDE
+           LOAD EVERY RIDE INDEPENDENTLY
+
+           IMPORTANT:
+           Do NOT stop when one ride is unavailable.
         ================================================= */
 
-        /* =========================================================
-   LOAD EVERY SELECTED RIDE
-
-   BEFORE SHOWING PREFERRED TIMES:
-   Make sure every selected ride has at least one
-   available start slot somewhere on this date.
-========================================================= */
-
-for (
-    const item
-    of
-    getSlotRideItems()
-) {
-
-    const data =
-        await fetchSlotDataForRide(
-            item
-        );
-
-
-    const slots =
-        Array.isArray(
-            data.slots
-        )
-            ?
-            data.slots
-            :
-            [];
-
-
-    /* =====================================================
-       SAVE SLOT DATA
-    ===================================================== */
-
-    rideSlotAvailability.set(
-        String(
-            item.rideId
-        ),
-        slots
-    );
-
-
-    /* =====================================================
-       RIDE COMPLETELY UNAVAILABLE FOR THIS DATE
-
-       Django already calculates this using the actual
-       participant quantity and slot capacity.
-    ===================================================== */
-
-    if (
-        !data.has_available_slot
-    ) {
-
-        /* -----------------------------------------
-           CLEAR OLD ASSIGNED SLOT VALUES
-        ----------------------------------------- */
-
-        clearAutomaticSlotAssignments();
-
-
-        selectedPreferredStart =
-            "";
-
-
-        selectedPreferredLabel =
-            "";
-
-
-        /* -----------------------------------------
-           DO NOT SHOW OLD SCHEDULE
-        ----------------------------------------- */
-
-        if (
-            autoSchedule
+        for (
+            const item
+            of
+            slotRideItems
         ) {
 
-            autoSchedule.style.display =
-                "none";
+            const data =
+                await fetchSlotDataForRide(
+                    item
+                );
+
+
+            const slots =
+                Array.isArray(
+                    data.slots
+                )
+                    ?
+                    data.slots
+                    :
+                    [];
+
+
+            const rideId =
+                String(
+                    item.rideId
+                );
+
+
+            /* =================================================
+               RIDE HAS NO AVAILABLE SLOT ON THIS DATE
+            ================================================= */
+
+            if (
+                !data.has_available_slot
+            ) {
+
+                unavailableSlotRideIds.add(
+                    rideId
+                );
+
+
+                /*
+                 * Do not put this ride into the common
+                 * availability map.
+                 *
+                 * This prevents unavailable times from
+                 * appearing as preferred-time choices.
+                 */
+
+                continue;
+            }
+
+
+            /* =================================================
+               RIDE HAS AT LEAST ONE AVAILABLE SLOT
+            ================================================= */
+
+            rideSlotAvailability.set(
+                rideId,
+                slots
+            );
 
         }
 
 
+        /* =================================================
+           COPY DATE-UNAVAILABLE RIDES INTO CURRENT SKIP SET
+        ================================================= */
+
+        skippedSlotRideIds =
+            new Set(
+                unavailableSlotRideIds
+            );
+
+
+        const availableRideItems =
+            slotRideItems.filter(
+                function (
+                    item
+                ) {
+
+                    return !unavailableSlotRideIds.has(
+                        String(
+                            item.rideId
+                        )
+                    );
+
+                }
+            );
+
+
+        /* =================================================
+           NO SELECTED RIDE HAS ANY SLOT ON THIS DATE
+        ================================================= */
+
         if (
-            autoScheduleList
+            availableRideItems.length === 0
         ) {
 
-            autoScheduleList.innerHTML =
-                "";
+            const unavailableNames =
+                slotRideItems
+                    .map(
+                        function (
+                            item
+                        ) {
 
-        }
+                            return item.rideName;
 
+                        }
+                    )
+                    .join(
+                        ", "
+                    );
 
-        /* -----------------------------------------
-           DISABLE REVIEW
-        ----------------------------------------- */
-
-        if (
-            continueToReview
-        ) {
-
-            continueToReview.disabled =
-                true;
-
-        }
-
-
-        /* -----------------------------------------
-           SHOW CLEAR MESSAGE IN SLOT AREA
-        ----------------------------------------- */
-
-        if (
-            preferredSlotList
-        ) {
 
             preferredSlotList.innerHTML = `
 
@@ -25853,23 +26737,15 @@ for (
 
                     </span>
 
-
                     <div>
 
                         <strong>
-
-                            ${escapeHtml(
-                                item.rideName
-                            )}
-
+                            No rides are available
                         </strong>
 
-
                         <span>
-
-                            No available time slots
-                            for this ride on the selected date.
-
+                            None of the selected rides have
+                            an available time slot on this date.
                         </span>
 
                     </div>
@@ -25878,43 +26754,145 @@ for (
 
             `;
 
+
+            if (
+                autoSlotMessage
+            ) {
+
+                autoSlotMessage.textContent =
+                    `${unavailableNames} ${
+                        slotRideItems.length === 1
+                            ?
+                            "has"
+                            :
+                            "have"
+                    } no available time slots on this date. Please choose another visit date.`;
+
+                autoSlotMessage.className =
+                    "ff-slot-message show error";
+
+            }
+
+
+            if (
+    continueToReview
+) {
+
+    /*
+     * Keep Review enabled.
+     *
+     * Clicking it will open the slot warning modal.
+     * Since every ride is unavailable, the customer
+     * will need to change the date.
+     */
+    continueToReview.disabled =
+        false;
+
+}
+
+
+            return;
         }
 
 
+        /* =================================================
+           AT LEAST ONE RIDE IS AVAILABLE
+
+           Show normal preferred-time choices.
+        ================================================= */
+
+        renderPreferredSlotChoices();
+      
+
+        /* =================================================
+   DATE EDIT:
+   AUTOMATICALLY TRY THE CUSTOMER'S OLD PREFERRED TIME
+
+   Example:
+   old preferred start = 10:30 AM
+
+   New date:
+   Mega      -> 10:30 available
+   Superman  -> 10:30 full, 11:30 available
+
+   Result:
+   Mega      -> 10:30
+   Superman  -> 11:30
+
+   Customer does not need to select the same
+   preferred time again manually.
+================================================= */
+
+if (
+    editingBookingDate
+    &&
+    previousPreferredStart
+) {
+
+    assignSlotsFromPreferredTime(
+        previousPreferredStart,
+        previousPreferredLabel
+        ||
+        previousPreferredStart
+    );
+
+}
+
+        /* =================================================
+           SOME RIDES ARE UNAVAILABLE, SOME ARE AVAILABLE
+        ================================================= */
+
         if (
-            autoSlotMessage
+         unavailableSlotRideIds.size > 0
+        &&
+           autoSlotMessage
+        &&
+        !selectedPreferredStart
         ) {
 
-            autoSlotMessage.textContent =
-                `${item.rideName} has no available time slots on the selected date. Please remove this ride or choose another visit date.`;
+            const unavailableNames =
+                slotRideItems
+                    .filter(
+                        function (
+                            item
+                        ) {
 
+                            return unavailableSlotRideIds.has(
+                                String(
+                                    item.rideId
+                                )
+                            );
+
+                        }
+                    )
+                    .map(
+                        function (
+                            item
+                        ) {
+
+                            return item.rideName;
+
+                        }
+                    );
+
+
+            autoSlotMessage.textContent =
+                `${
+                    unavailableNames.join(
+                        ", "
+                    )
+                } ${
+                    unavailableNames.length === 1
+                        ?
+                        "has"
+                        :
+                        "have"
+                } no available slots on this date. Other available rides can still be scheduled.`;
 
             autoSlotMessage.className =
                 "ff-slot-message show error";
 
         }
-
-
-        /*
-         * STOP HERE.
-         *
-         * Do not show preferred times because a complete
-         * booking schedule cannot be created while this
-         * selected ride has no availability.
-         */
-
-        return;
-
-    }
-
-}
-
-
-        /* =================================================
-           RENDER ONE COMMON TIME LIST
-        ================================================= */
-
-        renderPreferredSlotChoices();
 
     }
     catch (
@@ -26060,16 +27038,17 @@ function getPreferredSlotChoices() {
                 ) {
 
                     if (
-                        !slot
-                        ||
-                        !slot.start_time
-                        ||
-                        slot.is_past
-                    ) {
+    !slot
+    ||
+    !slot.available
+    ||
+    !slot.start_time
+    ||
+    slot.is_past
+) {
 
-                        return;
-
-                    }
+    return;
+}
 
 
                     const key =
@@ -26411,7 +27390,7 @@ function renderPreferredSlotChoices() {
 
 
 /* =========================================================
-   USER SELECTS ONE START TIME
+   USER SELECTS ONE PREFERRED START TIME
 ========================================================= */
 
 function assignSlotsFromPreferredTime(
@@ -26458,37 +27437,68 @@ function assignSlotsFromPreferredTime(
 
 
     /* =====================================================
-       CLEAR PREVIOUS ASSIGNMENTS
+       NEW TIME SELECTION = COMPLETELY NEW ASSIGNMENT
     ===================================================== */
 
     clearAutomaticSlotAssignments();
+
+
+    /*
+     * Start with rides that have no slot anywhere
+     * on this date.
+     */
+
+    skippedSlotRideIds =
+        new Set(
+            unavailableSlotRideIds
+        );
 
 
     const assignments =
         [];
 
 
+    const slotRideItems =
+        getSlotRideItems();
+
+
     /* =====================================================
        CHECK EACH RIDE INDEPENDENTLY
-
-       IMPORTANT:
-       EVERY RIDE STARTS SEARCHING FROM THE USER'S
-       ORIGINAL PREFERRED TIME.
-
-       WE DO NOT USE THE PREVIOUS RIDE'S TIME.
     ===================================================== */
 
     for (
         const item
         of
-         getSlotRideItems()
+        slotRideItems
     ) {
+
+        const rideId =
+            String(
+                item.rideId
+            );
+
+
+        /* =================================================
+           RIDE HAS NO SLOT ANYWHERE ON THIS DATE
+        ================================================= */
+
+        if (
+            unavailableSlotRideIds.has(
+                rideId
+            )
+        ) {
+
+            skippedSlotRideIds.add(
+                rideId
+            );
+
+            continue;
+        }
+
 
         const slots =
             rideSlotAvailability.get(
-                String(
-                    item.rideId
-                )
+                rideId
             )
             ||
             [];
@@ -26502,102 +27512,26 @@ function assignSlotsFromPreferredTime(
 
 
         /* =================================================
-           NO AVAILABLE SLOT AT OR AFTER PREFERRED TIME
+           THIS RIDE CANNOT BE SCHEDULED FROM PREFERRED TIME
+
+           IMPORTANT:
+           Do NOT cancel the other rides.
         ================================================= */
 
         if (
-    !chosenSlot
-) {
-
-    /* =================================================
-       CHECK WHETHER THIS RIDE HAS ANY AVAILABLE SLOT
-       ANYWHERE ON THE SELECTED DATE
-    ================================================= */
-
-    const anyAvailableSlot =
-        slots.some(
-            function (
-                slot
-            ) {
-
-                return (
-                    slot
-                    &&
-                    slot.available
-                    &&
-                    !slot.is_past
-                    &&
-                    slot.start_time
-                );
-
-            }
-        );
-
-
-    clearAutomaticSlotAssignments();
-
-
-    if (
-        autoSchedule
-    ) {
-
-        autoSchedule.style.display =
-            "none";
-
-    }
-
-
-    if (
-        continueToReview
-    ) {
-
-        continueToReview.disabled =
-            true;
-
-    }
-
-
-    if (
-        autoSlotMessage
-    ) {
-
-        /* =============================================
-           NO SLOT ANYWHERE ON THIS DATE
-        ============================================= */
-
-        if (
-            !anyAvailableSlot
+            !chosenSlot
         ) {
 
-            autoSlotMessage.textContent =
-                `${item.rideName} has no available time slots on the selected date. Please remove this ride or choose another visit date.`;
+            skippedSlotRideIds.add(
+                rideId
+            );
 
+            continue;
         }
-
-        /* =============================================
-           SLOTS EXIST, BUT ONLY BEFORE PREFERRED TIME
-        ============================================= */
-
-        else {
-
-            autoSlotMessage.textContent =
-                `${item.rideName} has no available time slot at or after ${selectedPreferredLabel}. Please choose an earlier preferred start time.`;
-
-        }
-
-
-        autoSlotMessage.className =
-            "ff-slot-message show error";
-
-    }
-
-
-    return;
-}
 
 
         /* =================================================
-           SAVE ASSIGNED SLOT INTO THIS RIDE
+           SAVE THIS RIDE'S NEW SLOT
         ================================================= */
 
         saveAssignedSlotToRide(
@@ -26627,7 +27561,67 @@ function assignSlotsFromPreferredTime(
 
 
     /* =====================================================
-       SUCCESS
+       NOTHING COULD BE SCHEDULED
+    ===================================================== */
+
+    if (
+        assignments.length === 0
+    ) {
+
+        if (
+            autoSchedule
+        ) {
+
+            autoSchedule.style.display =
+                "none";
+
+        }
+
+
+        if (
+            autoScheduleList
+        ) {
+
+            autoScheduleList.innerHTML =
+                "";
+
+        }
+
+
+        if (
+            autoSlotMessage
+        ) {
+
+            autoSlotMessage.textContent =
+               `No selected ride has a suitable available time at or after ${selectedPreferredLabel}. You can choose another preferred time, or click Review Booking to change the visit date.`;
+            autoSlotMessage.className =
+                "ff-slot-message show error";
+
+        }
+
+
+        if (
+    continueToReview
+) {
+
+    /*
+     * Keep Review enabled.
+     *
+     * Clicking Review will open the unavailable-rides
+     * modal instead of going directly to review.
+     */
+    continueToReview.disabled =
+        false;
+
+}
+
+
+        return;
+    }
+
+
+    /* =====================================================
+       SHOW SUCCESSFUL ASSIGNMENTS
     ===================================================== */
 
     renderAutomaticSchedule(
@@ -26645,18 +27639,86 @@ function assignSlotsFromPreferredTime(
     }
 
 
+    /* =====================================================
+       SOME RIDES COULD NOT BE SCHEDULED
+    ===================================================== */
+
     if (
-        autoSlotMessage
+        skippedSlotRideIds.size > 0
     ) {
 
-        autoSlotMessage.textContent =
-            "Available times have been assigned for all selected rides.";
+        const skippedItems =
+            slotRideItems.filter(
+                function (
+                    item
+                ) {
 
-        autoSlotMessage.className =
-            "ff-slot-message show success";
+                    return skippedSlotRideIds.has(
+                        String(
+                            item.rideId
+                        )
+                    );
+
+                }
+            );
+
+
+        const skippedNames =
+            skippedItems.map(
+                function (
+                    item
+                ) {
+
+                    return item.rideName;
+
+                }
+            );
+
+
+        if (
+            autoSlotMessage
+        ) {
+
+            autoSlotMessage.textContent =
+    skippedNames.length === 1
+        ?
+        `${skippedNames[0]} does not have a suitable available time slot. The other available rides have been assigned times. Click Review Booking to continue.`
+        :
+        `${skippedNames.join(", ")} do not have suitable available time slots. The other available rides have been assigned times. Click Review Booking to continue.`;
+            autoSlotMessage.className =
+                "ff-slot-message show error";
+
+        }
 
     }
 
+    /* =====================================================
+       EVERY RIDE WAS SUCCESSFULLY SCHEDULED
+    ===================================================== */
+
+    else {
+
+        if (
+            autoSlotMessage
+        ) {
+
+            autoSlotMessage.textContent =
+                "Available times have been assigned for all selected rides.";
+
+            autoSlotMessage.className =
+                "ff-slot-message show success";
+
+        }
+
+    }
+
+
+    /*
+     * IMPORTANT:
+     *
+     * Review stays enabled when at least one ride
+     * was successfully scheduled.
+     */
 
     if (
         continueToReview
@@ -27149,11 +28211,281 @@ function renderAutomaticSchedule(
 
 
 
+/* =========================================================
+   GET RIDES THAT COULD NOT BE SCHEDULED
+========================================================= */
+
+function getSkippedSlotRideItems() {
+
+    return bookingState.items.filter(
+        function (
+            item
+        ) {
+
+            return skippedSlotRideIds.has(
+                String(
+                    item.rideId
+                )
+            );
+
+        }
+    );
+
+}
 
 
 /* =========================================================
-   TIME SLOT -> REVIEW
+   OPEN PARTIAL AVAILABILITY WARNING
 ========================================================= */
+
+function openSlotWarningModal() {
+
+    if (
+        !slotWarningModal
+    ) {
+
+        return;
+    }
+
+
+    const skippedItems =
+        getSkippedSlotRideItems();
+
+
+    const remainingRideCount =bookingState.items.length-skippedItems.length;    
+
+
+    if (
+        skippedItems.length === 0
+    ) {
+
+        return;
+    }
+
+
+    if (
+        slotWarningRideList
+    ) {
+
+        slotWarningRideList.innerHTML =
+            "";
+
+
+        skippedItems.forEach(
+            function (
+                item
+            ) {
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "ff-slot-warning-ride";
+
+
+                row.innerHTML = `
+
+                    <i class="fas fa-circle-xmark"></i>
+
+                    <span>
+                        ${escapeHtml(
+                            item.rideName
+                        )}
+                    </span>
+
+                `;
+
+
+                slotWarningRideList.appendChild(
+                    row
+                );
+
+            }
+        );
+
+    }
+
+
+    if (
+    slotWarningText
+) {
+
+    if (
+        remainingRideCount <= 0
+    ) {
+
+        slotWarningText.textContent =
+            skippedItems.length === 1
+                ?
+                "This ride does not have an available time slot on this date. Please choose another visit date."
+                :
+                "None of these rides have available time slots on this date. Please choose another visit date.";
+
+    }
+
+    else {
+
+        slotWarningText.textContent =
+            skippedItems.length === 1
+                ?
+                "This ride does not have a suitable available time slot. You can change the visit date or continue without this ride."
+                :
+                "These rides do not have suitable available time slots. You can change the visit date or continue without these rides.";
+
+    }
+
+}
+
+    if (
+    slotWarningContinue
+) {
+
+    /* =====================================================
+       IF NO RIDE WOULD REMAIN,
+       CUSTOMER MUST CHANGE DATE
+    ===================================================== */
+
+    if (
+        remainingRideCount <= 0
+    ) {
+
+        slotWarningContinue.style.display =
+            "none";
+
+    }
+
+    else {
+
+        slotWarningContinue.style.display =
+            "";
+
+
+        slotWarningContinue.innerHTML =
+            skippedItems.length === 1
+
+                ?
+
+                `Continue Without Ride
+                 <i class="fas fa-arrow-right"></i>`
+
+                :
+
+                `Continue Without These Rides
+                 <i class="fas fa-arrow-right"></i>`;
+
+    }
+
+}
+
+
+    slotWarningModal.classList.add(
+        "show"
+    );
+
+
+    slotWarningModal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================================
+   CLOSE WARNING
+========================================================= */
+
+function closeSlotWarningModal() {
+
+    if (
+        !slotWarningModal
+    ) {
+
+        return;
+    }
+
+
+    slotWarningModal.classList.remove(
+        "show"
+    );
+
+
+    slotWarningModal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
+   FINISH TIME STEP AND GO TO REVIEW
+========================================================= */
+function finishTimeStepAndOpenReview() {
+
+    /* -----------------------------------------
+       COMPLETE SINGLE-RIDE REVIEW EDIT
+    ----------------------------------------- */
+
+    if (
+        editingRideIndex !== null
+    ) {
+
+        completeReviewRideEdit();
+
+    }
+
+
+    /* -----------------------------------------
+       COMPLETE BOOKING-WIDE TIME EDIT
+    ----------------------------------------- */
+
+    if (
+        editingBookingTime
+    ) {
+
+        completeBookingTimeEdit();
+
+    }
+
+
+    /* -----------------------------------------
+       COMPLETE BOOKING-WIDE DATE EDIT
+    ----------------------------------------- */
+
+    if (
+        editingBookingDate
+    ) {
+
+        completeBookingDateEdit();
+
+    }
+
+
+    renderSelectedAdventures();
+
+    updateBookingSummary();
+
+    showBookingStep(
+        "review"
+    );
+
+}
+
+
+
+
 /* =========================================================
    TIME SLOT -> REVIEW
 ========================================================= */
@@ -27162,9 +28494,33 @@ continueToReview?.addEventListener(
     "click",
     function () {
 
-        /* -----------------------------------------
-           PREFERRED START MUST BE SELECTED
-        ----------------------------------------- */
+        /* =================================================
+           CASE 1:
+           SOME / ALL RIDES COULD NOT BE SCHEDULED
+
+           IMPORTANT:
+           Check this BEFORE requiring preferred time.
+
+           Why?
+           When every ride has zero availability there is
+           no preferred time the customer can select.
+        ================================================= */
+
+        if (
+            skippedSlotRideIds.size > 0
+            &&
+            !selectedPreferredStart
+        ) {
+
+            openSlotWarningModal();
+
+            return;
+        }
+
+
+        /* =================================================
+           CUSTOMER MUST SELECT A PREFERRED START
+        ================================================= */
 
         if (
             !selectedPreferredStart
@@ -27178,22 +28534,40 @@ continueToReview?.addEventListener(
         }
 
 
-        /* -----------------------------------------
-           EVERY CURRENT WIZARD RIDE
-           MUST HAVE AN ASSIGNED SLOT
+        const slotRideItems =
+            getSlotRideItems();
 
-           NORMAL MODE:
-           -> checks all rides
 
-           EDIT MODE:
-           -> checks only edited ride
-        ----------------------------------------- */
+        /* =================================================
+           VALIDATE RIDES THAT ARE NOT BEING SKIPPED
+        ================================================= */
 
         for (
             const item
             of
-            getSlotRideItems()
+            slotRideItems
         ) {
+
+            const rideId =
+                String(
+                    item.rideId
+                );
+
+
+            /*
+             * This ride could not be scheduled.
+             * The confirmation modal will handle it.
+             */
+            if (
+                skippedSlotRideIds.has(
+                    rideId
+                )
+            ) {
+
+                continue;
+
+            }
+
 
             if (
                 !item.selectedStart
@@ -27224,62 +28598,26 @@ continueToReview?.addEventListener(
 
 
         /* =================================================
-           COMPLETE REVIEW EDIT
+           SOME RIDES COULD NOT BE SCHEDULED
 
-           IMPORTANT:
-           The edited ride already contains its new:
-           - offer
-           - participants
-           - quantity
-           - weight groups
-           - time slot
-
-           So we KEEP those changes and only leave edit mode.
+           Ask customer only NOW.
         ================================================= */
 
         if (
-            editingRideIndex !== null
+            skippedSlotRideIds.size > 0
         ) {
 
-            completeReviewRideEdit();
+            openSlotWarningModal();
 
+            return;
         }
 
 
         /* =================================================
-   COMPLETE BOOKING-WIDE TIME EDIT
-================================================= */
+           EVERYTHING VALID
+        ================================================= */
 
-if (
-    editingBookingTime
-) {
-
-    completeBookingTimeEdit();
-
-}
-
-
-        /* -----------------------------------------
-           REBUILD REVIEW
-        ----------------------------------------- */
-
-        renderSelectedAdventures();
-
-
-        /* -----------------------------------------
-           UPDATE TOTALS
-        ----------------------------------------- */
-
-        updateBookingSummary();
-
-
-        /* -----------------------------------------
-           RETURN TO REVIEW
-        ----------------------------------------- */
-
-        showBookingStep(
-            "review"
-        );
+        finishTimeStepAndOpenReview();
 
     }
 );
@@ -27287,6 +28625,151 @@ if (
 
 
 
+/* =========================================================
+   SLOT WARNING -> CHANGE DATE
+========================================================= */
+
+slotWarningChangeDate?.addEventListener(
+    "click",
+    function () {
+
+        closeSlotWarningModal();
+
+
+        /*
+         * Special date change coming from
+         * failed slot availability.
+         *
+         * Keep ALL original booking data.
+         */
+        startEditingBookingDate({
+            fromSlotWarning:
+                true
+        });
+
+    }
+);
+
+
+
+
+/* =========================================================
+   SLOT WARNING -> CONTINUE WITHOUT UNAVAILABLE RIDES
+========================================================= */
+
+slotWarningContinue?.addEventListener(
+    "click",
+    function () {
+
+        const skippedItems =
+            getSkippedSlotRideItems();
+
+
+        if (
+            skippedItems.length === 0
+        ) {
+
+            closeSlotWarningModal();
+
+            finishTimeStepAndOpenReview();
+
+            return;
+        }
+
+
+        const skippedIds =
+            new Set(
+                skippedItems.map(
+                    function (
+                        item
+                    ) {
+
+                        return String(
+                            item.rideId
+                        );
+
+                    }
+                )
+            );
+
+
+        /* =================================================
+           REMOVE ONLY UNSCHEDULED RIDES
+        ================================================= */
+
+        bookingState.items =
+            bookingState.items.filter(
+                function (
+                    item
+                ) {
+
+                    return !skippedIds.has(
+                        String(
+                            item.rideId
+                        )
+                    );
+
+                }
+            );
+
+
+        /* =================================================
+           CUSTOMER CANNOT CONTINUE WITH ZERO RIDES
+        ================================================= */
+
+        if (
+            bookingState.items.length === 0
+        ) {
+
+            showError(
+                "No rides remain in your booking. Please choose another visit date."
+            );
+
+            closeSlotWarningModal();
+
+
+            startEditingBookingDate({
+              fromSlotWarning:
+                 true
+            });
+
+            return;
+        }
+
+
+        /* =================================================
+           CLEAN TEMPORARY AVAILABILITY STATE
+        ================================================= */
+
+        skippedSlotRideIds =
+            new Set();
+
+
+        unavailableSlotRideIds =
+            new Set();
+
+
+        closeSlotWarningModal();
+
+
+        /* =================================================
+           COMPLETE EDIT MODE AND OPEN REVIEW
+        ================================================= */
+
+        finishTimeStepAndOpenReview();
+
+    }
+);
+
+
+slotWarningBackdrop?.addEventListener(
+    "click",
+    function () {
+
+        closeSlotWarningModal();
+
+    }
+);
 
 
     /* =========================================================
@@ -29052,19 +30535,32 @@ loadBookingCalendarAvailability();
 
 
 /* =========================================================
-   START BOOKING DATE EDIT
-========================================================= */
-
-/* =========================================================
    START SMART BOOKING DATE EDIT
 
-   Nothing is destroyed here.
+   IMPORTANT:
+   Nothing is deleted here.
 
-   We keep a complete backup and allow the customer
-   to choose another date.
+   We save the COMPLETE old booking before allowing
+   the customer to choose another date.
+
+   options.fromSlotWarning:
+   true = customer reached Date Edit because one or
+          more rides had no suitable slot.
 ========================================================= */
 
-function startEditingBookingDate() {
+function startEditingBookingDate(
+    options = {}
+) {
+
+    const fromSlotWarning =
+        Boolean(
+            options.fromSlotWarning
+        );
+
+
+    /* =====================================================
+       MUST HAVE A CURRENT BOOKING DATE
+    ===================================================== */
 
     if (
         !bookingState.bookingDate
@@ -29080,9 +30576,9 @@ function startEditingBookingDate() {
     }
 
 
-    /* -----------------------------------------
-       DO NOT CHANGE DATE DURING RIDE EDIT
-    ----------------------------------------- */
+    /* =====================================================
+       DO NOT START DATE EDIT WHILE EDITING ONE RIDE
+    ===================================================== */
 
     if (
         editingRideIndex !== null
@@ -29100,59 +30596,116 @@ function startEditingBookingDate() {
     }
 
 
-    /* -----------------------------------------
-       DO NOT CHANGE DATE DURING TIME EDIT
-    ----------------------------------------- */
+    /* =====================================================
+       DO NOT START DATE EDIT WHILE EDITING TIME
+    ===================================================== */
 
     if (
         editingBookingTime
     ) {
 
-        showBookingMessage(
-            "Finish or cancel the current time edit before changing the visit date.",
-            "warning",
-            "Finish Time Edit First"
-        );
+        /*
+         * If Date Edit is intentionally coming from
+         * the no-slot warning, the user is leaving
+         * Time Edit and changing the date instead.
+         */
+
+        if (
+            !fromSlotWarning
+        ) {
+
+            showBookingMessage(
+                "Finish or cancel the current time edit before changing the visit date.",
+                "warning",
+                "Finish Time Edit First"
+            );
 
 
-        return;
+            return;
+
+        }
+
+    }
+
+    
+ /* =====================================================
+   SAVE ORIGINAL BOOKING SAFELY
+
+   IMPORTANT:
+   ensureBookingDateBackup() creates the backup only once.
+
+   Therefore:
+   Original Date A
+       -> try Date B
+       -> try Date C
+       -> try Date D
+
+   Date A data remains protected until the edit is
+   either cancelled or successfully completed.
+===================================================== */
+
+ensureBookingDateBackup();
+
+
+editingDateFromSlotWarning =
+    fromSlotWarning;
+
+
+
+    /* =====================================================
+   SHOW DATE EDIT BACK BUTTON
+
+   Only show "Back to Review" when Date Edit was opened
+   from the actual Review screen.
+
+   If Date Edit came from the unavailable-slot warning,
+   we handle that flow separately.
+===================================================== */
+
+if (
+    cancelDateEdit
+) {
+
+    cancelDateEdit.style.display =
+        fromSlotWarning
+            ?
+            "none"
+            :
+            "inline-flex";
+
+}
+
+
+
+    /* =====================================================
+       IF WE CAME FROM TIME EDIT / SLOT WARNING,
+       LEAVE TIME EDIT MODE WITHOUT RESTORING / DELETING DATA
+    ===================================================== */
+
+    if (
+        fromSlotWarning
+    ) {
+
+        editingBookingTime =
+            false;
+
+
+        editingBookingTimeItemsBackup =
+            null;
+
+
+        editingBookingTimeStartBackup =
+            "";
+
+
+        editingBookingTimeLabelBackup =
+            "";
 
     }
 
 
     /* =====================================================
-       BACK UP EVERYTHING
-    ===================================================== */
-
-    editingBookingDateBackup = {
-
-        bookingDate:
-            bookingState.bookingDate,
-
-        items:
-            cloneBookingData(
-                bookingState.items
-            ),
-
-        preferredStart:
-            selectedPreferredStart
-            ||
-            "",
-
-        preferredLabel:
-            selectedPreferredLabel
-            ||
-            ""
-
-    };
-
-
-    editingBookingDate =
-        true;
-
-
-    /* =====================================================
-       RESTORE CURRENT DATE INTO DATE CONTROL
+       SHOW OLD DATE AS CURRENT SELECTED DATE
     ===================================================== */
 
     if (
@@ -29183,7 +30736,7 @@ function startEditingBookingDate() {
 
 
     /* =====================================================
-       OPEN CALENDAR AT CURRENT BOOKING MONTH
+       OPEN CALENDAR ON OLD BOOKING MONTH
     ===================================================== */
 
     const currentBookingDate =
@@ -29212,8 +30765,6 @@ function startEditingBookingDate() {
 
     /* =====================================================
        OPEN DATE STEP
-
-       OLD BOOKING IS STILL COMPLETELY SAFE.
     ===================================================== */
 
     showBookingStep(
@@ -29222,6 +30773,201 @@ function startEditingBookingDate() {
 
 
     loadBookingCalendarAvailability();
+
+}
+
+
+
+
+/* =========================================================
+   CANCEL BOOKING DATE EDIT
+
+   Review
+   -> Edit Date
+   -> Back to Review
+
+   Nothing should change.
+========================================================= */
+
+function cancelBookingDateEdit() {
+
+    if (
+        !editingBookingDate
+        ||
+        !editingBookingDateBackup
+    ) {
+
+        showBookingStep(
+            "review"
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       RESTORE ORIGINAL DATE
+    ===================================================== */
+
+    bookingState.bookingDate =
+        editingBookingDateBackup.bookingDate
+        ||
+        "";
+
+
+    if (
+        bookingDate
+    ) {
+
+        bookingDate.value =
+            bookingState.bookingDate;
+
+    }
+
+
+    /* =====================================================
+       RESTORE ALL ORIGINAL RIDES
+    ===================================================== */
+
+    bookingState.items =
+        cloneBookingData(
+            editingBookingDateBackup.items
+            ||
+            []
+        );
+
+
+    /* =====================================================
+       RESTORE ORIGINAL PREFERRED TIME
+    ===================================================== */
+
+    selectedPreferredStart =
+        editingBookingDateBackup.preferredStart
+        ||
+        "";
+
+
+    selectedPreferredLabel =
+        editingBookingDateBackup.preferredLabel
+        ||
+        "";
+
+
+    /* =====================================================
+       RESET DATE EDIT MODE
+    ===================================================== */
+
+    editingBookingDate =
+    false;
+
+
+editingBookingDateBackup =
+    null;
+
+
+editingDateFromSlotWarning =
+    false;
+    /* =====================================================
+       HIDE DATE BACK BUTTON
+    ===================================================== */
+
+    if (
+        cancelDateEdit
+    ) {
+
+        cancelDateEdit.style.display =
+            "none";
+
+    }
+
+
+    /* =====================================================
+       RESTORE DATE DISPLAY
+    ===================================================== */
+
+    if (
+        dateSelectedText
+    ) {
+
+        dateSelectedText.textContent =
+            formatDate(
+                bookingState.bookingDate
+            );
+
+    }
+
+
+    dateSelected?.classList.add(
+        "show"
+    );
+
+
+    /* =====================================================
+       REFRESH REVIEW
+    ===================================================== */
+
+    renderSelectedAdventures();
+
+    updateBookingSummary();
+
+
+    /* =====================================================
+       RETURN TO REVIEW
+    ===================================================== */
+
+    showBookingStep(
+        "review"
+    );
+
+}
+
+
+
+/* =========================================================
+   COMPLETE SAFE DATE EDIT
+
+   Called only after the customer has accepted a valid
+   final schedule.
+
+   At this point the new date becomes permanent.
+========================================================= */
+
+/* =========================================================
+   COMPLETE SAFE DATE EDIT
+========================================================= */
+
+function completeBookingDateEdit() {
+
+    if (
+        !editingBookingDate
+    ) {
+
+        return;
+
+    }
+
+
+    editingBookingDate =
+        false;
+
+
+    editingBookingDateBackup =
+        null;
+
+
+    editingDateFromSlotWarning =
+        false;
+
+
+    if (
+        cancelDateEdit
+    ) {
+
+        cancelDateEdit.style.display =
+            "none";
+
+    }
 
 }
 

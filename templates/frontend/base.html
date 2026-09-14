@@ -1,6 +1,5 @@
 {% load static %}
 
-{% load static %}
 
 <!doctype html>
 <html lang="en">
@@ -142,14 +141,10 @@
 
 
     <!-- css -->
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/animate.min.css'%}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/magnific-popup.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/owl.carousel.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/slimselect.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/flatpickr.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}">
+
     <script src="https://analytics.ahrefs.com/analytics.js" data-key="RwPsT82PhgRUJpKUSnou2g" async></script>
 
     <!-- page specific css -->
@@ -290,7 +285,8 @@
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
               <div class="offcanvas-header">
                 <a href="{% url 'home' %}" class="offcanvas-brand" id="offcanvasNavbarLabel">
-                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="flying fox adventure" />
+                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="flying fox adventure"  width="220"
+    height="80" />
                 </a>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
                   <i class="far fa-xmark"></i>
@@ -467,6 +463,8 @@
             <img
                 src="{% static 'frontend/assets/img/logo/logo.png' %}"
                 alt="Flying Fox Adventure"
+                 width="220"
+    height="80"
             />
         </a>
 
@@ -677,6 +675,8 @@
                                 <img
                                     src="{% static 'frontend/assets/img/logo/logo.png' %}"
                                     alt="Flying Fox Adventure"
+                                     width="220"
+    height="80"
                                 >
 
                             </a>
@@ -1526,9 +1526,7 @@
     </script>
 
 
-    <script
-        src="{% static 'frontend/assets/js/flyingfox-chatbot.js' %}"
-    ></script>
+    <script src="{% static 'frontend/assets/js/flyingfox-chatbot.js' %}"></script>
 
     {% comment %} <!-- scroll-top -->
     <a href="#" id="scroll-top"><i class="fas fa-arrow-up-long"></i></a>
@@ -1545,7 +1543,7 @@
     <script src="{% static 'frontend/assets/js/wow.min.js' %}"></script>
     <script src="{% static 'frontend/assets/js/slimselect.min.js' %}"></script>
     <script src="{% static 'frontend/assets/js/flatpickr.min.js' %}"></script>
-    <script src="{% static 'frontend/assets/js/main.js' %}"></script>
+    <script src="{% static 'frontend/assets/js/main.min.js' %}"></script>
 
     <!-- page specific js -->
     {% block extra_js %}{% endblock %}

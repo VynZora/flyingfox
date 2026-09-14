@@ -9,6 +9,29 @@
 {% block meta_description %}{{ ride.description|striptags|truncatechars:160 }}{% endblock %}
 
 
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/owl.carousel.min.css' %}"
+>
+
+<link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/magnific-popup.min.css' %}"
+>
+
+<link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/ride-detail.css' %}"
+>
+
+{% endblock %}
+
+
+
+
 {% block content %}
 
 

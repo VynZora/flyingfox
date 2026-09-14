@@ -133,7 +133,9 @@ active
                       <img
                         src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
                         alt="flying fox adventure"  loading="lazy"
-    decoding="async"
+                       decoding="async" 
+                        width="32"
+                        height="32"
                       >
 
                     </div>
@@ -152,6 +154,8 @@ active
                       <img
                         src="{% static 'frontend/assets/img/icon/calendar-pen.svg' %}"
                         alt="flying fox adventure" 
+                        width="32"
+                        height="32"
                       >
 
                     </div>
@@ -328,7 +332,9 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
-                        alt="flying fox adventure"  
+                        alt="flying fox adventure"
+                         width="32"
+                         height="32"  
                       >
 
                     </div>
@@ -347,6 +353,8 @@ active
                       <img
                         src="{% static 'frontend/assets/img/icon/calendar-pen.svg' %}"
                         alt="flying fox adventure"  
+                         width="32"
+                         height="32"
                       >
 
                     </div>
@@ -524,7 +532,9 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
-                        alt="flying fox adventure"  
+                        alt="flying fox adventure" 
+                         width="32"
+                         height="32" 
                       >
 
                     </div>
@@ -542,7 +552,9 @@ active
 
                       <img
                         src="{% static 'frontend/assets/img/icon/calendar-pen.svg' %}"
-                        alt="flying fox adventure"  
+                        alt="flying fox adventure" 
+                         width="32"
+                         height="32" 
                       >
 
                     </div>
@@ -720,6 +732,8 @@ active
                 src="{{ ride.featured_images.0.image.url }}"
                 alt="{{ ride.name }}"
                 class="ride-video-fallback-image"
+                width="1200"
+                height="900"
               />
               {% else %}
               <i class="fas fa-video-slash"></i>
@@ -2271,7 +2285,9 @@ active
                       src="{% static 'frontend/assets/img/icon/sack-dollar.svg' %}"
                       alt="flying fox adventure"
                        loading="lazy"
-    decoding="async"
+                       decoding="async"
+                        width="32"
+                         height="32"
                     />
                   </div>
                   <div>
@@ -3907,6 +3923,29 @@ active
 <!-- video playing modal end -->
 
 {% endblock %}
+
+
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{% static 'frontend/assets/css/animate.min.css' %}">
+
+<link rel="stylesheet"
+      href="{% static 'frontend/assets/css/owl.carousel.min.css' %}">
+
+<link rel="stylesheet"
+      href="{% static 'frontend/assets/css/magnific-popup.min.css' %}">
+
+<link rel="stylesheet"
+      href="{% static 'frontend/assets/css/home.css' %}">
+
+{% endblock %}
+
+
+
+
 
 {% block extra_js %}
 
