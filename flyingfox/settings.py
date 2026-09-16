@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "flyingfoxadventuremunnar.com",
     "www.flyingfoxadventuremunnar.com",
+    "https://flying-fox.onrender.com"
 ]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get(
