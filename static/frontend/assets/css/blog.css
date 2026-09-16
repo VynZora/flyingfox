@@ -1,0 +1,848 @@
+/* ============================================================
+   BLOG.CSS
+   Flying Fox Adventure Munnar
+
+   Blog listing page specific styles.
+
+   Contains:
+   - Blog cards
+   - Equal-height cards
+   - Blog images
+   - Date badge
+   - Blog meta
+   - Blog title
+   - Blog description
+   - Read More button positioning
+   - Empty state
+   - Blog pagination spacing
+   - Responsive behaviour
+
+   NOTE:
+   Shared breadcrumb, site-heading, theme-btn and pagination
+   base styles remain inside style-clean.css.
+   ============================================================ */
+
+
+/* ============================================================
+   1. BLOG AREA
+   ============================================================ */
+
+.blog-area {
+    position: relative;
+}
+
+
+/* ============================================================
+   2. BLOG GRID
+   Make every Bootstrap column stretch so all cards in the
+   same row can maintain equal height.
+   ============================================================ */
+
+.blog-area .row.g-4 > [class*="col-"],
+.blog-area .row.g-lg-5 > [class*="col-"] {
+    display: flex;
+}
+
+
+/* ============================================================
+   3. BLOG CARD
+   ============================================================ */
+
+.blog-item {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Existing border-top spacing used by blog cards */
+
+.blog-item .border-top {
+    padding-top: 25px;
+    margin-top: 12px;
+}
+
+
+/* ============================================================
+   4. BLOG IMAGE
+   ============================================================ */
+
+.blog-img {
+    position: relative;
+
+    width: 100%;
+    height: 280px;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+}
+
+
+/* Make the clickable image fill the complete image area */
+
+.blog-img > a {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Support old ani-img wrapper if it exists anywhere */
+
+.blog-img .ani-img {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Blog image */
+
+.blog-img img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 24px;
+
+    transition:
+        transform 0.5s ease;
+}
+
+
+/* Image zoom */
+
+.blog-item:hover .blog-img img {
+    transform: scale(1.08);
+}
+
+
+/* ============================================================
+   5. BLOG DATE BADGE
+   ============================================================ */
+
+.blog-date {
+    position: absolute;
+
+    top: 20px;
+    left: 20px;
+
+    z-index: 2;
+
+    padding: 0 12px;
+
+    background: var(--color-white, #ffffff);
+
+    color: var(--color-dark, #1e1e1e);
+
+    border: 3px solid var(--color-white, #ffffff);
+    border-radius: 50px;
+
+    box-shadow: var(--box-shadow);
+
+    font-weight: 500;
+    text-align: center;
+}
+
+
+/* ============================================================
+   6. BLOG META
+   ============================================================ */
+
+.blog-meta {
+    padding: 16px 0 14px;
+}
+
+
+.blog-meta ul {
+    margin: 0;
+    padding: 0;
+}
+
+
+.blog-meta ul li {
+    position: relative;
+
+    display: inline-block;
+
+    margin-right: 15px;
+}
+
+
+.blog-meta ul li:last-child {
+    margin-right: 0;
+}
+
+
+/* Links */
+
+.blog-meta ul li a {
+    color: var(--color-dark, #1e1e1e);
+
+    font-weight: 500;
+}
+
+
+.blog-meta ul li a:hover {
+    color: var(--theme-color, #c31103);
+}
+
+
+/* Template currently also uses span instead of anchor */
+
+.blog-meta ul li span {
+    color: var(--color-dark, #1e1e1e);
+
+    font-weight: 500;
+}
+
+
+/* Icons */
+
+.blog-meta ul li i {
+    margin-right: 5px;
+
+    color: var(--color-dark, #1e1e1e);
+}
+
+
+/* ============================================================
+   7. BLOG CONTENT
+   ============================================================ */
+
+.blog-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+
+/* ============================================================
+   8. BLOG TITLE
+   ============================================================ */
+
+.blog-title {
+    margin: 0;
+}
+
+
+.blog-title a {
+    display: inline-block;
+
+    margin-bottom: 15px;
+
+    color: var(--color-dark, #1e1e1e);
+
+    font-size: 22px;
+    line-height: 1.35;
+
+    transition:
+        color 0.3s ease;
+}
+
+
+.blog-title a:hover {
+    color: var(--theme-color, #c31103);
+}
+
+
+/* ============================================================
+   9. BLOG DESCRIPTION
+   Keep cards visually aligned even when descriptions differ.
+   ============================================================ */
+
+.blog-info p {
+    display: -webkit-box;
+
+    min-height: 58px;
+    margin-bottom: 20px;
+
+    overflow: hidden;
+
+    color: var(--body-text-color, #5a5a5a);
+
+    line-height: 1.7;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+
+/* ============================================================
+   10. READ MORE BUTTON
+   Push button to bottom so cards remain aligned.
+   ============================================================ */
+
+.blog-info .theme-btn {
+    width: fit-content;
+
+    margin-top: auto;
+}
+
+
+/* If old border-top structure is used */
+
+.blog-info .border-top {
+    margin-top: auto;
+}
+
+
+/* ============================================================
+   11. BORDER BLOG STYLE
+   Keep support for existing .blog-border variation.
+   ============================================================ */
+
+.blog-area.blog-border .blog-item {
+    border: 1.5px solid var(--theme-color, #c31103);
+    border-radius: 35px;
+
+    box-shadow: none;
+}
+
+
+.blog-area.blog-border .blog-item:hover {
+    border-color: var(--theme-color2, #8f0d02);
+}
+
+
+.blog-area.blog-border .blog-img {
+    border-radius: 20px;
+}
+
+
+.blog-area.blog-border .blog-img img {
+    border-radius: 20px;
+}
+
+
+.blog-area.blog-border .blog-title a {
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   12. EMPTY BLOG STATE
+   ============================================================ */
+
+.blog-empty-state {
+    width: 100%;
+
+    padding: 70px 25px;
+
+    border: 1px solid rgba(195, 17, 3, 0.12);
+    border-radius: 24px;
+
+    background: #fff5f5;
+
+    text-align: center;
+}
+
+
+.blog-empty-state i {
+    display: block;
+
+    margin-bottom: 20px;
+
+    color: var(--theme-color, #c31103);
+
+    font-size: 55px;
+}
+
+
+.blog-empty-state h4 {
+    margin-bottom: 12px;
+
+    color: var(--color-dark, #1e1e1e);
+}
+
+
+.blog-empty-state p {
+    margin: 0;
+
+    color: var(--body-text-color, #5a5a5a);
+}
+
+
+/* ============================================================
+   13. PAGINATION
+   Base .pagination/.page-link appearance remains global.
+   Only Blog page spacing belongs here.
+   ============================================================ */
+
+.blog-area .pagination-area {
+    margin-top: 50px;
+}
+
+
+.blog-area .pagination {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   14. TABLET
+   <= 991px
+   ============================================================ */
+
+@media (max-width: 991px) {
+
+    .blog-img {
+        height: 250px;
+    }
+
+}
+
+
+/* ============================================================
+   15. MOBILE
+   <= 767px
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    .blog-img {
+        height: 230px;
+    }
+
+
+    .blog-date {
+        top: 15px;
+        left: 15px;
+
+        padding: 0 10px;
+
+        font-size: 13px;
+    }
+
+
+    .blog-meta {
+        padding: 14px 0 12px;
+    }
+
+
+    .blog-meta ul {
+        display: flex;
+        flex-wrap: wrap;
+
+        gap: 5px 14px;
+    }
+
+
+    .blog-meta ul li {
+        margin-right: 0;
+
+        font-size: 14px;
+    }
+
+
+    .blog-title a {
+        font-size: 20px;
+    }
+
+
+    .blog-info p {
+        min-height: auto;
+    }
+
+
+    .blog-empty-state {
+        padding: 50px 20px;
+    }
+
+
+    .blog-empty-state i {
+        font-size: 48px;
+    }
+
+
+    .blog-area .pagination-area {
+        margin-top: 40px;
+    }
+
+}
+
+
+/* ============================================================
+   16. SMALL MOBILE
+   <= 575px
+   ============================================================ */
+
+@media (max-width: 575px) {
+
+    .blog-img {
+        height: 230px;
+
+        border-radius: 20px;
+    }
+
+
+    .blog-img img {
+        border-radius: 20px;
+    }
+
+
+    .blog-title a {
+        font-size: 19px;
+        line-height: 1.4;
+    }
+
+
+    .blog-meta ul li {
+        font-size: 13px;
+    }
+
+
+    .blog-empty-state {
+        padding: 45px 18px;
+
+        border-radius: 20px;
+    }
+
+}
+
+
+/* ============================================================
+   17. EXTRA SMALL MOBILE
+   <= 400px
+   ============================================================ */
+
+@media (max-width: 400px) {
+
+    .blog-img {
+        height: 215px;
+    }
+
+
+    .blog-date {
+        top: 12px;
+        left: 12px;
+
+        font-size: 12px;
+    }
+
+
+    .blog-title a {
+        font-size: 18px;
+    }
+
+
+    .blog-meta ul {
+        gap: 4px 10px;
+    }
+
+}
+
+
+
+
+
+/* ============================================================
+   BLOG HERO
+   Same visual design as About page
+   Blog-specific implementation
+   ============================================================ */
+
+
+/* ============================================================
+   HERO WRAPPER
+   ============================================================ */
+
+.ff-blog-math-hero {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 620px;
+
+    padding-top: 140px;
+    padding-bottom: 80px;
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c31103 0%,
+            #a90e02 52%,
+            #8f0d02 100%
+        );
+}
+
+
+/* ============================================================
+   REMOVE DEFAULT BREADCRUMB OVERLAY
+   ============================================================ */
+
+.ff-blog-math-hero::before {
+    display: none !important;
+}
+
+
+/* ============================================================
+   GEOMETRIC CANVAS
+   ============================================================ */
+
+.ff-blog-math-hero #ffBlogMathPattern {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   CENTER SOFT GLOW / DEPTH
+   ============================================================ */
+
+.ff-blog-math-hero::after {
+    position: absolute;
+
+    top: 54%;
+    left: 50%;
+
+    z-index: 2;
+
+    width: 600px;
+    height: 350px;
+
+    content: "";
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.035) 38%,
+            rgba(255, 255, 255, 0) 72%
+        );
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   HERO CONTAINER
+   Keep content above pattern
+   ============================================================ */
+
+.ff-blog-math-hero .container {
+    position: relative;
+
+    z-index: 4;
+
+    width: 100%;
+}
+
+
+/* ============================================================
+   HERO CONTENT
+   ============================================================ */
+
+.ff-blog-hero-content {
+    position: relative;
+
+    width: 100%;
+
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   HERO TITLE
+   ============================================================ */
+
+.ff-blog-math-hero .breadcrumb-title {
+    margin: 0 0 12px;
+
+    color: #ffffff;
+
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+
+/* ============================================================
+   BREADCRUMB MENU
+   ============================================================ */
+
+.ff-blog-math-hero .breadcrumb-menu {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+
+/* Breadcrumb item */
+
+.ff-blog-math-hero .breadcrumb-menu li {
+    position: relative;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-weight: 500;
+}
+
+
+/* Breadcrumb link */
+
+.ff-blog-math-hero .breadcrumb-menu li a {
+    color: rgba(255, 255, 255, 0.88);
+
+    transition:
+        color 0.3s ease;
+}
+
+
+.ff-blog-math-hero .breadcrumb-menu li a:hover {
+    color: #ffffff;
+}
+
+
+/* Active item */
+
+.ff-blog-math-hero .breadcrumb-menu li.active {
+    color: #ffffff;
+}
+
+
+/* Breadcrumb separator */
+
+.ff-blog-math-hero .breadcrumb-menu li::before {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+
+/* ============================================================
+   TABLET
+   <= 991px
+   ============================================================ */
+
+@media (max-width: 991px) {
+
+    .ff-blog-math-hero {
+        height: 540px;
+
+        padding-top: 120px;
+        padding-bottom: 70px;
+    }
+
+
+    .ff-blog-math-hero::after {
+        width: 520px;
+        height: 300px;
+    }
+
+
+    .ff-blog-math-hero .breadcrumb-title {
+        font-size: 44px;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   <= 767px
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    .ff-blog-math-hero {
+        height: 470px;
+
+        padding-top: 100px;
+        padding-bottom: 60px;
+    }
+
+
+    .ff-blog-math-hero::after {
+        width: 420px;
+        height: 260px;
+    }
+
+
+    .ff-blog-math-hero .breadcrumb-title {
+        font-size: 38px;
+        line-height: 1.2;
+    }
+
+
+    .ff-blog-math-hero .breadcrumb-menu {
+        font-size: 15px;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   <= 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .ff-blog-math-hero {
+        height: 430px;
+
+        padding-top: 95px;
+        padding-bottom: 50px;
+    }
+
+
+    .ff-blog-math-hero::after {
+        width: 330px;
+        height: 220px;
+    }
+
+
+    .ff-blog-math-hero .breadcrumb-title {
+        font-size: 34px;
+    }
+
+
+    .ff-blog-math-hero .breadcrumb-menu {
+        font-size: 14px;
+    }
+
+}
+
+
+/* ============================================================
+   END BLOG.CSS
+   ============================================================ */

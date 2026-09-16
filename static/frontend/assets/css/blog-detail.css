@@ -1,0 +1,1698 @@
+/* ============================================================
+   FLYING FOX ADVENTURE
+   BLOG DETAIL PAGE
+   File: frontend/assets/css/blog-detail.css
+
+   Contains:
+   - Blog single article
+   - Featured image
+   - Blog meta
+   - Article title
+   - Rich text content
+   - Tables/images inside article
+   - Sidebar
+   - Recent posts
+   - Category / Explore links
+   - Booking CTA
+   - Sticky sidebar states
+   - Responsive styles
+   ============================================================ */
+
+
+/* ============================================================
+   1. BLOG SINGLE
+   ============================================================ */
+
+.blog-single {
+    position: relative;
+}
+
+
+/* ============================================================
+   2. BLOG SINGLE CONTENT
+   ============================================================ */
+
+.blog-single-content {
+    position: relative;
+}
+
+.blog-single-content img {
+    max-width: 100%;
+    border-radius: 25px;
+}
+
+
+/* ============================================================
+   3. FEATURED IMAGE
+   ============================================================ */
+
+.blog-single-img {
+    position: relative;
+    overflow: hidden;
+    border-radius: 26px;
+}
+
+.blog-single-img img {
+    display: block;
+
+    width: 100%;
+    max-height: 620px;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 26px;
+}
+
+
+/* ============================================================
+   4. BLOG META
+   ============================================================ */
+
+.blog-single .blog-meta {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.blog-single .blog-meta-left ul {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.blog-single .blog-meta-left ul li {
+    color: var(--color-dark);
+
+    font-weight: 500;
+}
+
+.blog-single .blog-meta i {
+    margin-right: 5px;
+
+    color: var(--theme-color);
+}
+
+.blog-single .blog-meta a {
+    color: var(--color-dark);
+
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+.blog-single .blog-meta a:hover {
+    color: var(--theme-color);
+}
+
+
+/* ============================================================
+   5. BLOG TITLE
+   ============================================================ */
+
+.blog-single .blog-details-title {
+    color: var(--color-dark);
+
+    font-size: 34px;
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+
+/* ============================================================
+   6. ARTICLE / RICH TEXT DESCRIPTION
+   ============================================================ */
+
+.ff-blog-detail-description {
+    color: var(--body-text-color);
+
+    font-size: 16px;
+
+    line-height: 1.9;
+}
+
+
+/* Paragraphs */
+
+.ff-blog-detail-description p {
+    margin-bottom: 22px;
+}
+
+
+/* Headings */
+
+.ff-blog-detail-description h1,
+.ff-blog-detail-description h2,
+.ff-blog-detail-description h3,
+.ff-blog-detail-description h4,
+.ff-blog-detail-description h5,
+.ff-blog-detail-description h6 {
+    margin-top: 30px;
+    margin-bottom: 16px;
+
+    color: var(--color-dark);
+
+    line-height: 1.3;
+}
+
+.ff-blog-detail-description h1 {
+    font-size: 34px;
+}
+
+.ff-blog-detail-description h2 {
+    font-size: 30px;
+}
+
+.ff-blog-detail-description h3 {
+    font-size: 25px;
+}
+
+.ff-blog-detail-description h4 {
+    font-size: 22px;
+}
+
+.ff-blog-detail-description h5 {
+    font-size: 19px;
+}
+
+.ff-blog-detail-description h6 {
+    font-size: 17px;
+}
+
+
+/* Lists */
+
+.ff-blog-detail-description ul,
+.ff-blog-detail-description ol {
+    margin-bottom: 22px;
+
+    padding-left: 28px;
+}
+
+.ff-blog-detail-description li {
+    margin-bottom: 8px;
+}
+
+
+/* Strong */
+
+.ff-blog-detail-description strong {
+    font-weight: 700;
+}
+
+
+/* Links */
+
+.ff-blog-detail-description a {
+    color: #c31103;
+
+    text-decoration: underline;
+
+    transition: all 0.3s ease;
+}
+
+.ff-blog-detail-description a:hover {
+    color: var(--color-dark);
+}
+
+
+/* ============================================================
+   7. TABLES INSIDE ARTICLE
+   ============================================================ */
+
+.ff-blog-detail-description table {
+    width: 100%;
+
+    margin: 25px 0;
+
+    border-collapse: collapse;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+}
+
+.ff-blog-detail-description table th,
+.ff-blog-detail-description table td {
+    padding: 14px 16px;
+
+    border: 1px solid #dddddd;
+
+    text-align: left;
+    vertical-align: top;
+}
+
+.ff-blog-detail-description table th {
+    color: var(--color-dark);
+
+    background: #f7f7f7;
+
+    font-weight: 700;
+}
+
+.ff-blog-detail-description table tr:nth-child(even) td {
+    background: #fafafa;
+}
+
+
+/* ============================================================
+   8. IMAGES INSIDE ARTICLE
+   ============================================================ */
+
+.ff-blog-detail-description img {
+    display: block;
+
+    max-width: 100%;
+    height: auto;
+
+    margin: 25px 0;
+
+    border-radius: 16px;
+}
+
+
+/* ============================================================
+   9. BLOCKQUOTE
+   ============================================================ */
+
+.blog-single .blockqoute {
+    position: relative;
+
+    margin: 20px 0;
+
+    padding: 30px;
+
+    border-left: 5px solid var(--theme-color);
+
+    border-radius: 0;
+
+    background: var(--theme-bg-light);
+
+    font-size: 17px;
+    font-style: italic;
+}
+
+.blog-single .blockqoute .blockqoute-icon {
+    position: absolute;
+
+    right: 20px;
+    bottom: 5px;
+
+    color: var(--theme-color);
+
+    font-size: 70px;
+}
+
+.blog-single .blockqoute-author {
+    position: relative;
+
+    margin-top: 20px;
+
+    padding-left: 60px;
+
+    color: var(--color-dark);
+
+    font-size: 16px;
+}
+
+.blog-single .blockqoute-author::before {
+    content: "";
+
+    position: absolute;
+
+    top: 10px;
+    left: 0;
+
+    width: 40px;
+    height: 2px;
+
+    background: var(--theme-color);
+}
+
+
+/* ============================================================
+   10. BLOG DETAILS TAG
+   ============================================================ */
+
+.blog-single .blog-details-tag {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.blog-single .blog-details-tag h4 {
+    color: var(--color-dark);
+
+    font-size: 18px;
+}
+
+
+/* ============================================================
+   11. AUTHOR BOX
+   ============================================================ */
+
+.ff-blog-author-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-top: 35px;
+
+    padding: 26px;
+
+    border: 1px solid rgba(195, 17, 3, 0.12);
+
+    border-radius: 22px;
+
+    background: #fff8f7;
+}
+
+.ff-blog-author-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 72px;
+    height: 72px;
+
+    min-width: 72px;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    font-size: 28px;
+}
+
+.ff-blog-author-content span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #c31103;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+.ff-blog-author-content h4 {
+    margin-bottom: 6px;
+
+    font-size: 21px;
+}
+
+.ff-blog-author-content p {
+    margin: 0;
+}
+
+
+/* ============================================================
+   12. BLOG SIDEBAR
+   ============================================================ */
+
+.blog-sidebar {
+    position: relative;
+}
+
+
+/* ============================================================
+   13. SIDEBAR WIDGET
+   ============================================================ */
+
+.blog-sidebar .widget {
+    position: relative;
+
+    margin-bottom: 30px;
+
+    padding: 30px;
+
+    border-radius: 15px;
+
+    background: var(--theme-bg-light);
+}
+
+.blog-sidebar .widget:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Widget title */
+
+.blog-sidebar .widget .widget-title,
+.blog-sidebar .widget-title {
+    position: relative;
+
+    margin-bottom: 25px;
+
+    padding-bottom: 10px;
+
+    color: var(--color-dark);
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.blog-sidebar .widget .widget-title::before,
+.blog-sidebar .widget-title::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 20px;
+    height: 2px;
+
+    background: var(--theme-color);
+}
+
+.blog-sidebar .widget .widget-title::after,
+.blog-sidebar .widget-title::after {
+    content: "";
+
+    position: absolute;
+
+    left: 25px;
+    bottom: 0;
+
+    width: 35px;
+    height: 2px;
+
+    background: var(--theme-color);
+}
+
+
+/* ============================================================
+   14. SIDEBAR ABOUT
+   ============================================================ */
+
+.ff-blog-sidebar-about {
+    text-align: left;
+}
+
+.ff-blog-sidebar-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 62px;
+    height: 62px;
+
+    margin-bottom: 18px;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: #c31103;
+
+    font-size: 24px;
+}
+
+.ff-blog-sidebar-about p {
+    margin-bottom: 22px;
+
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   15. RECENT POSTS
+   ============================================================ */
+
+.blog-sidebar .recent-post {
+    position: relative;
+}
+
+.blog-sidebar .recent-post-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid var(--border-info-color);
+}
+
+.blog-sidebar .recent-post-item:last-child {
+    margin-bottom: 0;
+
+    padding-bottom: 0;
+
+    border-bottom: none;
+}
+
+
+/* Recent post image */
+
+.blog-sidebar .recent-post-img {
+    width: 90px;
+    height: 75px;
+
+    min-width: 90px;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+}
+
+.blog-sidebar .recent-post-img a {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+}
+
+.blog-sidebar .recent-post-img img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 12px;
+
+    transition: transform 0.4s ease;
+}
+
+.blog-sidebar .recent-post-item:hover .recent-post-img img {
+    transform: scale(1.08);
+}
+
+
+/* Recent post info */
+
+.blog-sidebar .recent-post-info {
+    flex: 1;
+}
+
+.blog-sidebar .recent-post-info h6 {
+    margin-bottom: 6px;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+}
+
+.blog-sidebar .recent-post-info h6 a {
+    color: var(--color-dark);
+
+    transition: all 0.3s ease;
+}
+
+.blog-sidebar .recent-post-info h6 a:hover {
+    color: #c31103;
+}
+
+.blog-sidebar .recent-post-info span {
+    color: var(--body-text-color);
+
+    font-size: 12px;
+}
+
+.blog-sidebar .recent-post-info span i {
+    margin-right: 5px;
+
+    color: #c31103;
+}
+
+
+/* ============================================================
+   16. CATEGORY / EXPLORE LINKS
+   ============================================================ */
+
+.blog-sidebar .category-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.blog-sidebar .category-list a {
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    padding: 12px 15px;
+
+    border-radius: 8px;
+
+    color: var(--body-text-color);
+
+    background: var(--color-white);
+
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+.blog-sidebar .category-list a i {
+    margin-right: 10px;
+
+    color: var(--theme-color);
+
+    transition: all 0.3s ease;
+}
+
+.blog-sidebar .category-list a:hover {
+    padding-left: 20px;
+
+    color: var(--color-white);
+
+    background: var(--theme-color);
+}
+
+.blog-sidebar .category-list a:hover i {
+    color: var(--color-white);
+}
+
+
+/* ============================================================
+   17. BOOK YOUR RIDE CTA
+   ============================================================ */
+
+.ff-blog-book-widget {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 35px 30px;
+
+    border-radius: 25px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #db160c,
+            #a90b03
+        );
+}
+
+
+/* Decorative circle 1 */
+
+.ff-blog-book-widget::before {
+    content: "";
+
+    position: absolute;
+
+    top: -75px;
+    right: -75px;
+
+    width: 190px;
+    height: 190px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    border-radius: 50%;
+}
+
+
+/* Decorative circle 2 */
+
+.ff-blog-book-widget::after {
+    content: "";
+
+    position: absolute;
+
+    top: -45px;
+    right: -45px;
+
+    width: 130px;
+    height: 130px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 50%;
+}
+
+
+/* CTA label */
+
+.ff-blog-book-label {
+    position: relative;
+
+    z-index: 2;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 14px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+/* CTA heading */
+
+.ff-blog-book-widget h3 {
+    position: relative;
+
+    z-index: 2;
+
+    margin-bottom: 15px;
+
+    color: #ffffff;
+
+    font-size: 31px;
+}
+
+.ff-blog-book-widget h3 span {
+    display: block;
+
+    color: #ffffff;
+}
+
+
+/* CTA paragraph */
+
+.ff-blog-book-widget p {
+    position: relative;
+
+    z-index: 2;
+
+    margin-bottom: 22px;
+
+    color: rgba(255, 255, 255, 0.86);
+}
+
+
+/* CTA button */
+
+.ff-blog-book-widget .theme-btn {
+    position: relative;
+
+    z-index: 2;
+
+    background: #ffffff;
+
+    color: #c31103;
+}
+
+.ff-blog-book-widget .theme-btn:hover {
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   18. STICKY SIDEBAR
+   ============================================================ */
+
+@media (min-width: 992px) {
+
+    .blog-single > .container > .row {
+        align-items: stretch;
+    }
+
+    .ff-sticky-sidebar-column {
+        position: relative;
+
+        align-self: stretch;
+    }
+
+    .ff-sticky-sidebar {
+        width: 100%;
+    }
+
+
+    /* Sidebar following viewport */
+
+    .ff-sticky-sidebar.is-fixed {
+        position: fixed;
+
+        top: 150px;
+
+        z-index: 10;
+    }
+
+
+    /* Stop sidebar at article bottom */
+
+    .ff-sticky-sidebar.is-bottom {
+        position: absolute;
+
+        top: auto;
+        bottom: 0;
+    }
+
+}
+
+
+/* ============================================================
+   19. TABLET
+   <= 991px
+   ============================================================ */
+
+@media (max-width: 991px) {
+
+    .blog-sidebar {
+        margin-top: 30px;
+    }
+
+    .ff-sticky-sidebar {
+        width: 100% !important;
+    }
+
+}
+
+
+/* ============================================================
+   20. MOBILE
+   <= 767px
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    .blog-single {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+
+
+    /* -----------------------------------------
+       Featured image
+       ----------------------------------------- */
+
+    .blog-single-img {
+        border-radius: 20px;
+    }
+
+    .blog-single-img img {
+        border-radius: 20px;
+    }
+
+
+    /* -----------------------------------------
+       Blog title
+       ----------------------------------------- */
+
+    .blog-single .blog-details-title {
+        font-size: 28px;
+
+        line-height: 1.3;
+    }
+
+
+    /* -----------------------------------------
+       Meta
+       ----------------------------------------- */
+
+    .blog-single .blog-meta {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        font-size: 15px;
+    }
+
+    .blog-single .blog-meta-left ul {
+        flex-wrap: wrap;
+
+        justify-content: flex-start;
+
+        gap: 10px;
+    }
+
+
+    /* -----------------------------------------
+       Article content
+       ----------------------------------------- */
+
+    .ff-blog-detail-description h1 {
+        font-size: 30px;
+    }
+
+    .ff-blog-detail-description h2 {
+        font-size: 27px;
+    }
+
+    .ff-blog-detail-description h3 {
+        font-size: 23px;
+    }
+
+
+    /* -----------------------------------------
+       Tables
+       ----------------------------------------- */
+
+    .ff-blog-detail-description {
+        overflow-wrap: break-word;
+    }
+
+    .ff-blog-detail-description table {
+        display: block;
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    /* -----------------------------------------
+       Blockquote
+       ----------------------------------------- */
+
+    .blog-single .blockqoute {
+        padding: 25px 20px;
+    }
+
+
+    /* -----------------------------------------
+       Tags
+       ----------------------------------------- */
+
+    .blog-single .blog-details-tag {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    /* -----------------------------------------
+       Author
+       ----------------------------------------- */
+
+    .ff-blog-author-box {
+        align-items: flex-start;
+
+        padding: 20px;
+    }
+
+    .ff-blog-author-icon {
+        width: 55px;
+        height: 55px;
+
+        min-width: 55px;
+
+        font-size: 21px;
+    }
+
+
+    /* -----------------------------------------
+       Sidebar widget
+       ----------------------------------------- */
+
+    .blog-sidebar .widget {
+        padding: 25px;
+    }
+
+
+    /* -----------------------------------------
+       CTA
+       ----------------------------------------- */
+
+    .ff-blog-book-widget {
+        padding: 30px 25px;
+    }
+
+    .ff-blog-book-widget h3 {
+        font-size: 28px;
+    }
+
+}
+
+
+/* ============================================================
+   21. SMALL MOBILE
+   <= 575px
+   ============================================================ */
+
+@media (max-width: 575px) {
+
+    .blog-single .blog-meta-left ul {
+        align-items: flex-start;
+
+        gap: 8px 15px;
+    }
+
+    .blog-single .blog-meta-left ul li {
+        font-size: 14px;
+    }
+
+
+    .blog-sidebar .recent-post-item {
+        gap: 12px;
+    }
+
+    .blog-sidebar .recent-post-img {
+        width: 82px;
+        height: 70px;
+
+        min-width: 82px;
+    }
+
+
+    .ff-blog-book-widget {
+        padding: 28px 22px;
+
+        border-radius: 20px;
+    }
+
+    .ff-blog-book-widget h3 {
+        font-size: 26px;
+    }
+
+}
+
+
+/* ============================================================
+   22. EXTRA SMALL MOBILE
+   <= 480px
+   ============================================================ */
+
+@media (max-width: 480px) {
+
+    .blog-single-img img {
+        min-height: 250px;
+
+        object-fit: cover;
+    }
+
+
+    .blog-single .blog-details-title {
+        font-size: 25px;
+    }
+
+
+    .ff-blog-detail-description {
+        font-size: 15px;
+
+        line-height: 1.8;
+    }
+
+    .ff-blog-detail-description h1 {
+        font-size: 27px;
+    }
+
+    .ff-blog-detail-description h2 {
+        font-size: 24px;
+    }
+
+    .ff-blog-detail-description h3 {
+        font-size: 21px;
+    }
+
+
+    .ff-blog-author-box {
+        flex-direction: column;
+    }
+
+
+    .blog-sidebar .widget {
+        padding: 22px 18px;
+    }
+
+    .blog-sidebar .widget .widget-title,
+    .blog-sidebar .widget-title {
+        font-size: 20px;
+    }
+
+
+    .blog-sidebar .recent-post-img {
+        width: 75px;
+        height: 68px;
+
+        min-width: 75px;
+    }
+
+    .blog-sidebar .recent-post-info h6 {
+        font-size: 14px;
+    }
+
+
+    .ff-blog-book-widget {
+        padding: 26px 20px;
+    }
+
+    .ff-blog-book-widget h3 {
+        font-size: 24px;
+    }
+
+}
+
+
+
+
+
+/* ============================================================
+   BLOG DETAIL HERO
+   Same visual system as About page hero
+   ============================================================ */
+
+.ff-blog-detail-hero {
+    position: relative;
+
+    display: flex;
+    width: 100%;
+    min-height: 430px;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    padding: 155px 0 95px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d7190f 0%,
+            #c31103 42%,
+            #970b03 100%
+        );
+
+    isolation: isolate;
+}
+
+
+/* ============================================================
+   CANVAS GEOMETRIC PATTERN
+============================================================ */
+
+.ff-blog-detail-hero #ffMathPattern {
+    position: absolute;
+
+    inset: 0;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+/* ============================================================
+   DARK / DEPTH OVERLAY
+============================================================ */
+
+.ff-blog-detail-hero::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 55%,
+            rgba(255, 255, 255, 0.04) 0%,
+            rgba(255, 255, 255, 0) 42%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(80, 0, 0, 0.08) 0%,
+            rgba(80, 0, 0, 0.03) 45%,
+            rgba(65, 0, 0, 0.14) 100%
+        );
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+
+/* ============================================================
+   SUBTLE BOTTOM DEPTH
+============================================================ */
+
+.ff-blog-detail-hero::after {
+    content: "";
+
+    position: absolute;
+
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: 110px;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(75, 0, 0, 0.12),
+            transparent
+        );
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+
+/* ============================================================
+   CONTAINER
+============================================================ */
+
+.ff-blog-detail-hero > .container {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* ============================================================
+   HERO CONTENT
+============================================================ */
+
+.ff-blog-detail-hero-content {
+    position: relative;
+
+    z-index: 3;
+
+    display: flex;
+
+    width: 100%;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   HERO TITLE
+============================================================ */
+
+.ff-blog-detail-hero .breadcrumb-title {
+    margin: 0 0 20px;
+
+    padding: 0;
+
+    color: #ffffff;
+
+    font-size: clamp(42px, 5vw, 68px);
+    font-weight: 800;
+
+    line-height: 1.08;
+
+    letter-spacing: -1.5px;
+
+    text-align: center;
+
+    text-shadow:
+        0 4px 18px rgba(70, 0, 0, 0.15);
+}
+
+
+/* ============================================================
+   BREADCRUMB
+============================================================ */
+
+.ff-blog-detail-hero .breadcrumb-menu {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 0;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+
+/* Breadcrumb item */
+
+.ff-blog-detail-hero .breadcrumb-menu li {
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-size: 15px;
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+
+/* Separator */
+
+.ff-blog-detail-hero .breadcrumb-menu li + li::before {
+    content: "/";
+
+    display: inline-block;
+
+    margin: 0 12px;
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-weight: 400;
+}
+
+
+/* Links */
+
+.ff-blog-detail-hero .breadcrumb-menu li a {
+    color: #ffffff;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        color 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.ff-blog-detail-hero .breadcrumb-menu li a:hover {
+    color: #ffffff;
+
+    opacity: 0.75;
+}
+
+
+/* Current page */
+
+.ff-blog-detail-hero .breadcrumb-menu li.active {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 991px) {
+
+    .ff-blog-detail-hero {
+        min-height: 380px;
+
+        padding:
+            135px 0
+            80px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-title {
+        margin-bottom: 17px;
+
+        font-size: clamp(38px, 7vw, 54px);
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 767px) {
+
+    .ff-blog-detail-hero {
+        min-height: 330px;
+
+        padding:
+            120px 0
+            65px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-title {
+        margin-bottom: 15px;
+
+        font-size: 38px;
+
+        letter-spacing: -0.8px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-menu {
+        padding: 0 15px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-menu li {
+        font-size: 13px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-menu li + li::before {
+        margin: 0 8px;
+    }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+============================================================ */
+
+@media (max-width: 575px) {
+
+    .ff-blog-detail-hero {
+        min-height: 310px;
+
+        padding:
+            110px 0
+            55px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-title {
+        font-size: 34px;
+
+        line-height: 1.12;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SMALL MOBILE
+============================================================ */
+
+@media (max-width: 400px) {
+
+    .ff-blog-detail-hero {
+        min-height: 290px;
+
+        padding:
+            105px 0
+            50px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-title {
+        font-size: 31px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-menu li {
+        font-size: 12px;
+    }
+
+    .ff-blog-detail-hero .breadcrumb-menu li + li::before {
+        margin: 0 6px;
+    }
+
+}
+
+
+
+/* ============================================================
+   PREVENT GLOBAL BREADCRUMB STYLE FROM BREAKING THIS HERO
+============================================================ */
+
+.site-breadcrumb.ff-blog-detail-hero {
+    position: relative;
+
+    display: flex;
+
+    width: 100%;
+    min-height: 400px;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+
+    padding: 140px 0 80px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d7190f 0%,
+            #c31103 42%,
+            #970b03 100%
+        );
+
+    background-image:
+        linear-gradient(
+            135deg,
+            #d7190f 0%,
+            #c31103 42%,
+            #970b03 100%
+        );
+
+    border: 0;
+    border-radius: 0;
+
+    isolation: isolate;
+}
+
+
+
+/* ============================================================
+   FINAL FIX - BLOG DETAIL HERO BREADCRUMB
+   Keep this at the VERY BOTTOM of blog-detail.css
+============================================================ */
+
+.site-breadcrumb.ff-blog-detail-hero .breadcrumb-menu {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+
+    gap: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    list-style: none !important;
+}
+
+.site-breadcrumb.ff-blog-detail-hero .breadcrumb-menu li {
+    position: relative !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    float: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    color: rgba(255, 255, 255, 0.82) !important;
+
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+}
+
+.site-breadcrumb.ff-blog-detail-hero .breadcrumb-menu li a {
+    display: inline-block !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    color: #ffffff !important;
+
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+
+    text-decoration: none !important;
+}
+
+/* Remove separator created by any global/theme CSS */
+.site-breadcrumb.ff-blog-detail-hero
+.breadcrumb-menu li::before {
+    content: none !important;
+}
+
+/* Add OUR separator */
+.site-breadcrumb.ff-blog-detail-hero
+.breadcrumb-menu li + li::before {
+    content: "/" !important;
+
+    position: static !important;
+
+    display: inline-block !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    margin: 0 12px !important;
+    padding: 0 !important;
+
+    background: none !important;
+
+    color: rgba(255, 255, 255, 0.55) !important;
+
+    font-size: 15px !important;
+    font-weight: 400 !important;
+
+    transform: none !important;
+}
+
+.site-breadcrumb.ff-blog-detail-hero
+.breadcrumb-menu li.active {
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+
+/* MOBILE */
+@media (max-width: 767px) {
+
+    .site-breadcrumb.ff-blog-detail-hero
+    .breadcrumb-menu li {
+        font-size: 13px !important;
+    }
+
+    .site-breadcrumb.ff-blog-detail-hero
+    .breadcrumb-menu li + li::before {
+        margin: 0 8px !important;
+
+        font-size: 13px !important;
+    }
+}
+
+
+
+
+/* ============================================================
+   END BLOG DETAIL CSS
+   ============================================================ */

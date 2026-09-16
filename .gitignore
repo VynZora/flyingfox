@@ -26,3 +26,21 @@ db.sqlite3
 db_backup_before_undo.sqlite3
 media/rides/videos/
 media/
+
+
+# Django generated static output
+staticfiles/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.venv/
+
+# Node dependencies
+node_modules/
+
+# Local database
+db.sqlite3

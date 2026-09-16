@@ -74,6 +74,14 @@ active
 {% endblock %}
 
 
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/blog.css' %}"
+>
+{% endblock %}
+
 {% block content %}
   <!-- breadcrumb -->
   {% comment %} <div class="site-breadcrumb" style="background: url({% static 'frontend/assets/img/about/img-6.jpeg' %})">
@@ -87,13 +95,18 @@ active
   </div> {% endcomment %}
 
 
-<div class="site-breadcrumb ff-about-math-hero">
+<!-- =========================================================
+     BLOG HERO
+========================================================= -->
 
-    <canvas id="ffMathPattern"></canvas>
+<div class="site-breadcrumb ff-blog-math-hero">
+
+    <!-- Geometric pattern -->
+    <canvas id="ffBlogMathPattern"></canvas>
 
     <div class="container">
 
-        <div class="ff-about-hero-content">
+        <div class="ff-blog-hero-content">
 
             <h3 class="breadcrumb-title">
                 Our Blog
@@ -118,6 +131,10 @@ active
     </div>
 
 </div>
+
+<!-- =========================================================
+     BLOG HERO END
+========================================================= -->
 
 
   <!-- breadcrumb end -->
@@ -435,7 +452,7 @@ active
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const canvas = document.getElementById("ffMathPattern");
+    const canvas = document.getElementById("ffBlogMathPattern");
 
     if (!canvas) {
         return;

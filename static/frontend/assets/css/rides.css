@@ -1,0 +1,1066 @@
+/* ============================================================
+   RIDES.CSS
+   Flying Fox Adventure - Rides Listing Page
+
+   Shared/global styles remain in style-clean.css.
+   This file contains:
+   - Rides hero
+   - Mathematical canvas positioning
+   - Ride listing
+   - Ride cards
+   - Images
+   - Price/rating/duration
+   - Empty state
+   - Pagination
+   - Responsive rules
+   ============================================================ */
+
+
+/* ============================================================
+   1. RIDES HERO
+   ============================================================ */
+
+.ff-rides-math-hero {
+    position: relative;
+
+    display: flex;
+    width: 100%;
+    height: 620px;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    padding-top: 140px;
+    padding-bottom: 80px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c31103 0%,
+            #aa0f02 52%,
+            #8f0d02 100%
+        );
+
+    isolation: isolate;
+}
+
+
+/* Remove the normal site-breadcrumb overlay/background */
+
+.ff-rides-math-hero::before {
+    display: none !important;
+}
+
+
+/* ============================================================
+   2. MATHEMATICAL CANVAS
+   ============================================================ */
+
+.ff-rides-math-hero #ffMathPattern {
+    position: absolute;
+
+    inset: 0;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+
+/* ============================================================
+   3. HERO DEPTH OVERLAY
+   ============================================================ */
+
+.ff-rides-math-hero::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(95, 7, 0, 0.32) 0%,
+            rgba(120, 8, 0, 0.22) 34%,
+            rgba(150, 10, 0, 0.10) 58%,
+            transparent 82%
+        );
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+/* ============================================================
+   4. HERO CONTENT
+   ============================================================ */
+
+.ff-rides-math-hero .container {
+    position: relative;
+
+    width: 100%;
+
+    z-index: 4;
+}
+
+
+.ff-rides-hero-content {
+    position: relative;
+
+    display: flex;
+
+    width: 100%;
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    text-align: center;
+
+    z-index: 4;
+}
+
+
+/* ============================================================
+   5. HERO TITLE
+   ============================================================ */
+
+.ff-rides-math-hero .breadcrumb-title {
+    position: relative;
+
+    margin: 0 0 12px;
+    padding: 0;
+
+    color: #ffffff !important;
+
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.15;
+
+    text-align: center;
+
+    z-index: 5;
+}
+
+
+/* ============================================================
+   6. HERO BREADCRUMB
+   ============================================================ */
+
+.ff-rides-math-hero .breadcrumb-menu {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+
+    z-index: 5;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li {
+    position: relative;
+
+    color: #ffffff;
+
+    font-weight: 500;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li a {
+    color: rgba(255, 255, 255, 0.92);
+
+    transition: 0.3s;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li a:hover {
+    color: #ffffff;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li.active {
+    color: #ffffff;
+
+    font-weight: 600;
+}
+
+
+.ff-rides-math-hero .breadcrumb-menu li::before {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+
+/* ============================================================
+   7. RIDES LISTING AREA
+   ============================================================ */
+
+.tour-area {
+    position: relative;
+}
+
+
+.tour-area .shape-1 {
+    position: absolute;
+
+    top: 80px;
+    left: 50%;
+
+    width: 25%;
+
+    transform: rotate(-15deg);
+}
+
+
+/* ============================================================
+   8. CARD COLUMNS
+   Makes cards in the same row equal height
+   ============================================================ */
+
+.tour-area .row.g-4 > [class*="col-"] {
+    display: flex;
+}
+
+
+/* ============================================================
+   9. RIDE CARD
+   ============================================================ */
+
+.tour-area .tour-item {
+    position: relative;
+
+    width: 100%;
+
+    padding: 8px;
+
+    background: var(--color-white);
+
+    border-radius: 25px;
+
+    box-shadow: var(--box-shadow);
+
+    transition: var(--transition);
+}
+
+
+.tour-area .tour-item:hover {
+    transform: translateY(-4px);
+}
+
+
+.ff-ride-card {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    flex-direction: column;
+}
+
+
+/* ============================================================
+   10. RIDE IMAGE
+   ============================================================ */
+
+.tour-area .tour-img {
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 18px 18px 0 0;
+}
+
+
+.ff-ride-card-image {
+    position: relative;
+
+    width: 100%;
+    height: 270px;
+
+    overflow: hidden;
+}
+
+
+.ff-ride-card-image > a {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+.ff-ride-card-image > a > img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 18px 18px 0 0;
+
+    transition: transform 0.5s ease;
+}
+
+
+.ff-ride-card:hover .ff-ride-card-image > a > img {
+    transform: scale(1.04);
+}
+
+
+/* ============================================================
+   11. IMAGE SHAPE
+   ============================================================ */
+
+.tour-area .tour-img .shape {
+    position: absolute;
+
+    bottom: -1px;
+    left: 0;
+
+    width: 100%;
+    height: auto;
+
+    border-radius: 0;
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+/* ============================================================
+   12. FAVORITE BUTTON
+   ============================================================ */
+
+.tour-area .tour-img .favorite {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    display: flex;
+
+    width: 38px;
+    height: 38px;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    color: var(--color-dark);
+    background: rgba(255, 255, 255, 0.88);
+
+    border: 0;
+    border-radius: 50%;
+
+    box-shadow: var(--box-shadow);
+
+    z-index: 5;
+
+    transition: var(--transition);
+}
+
+
+.tour-area .tour-img .favorite:hover {
+    color: var(--color-white);
+
+    background: var(--theme-color2);
+}
+
+
+/* ============================================================
+   13. IMAGE ACTION BUTTONS
+   ============================================================ */
+
+.tour-area .tour-btn {
+    position: absolute;
+
+    right: 25px;
+    bottom: 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    color: var(--theme-color);
+
+    z-index: 5;
+}
+
+
+.tour-area .tour-btn a,
+.tour-area .tour-btn button {
+    display: inline-flex;
+
+    width: 35px;
+    height: 35px;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 8px;
+    padding: 0;
+
+    color: var(--color-dark);
+    background: var(--color-white);
+
+    border: 0;
+    border-radius: 50%;
+
+    box-shadow: var(--box-shadow);
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+
+.tour-area .tour-btn a:hover,
+.tour-area .tour-btn button:hover {
+    color: var(--color-white);
+
+    background: var(--theme-color2);
+}
+
+
+/* ============================================================
+   14. CARD CONTENT
+   ============================================================ */
+
+.tour-area .tour-content {
+    display: flex;
+
+    flex: 1;
+
+    flex-direction: column;
+
+    padding: 5px 20px 15px;
+}
+
+
+/* ============================================================
+   15. CATEGORY / LOCATION TOP ROW
+   ============================================================ */
+
+.tour-area .tour-content .tour-top {
+    display: flex;
+
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 8px 15px;
+
+    margin-bottom: 10px;
+
+    color: var(--color-dark);
+}
+
+
+.ff-ride-card .tour-category,
+.ff-ride-card .tour-place {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+.tour-area .tour-content .tour-top i {
+    color: var(--theme-color2);
+}
+
+
+.tour-area .tour-content .tour-top a:hover {
+    color: var(--theme-color2);
+}
+
+
+/* ============================================================
+   16. TITLE
+   ============================================================ */
+
+.tour-area .tour-content .tour-title {
+    margin-bottom: 8px;
+
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+
+.tour-area .tour-content .tour-title a {
+    color: var(--color-dark);
+
+    transition: var(--transition);
+}
+
+
+.tour-area .tour-content .tour-title a:hover {
+    color: var(--theme-color2);
+}
+
+
+/* ============================================================
+   17. DESCRIPTION
+   ============================================================ */
+
+.ff-ride-description {
+    display: -webkit-box;
+
+    min-height: 58px;
+
+    margin: 0 0 18px;
+
+    overflow: hidden;
+
+    color: var(--body-text-color);
+
+    line-height: 1.65;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+
+/* ============================================================
+   18. LOCATION
+   ============================================================ */
+
+.tour-area .tour-content .tour-location {
+    margin-top: 6px;
+
+    color: var(--body-text-color);
+}
+
+
+.tour-area .tour-content .tour-location i {
+    color: var(--theme-color2);
+}
+
+
+/* ============================================================
+   19. RATING
+   ============================================================ */
+
+.tour-area .tour-content .tour-rate {
+    display: flex;
+
+    align-items: center;
+
+    margin: 8px 0;
+}
+
+
+.tour-area .tour-content .tour-rate .badge {
+    padding: 4px 7px;
+
+    color: var(--color-white);
+
+    background: var(--theme-color);
+
+    border-radius: 50px;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+.tour-area .tour-content .tour-rate .badge i {
+    margin-right: 2px;
+}
+
+
+.tour-area .tour-content .tour-rate-type {
+    margin: 0 5px;
+
+    color: var(--theme-color);
+
+    font-weight: 500;
+}
+
+
+/* ============================================================
+   20. DURATION
+   ============================================================ */
+
+.tour-area .tour-content .tour-duration {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: var(--body-text-color);
+}
+
+
+.tour-area .tour-content .tour-duration i {
+    color: var(--theme-color2);
+}
+
+
+/* ============================================================
+   21. CARD BOTTOM
+   ============================================================ */
+
+.ff-ride-card .tour-bottom {
+    margin-top: auto;
+}
+
+
+.tour-area .tour-content .tour-bottom {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: auto;
+    padding-top: 14px;
+
+    border-top: 1px solid var(--border-info-color);
+}
+
+
+/* ============================================================
+   22. PRICE
+   ============================================================ */
+
+.tour-area .tour-content .tour-price {
+    color: var(--body-text-color);
+
+    font-size: 16px;
+    line-height: 1.3;
+}
+
+
+.tour-area .tour-content .tour-price span {
+    color: var(--theme-color2);
+
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.ff-ride-card .tour-price small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--body-text-color);
+
+    font-size: 11px;
+}
+
+
+.ff-price-unavailable {
+    color: var(--body-text-color) !important;
+
+    font-size: 14px !important;
+}
+
+
+/* ============================================================
+   23. VIEW RIDE BUTTON
+   ============================================================ */
+
+.tour-area .tour-content .theme-btn {
+    flex-shrink: 0;
+
+    padding: 3px 3px 3px 18px;
+
+    font-size: 15px;
+}
+
+
+.tour-area .tour-content .theme-btn i {
+    margin-left: 4px;
+}
+
+
+/* ============================================================
+   24. RIDE BADGE
+   ============================================================ */
+
+.tour-area .tour-badge {
+    position: absolute;
+
+    top: 30px;
+    left: -5px;
+
+    padding: 2px 11px;
+
+    color: var(--color-white);
+    background: var(--theme-color2);
+
+    border-radius: 50px;
+
+    box-shadow: var(--box-shadow);
+
+    font-size: 14px;
+
+    z-index: 6;
+}
+
+
+.tour-area .tour-badge.badge-discount {
+    background: var(--color-red);
+}
+
+
+/* ============================================================
+   25. EMPTY RIDES
+   ============================================================ */
+
+.ff-rides-empty {
+    width: 100%;
+
+    padding: 70px 30px;
+
+    background: #fff5f5;
+
+    border: 1px solid rgba(195, 17, 3, 0.12);
+    border-radius: 24px;
+
+    text-align: center;
+}
+
+
+.ff-rides-empty > i {
+    display: block;
+
+    margin-bottom: 20px;
+
+    color: var(--theme-color);
+
+    font-size: 55px;
+}
+
+
+.ff-rides-empty h4 {
+    margin-bottom: 12px;
+
+    color: var(--color-dark);
+}
+
+
+.ff-rides-empty p {
+    max-width: 620px;
+
+    margin: 0 auto 24px;
+
+    color: var(--body-text-color);
+}
+
+
+/* ============================================================
+   26. PAGINATION
+   ============================================================ */
+
+.pagination-area {
+    margin-top: 50px;
+}
+
+
+.pagination-area .pagination {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+.pagination-area .page-item {
+    margin: 0;
+}
+
+
+.pagination-area .page-link {
+    display: inline-flex;
+
+    width: 42px;
+    height: 42px;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    color: var(--color-dark);
+    background: var(--color-white);
+
+    border: 1px solid var(--border-info-color);
+    border-radius: 50%;
+
+    box-shadow: none;
+
+    font-weight: 500;
+
+    transition: var(--transition);
+}
+
+
+.pagination-area .page-link:hover {
+    color: var(--color-white);
+
+    background: var(--theme-color);
+
+    border-color: var(--theme-color);
+}
+
+
+.pagination-area .page-item.active .page-link {
+    color: var(--color-white);
+
+    background: var(--theme-color);
+
+    border-color: var(--theme-color);
+}
+
+
+/* ============================================================
+   27. LARGE TABLET
+   ============================================================ */
+
+@media (max-width: 1199px) {
+
+    .ff-ride-card-image {
+        height: 250px;
+    }
+
+
+    .tour-area .tour-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+
+    .tour-area .tour-content .tour-bottom {
+        gap: 10px;
+    }
+
+}
+
+
+/* ============================================================
+   28. TABLET
+   ============================================================ */
+
+@media (max-width: 991px) {
+
+    .ff-rides-math-hero {
+        height: 540px;
+
+        padding-top: 130px;
+        padding-bottom: 70px;
+    }
+
+
+    .ff-ride-card-image {
+        height: 250px;
+    }
+
+
+    .tour-area .shape-1 {
+        width: 40%;
+    }
+
+}
+
+
+/* ============================================================
+   29. MOBILE
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    .ff-rides-math-hero {
+        height: 470px;
+
+        padding-top: 120px;
+        padding-bottom: 60px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-title {
+        font-size: 38px;
+    }
+
+
+    .tour-area.py-120 {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+
+
+    .ff-ride-card-image {
+        height: 240px;
+    }
+
+
+    .tour-area .tour-content .tour-top {
+        gap: 6px 12px;
+    }
+
+
+    .tour-area .tour-content .tour-bottom {
+        gap: 12px;
+    }
+
+
+    .ff-rides-empty {
+        padding: 50px 20px;
+    }
+
+}
+
+
+/* ============================================================
+   30. SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 575px) {
+
+    .ff-rides-math-hero {
+        height: 430px;
+
+        padding-top: 110px;
+        padding-bottom: 50px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-title {
+        margin-bottom: 10px;
+
+        font-size: 34px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-menu {
+        font-size: 14px;
+    }
+
+
+    .ff-ride-card-image {
+        height: 225px;
+    }
+
+
+    .tour-area .tour-content {
+        padding: 5px 15px 15px;
+    }
+
+
+    .tour-area .tour-content .tour-bottom {
+        align-items: flex-end;
+    }
+
+
+    .tour-area .tour-content .theme-btn {
+        padding-left: 14px;
+
+        font-size: 14px;
+    }
+
+
+    .ff-rides-empty {
+        padding: 45px 18px;
+    }
+
+
+    .ff-rides-empty > i {
+        font-size: 46px;
+    }
+
+}
+
+
+/* ============================================================
+   31. VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 420px) {
+
+    .ff-rides-math-hero {
+        height: 400px;
+
+        padding-top: 105px;
+        padding-bottom: 45px;
+    }
+
+
+    .ff-rides-math-hero .breadcrumb-title {
+        font-size: 31px;
+    }
+
+
+    .ff-ride-card-image {
+        height: 210px;
+    }
+
+
+    .tour-area .tour-content .tour-bottom {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    .tour-area .tour-content .theme-btn {
+        align-self: flex-start;
+    }
+
+}
+
+
+/* ============================================================
+   32. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .tour-area .tour-item,
+    .ff-ride-card-image > a > img,
+    .tour-area .tour-content .theme-btn,
+    .pagination-area .page-link {
+        transition: none;
+    }
+
+
+    .tour-area .tour-item:hover {
+        transform: none;
+    }
+
+
+    .ff-ride-card:hover .ff-ride-card-image > a > img {
+        transform: none;
+    }
+
+}

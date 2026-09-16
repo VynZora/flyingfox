@@ -64,29 +64,12 @@ active
 
 
 {% block extra_css %}
-<style>
-.ff-contact-honeypot {
-    position: absolute !important;
-    left: -10000px !important;
-    top: auto !important;
 
-    width: 1px !important;
-    height: 1px !important;
+<link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/contact.css' %}"
+>
 
-    overflow: hidden !important;
-
-    opacity: 0 !important;
-
-    pointer-events: none !important;
-}
-
-.ff-turnstile-wrapper {
-    margin-top: 20px;
-    margin-bottom: 25px;
-
-    max-width: 100%;
-} 
-</style>
 {% endblock %}
 
 {% block content %}
@@ -105,13 +88,17 @@ active
 
        <!-- breadcrumb -->
 
-<div class="site-breadcrumb ff-about-math-hero">
+<!-- =========================================================
+     CONTACT HERO
+========================================================= -->
+
+<div class="site-breadcrumb ff-contact-hero">
 
     <canvas id="ffMathPattern"></canvas>
 
     <div class="container">
 
-        <div class="ff-about-hero-content">
+        <div class="ff-contact-hero-content">
 
             <h3 class="breadcrumb-title">
                 Contact
@@ -137,6 +124,9 @@ active
 
 </div>
 
+<!-- =========================================================
+     CONTACT HERO END
+========================================================= -->
 <!-- breadcrumb end -->
 
 

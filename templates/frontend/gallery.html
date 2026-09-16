@@ -196,20 +196,18 @@ active
   
 
 
-  <div class="site-breadcrumb ff-about-math-hero">
+ <div class="site-breadcrumb ff-page-hero">
 
-    <canvas id="ffMathPattern"></canvas>
+    <canvas id="ffPagePattern"></canvas>
 
     <div class="container">
+        <div class="ff-page-hero-content">
 
-        <div class="ff-about-hero-content">
-
-            <h3 class="breadcrumb-title">
+            <h1 class="breadcrumb-title">
                 Gallery
-            </h3>
+            </h1>
 
             <ul class="breadcrumb-menu">
-
                 <li>
                     <a href="{% url 'home' %}">
                         Home
@@ -219,11 +217,9 @@ active
                 <li class="active">
                     Gallery
                 </li>
-
             </ul>
 
         </div>
-
     </div>
 
 </div>
@@ -551,7 +547,7 @@ active
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const canvas = document.getElementById("ffMathPattern");
+    const canvas = document.getElementById("ffPagePattern");
 
     if (!canvas) {
         return;

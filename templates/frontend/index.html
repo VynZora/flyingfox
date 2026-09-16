@@ -4457,10 +4457,10 @@ document.addEventListener(
 
 
         /* =====================================================
-           SETTINGS
+           STATE
         ====================================================== */
 
-        const maxVisibleCards = 2;
+        let visibleCount = 2;
 
         let scrollPerOffer = 320;
 
@@ -4470,23 +4470,59 @@ document.addEventListener(
 
         let ticking = false;
 
+        let resizeTimer = null;
+
 
         /* =====================================================
-           RESPONSIVE SCROLL DISTANCE
+           DEVICE SETTINGS
         ====================================================== */
 
-        function getScrollPerOffer() {
+        function getSettings() {
 
-            if (window.innerWidth <= 575) {
-                return 230;
+            const width =
+                window.innerWidth;
+
+
+            /*
+             * MOBILE
+             *
+             * One offer visible.
+             */
+
+            if (width <= 767) {
+
+                return {
+                    visibleCount: 1,
+                    scrollPerOffer: 240
+                };
+
             }
 
-            if (window.innerWidth <= 991) {
-                return 270;
+
+            /*
+             * TABLET
+             *
+             * Two offers visible.
+             */
+
+            if (width <= 991) {
+
+                return {
+                    visibleCount: 2,
+                    scrollPerOffer: 280
+                };
+
             }
 
-            return 320;
 
+            /*
+             * DESKTOP
+             */
+
+            return {
+                visibleCount: 2,
+                scrollPerOffer: 320
+            };
         }
 
 
@@ -4496,9 +4532,21 @@ document.addEventListener(
 
         function measureOffers() {
 
-            scrollPerOffer =
-                getScrollPerOffer();
+            const settings =
+                getSettings();
 
+
+            visibleCount =
+                settings.visibleCount;
+
+
+            scrollPerOffer =
+                settings.scrollPerOffer;
+
+
+            /* -----------------------------------------
+               MEASURE REAL CARD
+            ----------------------------------------- */
 
             const firstCard =
                 cards[0];
@@ -4521,7 +4569,7 @@ document.addEventListener(
                     listStyle.rowGap ||
                     listStyle.gap ||
                     "0"
-                );
+                ) || 0;
 
 
             cardStep =
@@ -4529,14 +4577,22 @@ document.addEventListener(
                 gap;
 
 
-            /*
-             * One reveal stage per offer
-             * after the first.
-             */
+            /* =================================================
+               NUMBER OF SCROLL TRANSITIONS
+
+               DESKTOP/TABLET:
+               4 offers - 2 visible
+               = 2 transitions
+
+               MOBILE:
+               4 offers - 1 visible
+               = 3 transitions
+            ================================================== */
 
             const revealCount =
                 Math.max(
-                    cards.length - 1,
+                    cards.length -
+                    visibleCount,
                     0
                 );
 
@@ -4547,8 +4603,8 @@ document.addEventListener(
 
 
             /*
-             * Outer section gives enough
-             * scrolling room for the sticky stage.
+             * Sticky stage needs one viewport
+             * plus additional scrolling distance.
              */
 
             section.style.height =
@@ -4561,13 +4617,13 @@ document.addEventListener(
 
             currentStage = -1;
 
-            updateOffers();
 
+            updateOffers();
         }
 
 
         /* =====================================================
-           UPDATE
+           UPDATE OFFERS
         ====================================================== */
 
         function updateOffers() {
@@ -4581,8 +4637,8 @@ document.addEventListener(
 
 
             /*
-             * Distance scrolled inside
-             * this section.
+             * How far user has travelled
+             * inside this section.
              */
 
             const scrolledInside =
@@ -4592,18 +4648,24 @@ document.addEventListener(
                 );
 
 
-            /*
-             * Stage:
-             *
-             * 0 = Offer 1
-             * 1 = Offer 1 + Offer 2
-             * 2 = Offer 2 + Offer 3
-             * 3 = Offer 3 + Offer 4
-             */
+            /* =================================================
+               MAXIMUM STAGE
+            ================================================== */
+
+            const maxStage =
+                Math.max(
+                    cards.length -
+                    visibleCount,
+                    0
+                );
+
 
             let stage =
                 Math.floor(
-                    scrolledInside /
+                    (
+                        scrolledInside +
+                        scrollPerOffer * 0.15
+                    ) /
                     scrollPerOffer
                 );
 
@@ -4613,14 +4675,13 @@ document.addEventListener(
                     0,
                     Math.min(
                         stage,
-                        cards.length - 1
+                        maxStage
                     )
                 );
 
 
             if (
-                stage ===
-                currentStage
+                stage === currentStage
             ) {
                 return;
             }
@@ -4631,24 +4692,35 @@ document.addEventListener(
 
 
             /* =================================================
-               CALCULATE VISIBLE CARDS
+               VISIBLE WINDOW
+
+               Desktop:
+               stage 0 = 1 + 2
+               stage 1 = 2 + 3
+               stage 2 = 3 + 4
+
+               Mobile:
+               stage 0 = 1
+               stage 1 = 2
+               stage 2 = 3
+               stage 3 = 4
             ================================================== */
 
-            const windowEnd =
+            const windowStart =
                 stage;
 
 
-            const windowStart =
-                Math.max(
-                    0,
-                    windowEnd -
-                    maxVisibleCards +
-                    1
+            const windowEnd =
+                Math.min(
+                    windowStart +
+                    visibleCount -
+                    1,
+                    cards.length - 1
                 );
 
 
             /* =================================================
-               SHOW / HIDE
+               VISIBILITY
             ================================================== */
 
             cards.forEach(
@@ -4658,26 +4730,14 @@ document.addEventListener(
                 ) {
 
                     const visible =
-                        index >=
-                            windowStart
-                        &&
-                        index <=
-                            windowEnd;
+                        index >= windowStart &&
+                        index <= windowEnd;
 
 
-                    if (visible) {
-
-                        card.classList.add(
-                            "is-visible"
-                        );
-
-                    } else {
-
-                        card.classList.remove(
-                            "is-visible"
-                        );
-
-                    }
+                    card.classList.toggle(
+                        "is-visible",
+                        visible
+                    );
 
                 }
             );
@@ -4693,12 +4753,9 @@ document.addEventListener(
 
 
             list.style.transform =
-                `translate3d(
-                    0,
-                    ${-translateY}px,
-                    0
-                )`;
-
+                "translate3d(0, -" +
+                translateY +
+                "px, 0)";
         }
 
 
@@ -4719,16 +4776,12 @@ document.addEventListener(
             window.requestAnimationFrame(
                 updateOffers
             );
-
         }
 
 
         /* =====================================================
            RESIZE
         ====================================================== */
-
-        let resizeTimer = null;
-
 
         function onResize() {
 
@@ -4744,9 +4797,8 @@ document.addEventListener(
                         measureOffers();
 
                     },
-                    180
+                    150
                 );
-
         }
 
 

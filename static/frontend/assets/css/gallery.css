@@ -1,0 +1,717 @@
+/* ============================================================
+   GALLERY.CSS
+   Flying Fox Adventure Munnar
+   Gallery page specific styles
+============================================================ */
+
+
+/* ============================================================
+   1. GALLERY PAGE HERO
+   Dark premium red version
+============================================================ */
+
+.ff-page-hero {
+    position: relative;
+
+    width: 100%;
+    height: 620px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    padding-top: 140px;
+    padding-bottom: 80px;
+
+    /*
+     * Darker than the previous bright red.
+     * Center stays rich red while the edges become deeper.
+     */
+    background:
+        radial-gradient(
+            circle at 50% 55%,
+            rgba(195, 17, 3, 0.38) 0%,
+            rgba(154, 13, 3, 0.22) 34%,
+            transparent 64%
+        ),
+        linear-gradient(
+            135deg,
+            #a80f04 0%,
+            #8f0d03 48%,
+            #690900 100%
+        ) !important;
+
+    isolation: isolate;
+}
+
+
+/* Remove old breadcrumb image/overlay */
+
+.ff-page-hero::before {
+    display: none !important;
+}
+
+
+/* ============================================================
+   2. HERO MATHEMATICAL PATTERN CANVAS
+============================================================ */
+
+#ffPagePattern {
+    position: absolute;
+    inset: 0;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   3. HERO CENTER SHADING
+============================================================ */
+
+.ff-page-hero::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: 54%;
+
+    width: 650px;
+    height: 380px;
+
+    transform: translate(-50%, -50%);
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(90, 6, 0, 0.26) 0%,
+            rgba(90, 6, 0, 0.12) 42%,
+            transparent 74%
+        );
+
+    border-radius: 50%;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   4. HERO CONTENT
+============================================================ */
+
+.ff-page-hero .container {
+    position: relative;
+
+    z-index: 4;
+}
+
+
+.ff-page-hero-content {
+    position: relative;
+
+    width: 100%;
+
+    text-align: center;
+
+    z-index: 4;
+}
+
+
+/* ============================================================
+   5. HERO TITLE
+============================================================ */
+
+.ff-page-hero .breadcrumb-title {
+    margin: 0 0 12px;
+
+    color: #ffffff;
+
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.15;
+
+    text-shadow:
+        0 3px 14px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ============================================================
+   6. HERO BREADCRUMB
+============================================================ */
+
+.ff-page-hero .breadcrumb-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+
+.ff-page-hero .breadcrumb-menu li,
+.ff-page-hero .breadcrumb-menu li a {
+    color: rgba(255, 255, 255, 0.88);
+
+    font-weight: 600;
+}
+
+
+.ff-page-hero .breadcrumb-menu li a {
+    text-decoration: none;
+
+    transition:
+        color 0.25s ease;
+}
+
+
+.ff-page-hero .breadcrumb-menu li a:hover {
+    color: #ffffff;
+}
+
+
+.ff-page-hero .breadcrumb-menu li.active {
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   7. GALLERY AREA
+============================================================ */
+
+.gallery-area {
+    position: relative;
+}
+
+
+/* ============================================================
+   8. CATEGORY FILTER
+============================================================ */
+
+.gallery-filter-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 45px;
+}
+
+
+.gallery-filter-btn {
+    display: inline-flex;
+
+    min-height: 44px;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 22px;
+
+    color: #333333;
+    background: #ffffff;
+
+    border:
+        1px solid
+        rgba(195, 17, 3, 0.18);
+
+    border-radius: 50px;
+
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    text-decoration: none;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.gallery-filter-btn:hover {
+    color: #a80f04;
+
+    background: #fff5f3;
+
+    border-color:
+        rgba(168, 15, 4, 0.35);
+
+    transform:
+        translateY(-1px);
+}
+
+
+.gallery-filter-btn.active {
+    color: #ffffff;
+
+    background: #a80f04;
+
+    border-color: #a80f04;
+
+    box-shadow:
+        0 8px 20px
+        rgba(168, 15, 4, 0.18);
+}
+
+
+/* ============================================================
+   9. GALLERY CARD
+============================================================ */
+
+.gallery-item {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    border-radius: 15px;
+}
+
+
+/* ============================================================
+   10. IMAGE / VIDEO
+============================================================ */
+
+.gallery-img {
+    position: relative;
+
+    width: 100%;
+    height: 260px;
+
+    overflow: hidden;
+
+    border-radius: 15px;
+
+    background: #f3f3f3;
+}
+
+
+.gallery-img img,
+.gallery-img video {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 15px;
+
+    transition:
+        transform 0.4s ease;
+}
+
+
+.gallery-item:hover .gallery-img img,
+.gallery-item:hover .gallery-img video {
+    transform:
+        scale(1.08);
+}
+
+
+/* ============================================================
+   11. HOVER OVERLAY
+============================================================ */
+
+.gallery-content {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 15px;
+
+    pointer-events: none;
+}
+
+
+.gallery-content::before {
+    position: absolute;
+
+    content: "";
+
+    inset: 10px;
+
+    background: #a80f04;
+
+    border-radius: 12px;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+
+.gallery-item:hover .gallery-content::before,
+.gallery-content:hover::before {
+    opacity: 0.9;
+    visibility: visible;
+}
+
+
+/* ============================================================
+   12. IMAGE / VIDEO POPUP BUTTON
+============================================================ */
+
+.gallery-link {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    display: flex;
+
+    width: 70px;
+    height: 70px;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+
+    border-radius: 50%;
+
+    font-size: 50px;
+    line-height: 1;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0);
+
+    transition:
+        transform 0.5s ease,
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+
+    pointer-events: auto;
+
+    z-index: 2;
+}
+
+
+.gallery-item:hover .gallery-link,
+.gallery-content:hover .gallery-link {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+}
+
+
+.gallery-link:hover,
+.gallery-link:focus {
+    color: #ffffff;
+}
+
+
+.gallery-link i {
+    margin: 0;
+
+    line-height: 1;
+}
+
+
+/* Video play icon */
+
+.gallery-link.popup-video {
+    font-size: 28px;
+}
+
+
+/* ============================================================
+   13. EMPTY GALLERY
+============================================================ */
+
+.gallery-area .text-center h4 {
+    margin: 20px 0 0;
+
+    color:
+        var(
+            --color-dark,
+            #1e1e1e
+        );
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   14. PAGINATION
+============================================================ */
+
+.gallery-area .pagination-area {
+    margin-top: 50px;
+}
+
+
+.gallery-area .pagination {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   15. TABLET
+============================================================ */
+
+@media (max-width: 991px) {
+
+    .ff-page-hero {
+        height: 540px;
+
+        padding-top: 130px;
+        padding-bottom: 70px;
+    }
+
+
+    .ff-page-hero .breadcrumb-title {
+        font-size: 42px;
+    }
+
+
+    .gallery-img {
+        height: 250px;
+    }
+
+}
+
+
+/* ============================================================
+   16. MOBILE
+============================================================ */
+
+@media (max-width: 767px) {
+
+    /* ---------------- HERO ---------------- */
+
+    .ff-page-hero {
+        height: 470px;
+
+        padding-top: 115px;
+        padding-bottom: 60px;
+    }
+
+
+    .ff-page-hero::after {
+        width: 420px;
+        height: 280px;
+    }
+
+
+    .ff-page-hero .breadcrumb-title {
+        margin-bottom: 10px;
+
+        font-size: 36px;
+        line-height: 1.15;
+    }
+
+
+    .ff-page-hero .breadcrumb-menu li,
+    .ff-page-hero .breadcrumb-menu li a {
+        font-size: 14px;
+    }
+
+
+    /* ---------------- FILTER ---------------- */
+
+    .gallery-filter-wrap {
+        justify-content: flex-start;
+
+        flex-wrap: nowrap;
+
+        gap: 8px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        margin-bottom: 30px;
+
+        padding-bottom: 5px;
+
+        scrollbar-width: none;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    .gallery-filter-wrap::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .gallery-filter-btn {
+        flex:
+            0 0 auto;
+
+        min-height: 40px;
+
+        padding: 8px 18px;
+
+        font-size: 12px;
+    }
+
+
+    /* ---------------- GALLERY ---------------- */
+
+    .gallery-img {
+        height: 250px;
+    }
+
+
+    .gallery-link {
+        width: 58px;
+        height: 58px;
+
+        font-size: 38px;
+    }
+
+
+    .gallery-link.popup-video {
+        font-size: 24px;
+    }
+
+
+    /* Touch devices */
+
+    @media (hover: none) {
+
+        .gallery-link {
+            opacity: 1;
+            visibility: visible;
+
+            transform:
+                translate(-50%, -50%)
+                scale(1);
+        }
+
+
+        .gallery-content::before {
+            opacity: 0.18;
+            visibility: visible;
+        }
+
+    }
+
+}
+
+
+/* ============================================================
+   17. SMALL MOBILE
+============================================================ */
+
+@media (max-width: 575px) {
+
+    /* ---------------- HERO ---------------- */
+
+    .ff-page-hero {
+        height: 430px;
+
+        padding-top: 105px;
+        padding-bottom: 50px;
+    }
+
+
+    .ff-page-hero::after {
+        width: 340px;
+        height: 240px;
+    }
+
+
+    .ff-page-hero .breadcrumb-title {
+        font-size: 32px;
+    }
+
+
+    /* ---------------- GALLERY ---------------- */
+
+    .gallery-img {
+        height: 240px;
+    }
+
+
+    .gallery-item,
+    .gallery-img,
+    .gallery-img img,
+    .gallery-img video {
+        border-radius: 14px;
+    }
+
+
+    .gallery-content {
+        border-radius: 14px;
+    }
+
+
+    .gallery-content::before {
+        inset: 8px;
+
+        border-radius: 11px;
+    }
+
+}
+
+
+/* ============================================================
+   18. EXTRA SMALL MOBILE
+============================================================ */
+
+@media (max-width: 400px) {
+
+    .ff-page-hero {
+        height: 400px;
+    }
+
+
+    .ff-page-hero .breadcrumb-title {
+        font-size: 29px;
+    }
+
+
+    .gallery-img {
+        height: 220px;
+    }
+
+
+    .gallery-filter-btn {
+        padding: 8px 15px;
+    }
+
+}
+
+
+/* ============================================================
+   END GALLERY.CSS
+============================================================ */

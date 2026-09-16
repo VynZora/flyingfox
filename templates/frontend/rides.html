@@ -63,6 +63,17 @@ active
 {% endblock %}
 
 
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/rides.css' %}"
+>
+{% endblock %}
+
+
+
+
 {% block content %}
   <!-- breadcrumb -->
 
@@ -70,10 +81,16 @@ active
      RIDES HERO / BREADCRUMB
 ========================================== -->
 
-<div class="site-breadcrumb ff-about-math-hero">
+<!-- =========================================
+     RIDES HERO / BREADCRUMB
+========================================== -->
 
-    <!-- Mathematical pattern -->
-    <canvas id="ffMathPattern"></canvas>
+<div class="site-breadcrumb ff-rides-math-hero">
+
+    <canvas
+        id="ffMathPattern"
+        aria-hidden="true"
+    ></canvas>
 
     <div class="container">
 
@@ -102,6 +119,8 @@ active
     </div>
 
 </div>
+
+<!-- breadcrumb end -->
 
 <!-- breadcrumb end -->
 
