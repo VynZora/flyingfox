@@ -63,6 +63,7 @@ from django.utils.text import slugify
 
 
 class OptimizedImageModel(models.Model):
+
     image_fields = []
 
     class Meta:
@@ -70,15 +71,6 @@ class OptimizedImageModel(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        for field in self.image_fields:
-            image_field = getattr(self, field, None)
-            if image_field and hasattr(image_field, "path"):
-                try:
-                    from .utils.image_optimizer import optimize_image
-                    optimize_image(image_field.path)
-                except Exception:
-                    pass
-
 
 
 
