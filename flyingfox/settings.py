@@ -199,27 +199,43 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 import os
 
+# ==========================================
+# MEDIA FILES - SUPABASE S3
+# ==========================================
+
+import os
+
+
+
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.environ.get(
+                "SUPABASE_S3_ACCESS_KEY_ID"
+            ),
+            "secret_key": os.environ.get(
+                "SUPABASE_S3_SECRET_ACCESS_KEY"
+            ),
+            "bucket_name": "media",
+            "endpoint_url": os.environ.get(
+                "SUPABASE_S3_ENDPOINT"
+            ),
+            "region_name": os.environ.get(
+                "SUPABASE_S3_REGION",
+                "us-east-1"
+            ),
+            "addressing_style": "path",
+            "querystring_auth": False,
+            "file_overwrite": False,
+        },
     },
+
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND":
+            "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
-
-AWS_ACCESS_KEY_ID = os.environ.get("SUPABASE_S3_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("SUPABASE_S3_SECRET_ACCESS_KEY")
-
-AWS_STORAGE_BUCKET_NAME = "media"
-
-AWS_S3_ENDPOINT_URL = os.environ.get("SUPABASE_S3_ENDPOINT")
-AWS_S3_REGION_NAME = os.environ.get("SUPABASE_S3_REGION")
-
-AWS_S3_ADDRESSING_STYLE = "path"
-AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_FILE_OVERWRITE = False
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
