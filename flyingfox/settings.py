@@ -203,37 +203,73 @@ import os
 # MEDIA FILES - SUPABASE S3
 # ==========================================
 
-import os
 
+# ==========================================
+# SUPABASE STORAGE
+# ==========================================
+
+SUPABASE_S3_ENDPOINT = os.environ.get(
+    "SUPABASE_S3_ENDPOINT"
+)
+
+SUPABASE_S3_REGION = os.environ.get(
+    "SUPABASE_S3_REGION",
+    "ap-south-1",
+)
+
+SUPABASE_S3_ACCESS_KEY_ID = os.environ.get(
+    "SUPABASE_S3_ACCESS_KEY_ID"
+)
+
+SUPABASE_S3_SECRET_ACCESS_KEY = os.environ.get(
+    "SUPABASE_S3_SECRET_ACCESS_KEY"
+)
 
 
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
+
         "OPTIONS": {
-            "access_key": os.environ.get(
-                "SUPABASE_S3_ACCESS_KEY_ID"
-            ),
-            "secret_key": os.environ.get(
-                "SUPABASE_S3_SECRET_ACCESS_KEY"
-            ),
-            "bucket_name": "media",
-            "endpoint_url": os.environ.get(
-                "SUPABASE_S3_ENDPOINT"
-            ),
-            "region_name": os.environ.get(
-                "SUPABASE_S3_REGION",
-                "us-east-1"
-            ),
-            "addressing_style": "path",
-            "querystring_auth": False,
-            "file_overwrite": False,
+            "access_key":
+                SUPABASE_S3_ACCESS_KEY_ID,
+
+            "secret_key":
+                SUPABASE_S3_SECRET_ACCESS_KEY,
+
+            "bucket_name":
+                "media",
+
+            "endpoint_url":
+                SUPABASE_S3_ENDPOINT,
+
+            "region_name":
+                SUPABASE_S3_REGION,
+
+            "addressing_style":
+                "path",
+
+            "signature_version":
+                "s3v4",
+
+            "querystring_auth":
+                False,
+
+            "file_overwrite":
+                False,
+
+            # IMPORTANT:
+            # Browser-facing Supabase public URL
+            "custom_domain":
+                "yiprdoylivpttwfjqezl.storage.supabase.co"
+                "/storage/v1/object/public/media",
         },
     },
 
     "staticfiles": {
         "BACKEND":
-            "whitenoise.storage.CompressedStaticFilesStorage",
+            "whitenoise.storage."
+            "CompressedStaticFilesStorage",
     },
 }
 
