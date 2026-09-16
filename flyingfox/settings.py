@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
-from pathlib import Path
-
+import os
 import dj_database_url
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,9 +27,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_z__7v1ikw!pdsk5x$$d!t&l*egm)m4f^u5&@kwb$5ak2a0=qi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get(
+    "DEBUG",
+    "False"
+).lower() == "true"
 
-ALLOWED_HOSTS = ["*"]
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "flyingfoxadventuremunnar.com",
+    "www.flyingfoxadventuremunnar.com",
+]
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get(
+    "RENDER_EXTERNAL_HOSTNAME"
+)
+
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
+    "https://flyingfoxadventuremunnar.com",
+    "https://www.flyingfoxadventuremunnar.com",
+]
 
 # Application definition
 
@@ -42,6 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "flyingfox_app",
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
@@ -84,12 +108,23 @@ WHITENOISE_MANIFEST_STRICT = False
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=60,
+            ssl_require=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -116,7 +151,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -187,33 +222,51 @@ EMAIL_BACKEND = (
     "django.core.mail.backends.smtp.EmailBackend"
 )
 
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = "smtp.zoho.in"
 
 EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "sirajvynzora@gmail.com"
+# EMAIL_HOST_USER = "booking@flyingfoxadventuremunnar.com"
+# EMAIL_HOST_PASSWORD ="RKX0NdqeudAL"
+# DEFAULT_FROM_EMAIL = "booking@flyingfoxadventuremunnar.com"
+# CONTACT_RECEIVER_EMAIL ="booking@flyingfoxadventuremunnar.com"
 
-EMAIL_HOST_PASSWORD ="lcnu ekkv pktx ktbz"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-DEFAULT_FROM_EMAIL = "sirajvynzora@gmail.com"
-CONTACT_RECEIVER_EMAIL ="sirajvynzora@gmail.com"
+EMAIL_HOST = os.environ.get(
+    "EMAIL_HOST",
+    "smtp.zoho.in"
+)
+
+EMAIL_PORT = int(
+    os.environ.get("EMAIL_PORT", "587")
+)
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = os.environ.get(
+    "EMAIL_HOST_USER",
+    ""
+)
+
+EMAIL_HOST_PASSWORD = os.environ.get(
+    "EMAIL_HOST_PASSWORD",
+    ""
+)
+
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    EMAIL_HOST_USER,
+)
+
+CONTACT_RECEIVER_EMAIL = os.environ.get(
+    "CONTACT_RECEIVER_EMAIL",
+    EMAIL_HOST_USER,
+)
 
 EMAIL_TIMEOUT = 30
-
-# ==========================================
-# TWILIO SETTINGS
-# ==========================================
-
-TWILIO_ACCOUNT_SID = "ACd41c526b5d484745f2a25e8626541960"
-
-TWILIO_AUTH_TOKEN = "af5adc9039c5f30763287ffd337c81a7"
-
-TWILIO_PHONE_NUMBER = "+17372508034"
-
-
-
 
 
 # ==========================================
@@ -226,8 +279,103 @@ TWILIO_WHATSAPP_CONTENT_SID = (
 )
 
 
-RAZORPAY_KEY_ID = 'rzp_test_TQTiv6aVNjku4w'
+# RAZORPAY_KEY_ID = 'rzp_test_TQTiv6aVNjku4w'
+# RAZORPAY_KEY_SECRET ='M6R5mKwPQ7mj2HsPP6ydASJn'
+# RAZORPAY_WEBHOOK_SECRET="your_actual_webhook_secret"
 
-RAZORPAY_KEY_SECRET ='M6R5mKwPQ7mj2HsPP6ydASJn'
+RAZORPAY_KEY_ID = os.environ.get(
+    "RAZORPAY_KEY_ID",
+    ""
+)
 
-RAZORPAY_WEBHOOK_SECRET="your_actual_webhook_secret"
+RAZORPAY_KEY_SECRET = os.environ.get(
+    "RAZORPAY_KEY_SECRET",
+    ""
+)
+
+RAZORPAY_WEBHOOK_SECRET = os.environ.get(
+    "RAZORPAY_WEBHOOK_SECRET",
+    ""
+)
+
+
+# telinfy whatsapp
+
+# TELINFY_API_KEY = "ac8bba62-9bc2-11f1-af5a-a8a159c17b9a"
+
+# TELINFY_BASE_URL = (
+#     "https://hub.telinfy.com/unified/developer"
+# )
+# PUBLIC_BASE_URL = "https://flyingfoxadventuremunnar.com"
+
+# TELINFY_WHATSAPP_TEMPLATE = "booking_confirmation_qr"
+
+# TELINFY_WHATSAPP_LANGUAGE = "en"
+
+
+
+TELINFY_API_KEY = os.environ.get(
+    "TELINFY_API_KEY",
+    ""
+)
+
+TELINFY_BASE_URL = os.environ.get(
+    "TELINFY_BASE_URL",
+    "https://hub.telinfy.com/unified/developer",
+)
+
+TELINFY_WHATSAPP_TEMPLATE = os.environ.get(
+    "TELINFY_WHATSAPP_TEMPLATE",
+    "booking_confirmation_qr",
+)
+
+TELINFY_WHATSAPP_LANGUAGE = os.environ.get(
+    "TELINFY_WHATSAPP_LANGUAGE",
+    "en",
+)
+
+
+TELINFY_SMS_API_URL = os.environ.get(
+    "TELINFY_SMS_API_URL",
+    "https://hub.telinfy.com/unified/developer/api/v1/sms/send",
+)
+
+TELINFY_SMS_SENDER_NAME = os.environ.get(
+    "TELINFY_SMS_SENDER_NAME",
+    "FLFXAD",
+)
+
+TELINFY_OTP_TEMPLATE_ID = os.environ.get(
+    "TELINFY_OTP_TEMPLATE_ID",
+    "",
+)
+
+
+
+
+
+# telinfy otp sms 
+# TELINFY_SMS_API_URL = (
+#     "https://hub.telinfy.com/"
+#     "unified/developer/api/v1/sms/send"
+# )
+
+# TELINFY_SMS_SENDER_NAME = "FLFXAD"
+
+# TELINFY_OTP_TEMPLATE_ID = "1777178816423927079"
+
+
+
+# 
+# TURNSTILE_SITE_KEY = "1x00000000000000000000AA"
+
+# TURNSTILE_SECRET_KEY = "1x0000000000000000000000000000000AA"
+TURNSTILE_SITE_KEY = os.environ.get(
+    "TURNSTILE_SITE_KEY",
+    ""
+)
+
+TURNSTILE_SECRET_KEY = os.environ.get(
+    "TURNSTILE_SECRET_KEY",
+    ""
+)
