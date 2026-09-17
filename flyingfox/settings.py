@@ -32,13 +32,15 @@ DEBUG = os.environ.get(
     "False"
 ).lower() == "true"
 
+# DEBUG=True
+
 
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "flyingfoxadventuremunnar.com",
     "www.flyingfoxadventuremunnar.com",
-    "https://flying-fox.onrender.com"
+    "flying-fox.onrender.com"
 ]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get(
