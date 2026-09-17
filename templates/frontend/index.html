@@ -4607,12 +4607,12 @@ document.addEventListener(
              * plus additional scrolling distance.
              */
 
-            section.style.height =
-                (
-                    window.innerHeight +
-                    extraScroll
-                ) +
-                "px";
+            const sectionHeight =
+                window.innerHeight + extraScroll;
+
+            section.style.setProperty(
+                "height",
+                 sectionHeight + "px","important");
 
 
             currentStage = -1;

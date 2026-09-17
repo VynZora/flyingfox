@@ -3385,9 +3385,9 @@ img {
   position: relative;
   overflow: hidden;
   padding: 105px 0 95px;
-  background:
+  /* background:
     url("../img/plan-adventure/zipline-bg.webp")
-    center center / cover no-repeat;
+    center center / cover no-repeat; */
 }.plan-adventure-overlay {
   position: absolute;
   inset: 0;
@@ -10171,184 +10171,9 @@ and
             720px;
     }
 }
-@media (max-width: 991px){
-.ff-scroll-offers {
-        height:
-            auto !important;
 
-        min-height:
-            0 !important;
 
-        overflow:
-            hidden !important;
 
-        background:
-            radial-gradient(
-                circle at 14% 22%,
-                rgba(255, 255, 255, 0.08),
-                transparent 30%
-            ),
-            linear-gradient(
-                135deg,
-                #df180b 0%,
-                #c31103 50%,
-                #a30d02 100%
-            ) !important;
-    }.ff-scroll-offers-pattern {
-        display:
-            block !important;
-
-        background-repeat:
-            no-repeat;
-
-        background-position:
-            center bottom;
-
-        background-size:
-            cover;
-
-        opacity:
-            0.26;
-    }.ff-scroll-offers-stage {
-        position:
-            relative !important;
-
-        top:
-            auto !important;
-
-        width:
-            100%;
-
-        height:
-            auto !important;
-
-        min-height:
-            0 !important;
-
-        display:
-            block;
-
-        overflow:
-            visible;
-    }.ff-scroll-offers-stage::before,
-    .ff-scroll-offers-stage::after {
-        display:
-            none !important;
-    }.ff-scroll-offers-container {
-        width:
-            100%;
-
-        max-width:
-            760px;
-
-        margin:
-            0 auto;
-
-        padding:
-            60px
-            24px;
-    }.ff-scroll-offers-layout {
-        display:
-            block !important;
-
-        width:
-            100%;
-
-        min-width:
-            0 !important;
-    }.ff-scroll-offers-intro {
-        width:
-            100%;
-
-        max-width:
-            620px;
-
-        margin:
-            0
-            auto
-            40px;
-
-        text-align:
-            center;
-    }.ff-scroll-offers-eyebrow {
-        justify-content:
-            center;
-    }.ff-scroll-offers-description {
-        max-width:
-            520px;
-
-        margin:
-            0
-            auto
-            24px !important;
-    }.ff-scroll-offers-all {
-        margin:
-            0
-            auto;
-    }.ff-scroll-offers-right {
-        width:
-            100% !important;
-
-        max-width:
-            680px !important;
-
-        min-width:
-            0 !important;
-
-        margin:
-            0 auto;
-    }.ff-scroll-offers-heading {
-        justify-content:
-            center;
-
-        margin-bottom:
-            15px;
-    }.ff-scroll-offers-scroll-hint {
-        display:
-            none !important;
-    }.ff-scroll-offers-viewport {
-        width:
-            100% !important;
-
-        height:
-            auto !important;
-
-        overflow:
-            visible !important;
-    }.ff-scroll-offers-list {
-        width:
-            100% !important;
-
-        transform:
-            none !important;
-
-        gap:
-            14px;
-    }.ff-scroll-offer-card {
-        width:
-            100% !important;
-
-        height:
-            150px;
-
-        min-height:
-            150px;
-
-        flex:
-            0
-            0
-            150px;
-
-        opacity:
-            1 !important;
-
-        visibility:
-            visible !important;
-
-        transform:
-            none !important;
-    }
-}
 @media (max-width: 575px){
 .ff-scroll-offers-container {
         padding:
@@ -12770,342 +12595,7 @@ and
 
 
 
-/* =========================================================
-   OFFERS PROGRESSIVE SCROLL
-   MOBILE
-   <= 767px
-========================================================= */
 
-@media (max-width: 767px) {
-
-    /* -----------------------------------------
-       STICKY SCREEN
-    ----------------------------------------- */
-
-    .ff-scroll-offers-stage {
-        position: sticky !important;
-
-        top: 0 !important;
-
-        width: 100%;
-
-        height: 100svh !important;
-
-        min-height: 600px;
-
-        display: flex;
-
-        align-items: center;
-
-        overflow: hidden;
-    }
-
-
-    /* -----------------------------------------
-       CONTAINER
-    ----------------------------------------- */
-
-    .ff-scroll-offers-container {
-        width: 100%;
-
-        padding:
-            72px
-            12px
-            24px;
-    }
-
-
-    /* -----------------------------------------
-       STACK CONTENT
-    ----------------------------------------- */
-
-    .ff-scroll-offers-layout {
-        display: flex !important;
-
-        flex-direction: column !important;
-
-        grid-template-columns: none !important;
-
-        align-items: stretch;
-
-        gap: 18px;
-
-        width: 100%;
-    }
-
-
-    /* -----------------------------------------
-       INTRO
-    ----------------------------------------- */
-
-    .ff-scroll-offers-intro {
-        width: 100%;
-
-        text-align: center;
-    }
-
-
-    .ff-scroll-offers-eyebrow {
-        justify-content: center;
-
-        margin-bottom: 8px;
-    }
-
-
-    .ff-scroll-offers-eyebrow-line {
-        display: none;
-    }
-
-
-    .ff-scroll-offers-title {
-        margin-bottom: 8px !important;
-
-        text-align: center;
-    }
-
-
-    .ff-scroll-offers-title-white,
-    .ff-scroll-offers-title-cream {
-        display: block;
-    }
-
-
-    .ff-scroll-offers-description {
-        max-width: 330px;
-
-        margin:
-            0
-            auto
-            12px !important;
-
-        font-size: 12px;
-
-        line-height: 1.45;
-    }
-
-
-    /* -----------------------------------------
-       BUTTON
-    ----------------------------------------- */
-
-    .ff-scroll-offers-all {
-        width: 100%;
-
-        max-width: 270px;
-
-        min-height: 46px;
-
-        margin:
-            0
-            auto;
-
-        padding-left: 17px;
-
-        font-size: 11px;
-    }
-
-
-    .ff-scroll-offers-all-icon {
-        width: 38px;
-
-        height: 38px;
-
-        flex:
-            0
-            0
-            38px;
-    }
-
-
-    /* -----------------------------------------
-       RIGHT AREA
-    ----------------------------------------- */
-
-    .ff-scroll-offers-right {
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        min-width: 0;
-    }
-
-
-    /* -----------------------------------------
-       HEADING
-    ----------------------------------------- */
-
-    .ff-scroll-offers-heading {
-        width: 100%;
-
-        margin-bottom: 8px;
-
-        text-align: center;
-    }
-
-
-    .ff-scroll-offers-heading-title {
-        justify-content: center;
-
-        font-size: 10px;
-    }
-
-
-    /* -----------------------------------------
-       ONE CARD VIEWPORT
-    ----------------------------------------- */
-
-    .ff-scroll-offers-viewport {
-        position: relative;
-
-        width: 100%;
-
-        height: 150px !important;
-
-        overflow: hidden !important;
-    }
-
-
-    /* -----------------------------------------
-       VERTICAL LIST
-    ----------------------------------------- */
-
-    .ff-scroll-offers-list {
-        display: flex !important;
-
-        flex-direction: column !important;
-
-        width: 100% !important;
-
-        gap: 10px !important;
-
-        will-change: transform;
-
-        transition:
-            transform
-            0.5s
-            cubic-bezier(
-                0.22,
-                1,
-                0.36,
-                1
-            );
-    }
-
-
-    /* -----------------------------------------
-       OFFER
-    ----------------------------------------- */
-
-    .ff-scroll-offer-card {
-        position: relative;
-
-        width: 100% !important;
-
-        height: 150px !important;
-
-        min-height: 150px !important;
-
-        flex:
-            0
-            0
-            150px !important;
-
-        overflow: hidden;
-
-        border-radius: 14px;
-
-        opacity: 0;
-
-        visibility: hidden;
-
-        transform:
-            translateY(22px)
-            scale(0.985);
-
-        transition:
-            opacity 0.4s ease,
-            visibility 0.4s ease,
-            transform 0.4s ease;
-    }
-
-
-    .ff-scroll-offer-card.is-visible {
-        opacity: 1 !important;
-
-        visibility: visible !important;
-
-        transform:
-            translateY(0)
-            scale(1) !important;
-    }
-
-
-    /* -----------------------------------------
-       IMAGE
-    ----------------------------------------- */
-
-    .ff-scroll-offer-image {
-        position: absolute;
-
-        inset: 0;
-
-        display: block;
-
-        width: 100%;
-
-        height: 100% !important;
-
-        object-fit: cover;
-
-        object-position: center;
-    }
-
-
-    /* -----------------------------------------
-       CONTENT
-    ----------------------------------------- */
-
-    .ff-scroll-offer-content {
-        left: 11px;
-
-        right: 8px;
-
-        bottom: 8px;
-    }
-
-
-    .ff-scroll-offer-title {
-        max-width: 55%;
-
-        font-size: 13px;
-    }
-
-
-    .ff-scroll-offer-book {
-        min-height: 32px;
-
-        padding:
-            6px
-            9px;
-
-        font-size: 8px;
-    }
-
-
-    /* -----------------------------------------
-       SCROLL HINT
-    ----------------------------------------- */
-
-    .ff-scroll-offers-scroll-hint {
-        display: flex !important;
-
-        justify-content: center;
-
-        margin-top: 8px;
-
-        font-size: 9px;
-    }
-}
 
 
 
@@ -13161,25 +12651,855 @@ and
         min-height: 44px;
     }
 
+    .ff-scroll-offer-title {
+        font-size: 12px;
+    }
+}
 
-    .ff-scroll-offers-viewport {
-        height: 138px !important;
+
+
+
+
+/* =========================================================
+   OFFERS - SMALL DESKTOP / LAPTOP FIX
+   992px - 1250px
+========================================================= */
+
+@media (min-width: 992px) and (max-width: 1250px) {
+
+    /* =====================================================
+       SECTION / STICKY SCREEN
+    ====================================================== */
+
+    .ff-scroll-offers {
+        width: 100% !important;
+        overflow: clip !important;
+    }
+
+    .ff-scroll-offers-stage {
+        position: sticky !important;
+        top: 0 !important;
+
+        width: 100% !important;
+        height: 100vh !important;
+        height: 100svh !important;
+
+        min-height: 620px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        overflow: hidden !important;
     }
 
 
-    .ff-scroll-offer-card {
-        height: 138px !important;
+    /* =====================================================
+       CONTAINER
+    ====================================================== */
 
-        min-height: 138px !important;
+    .ff-scroll-offers-container {
+        width: 100% !important;
+        max-width: 1180px !important;
+
+        margin: 0 auto !important;
+
+        padding:
+            105px
+            28px
+            28px !important;
+    }
+
+
+    /* =====================================================
+       MAIN 2-COLUMN LAYOUT
+    ====================================================== */
+
+    .ff-scroll-offers-layout {
+        display: grid !important;
+
+        grid-template-columns:
+            minmax(0, 0.82fr)
+            minmax(0, 1.18fr) !important;
+
+        align-items: center !important;
+
+        gap: 34px !important;
+
+        width: 100% !important;
+
+        justify-content: initial !important;
+    }
+
+
+    /* =====================================================
+       LEFT CONTENT
+    ====================================================== */
+
+    .ff-scroll-offers-intro {
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        justify-self: stretch !important;
+
+        /* IMPORTANT:
+           remove old -55px movement */
+        transform: none !important;
+
+        margin: 0 !important;
+    }
+
+
+    .ff-scroll-offers-eyebrow {
+        margin-bottom: 14px !important;
+
+        font-size: 12px !important;
+
+        gap: 8px !important;
+    }
+
+
+    .ff-scroll-offers-eyebrow i {
+        font-size: 16px !important;
+    }
+
+
+    .ff-scroll-offers-eyebrow-line {
+        width: 65px !important;
+
+        margin-left: 4px !important;
+    }
+
+
+    /* =====================================================
+       TITLE
+    ====================================================== */
+
+    .ff-scroll-offers-title {
+        margin:
+            0
+            0
+            16px !important;
+
+        font-size: clamp(
+            34px,
+            3.4vw,
+            44px
+        ) !important;
+
+        line-height: 1.02 !important;
+
+        letter-spacing: -1px !important;
+    }
+
+
+    .ff-scroll-offers-title-white,
+    .ff-scroll-offers-title-cream {
+        display: block !important;
+    }
+
+
+    .ff-scroll-offers-title-cream {
+        margin-top: 6px !important;
+
+        /* remove old forced nowrap */
+        white-space: normal !important;
+    }
+
+
+    /* =====================================================
+       DESCRIPTION
+    ====================================================== */
+
+    .ff-scroll-offers-description {
+        width: 100% !important;
+
+        max-width: 350px !important;
+
+        margin:
+            0
+            0
+            20px !important;
+
+        font-size: 14px !important;
+
+        line-height: 1.55 !important;
+    }
+
+
+    /* =====================================================
+       EXPLORE BUTTON
+    ====================================================== */
+
+    .ff-scroll-offers-all {
+        width: 100% !important;
+
+        max-width: 285px !important;
+
+        min-height: 52px !important;
+
+        padding:
+            5px
+            6px
+            5px
+            20px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    .ff-scroll-offers-all-icon {
+        width: 42px !important;
+        height: 42px !important;
 
         flex:
             0
             0
-            138px !important;
+            42px !important;
+    }
+
+
+    /* =====================================================
+       RIGHT SIDE
+    ====================================================== */
+
+    .ff-scroll-offers-right {
+        width: 100% !important;
+
+        max-width: none !important;
+
+        min-width: 0 !important;
+
+        justify-self: stretch !important;
+    }
+
+
+    /* =====================================================
+       RIGHT HEADING
+    ====================================================== */
+
+    .ff-scroll-offers-heading {
+        width: 100% !important;
+
+        margin-bottom: 12px !important;
+
+        gap: 12px !important;
+    }
+
+
+    .ff-scroll-offers-heading-title {
+        font-size: 12px !important;
+    }
+
+
+    .ff-scroll-offers-scroll-hint {
+        font-size: 9px !important;
+    }
+
+
+    /* =====================================================
+       TWO OFFER CARDS
+    ====================================================== */
+
+    .ff-scroll-offers-viewport {
+        position: relative !important;
+
+        width: 100% !important;
+
+        /*
+           190 card
+           + 12 gap
+           + 190 card
+           = 392
+        */
+        height: 392px !important;
+
+        overflow: hidden !important;
+    }
+
+
+    .ff-scroll-offers-list {
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        gap: 12px !important;
+    }
+
+
+    .ff-scroll-offer-card {
+        position: relative !important;
+
+        width: 100% !important;
+
+        height: 190px !important;
+        min-height: 190px !important;
+
+        flex:
+            0
+            0
+            190px !important;
+
+        border-radius: 18px !important;
+    }
+
+
+    /* =====================================================
+       CARD IMAGE
+    ====================================================== */
+
+    .ff-scroll-offer-image {
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        max-width: none !important;
+
+        object-fit: cover !important;
+        object-position: center !important;
+    }
+
+
+    /* =====================================================
+       CARD CONTENT
+    ====================================================== */
+
+    .ff-scroll-offer-content {
+        left: 18px !important;
+        right: 14px !important;
+        bottom: 14px !important;
+
+        gap: 12px !important;
     }
 
 
     .ff-scroll-offer-title {
-        font-size: 12px;
+        max-width: 58% !important;
+
+        font-size: 18px !important;
+
+        line-height: 1.15 !important;
+    }
+
+
+    .ff-scroll-offer-book {
+        min-height: 38px !important;
+
+        padding:
+            7px
+            13px !important;
+
+        font-size: 11px !important;
+    }
+}
+
+
+
+/* =========================================================
+   FLYING FOX OFFERS
+   FINAL MOBILE PROGRESSIVE SCROLL FIX
+   <= 767px
+========================================================= */
+
+@media (max-width: 767px) {
+
+    /* =====================================================
+       IMPORTANT:
+       JS controls the section height.
+       DO NOT put height:auto !important here.
+    ====================================================== */
+
+    .ff-scroll-offers {
+        position: relative !important;
+
+        width: 100% !important;
+
+        /*
+         * IMPORTANT:
+         * Do NOT use:
+         * height:auto !important;
+         *
+         * JavaScript adds the real height inline.
+         */
+        min-height: 100svh !important;
+
+        overflow: visible !important;
+
+        isolation: isolate !important;
+
+        background: transparent !important;
+    }
+
+
+    /* =====================================================
+       STICKY SCREEN
+    ====================================================== */
+
+    .ff-scroll-offers-stage {
+        position: sticky !important;
+
+        top: 0 !important;
+
+        width: 100% !important;
+
+        height: 100vh !important;
+        height: 100svh !important;
+
+        min-height: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        overflow: hidden !important;
+
+        isolation: isolate !important;
+
+        background:
+            radial-gradient(
+                circle at 14% 22%,
+                rgba(255, 255, 255, 0.08),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 80% 20%,
+                rgba(255, 255, 255, 0.04),
+                transparent 28%
+            ),
+            linear-gradient(
+                135deg,
+                #df180b 0%,
+                #c31103 48%,
+                #a30d02 100%
+            ) !important;
+    }
+
+
+    /* =====================================================
+       BACKGROUND IMAGE / PATTERN
+       SAME METHOD AS DESKTOP
+    ====================================================== */
+
+    .ff-scroll-offers-pattern {
+        display: none !important;
+    }
+
+
+    .ff-scroll-offers-stage::before {
+        content: "" !important;
+
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        z-index: 0 !important;
+
+        pointer-events: none !important;
+
+        display: block !important;
+
+        background-image:
+            var(--ff-offers-pattern) !important;
+
+        background-repeat:
+            no-repeat !important;
+
+        background-position:
+            center bottom !important;
+
+        background-size:
+            cover !important;
+
+        opacity: 0.30 !important;
+    }
+
+
+    .ff-scroll-offers-stage::after {
+        content: "" !important;
+
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        z-index: 1 !important;
+
+        pointer-events: none !important;
+
+        display: block !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(120, 8, 1, 0.04) 0%,
+                rgba(195, 17, 3, 0.01) 50%,
+                rgba(90, 5, 0, 0.10) 100%
+            ) !important;
+    }
+
+
+    /* =====================================================
+       CONTENT ABOVE BACKGROUND
+    ====================================================== */
+
+    .ff-scroll-offers-container {
+        position: relative !important;
+
+        z-index: 3 !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 auto !important;
+
+        padding:
+            78px
+            12px
+            22px !important;
+    }
+
+
+    /* =====================================================
+       STACK MOBILE CONTENT
+    ====================================================== */
+
+    .ff-scroll-offers-layout {
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        align-items: stretch !important;
+
+        justify-content: center !important;
+
+        width: 100% !important;
+
+        gap: 18px !important;
+
+        grid-template-columns: none !important;
+    }
+
+
+    /* =====================================================
+       INTRO
+    ====================================================== */
+
+    .ff-scroll-offers-intro {
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        text-align: center !important;
+
+        transform: none !important;
+    }
+
+
+    .ff-scroll-offers-eyebrow {
+        justify-content: center !important;
+
+        margin-bottom: 8px !important;
+
+        font-size: 10px !important;
+    }
+
+
+    .ff-scroll-offers-eyebrow-line {
+        display: none !important;
+    }
+
+
+    .ff-scroll-offers-title {
+        margin:
+            0
+            0
+            8px !important;
+
+        font-size:
+            clamp(
+                27px,
+                8vw,
+                34px
+            ) !important;
+
+        line-height: 1.02 !important;
+
+        letter-spacing: -0.8px !important;
+
+        text-align: center !important;
+    }
+
+
+    .ff-scroll-offers-title-white,
+    .ff-scroll-offers-title-cream {
+        display: block !important;
+    }
+
+
+    .ff-scroll-offers-title-cream {
+        margin-top: 4px !important;
+
+        white-space: normal !important;
+    }
+
+
+    .ff-scroll-offers-description {
+        width: 100% !important;
+
+        max-width: 330px !important;
+
+        margin:
+            0
+            auto
+            12px !important;
+
+        font-size: 11px !important;
+
+        line-height: 1.5 !important;
+
+        text-align: center !important;
+    }
+
+
+    /* =====================================================
+       EXPLORE BUTTON
+    ====================================================== */
+
+    .ff-scroll-offers-all {
+        width: calc(100% - 34px) !important;
+
+        max-width: 280px !important;
+
+        min-height: 46px !important;
+
+        margin:
+            0
+            auto !important;
+
+        padding:
+            4px
+            5px
+            4px
+            17px !important;
+
+        font-size: 11px !important;
+    }
+
+
+    .ff-scroll-offers-all-icon {
+        width: 38px !important;
+
+        height: 38px !important;
+
+        flex:
+            0
+            0
+            38px !important;
+    }
+
+
+    /* =====================================================
+       RIGHT / OFFERS AREA
+    ====================================================== */
+
+    .ff-scroll-offers-right {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+    }
+
+
+    /* =====================================================
+       OFFERS HEADING
+    ====================================================== */
+
+    .ff-scroll-offers-heading {
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: space-between !important;
+
+        width: 100% !important;
+
+        gap: 8px !important;
+
+        margin-bottom: 8px !important;
+    }
+
+
+    .ff-scroll-offers-heading-title {
+        font-size: 9px !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    .ff-scroll-offers-scroll-hint {
+        display: inline-flex !important;
+
+        align-items: center !important;
+
+        justify-content: flex-end !important;
+
+        margin: 0 !important;
+
+        font-size: 8px !important;
+
+        white-space: nowrap !important;
+    }
+
+  /* ONE LARGE OFFER CARD */
+    .ff-scroll-offers-viewport {
+        position: relative !important;
+        width: 100% !important;
+
+        height: clamp(210px, 29svh, 255px) !important;
+
+        overflow: hidden !important;
+    }
+
+
+    .ff-scroll-offers-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        gap: 12px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        will-change: transform !important;
+
+        transition:
+            transform 0.5s
+            cubic-bezier(0.22, 1, 0.36, 1) !important;
+    }
+
+
+    .ff-scroll-offer-card {
+        position: relative !important;
+
+        width: 100% !important;
+
+        height: clamp(210px, 29svh, 255px) !important;
+        min-height: clamp(210px, 29svh, 255px) !important;
+
+        flex:
+            0 0
+            clamp(210px, 29svh, 255px) !important;
+
+        margin: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius: 16px !important;
+    }
+
+
+    .ff-scroll-offer-content {
+        left: 14px !important;
+        right: 12px !important;
+        bottom: 12px !important;
+    }
+
+
+    .ff-scroll-offer-title {
+        max-width: 58% !important;
+
+        font-size: 14px !important;
+        line-height: 1.15 !important;
+    }
+
+
+    .ff-scroll-offer-book {
+        min-height: 34px !important;
+
+        padding: 7px 10px !important;
+
+        font-size: 9px !important;
+    }
+
+
+    .ff-scroll-offer-card.is-visible {
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        transform:
+            translateY(0)
+            scale(1) !important;
+    }
+
+
+    /* =====================================================
+       CARD IMAGE
+    ====================================================== */
+
+    .ff-scroll-offer-image {
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        display: block !important;
+
+        width: 100% !important;
+
+        height: 100% !important;
+
+        max-width: none !important;
+
+        object-fit: cover !important;
+
+        object-position: center !important;
+    }
+
+
+    /* =====================================================
+       CARD CONTENT
+    ====================================================== */
+
+    .ff-scroll-offer-content {
+        left: 11px !important;
+
+        right: 8px !important;
+
+        bottom: 8px !important;
+    }
+
+
+    .ff-scroll-offer-title {
+        max-width: 55% !important;
+
+        font-size: 12px !important;
+    }
+
+
+    .ff-scroll-offer-book {
+        min-height: 31px !important;
+
+        padding:
+            6px
+            9px !important;
+
+        font-size: 8px !important;
     }
 }

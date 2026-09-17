@@ -9605,9 +9605,9 @@ span.flatpickr-weekday {
   position: relative;
   overflow: hidden;
   padding: 105px 0 95px;
-  background:
+  /* background:
     url("../img/plan-adventure/zipline-bg.webp")
-    center center / cover no-repeat;
+    center center / cover no-repeat; */
 }
 
 /* Red overlay using theme color */
