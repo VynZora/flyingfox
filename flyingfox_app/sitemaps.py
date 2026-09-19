@@ -1,4 +1,4 @@
-import math
+﻿import math
 
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
@@ -45,12 +45,16 @@ class RideSitemap(Sitemap):
     priority = 0.9
 
     def items(self):
-        return Ride.objects.filter(is_active=True)
+        return Ride.objects.filter(
+            is_active=True
+        )
 
     def location(self, obj):
         return reverse(
             "ride_detail",
-            kwargs={"slug": obj.slug},
+            kwargs={
+                "slug": obj.slug,
+            },
         )
 
 
@@ -69,7 +73,9 @@ class BlogSitemap(Sitemap):
     def location(self, obj):
         return reverse(
             "blog_detail",
-            kwargs={"slug": obj.slug},
+            kwargs={
+                "slug": obj.slug,
+            },
         )
 
 
@@ -94,12 +100,14 @@ class OfferSitemap(Sitemap):
     def location(self, obj):
         return reverse(
             "frontend_offer_detail",
-            kwargs={"slug": obj.slug},
+            kwargs={
+                "slug": obj.slug,
+            },
         )
 
 
 # =========================================================
-# GALLERY PAGINATION + CATEGORY PAGES
+# GALLERY CATEGORY PAGES
 # =========================================================
 
 class GalleryPageSitemap(Sitemap):
@@ -109,27 +117,8 @@ class GalleryPageSitemap(Sitemap):
 
     def items(self):
         return [
-            # Gallery category pages
             "/gallery/normal-zipline/",
             "/gallery/superman-zipline/",
-
-            # Main gallery pagination
-            "/gallery/page/2/",
-            "/gallery/page/3/",
-            "/gallery/page/4/",
-            "/gallery/page/5/",
-            "/gallery/page/6/",
-            "/gallery/page/7/",
-
-            # Normal zipline pagination
-            "/gallery/normal-zipline/page/2/",
-
-            # Superman zipline pagination
-            "/gallery/superman-zipline/page/2/",
-            "/gallery/superman-zipline/page/3/",
-            "/gallery/superman-zipline/page/4/",
-            "/gallery/superman-zipline/page/5/",
-            "/gallery/superman-zipline/page/6/",
         ]
 
     def location(self, item):
@@ -154,11 +143,17 @@ class BlogPageSitemap(Sitemap):
             total_blogs / blogs_per_page
         )
 
-        # Page 1 is already included through StaticViewSitemap as "blog"
-        return range(2, total_pages + 1)
+        # Page 1 is already included as /blog/
+        # through StaticViewSitemap.
+        return range(
+            2,
+            total_pages + 1,
+        )
 
     def location(self, page):
         return reverse(
             "blog_page",
-            kwargs={"page": page},
+            kwargs={
+                "page": page,
+            },
         )

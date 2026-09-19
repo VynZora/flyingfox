@@ -1,151 +1,153 @@
 {% load static %}
 
-
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <meta charset="UTF-8">
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- =====================================================
          PRIMARY SEO
     ====================================================== -->
 
-    <title>
-        {% block title %}
-            Flying Fox Adventure Munnar
-        {% endblock %}
-    </title>
-
-
+    <title>{% block title %} Flying Fox Adventure Munnar {% endblock %}</title>
 
     <meta
-        name="keywords"
-        content="{% block meta_keywords %}Flying Fox Munnar, Zipline Munnar, Adventure Activities Munnar, Munnar Zipline{% endblock %}"
-    >
-
+      name="keywords"
+      content="{% block meta_keywords %}Flying Fox Munnar, Zipline Munnar, Adventure Activities Munnar, Munnar Zipline{% endblock %}"
+    />
 
     <!-- =====================================================
          OPEN GRAPH - FACEBOOK / WHATSAPP / LINKEDIN
     ====================================================== -->
 
     <meta
-        property="og:title"
-        content="{% block og_title %}Flying Fox Adventure Munnar{% endblock %}"
-    >
+      property="og:title"
+      content="{% block og_title %}Flying Fox Adventure Munnar{% endblock %}"
+    />
 
     <meta
-        property="og:description"
-        content="{% block og_description %}Experience exciting Flying Fox and zipline adventures in Munnar, Kerala.{% endblock %}"
-    >
+      property="og:description"
+      content="{% block og_description %}Experience exciting Flying Fox and zipline adventures in Munnar, Kerala.{% endblock %}"
+    />
 
     <meta
-        property="og:type"
-        content="{% block og_type %}website{% endblock %}"
-    >
+      property="og:type"
+      content="{% block og_type %}website{% endblock %}"
+    />
 
     <meta
-        property="og:url"
-        content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}"
-    >
+      property="og:url"
+      content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}"
+    />
 
     <meta
-        property="og:image"
-        content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}{% endblock %}"
-    >
+      property="og:image"
+      content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}{% endblock %}"
+    />
 
-    <meta
-        property="og:site_name"
-        content="Flying Fox Adventure"
-    >
+    <meta property="og:site_name" content="Flying Fox Adventure" />
 
-    <meta
-        property="og:locale"
-        content="en_IN"
-    >
-
+    <meta property="og:locale" content="en_IN" />
 
     <!-- =====================================================
          X / TWITTER CARD
     ====================================================== -->
 
-    <meta
-        name="twitter:card"
-        content="summary_large_image"
-    >
+    <meta name="twitter:card" content="summary_large_image" />
 
     <meta
-        name="twitter:title"
-        content="{% block twitter_title %}Flying Fox Adventure Munnar{% endblock %}"
-    >
+      name="twitter:title"
+      content="{% block twitter_title %}Flying Fox Adventure Munnar{% endblock %}"
+    />
 
     <meta
-        name="twitter:description"
-        content="{% block twitter_description %}Experience exciting Flying Fox and zipline adventures in Munnar, Kerala.{% endblock %}"
-    >
+      name="twitter:description"
+      content="{% block twitter_description %}Experience exciting Flying Fox and zipline adventures in Munnar, Kerala.{% endblock %}"
+    />
 
     <meta
-        name="twitter:image"
-        content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}{% endblock %}"
-    >
+      name="twitter:image"
+      content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'frontend/assets/img/og/flying-fox-og.webp' %}{% endblock %}"
+    />
 
+    <meta
+      name="description"
+      content="{% block meta_description %}Experience thrilling zipline adventures in Munnar with Flying Fox Adventure. Enjoy exciting rides, scenic views and unforgettable experiences.{% endblock %}"
+    />
 
-
- <meta
-    name="description"
-    content="{% block meta_description %}Experience thrilling zipline adventures in Munnar with Flying Fox Adventure. Enjoy exciting rides, scenic views and unforgettable experiences.{% endblock %}"> 
-
-   <!-- Canonical URL -->
+    <!-- Canonical URL -->
     <link
-        rel="canonical"
-        href="https://flyingfoxadventuremunnar.com{{ request.get_full_path }}"
-    >
-
+      rel="canonical"
+      href="https://flyingfoxadventuremunnar.com{{ request.get_full_path }}"
+    />
 
     <!-- =====================================================
      FLYING FOX FAVICONS
 ===================================================== -->
 
-<link rel="icon"
+    <link
+      rel="icon"
       type="image/x-icon"
-      href="{% static 'frontend/assets/img/favicon/favicon.ico' %}">
+      href="{% static 'frontend/assets/img/favicon/favicon.ico' %}"
+    />
 
-<link rel="icon"
+    <link
+      rel="icon"
       type="image/svg+xml"
-      href="{% static 'frontend/assets/img/favicon/favicon.svg' %}">
+      href="{% static 'frontend/assets/img/favicon/favicon.svg' %}"
+    />
 
-<link rel="icon"
+    <link
+      rel="icon"
       type="image/png"
       sizes="96x96"
-      href="{% static 'frontend/assets/img/favicon/favicon-96x96.png' %}">
+      href="{% static 'frontend/assets/img/favicon/favicon-96x96.png' %}"
+    />
 
-<link rel="apple-touch-icon"
+    <link
+      rel="apple-touch-icon"
       sizes="180x180"
-      href="{% static 'frontend/assets/img/favicon/apple-touch-icon.png' %}">
+      href="{% static 'frontend/assets/img/favicon/apple-touch-icon.png' %}"
+    />
 
-<link rel="manifest"
-      href="{% static 'frontend/assets/img/favicon/site.webmanifest' %}">
+    <link
+      rel="manifest"
+      href="{% static 'frontend/assets/img/favicon/site.webmanifest' %}"
+    />
 
-<meta name="theme-color" content="#d7190f">
-
-
-
+    <meta name="theme-color" content="#d7190f" />
 
     <!-- css -->
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap.min.css' %}">
-<link rel="stylesheet" href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}">
-<link rel="stylesheet" href="{% static 'frontend/assets/css/style-clean.css' %}">
+    <link
+      rel="stylesheet"
+      href="{% static 'frontend/assets/css/bootstrap.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}"
+    />
 
-    <script src="https://analytics.ahrefs.com/analytics.js" data-key="RwPsT82PhgRUJpKUSnou2g" async></script>
+    <link rel="stylesheet" href="{% static 'frontend/assets/css/style-purged.min.css' %}">
+    {% comment %}
+    <link
+      rel="stylesheet"
+      href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}"
+    />
+    {% endcomment %}
+    {% comment %} <link
+      rel="stylesheet"
+      href="{% static 'frontend/assets/css/style-clean.css' %}"
+    /> {% endcomment %}
+
+    <script
+      src="https://analytics.ahrefs.com/analytics.js"
+      data-key="RwPsT82PhgRUJpKUSnou2g"
+      async
+    ></script>
 
     <!-- page specific css -->
     {% block extra_css %}{% endblock %}
@@ -153,55 +155,59 @@
 
   <body class="h-bg">
     <!-- preloader -->
-    {% comment %} <div class="preloader">
+    {% comment %}
+    <div class="preloader">
       <div class="loader-ripple">
         <div></div>
         <div></div>
       </div>
-    </div> {% endcomment %}
+    </div>
+    {% endcomment %}
 
-<!-- preloader -->
-<div class="preloader">
-
-    <video
-        class="ff-preloader-video"
-        autoplay
-        muted
-        loop
-        playsinline
-    >
+    <!-- preloader -->
+    <div class="preloader">
+      <video class="ff-preloader-video" autoplay muted loop playsinline>
         <source
-            src="{% static 'frontend/assets/video/fox-preloader.webm' %}"
-            type="video/webm"
-        >
+          src="{% static 'frontend/assets/video/fox-preloader.webm' %}"
+          type="video/webm"
+        />
 
-        {% comment %} <source
-            src="{% static 'frontend/assets/video/fox-preloader.mp4' %}"
-            type="video/mp4"
-        > {% endcomment %}
-    </video>
-
-</div>
-<!-- preloader end -->
+        {% comment %}
+        <source
+          src="{% static 'frontend/assets/video/fox-preloader.mp4' %}"
+          type="video/mp4"
+        />
+        {% endcomment %}
+      </video>
+    </div>
+    <!-- preloader end -->
     <!-- preloader end -->
 
     <!-- header area -->
     <header class="header-2 h-abs">
       <!-- header top -->
       <div class="header-top">
-        {% comment %} <div class="container">
+        {% comment %}
+        <div class="container">
           <div class="header-top-wrap">
             <div class="header-top-left">
               <div class="header-top-list">
                 <ul>
                   <li>
-                    <a href="mailto:info@example.com"><i class="far fa-envelopes"></i> info@example.com</a>
+                    <a href="mailto:info@example.com"
+                      ><i class="far fa-envelopes"></i> info@example.com</a
+                    >
                   </li>
                   <li>
-                    <a href="tel:+21236547898"><i class="far fa-phone-volume"></i> +2 123 654 7898</a>
+                    <a href="tel:+21236547898"
+                      ><i class="far fa-phone-volume"></i> +2 123 654 7898</a
+                    >
                   </li>
                   <li>
-                    <a href="#"><i class="far fa-alarm-clock"></i> Sun - Fri (08AM - 10PM)</a>
+                    <a href="#"
+                      ><i class="far fa-alarm-clock"></i> Sun - Fri (08AM -
+                      10PM)</a
+                    >
                   </li>
                 </ul>
               </div>
@@ -212,7 +218,12 @@
               </div>
               <div class="header-top-lang">
                 <div class="dropdown">
-                  <a href="#" class="top-lang dropdown-toggle" data-bs-toggle="dropdown"><i class="fal fa-globe"></i> Eng</a>
+                  <a
+                    href="#"
+                    class="top-lang dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    ><i class="fal fa-globe"></i> Eng</a
+                  >
                   <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#">English</a></li>
                     <li><a class="dropdown-item" href="#">German</a></li>
@@ -230,7 +241,8 @@
               </div>
             </div>
           </div>
-        </div> {% endcomment %}
+        </div>
+        {% endcomment %}
       </div>
       <!-- header top end -->
 
@@ -239,11 +251,14 @@
         <nav class="navbar navbar-expand-lg">
           <div class="container position-relative">
             <a class="navbar-brand" href="{% url 'home' %}">
-              <img src="{% static 'frontend/assets/img/logo/logo-navbar.png' %}" alt="logo" />
+              <img
+                src="{% static 'frontend/assets/img/logo/logo-navbar.png' %}"
+                alt="logo"
+              />
             </a>
-            {% comment %} <div class="mobile-menu-right">
-              <div class="mobile-menu-btn">
-              </div>
+            {% comment %}
+            <div class="mobile-menu-right">
+              <div class="mobile-menu-btn"></div>
               <button
                 class="navbar-toggler"
                 type="button"
@@ -256,181 +271,192 @@
                 <span></span>
                 <span></span>
               </button>
-            </div> {% endcomment %}
+            </div>
+            {% endcomment %}
 
-<div class="mobile-menu-right">
+            <div class="mobile-menu-right">
+              <a href="{% url 'bookings' %}" class="mobile-book-now">
+                Book Now
+                <i class="fas fa-arrow-right"></i>
+              </a>
 
-    <a
-        href="{% url 'bookings' %}"
-        class="mobile-book-now"
-    >
-        Book Now
-        <i class="fas fa-arrow-right"></i>
-    </a>
-
-    <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasNavbar"
-        aria-controls="offcanvasNavbar"
-        aria-label="Toggle navigation"
-    >
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-</div>
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar"
+                aria-label="Toggle navigation"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+            </div>
+            <div
+              class="offcanvas offcanvas-start"
+              tabindex="-1"
+              id="offcanvasNavbar"
+            >
               <div class="offcanvas-header">
-                <a href="{% url 'home' %}" class="offcanvas-brand" id="offcanvasNavbarLabel">
-                  <img src="{% static 'frontend/assets/img/logo/logo.png' %}" alt="flying fox adventure"  width="220"
-    height="80" />
+                <a
+                  href="{% url 'home' %}"
+                  class="offcanvas-brand"
+                  id="offcanvasNavbarLabel"
+                >
+                  <img
+                    src="{% static 'frontend/assets/img/logo/logo.png' %}"
+                    alt="flying fox adventure"
+                    width="220"
+                    height="80"
+                  />
                 </a>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="offcanvas"
+                  aria-label="Close"
+                >
                   <i class="far fa-xmark"></i>
                 </button>
               </div>
               <div class="offcanvas-body gap-xl-4">
                 <ul class="navbar-nav justify-content-center flex-grow-1">
-
                   <li class="nav-item">
-                    <a class="nav-link {% block nav_home %}{% endblock %}" href="{% url 'home' %}">
+                    <a
+                      class="nav-link {% block nav_home %}{% endblock %}"
+                      href="{% url 'home' %}"
+                    >
                       Home
                     </a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link {% block nav_about %}{% endblock %}" href="{% url 'about' %}">
+                    <a
+                      class="nav-link {% block nav_about %}{% endblock %}"
+                      href="{% url 'about' %}"
+                    >
                       About
                     </a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link {% block nav_rides %}{% endblock %}" href="{% url 'rides' %}">
+                    <a
+                      class="nav-link {% block nav_rides %}{% endblock %}"
+                      href="{% url 'rides' %}"
+                    >
                       Rides
                     </a>
                   </li>
 
                   <li class="nav-item">
-                     <a  class="nav-link {% block nav_offers %}{% endblock %}" href="{% url 'offers' %}">
+                    <a
+                      class="nav-link {% block nav_offers %}{% endblock %}"
+                      href="{% url 'offers' %}"
+                    >
                       Offers
-                      </a>
+                    </a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link {% block nav_gallery %}{% endblock %}" href="{% url 'gallery' %}">
+                    <a
+                      class="nav-link {% block nav_gallery %}{% endblock %}"
+                      href="{% url 'gallery' %}"
+                    >
                       Gallery
                     </a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link {% block nav_blog %}{% endblock %}" href="{% url 'blog' %}">
+                    <a
+                      class="nav-link {% block nav_blog %}{% endblock %}"
+                      href="{% url 'blog' %}"
+                    >
                       Blog
                     </a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link {% block nav_contact %}{% endblock %}" href="{% url 'contact' %}">
+                    <a
+                      class="nav-link {% block nav_contact %}{% endblock %}"
+                      href="{% url 'contact' %}"
+                    >
                       Contact
                     </a>
                   </li>
-
                 </ul>
 
-
-
                 <!-- Mobile Account & Booking Buttons -->
-<div class="mobile-offcanvas-actions">
+                <div class="mobile-offcanvas-actions">
+                  {% if request.session.user_id %}
 
-    {% if request.session.user_id %}
+                  <a
+                    href="{% url 'user_dashboard' %}"
+                    class="theme-btn mobile-offcanvas-btn"
+                  >
+                    <span> My Account </span>
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
 
-        <a
-            href="{% url 'user_dashboard' %}"
-            class="theme-btn mobile-offcanvas-btn"
-        >
-            <span>
-                My Account
-            </span>
-            <i class="fas fa-arrow-right"></i>
-        </a>
+                  {% else %}
 
-    {% else %}
+                  <a
+                    href="{% url 'user_signin' %}"
+                    class="theme-btn mobile-offcanvas-btn"
+                  >
+                    <span> Login </span>
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
 
-        <a
-            href="{% url 'user_signin' %}"
-            class="theme-btn mobile-offcanvas-btn"
-        >
-            <span>
-                Login
-            </span>
-            <i class="fas fa-arrow-right"></i>
-        </a>
+                  {% endif %}
 
-    {% endif %}
-
-
-    <a
-        href="{% url 'bookings' %}"
-        class="theme-btn mobile-offcanvas-btn mobile-booking-btn"
-    >
-        <span>
-            Book Now
-        </span>
-        <i class="fas fa-arrow-right"></i>
-    </a>
-
-</div>
-
-
+                  <a
+                    href="{% url 'bookings' %}"
+                    class="theme-btn mobile-offcanvas-btn mobile-booking-btn"
+                  >
+                    <span> Book Now </span>
+                    <i class="fas fa-arrow-right"></i>
+                  </a>
+                </div>
 
                 <!-- nav-right -->
                 <div class="nav-right">
                   <div class="nav-btn">
-{% if request.session.user_id %}
+                    {% if request.session.user_id %}
 
-    <a
-        href="{% url 'user_dashboard' %}"
-        class="theme-btn"
-    >
-        My Account
-        <i class="fas fa-user"></i>
-    </a>
+                    <a href="{% url 'user_dashboard' %}" class="theme-btn">
+                      My Account
+                      <i class="fas fa-user"></i>
+                    </a>
 
-{% else %}
+                    {% else %}
 
-    <a
-        href="{% url 'user_signin' %}"
-        class="theme-btn"
-    >
-        Login
-        <i class="fas fa-user"></i>
-    </a>
+                    <a href="{% url 'user_signin' %}" class="theme-btn">
+                      Login
+                      <i class="fas fa-user"></i>
+                    </a>
 
-{% endif %}
+                    {% endif %}
                   </div>
                   <div class="nav-btn">
-                    <a href="{% url 'bookings' %}" class="theme-btn">Book Now<i class="fas fa-arrow-right"></i></a>
+                    <a href="{% url 'bookings' %}" class="theme-btn"
+                      >Book Now<i class="fas fa-arrow-right"></i
+                    ></a>
                   </div>
 
-
-                    <!-- Sidebar Button -->
-    <button
-        type="button"
-        class="sidebar-btn nav-right-link"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#sidebarPopup"
-        aria-controls="sidebarPopup"
-        aria-label="Open sidebar"
-    >
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-
-
+                  <!-- Sidebar Button -->
+                  <button
+                    type="button"
+                    class="sidebar-btn nav-right-link"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebarPopup"
+                    aria-controls="sidebarPopup"
+                    aria-label="Open sidebar"
+                  >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -445,1092 +471,712 @@
      SIDEBAR POPUP
 ===================================================== -->
 
-<div
-    class="sidebar-popup offcanvas offcanvas-end"
-    tabindex="-1"
-    id="sidebarPopup"
-    aria-labelledby="sidebarPopupLabel"
->
-
-    <!-- Sidebar Header -->
-    <div class="offcanvas-header">
-
+    <div
+      class="sidebar-popup offcanvas offcanvas-end"
+      tabindex="-1"
+      id="sidebarPopup"
+      aria-labelledby="sidebarPopupLabel"
+    >
+      <!-- Sidebar Header -->
+      <div class="offcanvas-header">
         <a
-            href="{% url 'home' %}"
-            class="sidebar-popup-logo"
-            id="sidebarPopupLabel"
+          href="{% url 'home' %}"
+          class="sidebar-popup-logo"
+          id="sidebarPopupLabel"
         >
-            <img
-                src="{% static 'frontend/assets/img/logo/logo.png' %}"
-                alt="Flying Fox Adventure"
-                 width="220"
-    height="80"
-            />
+          <img
+            src="{% static 'frontend/assets/img/logo/logo.png' %}"
+            alt="Flying Fox Adventure"
+            width="220"
+            height="80"
+          />
         </a>
 
         <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
         >
-            <i class="far fa-xmark"></i>
+          <i class="far fa-xmark"></i>
         </button>
+      </div>
 
-    </div>
-
-
-    <!-- Sidebar Body -->
-    <div class="sidebar-popup-wrap offcanvas-body">
-
+      <!-- Sidebar Body -->
+      <div class="sidebar-popup-wrap offcanvas-body">
         <div class="sidebar-popup-content">
+          <!-- About -->
+          <div class="sidebar-popup-about">
+            <h4>About Flying Fox</h4>
 
+            <p>
+              Experience the thrill of soaring above Munnar's breathtaking
+              valleys with professional adventure guides, quality safety
+              equipment, and unforgettable Flying Fox experiences.
+            </p>
+          </div>
 
-            <!-- About -->
-            <div class="sidebar-popup-about">
+          <!-- Contact -->
+          <div class="sidebar-popup-contact">
+            <h4>Contact Info</h4>
 
-                <h4>
-                    About Flying Fox
-                </h4>
+            <ul>
+              <!-- Email -->
+              <li>
+                <div class="icon">
+                  <i class="far fa-envelope"></i>
+                </div>
 
-                <p>
-                    Experience the thrill of soaring above Munnar's
-                    breathtaking valleys with professional adventure
-                    guides, quality safety equipment, and unforgettable
-                    Flying Fox experiences.
-                </p>
+                <div class="content">
+                  <h5>Email</h5>
 
-            </div>
+                  <a href="mailto:support@flyingfoxadventuremunnar.com">
+                    support@flyingfoxadventuremunnar.com
+                  </a>
+                </div>
+              </li>
 
+              <!-- Phone -->
+              <li>
+                <div class="icon">
+                  <i class="far fa-phone"></i>
+                </div>
 
-            <!-- Contact -->
-            <div class="sidebar-popup-contact">
+                <div class="content">
+                  <h5>Phone</h5>
 
-                <h4>
-                    Contact Info
-                </h4>
+                  <a href="tel:+917907219198"> +91 7907219198 </a>
+                </div>
+              </li>
 
-                <ul>
+              <!-- Address -->
+              <li>
+                <div class="icon">
+                  <i class="far fa-location-dot"></i>
+                </div>
 
-                    <!-- Email -->
-                    <li>
+                <div class="content">
+                  <h5>Address</h5>
 
-                        <div class="icon">
-                            <i class="far fa-envelope"></i>
-                        </div>
+                  <span> Thekkumkanam, Kerala </span>
+                </div>
+              </li>
+            </ul>
+          </div>
 
-                        <div class="content">
+          <!-- Social -->
+          <div class="sidebar-popup-social">
+            <h4>Follow Us</h4>
 
-                            <h5>
-                                Email
-                            </h5>
+            <a href="#" aria-label="Facebook">
+              <i class="fab fa-facebook"></i>
+            </a>
 
-                            <a href="mailto:support@flyingfoxadventuremunnar.com">
-                                support@flyingfoxadventuremunnar.com 
-                            </a>
+            <a href="#" aria-label="X">
+              <i class="fab fa-x-twitter"></i>
+            </a>
 
-                        </div>
+            <a
+              href="https://www.instagram.com/flyingfox_adventure/"
+              aria-label="Instagram"
+            >
+              <i class="fab fa-instagram"></i>
+            </a>
 
-                    </li>
-
-
-                    <!-- Phone -->
-                    <li>
-
-                        <div class="icon">
-                            <i class="far fa-phone"></i>
-                        </div>
-
-                        <div class="content">
-
-                            <h5>
-                                Phone
-                            </h5>
-
-                            <a href="tel:+917907219198">
-                                +91 7907219198
-                            </a>
-
-                        </div>
-
-                    </li>
-
-
-                    <!-- Address -->
-                    <li>
-
-                        <div class="icon">
-                            <i class="far fa-location-dot"></i>
-                        </div>
-
-                        <div class="content">
-
-                            <h5>
-                                Address
-                            </h5>
-
-                            <span>
-                                Thekkumkanam, Kerala
-                            </span>
-
-                        </div>
-
-                    </li>
-
-                </ul>
-
-            </div>
-
-
-            <!-- Social -->
-            <div class="sidebar-popup-social">
-
-                <h4>
-                    Follow Us
-                </h4>
-
-                <a href="#" aria-label="Facebook">
-                    <i class="fab fa-facebook"></i>
-                </a>
-
-                <a href="#" aria-label="X">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-
-                <a href="https://www.instagram.com/flyingfox_adventure/" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-
-                <a href="#" aria-label="YouTube">
-                    <i class="fab fa-youtube"></i>
-                </a>
-
-            </div>
-
+            <a href="#" aria-label="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </div>
         </div>
-
+      </div>
     </div>
 
-</div>
+    <!-- sidebar popup end -->
 
-<!-- sidebar popup end -->
-
-    <main class="main">
-      {% block content %}{% endblock %}
-    </main>
+    <main class="main">{% block content %}{% endblock %}</main>
 
     <!-- footer area -->
     <!-- =========================================================
      FOOTER AREA
 ========================================================= -->
 
-<footer class="footer-area fta-2 light pb-40">
+    <footer class="footer-area fta-2 light pb-40">
+      <!-- Decorative shapes -->
 
-    <!-- Decorative shapes -->
-
-    <div class="footer-shape">
+      <div class="footer-shape">
+        <img
+          class="shape-1"
+          src="{% static 'frontend/assets/img/shape/05.webp' %}"
+          alt="footer shape 1 flying fox munnar"
+        />
 
         <img
-            class="shape-1"
-            src="{% static 'frontend/assets/img/shape/05.webp' %}"
-            alt="footer shape 1 flying fox munnar">
+          class="shape-2"
+          src="{% static 'frontend/assets/img/shape/06.webp' %}"
+          alt="footer shape 2 flying fox munnar"
+        />
 
         <img
-            class="shape-2"
-            src="{% static 'frontend/assets/img/shape/06.webp' %}"
-            alt="footer shape 2 flying fox munnar"
-        >
+          class="shape-3"
+          src="{% static 'frontend/assets/img/shape/07.webp' %}"
+          alt="footer shape 3 flying fox munnar"
+        />
+      </div>
 
-        <img
-            class="shape-3"
-            src="{% static 'frontend/assets/img/shape/07.webp' %}"
-            alt="footer shape 3 flying fox munnar"
-        >
-
-    </div>
-
-
-    <div class="footer-widget">
-
+      <div class="footer-widget">
         <div class="container">
-
-            <div class="footer-widget-wrap pt-70 pb-50">
-
-                <div class="row g-4">
-
-
-                    <!-- =====================================================
+          <div class="footer-widget-wrap pt-70 pb-50">
+            <div class="row g-4">
+              <!-- =====================================================
                          ABOUT
                     ====================================================== -->
 
-                    <div class="col-lg-5">
+              <div class="col-lg-5">
+                <div class="footer-widget-box about-us">
+                  <a href="{% url 'home' %}" class="footer-logo">
+                    <img
+                      src="{% static 'frontend/assets/img/logo/logo.png' %}"
+                      alt="Flying Fox Adventure"
+                      width="220"
+                      height="80"
+                    />
+                  </a>
 
-                        <div class="footer-widget-box about-us">
+                  <p>
+                    Experience the thrill of soaring above Munnar's breathtaking
+                    valleys with world-class safety, professional guides, and
+                    unforgettable Flying Fox adventures designed for every
+                    thrill seeker.
+                  </p>
 
-                            <a
-                                href="{% url 'home' %}"
-                                class="footer-logo"
-                            >
+                  <!-- FOLLOW US -->
 
-                                <img
-                                    src="{% static 'frontend/assets/img/logo/logo.png' %}"
-                                    alt="Flying Fox Adventure"
-                                     width="220"
-    height="80"
-                                >
+                  {% comment %}
+                  <div class="footer-download mt-4">
+                    <h4>Follow Us On</h4>
 
-                            </a>
+                    <ul class="footer-social">
+                      <li>
+                        <a href="#" aria-label="Facebook">
+                          <i class="fab fa-facebook-f"></i>
+                        </a>
+                      </li>
 
+                      <li>
+                        <a href="#" aria-label="Instagram">
+                          <i class="fab fa-instagram"></i>
+                        </a>
+                      </li>
 
-                            <p>
-                                Experience the thrill of soaring above
-                                Munnar's breathtaking valleys with
-                                world-class safety, professional guides,
-                                and unforgettable Flying Fox adventures
-                                designed for every thrill seeker.
-                            </p>
+                      <li>
+                        <a href="#" aria-label="YouTube">
+                          <i class="fab fa-youtube"></i>
+                        </a>
+                      </li>
 
+                      <li>
+                        <a href="#" aria-label="WhatsApp">
+                          <i class="fab fa-whatsapp"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  {% endcomment %}
+                </div>
+              </div>
 
-                            <!-- FOLLOW US -->
-
-                            {% comment %} <div class="footer-download mt-4">
-
-                                <h4>
-                                    Follow Us On
-                                </h4>
-
-
-                                <ul class="footer-social">
-
-                                    <li>
-
-                                        <a
-                                            href="#"
-                                            aria-label="Facebook"
-                                        >
-
-                                            <i class="fab fa-facebook-f"></i>
-
-                                        </a>
-
-                                    </li>
-
-
-                                    <li>
-
-                                        <a
-                                            href="#"
-                                            aria-label="Instagram"
-                                        >
-
-                                            <i class="fab fa-instagram"></i>
-
-                                        </a>
-
-                                    </li>
-
-
-                                    <li>
-
-                                        <a
-                                            href="#"
-                                            aria-label="YouTube"
-                                        >
-
-                                            <i class="fab fa-youtube"></i>
-
-                                        </a>
-
-                                    </li>
-
-
-                                    <li>
-
-                                        <a
-                                            href="#"
-                                            aria-label="WhatsApp"
-                                        >
-
-                                            <i class="fab fa-whatsapp"></i>
-
-                                        </a>
-
-                                    </li>
-
-                                </ul>
-
-                            </div>  {% endcomment %}
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- =====================================================
+              <!-- =====================================================
                          COMPANY
                     ====================================================== -->
 
-                    <div class="col-6 col-lg-2">
+              <div class="col-6 col-lg-2">
+                <div class="footer-widget-box list">
+                  <h4 class="footer-widget-title">Company</h4>
 
-                        <div class="footer-widget-box list">
+                  <ul class="footer-list">
+                    <li>
+                      <a href="{% url 'about' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                            <h4 class="footer-widget-title">
-                                Company
-                            </h4>
+                        About Us
+                      </a>
+                    </li>
 
+                    {% comment %}
+                    <li>
+                      <a href="{% url 'terms_conditions' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                            <ul class="footer-list">
+                        Terms & conditions
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'privacy_policy' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                                <li>
+                        privacy policy
+                      </a>
+                    </li>
+                    {% endcomment %} {% comment %}
+                    <li>
+                      <a href="{% url 'faq' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                                    <a href="{% url 'about' %}">
+                        FAQ's
+                      </a>
+                    </li>
+                    {% endcomment %} {% comment %}
+                    <li>
+                      <a href="{% url 'blog' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                                        <i class="far fa-angle-double-right"></i>
+                        Update News
+                      </a>
+                    </li>
+                    {% endcomment %}
 
-                                        About Us
+                    <li>
+                      <a href="{% url 'contact' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                                    </a>
+                        Contact Us
+                      </a>
+                    </li>
 
-                                </li>
+                    <li>
+                      <a href="{% url 'rides' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                                 {% comment %} <li>
+                        Our Rides
+                      </a>
+                    </li>
 
-                                    <a href="{% url 'terms_conditions' %}">
+                    <li>
+                      <a href="{% url 'offers' %}">
+                        <i class="far fa-angle-double-right"></i>
 
-                                        <i class="far fa-angle-double-right"></i>
+                        Offers
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-                                        Terms & conditions 
-
-                                    </a>
-
-                                </li>
-                                <li>
-
-                                    <a href="{% url 'privacy_policy' %}">
-
-                                        <i class="far fa-angle-double-right"></i>
-
-                                        privacy policy
-
-                                    </a>
-
-                                </li> {% endcomment %}
-
-
-                                {% comment %} <li>
-
-                                    <a href="{% url 'faq' %}">
-
-                                        <i class="far fa-angle-double-right"></i>
-
-                                        FAQ's
-
-                                    </a>
-
-                                </li> {% endcomment %}
-
-
-                                {% comment %} <li>
-
-                                    <a href="{% url 'blog' %}">
-
-                                        <i class="far fa-angle-double-right"></i>
-
-                                        Update News
-
-                                    </a>
-
-                                </li> {% endcomment %}
-
-
-                                <li>
-
-                                    <a href="{% url 'contact' %}">
-
-                                        <i class="far fa-angle-double-right"></i>
-
-                                        Contact Us
-
-                                    </a>
-
-                                </li>
-
-
-                                <li>
-
-                                    <a href="{% url 'rides' %}">
-
-                                        <i class="far fa-angle-double-right"></i>
-
-                                        Our Rides
-
-                                    </a>
-
-                                </li>
-
-
-                                <li>
-
-                                    <a href="{% url 'offers' %}">
-
-                                        <i class="far fa-angle-double-right"></i>
-
-                                        Offers
-
-                                    </a>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- =====================================================
+              <!-- =====================================================
                          POPULAR RIDES
                     ====================================================== -->
 
-                    <div class="col-6 col-lg-2">
+              <div class="col-6 col-lg-2">
+                <div class="footer-widget-box list">
+                  <h4 class="footer-widget-title">Popular Rides</h4>
 
-                        <div class="footer-widget-box list">
+                  <ul class="footer-list">
+                    {% for ride in footer_popular_rides %}
 
-                            <h4 class="footer-widget-title">
-                                Popular Rides
-                            </h4>
+                    <li>
+                      <a href="{% url 'ride_detail' ride.slug %}">
+                        <i class="far fa-angle-double-right"></i>
 
+                        {{ ride.name }}
+                      </a>
+                    </li>
 
-                            <ul class="footer-list">
+                    {% empty %}
 
-                                {% for ride in footer_popular_rides %}
+                    <li>
+                      <span> No rides available. </span>
+                    </li>
 
-                                    <li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
 
-                                        <a
-                                            href="{% url 'ride_detail' ride.slug %}"
-                                        >
-
-                                            <i class="far fa-angle-double-right"></i>
-
-                                            {{ ride.name }}
-
-                                        </a>
-
-                                    </li>
-
-                                {% empty %}
-
-                                    <li>
-
-                                        <span>
-                                            No rides available.
-                                        </span>
-
-                                    </li>
-
-                                {% endfor %}
-
-                            </ul>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- =====================================================
+              <!-- =====================================================
                          GET IN TOUCH
                     ====================================================== -->
 
-                    <div class="col-lg-3">
-
-                        <div class="footer-widget-box">
-
-                            <h4 class="footer-widget-title">
-                                Get In Touch
-                            </h4>
-
-
-                            <div class="footer-contact">
-
-
-                                <!-- PHONE -->
-
-                                <div class="footer-contact-item">
-
-                                    <div class="icon">
-
-                                        <img
-                                            src="{% static 'frontend/assets/img/icon/call-red.svg' %}"
-                                            alt="Call Flying Fox Adventure"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="content">
-
-                                        <h5>
-                                            Call Us
-                                        </h5>
-
-                                        <a href="tel:+917907219198">
-                                            +91 7907219198
-                                        </a>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                <!-- EMAIL -->
-
-                                <div class="footer-contact-item">
-
-                                    <div class="icon">
-
-                                        <img
-                                            src="{% static 'frontend/assets/img/icon/email-red.svg' %}"
-                                            alt="Email Flying Fox Adventure"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="content">
-
-                                        <h5>
-                                            Mail Us
-                                        </h5>
-
-                                        <a href="mailto:support@flyingfoxadventuremunnar.com ">
-
-                                            support@flyingfoxadventuremunnar.com
-
-                                        </a>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                <!-- ADDRESS -->
-
-                                {% comment %} <div class="footer-contact-item">
-
-                                    <div class="icon">
-
-                                        <img
-                                            src="{% static 'frontend/assets/img/icon/address-red.svg' %}"
-                                            alt="Flying Fox Adventure Address"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="content">
-
-                                        <h5>
-                                            Our Address
-                                        </h5>
-
-                                        <p>
-                                            Thekkumkanam, Kerala
-                                        </p>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                <!-- OPENING TIME -->
-
-                                <div class="footer-contact-item">
-
-                                    <div class="icon">
-
-                                        <img
-                                            src="{% static 'frontend/assets/img/icon/clock-red.svg' %}"
-                                            alt="Flying Fox Adventure Opening Hours"
-                                        >
-
-                                    </div>
-
-
-                                    <div class="content">
-
-                                        <h5>
-                                            Opening Hours
-                                        </h5>
-
-                                        <p>
-                                            8:30 AM – 6:00 PM
-                                        </p>
-
-                                    </div>
-
-                                </div> {% endcomment %}
-
-
-                            </div>
-
-
-                            <!-- SOCIAL -->
-
-                            <ul class="footer-social">
-
-                                <li>
-
-                                    <a
-                                        href="#"
-                                        aria-label="Facebook"
-                                    >
-
-                                        <i class="fab fa-facebook-f"></i>
-
-                                    </a>
-
-                                </li>
-
-
-                                <li>
-
-                                    <a
-                                        href="https://www.instagram.com/flyingfox_adventure/"
-                                        aria-label="Instagram"
-                                    >
-
-                                        <i class="fab fa-instagram"></i>
-
-                                    </a>
-
-                                </li>
-
-
-                                <li>
-
-                                    <a
-                                        href="#"
-                                        aria-label="YouTube"
-                                    >
-
-                                        <i class="fab fa-youtube"></i>
-
-                                    </a>
-
-                                </li>
-
-
-                                <li>
-
-                                   <a
-                                       href="https://wa.me/917907219198"
-                                       aria-label="WhatsApp"
-                                       target="_blank"
-                                      rel="noopener noreferrer">
-                                      <i class="fab fa-whatsapp"></i>
-                                   </a>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
-
+              <div class="col-lg-3">
+                <div class="footer-widget-box">
+                  <h4 class="footer-widget-title">Get In Touch</h4>
+
+                  <div class="footer-contact">
+                    <!-- PHONE -->
+
+                    <div class="footer-contact-item">
+                      <div class="icon">
+                        <img
+                          src="{% static 'frontend/assets/img/icon/call-red.svg' %}"
+                          alt="Call Flying Fox Adventure"
+                        />
+                      </div>
+
+                      <div class="content">
+                        <h5>Call Us</h5>
+
+                        <a href="tel:+917907219198"> +91 7907219198 </a>
+                      </div>
                     </div>
 
+                    <!-- EMAIL -->
 
+                    <div class="footer-contact-item">
+                      <div class="icon">
+                        <img
+                          src="{% static 'frontend/assets/img/icon/email-red.svg' %}"
+                          alt="Email Flying Fox Adventure"
+                        />
+                      </div>
+
+                      <div class="content">
+                        <h5>Mail Us</h5>
+
+                        <a href="mailto:support@flyingfoxadventuremunnar.com ">
+                          support@flyingfoxadventuremunnar.com
+                        </a>
+                      </div>
+                    </div>
+
+                    <!-- ADDRESS -->
+
+                    {% comment %}
+                    <div class="footer-contact-item">
+                      <div class="icon">
+                        <img
+                          src="{% static 'frontend/assets/img/icon/address-red.svg' %}"
+                          alt="Flying Fox Adventure Address"
+                        />
+                      </div>
+
+                      <div class="content">
+                        <h5>Our Address</h5>
+
+                        <p>Thekkumkanam, Kerala</p>
+                      </div>
+                    </div>
+
+                    <!-- OPENING TIME -->
+
+                    <div class="footer-contact-item">
+                      <div class="icon">
+                        <img
+                          src="{% static 'frontend/assets/img/icon/clock-red.svg' %}"
+                          alt="Flying Fox Adventure Opening Hours"
+                        />
+                      </div>
+
+                      <div class="content">
+                        <h5>Opening Hours</h5>
+
+                        <p>8:30 AM – 6:00 PM</p>
+                      </div>
+                    </div>
+                    {% endcomment %}
+                  </div>
+
+                  <!-- SOCIAL -->
+
+                  <ul class="footer-social">
+                    <li>
+                      <a href="#" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        href="https://www.instagram.com/flyingfox_adventure/"
+                        aria-label="Instagram"
+                      >
+                        <i class="fab fa-instagram"></i>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        href="https://wa.me/917907219198"
+                        aria-label="WhatsApp"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <i class="fab fa-whatsapp"></i>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-
+              </div>
             </div>
-
+          </div>
         </div>
+      </div>
 
-    </div>
-
-
-
-    <!-- =========================================================
+      <!-- =========================================================
          COPYRIGHT
     ========================================================= -->
 
-    {% comment %} <div class="container">
-
+      {% comment %}
+      <div class="container">
         <div class="copyright text-center">
+          <p class="copyright-text">
+            &copy; Copyright
 
-            <p class="copyright-text">
+            <span id="date"></span>
 
-                &copy; Copyright
+            <a href="{% url 'home' %}"> Flying Fox Adventure </a>
 
-                <span id="date"></span>
+            All Rights Reserved.
 
-                <a href="{% url 'home' %}">
-                    Flying Fox Adventure
-                </a>
-
-                All Rights Reserved.
-
-                <span class="ff-footer-credit">
-                    Designed by
-                    <a href="#">
-                        Vynzora
-                    </a>
-                </span>
-
-            </p>
-
+            <span class="ff-footer-credit">
+              Designed by
+              <a href="#"> Vynzora </a>
+            </span>
+          </p>
         </div>
+      </div>
+      {% endcomment %}
 
-    </div> {% endcomment %}
-
-<div class="container">
-
-    <div class="copyright">
-
-        <div class="ff-footer-bottom">
-
+      <div class="container">
+        <div class="copyright">
+          <div class="ff-footer-bottom">
             <!-- COPYRIGHT LEFT -->
             <p class="copyright-text">
+              &copy; Copyright
 
-                &copy; Copyright
+              <span id="date"></span>
 
-                <span id="date"></span>
+              <a href="{% url 'home' %}"> Flying Fox Adventure </a>
 
-                <a href="{% url 'home' %}">
-                    Flying Fox Adventure
-                </a>
+              All Rights Reserved.
 
-                All Rights Reserved.
-
-                <span class="ff-footer-credit">
-                    Designed by
-                    <a href="https://vynzora.com/">
-                        Vynzora
-                    </a>
-                </span>
-
+              <span class="ff-footer-credit">
+                Designed by
+                <a href="https://vynzora.com/"> Vynzora </a>
+              </span>
             </p>
-
 
             <!-- LEGAL LINKS RIGHT -->
             <div class="ff-footer-legal">
+              <a href="{% url 'privacy_policy' %}"> Privacy Policy </a>
 
-                <a href="{% url 'privacy_policy' %}">
-                    Privacy Policy
-                </a>
+              <span>|</span>
 
-                <span>|</span>
-
-                <a href="{% url 'terms_conditions' %}">
-                    Terms & Conditions
-                </a>
-
+              <a href="{% url 'terms_conditions' %}"> Terms & Conditions </a>
             </div>
-
+          </div>
         </div>
+      </div>
+    </footer>
 
-    </div>
-
-</div>   
-
-</footer>
-
-<!-- footer area end -->
+    <!-- footer area end -->
 
     <!-- =====================================================
      FLYING FOX CHATBOT
     ===================================================== -->
 
     <div class="ff-chatbot-wrapper">
+      <!-- Floating chatbot button -->
 
-        <!-- Floating chatbot button -->
+      <button
+        type="button"
+        class="ff-chatbot-toggle"
+        id="ffChatbotToggle"
+        aria-label="Open Flying Fox chatbot"
+        aria-expanded="false"
+      >
+        <span class="ff-chatbot-toggle-icon">
+          <i class="fas fa-comments"></i>
+        </span>
+      </button>
 
-        <button
-            type="button"
-            class="ff-chatbot-toggle"
-            id="ffChatbotToggle"
-            aria-label="Open Flying Fox chatbot"
-            aria-expanded="false"
-        >
+      <!-- Chatbot window -->
 
-            <span class="ff-chatbot-toggle-icon">
+      <div class="ff-chatbot-window" id="ffChatbotWindow" aria-hidden="true">
+        <!-- Header -->
 
-                <i class="fas fa-comments"></i>
+        <div class="ff-chatbot-header">
+          <div class="ff-chatbot-agent">
+            <div class="ff-chatbot-avatar">
+              <i class="fas fa-headset"></i>
+            </div>
 
-            </span>
+            <div class="ff-chatbot-agent-info">
+              <h5>Flying Fox Assistant</h5>
 
-        </button>
+              <span>
+                <span class="ff-chatbot-online-dot"></span>
 
+                Online now
+              </span>
+            </div>
+          </div>
 
-        <!-- Chatbot window -->
+          <div class="ff-chatbot-header-actions">
+            <!-- Change Language -->
+            <button
+              type="button"
+              class="ff-chatbot-language-toggle"
+              id="ffChatbotChangeLanguage"
+              aria-label="Change chatbot language"
+              title="Change language"
+              hidden
+            >
+              <i class="fas fa-globe"></i>
+            </button>
+
+            <!-- Close Chatbot -->
+            <button
+              type="button"
+              class="ff-chatbot-close"
+              id="ffChatbotClose"
+              aria-label="Close chatbot"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages -->
 
         <div
-            class="ff-chatbot-window"
-            id="ffChatbotWindow"
-            aria-hidden="true"
+          class="ff-chatbot-messages"
+          id="ffChatbotMessages"
+          aria-live="polite"
         >
-
-            <!-- Header -->
-
-            <div class="ff-chatbot-header">
-
-                <div class="ff-chatbot-agent">
-
-                    <div class="ff-chatbot-avatar">
-
-                        <i class="fas fa-headset"></i>
-
-                    </div>
-
-                    <div class="ff-chatbot-agent-info">
-
-                        <h5>
-                            Flying Fox Assistant
-                        </h5>
-
-                        <span>
-
-                            <span class="ff-chatbot-online-dot"></span>
-
-                            Online now
-
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-<div class="ff-chatbot-header-actions">
-
-    <!-- Change Language -->
-    <button
-        type="button"
-        class="ff-chatbot-language-toggle"
-        id="ffChatbotChangeLanguage"
-        aria-label="Change chatbot language"
-        title="Change language"
-        hidden
-    >
-        <i class="fas fa-globe"></i>
-    </button>
-
-
-    <!-- Close Chatbot -->
-    <button
-        type="button"
-        class="ff-chatbot-close"
-        id="ffChatbotClose"
-        aria-label="Close chatbot"
-    >
-        <i class="fas fa-times"></i>
-    </button>
-
-</div>
-
+          <div class="ff-chatbot-message ff-bot-message">
+            <div class="ff-message-avatar">
+              <i class="fas fa-headset"></i>
             </div>
 
+            <div class="ff-message-body">
+              <div class="ff-message-bubble">
+                Hello! Welcome to Flying Fox Adventure. How can I help you
+                today?
+              </div>
 
-            <!-- Messages -->
-
-            <div
-                class="ff-chatbot-messages"
-                id="ffChatbotMessages"
-                aria-live="polite">
-
-                <div class="ff-chatbot-message ff-bot-message">
-
-                    <div class="ff-message-avatar">
-
-                        <i class="fas fa-headset"></i>
-
-                    </div>
-
-                    <div class="ff-message-body">
-
-                        <div class="ff-message-bubble">
-
-                            Hello! Welcome to Flying Fox Adventure.
-
-                            How can I help you today?
-
-                        </div>
-
-                        <span class="ff-message-time">
-                            Now
-                        </span>
-
-                    </div>
-
-                </div>
-
+              <span class="ff-message-time"> Now </span>
             </div>
+          </div>
+        </div>
 
-
-            <!-- ==========================================
+        <!-- ==========================================
      CHATBOT LANGUAGE OPTIONS
 =========================================== -->
 
-<div
-    id="chatbotLanguageOptions"
-    class="chatbot-language-options"
-    style="display: none;"
->
+        <div
+          id="chatbotLanguageOptions"
+          class="chatbot-language-options"
+          style="display: none"
+        >
+          <button type="button" class="chatbot-language-btn" data-language="en">
+            <span class="language-flag">🇬🇧</span>
 
-    <button
-        type="button"
-        class="chatbot-language-btn"
-        data-language="en"
-    >
-        <span class="language-flag">🇬🇧</span>
+            <span class="language-name"> English </span>
+          </button>
 
-        <span class="language-name">
-            English
-        </span>
-    </button>
+          <button type="button" class="chatbot-language-btn" data-language="ml">
+            <span class="language-flag">🇮🇳</span>
 
+            <span class="language-name"> മലയാളം </span>
+          </button>
 
-    <button
-        type="button"
-        class="chatbot-language-btn"
-        data-language="ml"
-    >
-        <span class="language-flag">🇮🇳</span>
+          <button type="button" class="chatbot-language-btn" data-language="hi">
+            <span class="language-flag">🇮🇳</span>
 
-        <span class="language-name">
-            മലയാളം
-        </span>
-    </button>
+            <span class="language-name"> हिंदी </span>
+          </button>
 
+          <button type="button" class="chatbot-language-btn" data-language="ta">
+            <span class="language-flag">🇮🇳</span>
 
-    <button
-        type="button"
-        class="chatbot-language-btn"
-        data-language="hi"
-    >
-        <span class="language-flag">🇮🇳</span>
-
-        <span class="language-name">
-            हिंदी
-        </span>
-    </button>
-
-
-    <button
-        type="button"
-        class="chatbot-language-btn"
-        data-language="ta"
-    >
-        <span class="language-flag">🇮🇳</span>
-
-        <span class="language-name">
-            தமிழ்
-        </span>
-    </button>
-
-</div>
-
-
-            <!-- Quick reply buttons -->
-
-            <div class="ff-chatbot-quick-replies" id="ffChatbotQuickReplies" hidden>
-
-               <button
-        type="button"
-        class="ff-chatbot-quick-button"
-        data-message="How can I book a ride?"
-    >
-        Book Ride
-    </button>
-
-    <button
-        type="button"
-        class="ff-chatbot-quick-button"
-        data-message="Show ride prices"
-    >
-        Ride Prices
-    </button>
-
-    <button
-        type="button"
-        class="ff-chatbot-quick-button"
-        data-message="Tell me about safety"
-    >
-        Safety
-    </button>
-
-    <button
-        type="button"
-        class="ff-chatbot-quick-button"
-        data-message="How do I get my QR ticket?"
-    >
-        QR Ticket
-    </button>
-
-            </div>
-
-
-            <!-- Message form -->
-
-            <form
-                method="POST"
-                class="ff-chatbot-form"
-                id="ffChatbotForm"
-            >
-
-                {% csrf_token %}
-
-                <div class="ff-chatbot-input-box">
-
-                    <input
-                        type="text"
-                        id="ffChatbotInput"
-                        name="message"
-                        placeholder="Type your message..."
-                        maxlength="1000"
-                        autocomplete="off"
-                        aria-label="Chatbot message"
-                    >
-
-                    <button
-                        type="submit"
-                        class="ff-chatbot-send"
-                        id="ffChatbotSend"
-                        aria-label="Send message"
-                    >
-
-                        <i class="fas fa-paper-plane"></i>
-
-                    </button>
-
-                </div>
-
-            </form>
-
+            <span class="language-name"> தமிழ் </span>
+          </button>
         </div>
 
+        <!-- Quick reply buttons -->
+
+        <div class="ff-chatbot-quick-replies" id="ffChatbotQuickReplies" hidden>
+          <button
+            type="button"
+            class="ff-chatbot-quick-button"
+            data-message="How can I book a ride?"
+          >
+            Book Ride
+          </button>
+
+          <button
+            type="button"
+            class="ff-chatbot-quick-button"
+            data-message="Show ride prices"
+          >
+            Ride Prices
+          </button>
+
+          <button
+            type="button"
+            class="ff-chatbot-quick-button"
+            data-message="Tell me about safety"
+          >
+            Safety
+          </button>
+
+          <button
+            type="button"
+            class="ff-chatbot-quick-button"
+            data-message="How do I get my QR ticket?"
+          >
+            QR Ticket
+          </button>
+        </div>
+
+        <!-- Message form -->
+
+        <form method="POST" class="ff-chatbot-form" id="ffChatbotForm">
+          {% csrf_token %}
+
+          <div class="ff-chatbot-input-box">
+            <input
+              type="text"
+              id="ffChatbotInput"
+              name="message"
+              placeholder="Type your message..."
+              maxlength="1000"
+              autocomplete="off"
+              aria-label="Chatbot message"
+            />
+
+            <button
+              type="submit"
+              class="ff-chatbot-send"
+              id="ffChatbotSend"
+              aria-label="Send message"
+            >
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
-
     <script>
-        window.FLYING_FOX_CHATBOT = {
-            initializeUrl: "{% url 'chatbot_initialize' %}",
-            messageUrl: "{% url 'chatbot_message' %}"
-        };
+      window.FLYING_FOX_CHATBOT = {
+        initializeUrl: "{% url 'chatbot_initialize' %}",
+        messageUrl: "{% url 'chatbot_message' %}",
+      };
     </script>
-
 
     <script src="{% static 'frontend/assets/js/flyingfox-chatbot.js' %}"></script>
 
-    {% comment %} <!-- scroll-top -->
+    {% comment %}
+    <!-- scroll-top -->
     <a href="#" id="scroll-top"><i class="fas fa-arrow-up-long"></i></a>
-    <!-- scroll-top end --> {% endcomment %}
+    <!-- scroll-top end -->
+    {% endcomment %}
 
     <!-- js -->
     <script src="{% static 'frontend/assets/js/jquery-3.7.1.min.js' %}"></script>
@@ -1547,6 +1193,5 @@
 
     <!-- page specific js -->
     {% block extra_js %}{% endblock %}
-
   </body>
 </html>
