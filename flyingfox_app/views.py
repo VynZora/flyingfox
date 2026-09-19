@@ -20501,6 +20501,19 @@ booking@flyingfoxadventuremunnar.com
 
 
 
+from django.core.paginator import (
+    Paginator,
+    EmptyPage,
+    PageNotAnInteger,
+)
+
+from django.http import Http404
+from django.shortcuts import (
+    render,
+    get_object_or_404,
+)
+
+
 def gallery(
     request,
     category_slug=None,
@@ -20554,9 +20567,16 @@ def gallery(
         12,
     )
 
-    gallery_items = paginator.get_page(
-        page
-    )
+    try:
+        gallery_items = paginator.page(page)
+
+    except (
+        PageNotAnInteger,
+        EmptyPage,
+    ):
+        raise Http404(
+            "Gallery page does not exist."
+        )
 
 
     # =====================================================

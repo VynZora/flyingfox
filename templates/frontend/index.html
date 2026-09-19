@@ -1685,8 +1685,7 @@ active
 
         <div
           class="safety-equipment-slider owl-carousel owl-theme wow fadeInUp"
-          data-wow-delay=".3s"
-        >
+          data-wow-delay=".3s">
           <!-- HELMET -->
 
           <div class="safety-equipment-item">
@@ -4100,27 +4099,67 @@ active
 
 <script>
   $(document).ready(function () {
-    $(".safety-equipment-slider").owlCarousel({
-      loop: true,
+
+    const safetySlider = $(".safety-equipment-slider");
+
+    if (!safetySlider.length) {
+      return;
+    }
+
+    safetySlider.owlCarousel({
+      // IMPORTANT:
+      // Do not use loop here.
+      // Owl loop creates cloned slides containing duplicate images.
+      loop: false,
+
+      // Allows navigation to return to the beginning
+      // without generating cloned HTML elements.
+      rewind: true,
+
       margin: 20,
+
       nav: true,
+
       dots: true,
+
       autoplay: true,
+
       autoplayTimeout: 3200,
+
       autoplayHoverPause: true,
+
       smartSpeed: 750,
+
       navText: [
         '<i class="fas fa-arrow-left"></i>',
         '<i class="fas fa-arrow-right"></i>',
       ],
+
       responsive: {
-        0: { items: 1, margin: 14 },
-        480: { items: 2, margin: 14 },
-        768: { items: 3 },
-        992: { items: 4 },
-        1200: { items: 5 },
+        0: {
+          items: 1,
+          margin: 14,
+        },
+
+        480: {
+          items: 2,
+          margin: 14,
+        },
+
+        768: {
+          items: 3,
+        },
+
+        992: {
+          items: 4,
+        },
+
+        1200: {
+          items: 5,
+        },
       },
     });
+
   });
 </script>
 
