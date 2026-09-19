@@ -9,6 +9,7 @@ from django.conf.urls.static import static
 
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
+from django.http import JsonResponse
 
 from flyingfox_app.sitemaps import (
     StaticViewSitemap,
@@ -20,6 +21,20 @@ from flyingfox_app.sitemaps import (
 )
 
 
+# =====================================================
+# HEALTH CHECK
+# =====================================================
+
+def health_check(request):
+    return JsonResponse({
+        "status": "ok"
+    })
+
+
+# =====================================================
+# SITEMAPS
+# =====================================================
+
 sitemaps = {
     "static": StaticViewSitemap,
     "rides": RideSitemap,
@@ -30,10 +45,32 @@ sitemaps = {
 }
 
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
+# =====================================================
+# URL PATTERNS
+# =====================================================
 
+urlpatterns = [
+
+    # -------------------------------------------------
+    # Health Check
+    # -------------------------------------------------
+    path(
+        "health/",
+        health_check,
+        name="health_check",
+    ),
+
+    # -------------------------------------------------
+    # Django Admin
+    # -------------------------------------------------
+    path(
+        "admin/",
+        admin.site.urls,
+    ),
+
+    # -------------------------------------------------
     # Sitemap
+    # -------------------------------------------------
     path(
         "sitemap.xml",
         sitemap,
@@ -41,7 +78,9 @@ urlpatterns = [
         name="django.contrib.sitemaps.views.sitemap",
     ),
 
+    # -------------------------------------------------
     # Robots.txt
+    # -------------------------------------------------
     path(
         "robots.txt",
         TemplateView.as_view(
@@ -51,13 +90,27 @@ urlpatterns = [
         name="robots_txt",
     ),
 
-    # Main application
-    path("", include("flyingfox_app.urls")),
+    # -------------------------------------------------
+    # Main Application
+    # Keep this last
+    # -------------------------------------------------
+    path(
+        "",
+        include("flyingfox_app.urls"),
+    ),
 ]
 
 
+# =====================================================
+# CUSTOM 404
+# =====================================================
+
 handler404 = "flyingfox_app.views.page_404"
 
+
+# =====================================================
+# MEDIA FILES - DEVELOPMENT ONLY
+# =====================================================
 
 if settings.DEBUG:
     urlpatterns += static(
