@@ -5092,178 +5092,178 @@ def testimonial_delete(request, pk):
         # user sign up
     # ---------------------------
 
-def user_signup(request):
+# def user_signup(request):
 
-    if request.session.get("user_id"):
-       return redirect("home")
+#     if request.session.get("user_id"):
+#        return redirect("home")
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        full_name = request.POST.get(
-            "full_name",
-            ""
-        ).strip()
+#         full_name = request.POST.get(
+#             "full_name",
+#             ""
+#         ).strip()
 
-        email = request.POST.get(
-            "email",
-            ""
-        ).strip().lower()
+#         email = request.POST.get(
+#             "email",
+#             ""
+#         ).strip().lower()
 
-        phone = request.POST.get(
-            "phone",
-            ""
-        ).strip()
+#         phone = request.POST.get(
+#             "phone",
+#             ""
+#         ).strip()
 
-        password = request.POST.get(
-            "password",
-            ""
-        )
+#         password = request.POST.get(
+#             "password",
+#             ""
+#         )
 
-        confirm_password = request.POST.get(
-            "confirm_password",
-            ""
-        )
-
-
-        # ---------------------------
-        # VALIDATION
-        # ---------------------------
-
-        if not full_name:
-            messages.error(
-                request,
-                "Full name is required."
-            )
-
-            return render(
-                request,
-                "authenticate/signup.html",
-                {
-                    "form_data": request.POST
-                }
-            )
+#         confirm_password = request.POST.get(
+#             "confirm_password",
+#             ""
+#         )
 
 
-        if not email:
-            messages.error(
-                request,
-                "Email address is required."
-            )
+#         # ---------------------------
+#         # VALIDATION
+#         # ---------------------------
 
-            return render(
-                request,
-                "authenticate/signup.html",
-                {
-                    "form_data": request.POST
-                }
-            )
+#         if not full_name:
+#             messages.error(
+#                 request,
+#                 "Full name is required."
+#             )
 
-
-        if UserProfile.objects.filter(
-            email__iexact=email
-        ).exists():
-
-            messages.error(
-                request,
-                "An account with this email already exists."
-            )
-
-            return render(
-                request,
-                "authenticate/signup.html",
-                {
-                    "form_data": request.POST
-                }
-            )
+#             return render(
+#                 request,
+#                 "authenticate/signup.html",
+#                 {
+#                     "form_data": request.POST
+#                 }
+#             )
 
 
-        if UserProfile.objects.filter(
-            phone=phone
-        ).exists():
+#         if not email:
+#             messages.error(
+#                 request,
+#                 "Email address is required."
+#             )
 
-            messages.error(
-                request,
-                "An account with this phone number already exists."
-            )
-
-            return render(
-                request,
-                "authenticate/signup.html",
-                {
-                    "form_data": request.POST
-                }
-            )
+#             return render(
+#                 request,
+#                 "authenticate/signup.html",
+#                 {
+#                     "form_data": request.POST
+#                 }
+#             )
 
 
-        if len(password) < 8:
+#         if UserProfile.objects.filter(
+#             email__iexact=email
+#         ).exists():
 
-            messages.error(
-                request,
-                "Password must contain at least 8 characters."
-            )
+#             messages.error(
+#                 request,
+#                 "An account with this email already exists."
+#             )
 
-            return render(
-                request,
-                "authenticate/signup.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-
-        if password != confirm_password:
-
-            messages.error(
-                request,
-                "Passwords do not match."
-            )
-
-            return render(
-                request,
-                "authenticate/signup.html",
-                {
-                    "form_data": request.POST
-                }
-            )
+#             return render(
+#                 request,
+#                 "authenticate/signup.html",
+#                 {
+#                     "form_data": request.POST
+#                 }
+#             )
 
 
-        # ---------------------------
-        # CREATE USER
-        # ---------------------------
+#         if UserProfile.objects.filter(
+#             phone=phone
+#         ).exists():
 
-        user = UserProfile.objects.create(
-            full_name=full_name,
-            email=email,
-            phone=phone,
+#             messages.error(
+#                 request,
+#                 "An account with this phone number already exists."
+#             )
 
-            # IMPORTANT
-            password=make_password(
-                password
-            )
-        )
-
-
-        # Automatically login
-        request.session["user_id"] = user.id
-
-        request.session[
-            "user_name"
-        ] = user.full_name
+#             return render(
+#                 request,
+#                 "authenticate/signup.html",
+#                 {
+#                     "form_data": request.POST
+#                 }
+#             )
 
 
-        messages.success(
-            request,
-            "Your account has been created successfully."
-        )
+#         if len(password) < 8:
+
+#             messages.error(
+#                 request,
+#                 "Password must contain at least 8 characters."
+#             )
+
+#             return render(
+#                 request,
+#                 "authenticate/signup.html",
+#                 {
+#                     "form_data": request.POST
+#                 }
+#             )
 
 
-        return redirect("home")
+#         if password != confirm_password:
+
+#             messages.error(
+#                 request,
+#                 "Passwords do not match."
+#             )
+
+#             return render(
+#                 request,
+#                 "authenticate/signup.html",
+#                 {
+#                     "form_data": request.POST
+#                 }
+#             )
 
 
-    return render(
-        request,
-        "authenticate/signup.html"
-    )
+#         # ---------------------------
+#         # CREATE USER
+#         # ---------------------------
+
+#         user = UserProfile.objects.create(
+#             full_name=full_name,
+#             email=email,
+#             phone=phone,
+
+#             # IMPORTANT
+#             password=make_password(
+#                 password
+#             )
+#         )
+
+
+#         # Automatically login
+#         request.session["user_id"] = user.id
+
+#         request.session[
+#             "user_name"
+#         ] = user.full_name
+
+
+#         messages.success(
+#             request,
+#             "Your account has been created successfully."
+#         )
+
+
+#         return redirect("home")
+
+
+#     return render(
+#         request,
+#         "authenticate/signup.html"
+#     )
 
 
 

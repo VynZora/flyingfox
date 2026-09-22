@@ -1,0 +1,1271 @@
+/* =========================================================
+   FLYING FOX - SIGN IN PAGE
+   Extracted from original style.css
+========================================================= */
+
+
+/* =========================================================
+   LOGIN PAGE
+========================================================= */
+
+.ff-login-page {
+    position: relative;
+    padding: 155px 0 70px;
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(195, 17, 3, .07),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 10% 90%,
+            rgba(195, 17, 3, .04),
+            transparent 25%
+        ),
+        #f8f8f8;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.ff-login-page-heading {
+    margin-bottom: 25px;
+}
+
+.ff-login-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    color: #c31103;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ff-login-tag i {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    background: rgba(195, 17, 3, .1);
+}
+
+.ff-login-page-heading h1 {
+    margin: 0;
+
+    color: #1e1e1e;
+
+    font-size: 46px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.ff-login-card {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.08fr;
+
+    min-height: 540px;
+
+    overflow: hidden;
+
+    border-radius: 28px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 20px 55px
+        rgba(0, 0, 0, .08);
+}
+
+
+/* =========================================================
+   IMAGE SIDE
+========================================================= */
+
+.ff-login-image-side {
+    position: relative;
+
+    min-height: 540px;
+
+    overflow: hidden;
+}
+
+.ff-login-image {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 1s ease;
+}
+
+.ff-login-card:hover .ff-login-image {
+    transform: scale(1.025);
+}
+
+.ff-login-image-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, .05) 20%,
+            rgba(0, 0, 0, .78) 100%
+        );
+}
+
+.ff-login-image-content {
+    position: absolute;
+
+    z-index: 2;
+
+    left: 50px;
+    right: 50px;
+    bottom: 50px;
+
+    color: #ffffff;
+}
+
+.ff-login-small-title {
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    padding:
+        7px
+        15px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .35);
+
+    border-radius: 50px;
+
+    background:
+        rgba(255, 255, 255, .12);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ff-login-image-content h2 {
+    max-width: 480px;
+
+    margin-bottom: 15px;
+
+    color: #ffffff;
+
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.ff-login-image-content h2 span {
+    display: block;
+
+    color: #ffffff;
+}
+
+.ff-login-image-content p {
+    max-width: 520px;
+
+    color:
+        rgba(255, 255, 255, .85);
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   IMAGE FEATURES
+========================================================= */
+
+.ff-login-image-features {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 25px;
+}
+
+.ff-login-feature {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        9px
+        13px;
+
+    border-radius: 50px;
+
+    background:
+        rgba(255, 255, 255, .14);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.ff-login-feature i {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   FORM SIDE
+========================================================= */
+
+.ff-login-form-side {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding:
+        35px
+        65px;
+}
+
+.ff-login-form-wrapper {
+    width: 100%;
+
+    max-width: 520px;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.ff-login-logo {
+    margin-bottom: 12px;
+
+    text-align: center;
+}
+
+.ff-login-logo img {
+    width: 75px;
+
+    height: auto;
+}
+
+
+/* =========================================================
+   FORM HEADING
+========================================================= */
+
+.ff-login-form-heading {
+    margin-bottom: 22px;
+
+    text-align: center;
+}
+
+.ff-login-form-heading > span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #c31103;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.ff-login-form-heading h2 {
+    margin-bottom: 8px;
+
+    color: #1e1e1e;
+
+    font-size: 34px;
+    line-height: 1.15;
+
+    font-weight: 700;
+}
+
+.ff-login-form-heading h2 strong {
+    color: #c31103;
+
+    font-weight: 800;
+}
+
+.ff-login-form-heading p {
+    margin-bottom: 0;
+
+    color: #666666;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   PHONE ROW
+========================================================= */
+
+.ff-login-phone-row {
+    display: grid;
+
+    grid-template-columns:
+        115px
+        1fr;
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+}
+
+.ff-login-country-code {
+    height: 56px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 7px;
+
+    border:
+        1px solid
+        #dddddd;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    color: #222222;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    transition:
+        border-color .3s ease;
+}
+
+.ff-login-country-code:hover {
+    border-color: #c31103;
+}
+
+.ff-india-flag {
+    font-size: 25px;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.ff-login-input-wrap {
+    position: relative;
+}
+
+.ff-login-input-wrap > i {
+    position: absolute;
+
+    top: 50%;
+    left: 20px;
+
+    transform:
+        translateY(-50%);
+
+    color: #999999;
+
+    font-size: 17px;
+
+    pointer-events: none;
+}
+
+.ff-login-input {
+    width: 100%;
+
+    height: 56px;
+
+    padding:
+        0
+        18px
+        0
+        46px;
+
+    outline: 0;
+
+    border:
+        1px solid
+        #dddddd;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    color: #222222;
+
+    font-size: 14px;
+
+    transition:
+        all .3s ease;
+}
+
+.ff-login-input::placeholder {
+    color: #aaaaaa;
+}
+
+.ff-login-input:hover {
+    border-color:
+        rgba(195, 17, 3, .45);
+}
+
+.ff-login-input:focus {
+    border-color: #c31103;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(195, 17, 3, .08);
+}
+
+
+/* =========================================================
+   WHATSAPP CHECKBOX
+========================================================= */
+
+.ff-login-whatsapp {
+    position: relative;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    margin:
+        3px
+        0
+        16px;
+
+    cursor: pointer;
+}
+
+.ff-login-whatsapp input {
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.ff-login-checkbox {
+    position: relative;
+
+    width: 21px;
+    height: 21px;
+
+    flex:
+        0 0 21px;
+
+    margin-top: 1px;
+
+    border:
+        2px solid
+        #cccccc;
+
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    transition:
+        all .3s ease;
+}
+
+.ff-login-whatsapp input:checked + .ff-login-checkbox {
+    border-color: #c31103;
+
+    background: #c31103;
+}
+
+.ff-login-whatsapp input:checked + .ff-login-checkbox::after {
+    content: "\f00c";
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    font-family:
+        "Font Awesome 6 Pro";
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.ff-login-whatsapp-text {
+    color: #555555;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.ff-login-whatsapp-text strong {
+    color: #159447;
+
+    font-weight: 600;
+}
+
+.ff-login-whatsapp-text strong i {
+    margin:
+        0
+        3px;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.ff-login-submit {
+    width: 100%;
+
+    height: 54px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    background: #c31103;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 24px
+        rgba(195, 17, 3, .18);
+
+    transition:
+        all .35s ease;
+}
+
+.ff-login-submit i {
+    transition:
+        transform .3s ease;
+}
+
+.ff-login-submit:hover {
+    background: #9f0e02;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 15px 35px
+        rgba(195, 17, 3, .28);
+}
+
+.ff-login-submit:hover i {
+    transform:
+        translateX(5px);
+}
+
+
+/* =========================================================
+   ERRORS / MESSAGES
+========================================================= */
+
+.ff-login-error {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin:
+        -5px
+        0
+        14px;
+
+    color: #c31103;
+
+    font-size: 13px;
+}
+
+.ff-login-messages {
+    margin-bottom: 20px;
+}
+
+.ff-login-alert {
+    padding:
+        12px
+        15px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(195, 17, 3, .08);
+
+    color: #c31103;
+
+    font-size: 13px;
+}
+
+.ff-login-alert.success {
+    background:
+        rgba(25, 135, 84, .1);
+
+    color: #198754;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.ff-login-divider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin:
+        18px
+        0;
+}
+
+.ff-login-divider span {
+    flex: 1;
+
+    height: 1px;
+
+    background: #eeeeee;
+}
+
+.ff-login-divider p {
+    margin: 0;
+
+    color: #999999;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .7px;
+}
+
+
+/* =========================================================
+   SECURITY BOX
+========================================================= */
+
+.ff-login-security {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding:
+        11px
+        14px;
+
+    border:
+        1px solid
+        #eeeeee;
+
+    border-radius: 13px;
+
+    background: #fafafa;
+}
+
+.ff-login-security-icon {
+    width: 38px;
+    height: 38px;
+
+    flex:
+        0 0 38px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(195, 17, 3, .1);
+
+    color: #c31103;
+
+    font-size: 15px;
+}
+
+.ff-login-security h4 {
+    margin-bottom: 3px;
+
+    color: #222222;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ff-login-security p {
+    color: #777777;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+.ff-login-register {
+    margin-top: 14px;
+
+    text-align: center;
+}
+
+.ff-login-register p {
+    color: #777777;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   AUTHENTICATION PROGRESS
+========================================================= */
+
+.ff-auth-progress {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: 850px;
+
+    margin:
+        0
+        auto
+        35px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.ff-auth-progress-brand {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+.ff-auth-progress-brand img {
+    width: 52px;
+    height: 52px;
+
+    object-fit: contain;
+}
+
+.ff-auth-progress-brand div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.ff-auth-progress-brand span {
+    color: #c91408;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+.ff-auth-progress-brand strong {
+    color: #191919;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   AUTH STEPS
+========================================================= */
+
+.ff-auth-steps {
+    width: 100%;
+
+    max-width: 650px;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.ff-auth-step {
+    position: relative;
+
+    z-index: 2;
+
+    min-width: 105px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.ff-auth-step-icon {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+
+    border:
+        2px solid
+        #dedede;
+
+    color: #999999;
+
+    font-size: 16px;
+
+    transition:
+        all .3s ease;
+}
+
+.ff-auth-step span {
+    display: block;
+
+    margin-top: 9px;
+
+    color: #777777;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+.ff-auth-step-line {
+    position: relative;
+
+    flex: 1;
+
+    height: 2px;
+
+    margin-top: 22px;
+
+    background: #e5e5e5;
+}
+
+
+/* ACTIVE */
+
+.ff-auth-step.active .ff-auth-step-icon {
+    background: #c91408;
+
+    border-color: #c91408;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 22px
+        rgba(201, 20, 8, .2);
+}
+
+.ff-auth-step.active span {
+    color: #c91408;
+
+    font-weight: 800;
+}
+
+
+/* COMPLETED */
+
+.ff-auth-step.completed .ff-auth-step-icon {
+    background: #c91408;
+
+    border-color: #c91408;
+
+    color: #ffffff;
+}
+
+.ff-auth-step.completed span {
+    color: #191919;
+
+    font-weight: 700;
+}
+
+.ff-auth-step-line.completed {
+    background: #c91408;
+}
+
+
+/* PROGRESS BACKGROUND */
+
+.ff-auth-progress::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 100px;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(201, 20, 8, .06) 0,
+            rgba(201, 20, 8, 0) 70%
+        );
+
+    z-index: -1;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1199px) {
+
+    .ff-login-form-side {
+        padding:
+            50px
+            45px;
+    }
+
+    .ff-login-image-content {
+        left: 35px;
+        right: 35px;
+        bottom: 40px;
+    }
+
+    .ff-login-image-content h2 {
+        font-size: 38px;
+    }
+}
+
+
+/* =========================================================
+   TABLET / SMALL SCREEN
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .ff-login-page {
+        padding:
+            150px
+            0
+            90px;
+    }
+
+    .ff-login-card {
+        grid-template-columns: 1fr;
+    }
+
+    .ff-login-image-side {
+        min-height: 480px;
+    }
+
+    .ff-login-form-side {
+        padding:
+            55px
+            40px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .ff-login-page {
+        padding:
+            130px
+            0
+            70px;
+    }
+
+    .ff-login-page-heading h1 {
+        font-size: 35px;
+    }
+
+    .ff-login-card {
+        border-radius: 22px;
+    }
+
+    .ff-login-image-side {
+        min-height: 380px;
+    }
+
+    .ff-login-image-content {
+        left: 25px;
+        right: 25px;
+        bottom: 30px;
+    }
+
+    .ff-login-image-content h2 {
+        font-size: 31px;
+    }
+
+    .ff-login-image-content p {
+        font-size: 13px;
+    }
+
+    .ff-login-image-features {
+        display: none;
+    }
+
+    .ff-login-form-side {
+        padding:
+            45px
+            25px;
+    }
+
+    .ff-login-form-heading h2 {
+        font-size: 30px;
+    }
+
+    .ff-login-phone-row {
+        grid-template-columns:
+            100px
+            1fr;
+
+        gap: 8px;
+    }
+
+    .ff-login-country-code {
+        height: 58px;
+
+        font-size: 13px;
+    }
+
+    .ff-login-input {
+        height: 58px;
+
+        padding-left: 42px;
+
+        font-size: 14px;
+    }
+
+    .ff-login-input-wrap > i {
+        left: 16px;
+    }
+
+    .ff-login-submit {
+        height: 58px;
+    }
+
+
+    /* AUTH PROGRESS */
+
+    .ff-auth-progress {
+        margin-bottom: 25px;
+    }
+
+    .ff-auth-progress-brand {
+        margin-bottom: 20px;
+    }
+
+    .ff-auth-progress-brand img {
+        width: 44px;
+        height: 44px;
+    }
+
+    .ff-auth-progress-brand strong {
+        font-size: 15px;
+    }
+
+    .ff-auth-steps {
+        max-width: 480px;
+    }
+
+    .ff-auth-step {
+        min-width: 85px;
+    }
+
+    .ff-auth-step-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 14px;
+    }
+
+    .ff-auth-step-line {
+        margin-top: 19px;
+    }
+
+    .ff-auth-step span {
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .ff-auth-progress {
+        padding:
+            0
+            8px;
+
+        margin-bottom: 20px;
+    }
+
+    .ff-auth-progress-brand {
+        gap: 8px;
+
+        margin-bottom: 18px;
+    }
+
+    .ff-auth-progress-brand img {
+        width: 38px;
+        height: 38px;
+    }
+
+    .ff-auth-progress-brand span {
+        font-size: 9px;
+    }
+
+    .ff-auth-progress-brand strong {
+        font-size: 13px;
+    }
+
+    .ff-auth-step {
+        min-width: 70px;
+    }
+
+    .ff-auth-step-icon {
+        width: 36px;
+        height: 36px;
+
+        font-size: 12px;
+    }
+
+    .ff-auth-step-line {
+        margin-top: 17px;
+    }
+
+    .ff-auth-step span {
+        font-size: 9px;
+
+        white-space: normal;
+
+        line-height: 1.25;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .ff-login-phone-row {
+        grid-template-columns:
+            92px
+            1fr;
+    }
+
+    .ff-india-flag {
+        font-size: 19px;
+    }
+
+    .ff-login-country-code {
+        gap: 4px;
+    }
+}

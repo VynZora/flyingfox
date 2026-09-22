@@ -249,3 +249,60 @@
     }
 
 }
+
+
+/* =========================================================
+   FINAL HERO LAYOUT FIX
+========================================================= */
+
+@media (min-width: 1200px) {
+
+    .hero-section.hs-2 {
+        position: relative !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .hs-2 .hero-slider {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .hs-2 .hero-single {
+        position: relative !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+
+        margin: 0 !important;
+
+        padding-top: 170px !important;
+        padding-bottom: 70px !important;
+
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .hs-2 .hero-bg-img {
+        position: absolute !important;
+        inset: 0 !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+    }
+}
+
+
+
+
+
+/* Failsafe: always show the first hero slide even before/without Owl Carousel JS */
+.hero-slider.owl-carousel {
+    display: block !important;
+}
+.hero-slider.owl-carousel .hero-single:not(:first-child) {
+    display: none;
+}
