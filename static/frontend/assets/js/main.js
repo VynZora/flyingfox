@@ -64,7 +64,7 @@ Version         : 1.0
     autoplay: true,
     autoplayHoverPause: true,
     autoplayTimeout: 5000,
-    navText: ["<i class='far fa-long-arrow-left'></i>", "<i class='far fa-long-arrow-right'></i>"],
+    navText: ["<i class='far fa-arrow-left-long'></i>", "<i class='far fa-arrow-right-long'></i>"],
     onInitialized: animateSlide,
     onChanged: animateSlide,
   });
@@ -141,7 +141,7 @@ Version         : 1.0
     margin: 0,
     nav: true,
     dots: false,
-    navText: ["<i class='far fa-long-arrow-left'></i>", "<i class='far fa-long-arrow-right'></i>"],
+    navText: ["<i class='far fa-arrow-left-long'></i>", "<i class='far fa-arrow-right-long'></i>"],
     autoplay: false,
     responsive: {
       0: {
