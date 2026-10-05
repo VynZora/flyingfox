@@ -121,27 +121,40 @@
 
     <meta name="theme-color" content="#d7190f" />
 
-    <!-- css -->
-    <link
-      rel="stylesheet"
-      href="{% static 'frontend/assets/css/bootstrap-optimized.min.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}"
-    />
+   <!-- =====================================================
+     GLOBAL CSS
+===================================================== -->
 
-    <link rel="stylesheet" href="{% static 'frontend/assets/css/style-purged.min.css' %}">
-    {% comment %}
-    <link
-      rel="stylesheet"
-      href="{% static 'frontend/assets/css/all-fontawesome.min.css' %}"
-    />
-    {% endcomment %}
-    {% comment %} <link
-      rel="stylesheet"
-      href="{% static 'frontend/assets/css/style-clean.css' %}"
-    /> {% endcomment %}
+<!-- Bootstrap:
+     Keep synchronous because navbar/layout requires it immediately -->
+<link
+  rel="stylesheet"
+  href="{% static 'frontend/assets/css/bootstrap-optimized.min.css' %}"
+/>
+
+<!-- Main website styles:
+     Keep synchronous because header/navbar and above-the-fold
+     elements depend on it -->
+<link
+  rel="stylesheet"
+  href="{% static 'frontend/assets/css/style-purged.min.css' %}"
+/>
+
+<!-- Font Awesome:
+     Non-critical. Load asynchronously -->
+<link
+  rel="preload"
+  href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+
+<noscript>
+  <link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}"
+  />
+</noscript>
 
     <script
       src="https://analytics.ahrefs.com/analytics.js"
@@ -262,8 +275,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div class="container position-relative">
             <a class="navbar-brand" href="{% url 'home' %}">
               <img
-                src="{% static 'frontend/assets/img/logo/logo-navbar.png' %}"
+                src="{% static 'frontend/assets/img/logo/logo-navbar.webp' %}"
                 alt="logo"
+                width="144"
+                height="84"
               />
             </a>
             {% comment %}

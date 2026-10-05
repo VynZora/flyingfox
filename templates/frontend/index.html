@@ -3928,16 +3928,66 @@ active
 
 {% block extra_css %}
 
-<link rel="stylesheet"
-      href="{% static 'frontend/assets/css/animate.min.css' %}">
+<!-- =====================================================
+     HOME PAGE MAIN CSS
+     Keep synchronous for hero / first-screen rendering
+===================================================== -->
 
-<link rel="stylesheet"
-      href="{% static 'frontend/assets/css/owl.carousel.min.css' %}">
+<link
+  rel="stylesheet"
+  href="{% static 'frontend/assets/css/home-optimized.css' %}"
+/>
 
-<link rel="stylesheet"
-      href="{% static 'frontend/assets/css/magnific-popup.min.css' %}">
 
-<link rel="stylesheet" href="{% static 'frontend/assets/css/home-optimized.css' %}">
+<!-- =====================================================
+     NON-CRITICAL HOME CSS
+     Load asynchronously
+===================================================== -->
+
+<!-- Animate.css -->
+<link
+  rel="preload"
+  href="{% static 'frontend/assets/css/animate.min.css' %}"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+
+<!-- Magnific Popup -->
+<link
+  rel="preload"
+  href="{% static 'frontend/assets/css/magnific-popup.min.css' %}"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+
+<!-- Owl Carousel -->
+<link
+  rel="preload"
+  href="{% static 'frontend/assets/css/owl.carousel.min.css' %}"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+
+
+<!-- Fallback when JavaScript is disabled -->
+<noscript>
+
+  <link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/animate.min.css' %}"
+  />
+
+  <link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/magnific-popup.min.css' %}"
+  />
+
+  <link
+    rel="stylesheet"
+    href="{% static 'frontend/assets/css/owl.carousel.min.css' %}"
+  />
+
+</noscript>
 
 {% endblock %}
 
