@@ -4,7 +4,7 @@ from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Ride, Blog, Offer
+from .models import Ride, Blog, Offer, GalleryItem, GalleryCategory
 
 
 # =========================================================
@@ -106,24 +106,6 @@ class OfferSitemap(Sitemap):
         )
 
 
-# =========================================================
-# GALLERY CATEGORY PAGES
-# =========================================================
-
-class GalleryPageSitemap(Sitemap):
-    protocol = "https"
-    changefreq = "weekly"
-    priority = 0.6
-
-    def items(self):
-        return [
-            "/gallery/normal-zipline/",
-            "/gallery/superman-zipline/",
-        ]
-
-    def location(self, item):
-        return item
-
 
 # =========================================================
 # BLOG PAGINATION
@@ -157,3 +139,100 @@ class BlogPageSitemap(Sitemap):
                 "page": page,
             },
         )
+
+
+
+
+
+
+# =========================================================
+# GALLERY PAGINATION SITEMAP
+# =========================================================
+
+class GalleryPaginationSitemap(Sitemap):
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        items_per_page = 12
+
+        total_items = GalleryItem.objects.count()
+
+        total_pages = math.ceil(
+            total_items / items_per_page
+        )
+
+        # Page 1 is already included in StaticViewSitemap.
+        return range(2, total_pages + 1)
+
+    def location(self, page):
+        return reverse(
+            "gallery_page",
+            kwargs={"page": page},
+        )
+
+
+# =========================================================
+# GALLERY CATEGORY SITEMAP
+# =========================================================
+
+class GalleryCategorySitemap(Sitemap):
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        return GalleryCategory.objects.all()
+
+    def location(self, category):
+        return reverse(
+            "gallery_category",
+            kwargs={
+                "category_slug": category.slug,
+            },
+        )
+
+
+# =========================================================
+# GALLERY CATEGORY PAGINATION SITEMAP
+# =========================================================
+
+class GalleryCategoryPaginationSitemap(Sitemap):
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.5
+
+    def items(self):
+        items_per_page = 12
+        pages = []
+
+        categories = GalleryCategory.objects.all()
+
+        for category in categories:
+            total_items = GalleryItem.objects.filter(
+                category=category
+            ).count()
+
+            total_pages = math.ceil(
+                total_items / items_per_page
+            )
+
+            for page in range(2, total_pages + 1):
+                pages.append((category.slug, page))
+
+        return pages
+
+    def location(self, item):
+        category_slug, page = item
+
+        return reverse(
+            "gallery_category_page",
+            kwargs={
+                "category_slug": category_slug,
+                "page": page,
+            },
+        )
+
+
+    

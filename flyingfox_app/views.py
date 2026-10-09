@@ -20514,38 +20514,23 @@ from django.shortcuts import (
 )
 
 
-def gallery(
-    request,
-    category_slug=None,
-    page=1,
-):
 
-    # =====================================================
-    # ALL GALLERY CATEGORIES
-    # =====================================================
+def gallery(request, category_slug=None, page=1):
 
+    # Gallery categories
     categories = GalleryCategory.objects.all()
 
-
-    # =====================================================
-    # BASE GALLERY QUERYSET
-    # =====================================================
-
+    # Gallery images and videos
     gallery_queryset = (
         GalleryItem.objects
         .select_related("category")
-        .order_by("-uploaded_at")
+        .order_by("-uploaded_at", "-pk")
     )
-
-
-    # =====================================================
-    # SELECTED CATEGORY
-    # =====================================================
 
     selected_category = None
 
+    # Category filtering
     if category_slug:
-
         category = get_object_or_404(
             GalleryCategory,
             slug=category_slug,
@@ -20557,31 +20542,86 @@ def gallery(
             category=category
         )
 
+    # Pagination: 12 items per page
+    paginator = Paginator(gallery_queryset, 12)
 
-    # =====================================================
-    # PAGINATION
-    # =====================================================
+    # Redirect old URLs such as /gallery/?page=5
+    if "page" in request.GET:
+        try:
+            old_page = int(request.GET["page"])
+            if old_page < 1:
+                raise ValueError
+            paginator.page(old_page)
+        except (ValueError, TypeError, EmptyPage, PageNotAnInteger):
+            raise Http404("Gallery page does not exist.")
 
-    paginator = Paginator(
-        gallery_queryset,
-        12,
-    )
+        if selected_category:
+            if old_page == 1:
+                redirect_path = reverse(
+                    "gallery_category",
+                    kwargs={"category_slug": selected_category}
+                )
+            else:
+                redirect_path = reverse(
+                    "gallery_category_page",
+                    kwargs={
+                        "category_slug": selected_category,
+                        "page": old_page,
+                    }
+                )
+        else:
+            if old_page == 1:
+                redirect_path = reverse("gallery")
+            else:
+                redirect_path = reverse(
+                    "gallery_page",
+                    kwargs={"page": old_page}
+                )
 
+        return redirect(redirect_path, permanent=True)
+
+    # Get requested page
     try:
         gallery_items = paginator.page(page)
+    except (PageNotAnInteger, EmptyPage):
+        raise Http404("Gallery page does not exist.")
 
-    except (
-        PageNotAnInteger,
-        EmptyPage,
+    # Build clean URL for this gallery page
+    if selected_category:
+        if gallery_items.number == 1:
+            canonical_path = reverse(
+                "gallery_category",
+                kwargs={"category_slug": selected_category}
+            )
+        else:
+            canonical_path = reverse(
+                "gallery_category_page",
+                kwargs={
+                    "category_slug": selected_category,
+                    "page": gallery_items.number,
+                }
+            )
+    else:
+        if gallery_items.number == 1:
+            canonical_path = reverse("gallery")
+        else:
+            canonical_path = reverse(
+                "gallery_page",
+                kwargs={"page": gallery_items.number}
+            )
+
+    # Redirect /gallery/page/1/ to /gallery/
+    if (
+        gallery_items.number == 1
+        and request.path != canonical_path
     ):
-        raise Http404(
-            "Gallery page does not exist."
-        )
+        return redirect(canonical_path, permanent=True)
 
-
-    # =====================================================
-    # RENDER TEMPLATE
-    # =====================================================
+    # Absolute canonical URL
+    canonical_url = (
+        "https://flyingfoxadventuremunnar.com"
+        + canonical_path
+    )
 
     return render(
         request,
@@ -20590,9 +20630,9 @@ def gallery(
             "gallery_items": gallery_items,
             "categories": categories,
             "selected_category": selected_category,
+            "canonical_url": canonical_url,
         },
     )
-
 
 
 

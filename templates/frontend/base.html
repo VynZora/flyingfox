@@ -39,10 +39,12 @@
       content="{% block og_type %}website{% endblock %}"
     />
 
-    <meta
-      property="og:url"
-      content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}"
-    />
+    
+<meta
+    property="og:url"
+    content="{% block og_url %}{% if canonical_url %}{{ canonical_url }}{% else %}https://flyingfoxadventuremunnar.com{{ request.path }}{% endif %}{% endblock %}"
+/>
+
 
     <meta
       property="og:image"
@@ -80,10 +82,18 @@
     />
 
     <!-- Canonical URL -->
-    <link
-      rel="canonical"
-      href="https://flyingfoxadventuremunnar.com{{ request.get_full_path }}"
-    />
+   
+<!-- ==========================================
+     CANONICAL URL - SEO
+========================================== -->
+
+{% block canonical %}
+<link
+    rel="canonical"
+    href="{% if canonical_url %}{{ canonical_url }}{% else %}https://flyingfoxadventuremunnar.com{{ request.path }}{% endif %}"
+/>
+{% endblock %}
+
 
     <!-- =====================================================
      FLYING FOX FAVICONS

@@ -11,14 +11,18 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 from django.http import JsonResponse
 
+
 from flyingfox_app.sitemaps import (
     StaticViewSitemap,
     RideSitemap,
     BlogSitemap,
     OfferSitemap,
-    GalleryPageSitemap,
     BlogPageSitemap,
+    GalleryPaginationSitemap,
+    GalleryCategorySitemap,
+    GalleryCategoryPaginationSitemap,
 )
+
 
 
 # =====================================================
@@ -35,14 +39,18 @@ def health_check(request):
 # SITEMAPS
 # =====================================================
 
+
 sitemaps = {
     "static": StaticViewSitemap,
     "rides": RideSitemap,
     "blogs": BlogSitemap,
     "offers": OfferSitemap,
-    "gallery_pages": GalleryPageSitemap,
     "blog_pages": BlogPageSitemap,
+    "gallery_pages": GalleryPaginationSitemap,
+    "gallery_categories": GalleryCategorySitemap,
+    "gallery_category_pages": GalleryCategoryPaginationSitemap,
 }
+
 
 
 # =====================================================
