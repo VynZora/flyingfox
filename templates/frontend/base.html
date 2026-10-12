@@ -221,7 +221,37 @@
       </video>
     </div>
     <!-- preloader end -->
-    <!-- preloader end -->
+
+
+<script>
+  (function () {
+    var MIN_TIME = 2000;    // show preloader at least 1 second
+    var FAILSAFE = 20000;   // emergency limit if a file hangs (10 seconds)
+    var start = Date.now();
+
+    function hidePreloader() {
+      var p = document.querySelector('.preloader');
+      if (!p || p.getAttribute('data-hidden')) return;
+      p.setAttribute('data-hidden', '1');
+      p.style.transition = 'opacity .3s ease';
+      p.style.opacity = '0';
+      setTimeout(function () { p.style.display = 'none'; }, 300);
+    }
+
+    function pageReady() {
+      var elapsed = Date.now() - start;
+      setTimeout(hidePreloader, Math.max(MIN_TIME - elapsed, 0));
+    }
+
+    if (document.readyState === 'complete') {
+      pageReady();
+    } else {
+      window.addEventListener('load', pageReady);
+    }
+
+    setTimeout(hidePreloader, FAILSAFE);
+  })();
+</script>    
 
     <!-- header area -->
     <header class="header-2 h-abs">

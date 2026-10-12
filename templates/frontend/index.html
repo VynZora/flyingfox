@@ -3992,6 +3992,16 @@ active
 
 </noscript>
 
+<style>
+  /* Show the first hero slide before Owl Carousel starts */
+  .hero-slider:not(.owl-loaded) {
+    display: block;
+  }
+  .hero-slider:not(.owl-loaded) .hero-single:not(:first-child) {
+    display: none;
+  }
+</style>
+
 {% endblock %}
 
 
