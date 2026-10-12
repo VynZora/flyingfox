@@ -174,12 +174,19 @@
 
 <meta name="google-site-verification" content="uXoofp8pJKBTQ9oN-tX_UQlHiJAM69kfD1YPN_q3AL0" />
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5CVB5GFQ');</script>
+<!-- Google Tag Manager (loaded after page load) -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-5CVB5GFQ';
+      document.head.appendChild(s);
+    }, 2000);
+  });
+</script>
 <!-- End Google Tag Manager -->
 
     <!-- page specific css -->
@@ -344,6 +351,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     alt="flying fox adventure"
                     width="220"
                     height="80"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </a>
                 <button
@@ -524,6 +533,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             alt="Flying Fox Adventure"
             width="220"
             height="80"
+            loading="lazy"
+            decoding="async"
           />
         </a>
 
@@ -643,18 +654,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           class="shape-1"
           src="{% static 'frontend/assets/img/shape/05.webp' %}"
           alt="footer shape 1 flying fox munnar"
+          loading="lazy"
+          decoding="async"
         />
 
         <img
           class="shape-2"
           src="{% static 'frontend/assets/img/shape/06.webp' %}"
           alt="footer shape 2 flying fox munnar"
+          loading="lazy"
+          decoding="async"
         />
 
         <img
           class="shape-3"
           src="{% static 'frontend/assets/img/shape/07.webp' %}"
           alt="footer shape 3 flying fox munnar"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -674,6 +691,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                       alt="Flying Fox Adventure"
                       width="220"
                       height="80"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </a>
 
@@ -866,7 +885,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                       <div class="content">
                         <h5>Mail Us</h5>
 
-                        <a href="mailto:support@flyingfoxadventuremunnar.com ">
+                        <a href="mailto:support@flyingfoxadventuremunnar.com">
                           support@flyingfoxadventuremunnar.com
                         </a>
                       </div>
