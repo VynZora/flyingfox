@@ -131,40 +131,61 @@
 
     <meta name="theme-color" content="#d7190f" />
 
-   <!-- =====================================================
-     GLOBAL CSS
-===================================================== -->
+<!-- ===================== GLOBAL CSS ===================== -->
 
-<!-- Bootstrap:
-     Keep synchronous because navbar/layout requires it immediately -->
+<!-- Fonts: preconnect, then load without blocking render -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
   rel="stylesheet"
-  href="{% static 'frontend/assets/css/bootstrap-optimized.min.css' %}"
+  href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Roboto:wght@400;500;700&display=swap"
+  media="print"
+  onload="this.media='all'"
 />
 
-<!-- Main website styles:
-     Keep synchronous because header/navbar and above-the-fold
-     elements depend on it -->
-<link
-  rel="stylesheet"
-  href="{% static 'frontend/assets/css/style-purged.min.css' %}"
-/>
+<!-- Inline: only what the preloader needs to cover the screen instantly -->
+<style>
+  .preloader {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    overflow: hidden;
+    z-index: 2147483647;
+  }
+  .ff-preloader-video {
+    display: block;
+    width: 350px;
+    height: 350px;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+  @media (max-width: 991px) { .ff-preloader-video { width: 300px; height: 300px; } }
+  @media (max-width: 767px) { .ff-preloader-video { width: 280px; height: 280px; } }
+  @media (max-width: 480px) { .ff-preloader-video { width: 250px; height: 250px; } }
+</style>
 
-<!-- Font Awesome:
-     Non-critical. Load asynchronously -->
-<link
-  rel="preload"
-  href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
+<!-- Main CSS: non-blocking -->
+<link rel="preload" href="{% static 'frontend/assets/css/bootstrap-optimized.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<link rel="preload" href="{% static 'frontend/assets/css/style-purged.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<link rel="preload" href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 
 <noscript>
-  <link
-    rel="stylesheet"
-    href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}"
-  />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Roboto:wght@400;500;700&display=swap" />
+  <link rel="stylesheet" href="{% static 'frontend/assets/css/bootstrap-optimized.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'frontend/assets/css/style-purged.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'frontend/assets/css/all-fontawesome.purged.css' %}" />
 </noscript>
+
+
 
     <script
       src="https://analytics.ahrefs.com/analytics.js"
@@ -321,9 +342,11 @@
         <nav class="navbar navbar-expand-lg">
           <div class="container position-relative">
             <a class="navbar-brand" href="{% url 'home' %}">
-              <img
-                src="{% static 'frontend/assets/img/logo/logo-navbar-288.webp' %}"
-                alt="logo"
+             <img
+                 src="{% static 'frontend/assets/img/logo/logo-navbar-1x.webp' %}"
+                 srcset="{% static 'frontend/assets/img/logo/logo-navbar-1x.webp' %} 1x,
+                 {% static 'frontend/assets/img/logo/logo-navbar-2x.webp' %} 2x"
+                 alt="Flying Fox Adventure logo"
                 width="144"
                 height="84"
               />

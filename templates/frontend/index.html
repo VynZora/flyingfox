@@ -2197,7 +2197,7 @@ active
         <div class="ff-testimonial-slider owl-carousel owl-theme">
           {% for testimonial in testimonials %}
           <div class="item">
-            <article class="ff-testimonial-card">
+            <div class="ff-testimonial-card">
               <div class="ff-testimonial-image">
                 {% if testimonial.image %}
                 <img
@@ -2240,7 +2240,7 @@ active
                   </div>
                 </div>
               </div>
-            </article>
+            </div>
           </div>
           {% endfor %}
         </div>
@@ -3928,24 +3928,15 @@ active
 
 
 
-
 {% block extra_css %}
 
-<!-- =====================================================
-     HOME PAGE MAIN CSS
-     Keep synchronous for hero / first-screen rendering
-===================================================== -->
-
+<!-- Home page main CSS (loaded without blocking render) -->
 <link
-  rel="stylesheet"
+  rel="preload"
   href="{% static 'frontend/assets/css/home-optimized.css' %}"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
 />
-
-
-<!-- =====================================================
-     NON-CRITICAL HOME CSS
-     Load asynchronously
-===================================================== -->
 
 <!-- Animate.css -->
 <link
@@ -3971,25 +3962,11 @@ active
   onload="this.onload=null;this.rel='stylesheet'"
 />
 
-
-<!-- Fallback when JavaScript is disabled -->
 <noscript>
-
-  <link
-    rel="stylesheet"
-    href="{% static 'frontend/assets/css/animate.min.css' %}"
-  />
-
-  <link
-    rel="stylesheet"
-    href="{% static 'frontend/assets/css/magnific-popup.min.css' %}"
-  />
-
-  <link
-    rel="stylesheet"
-    href="{% static 'frontend/assets/css/owl.carousel.min.css' %}"
-  />
-
+  <link rel="stylesheet" href="{% static 'frontend/assets/css/home-optimized.css' %}" />
+  <link rel="stylesheet" href="{% static 'frontend/assets/css/animate.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'frontend/assets/css/magnific-popup.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'frontend/assets/css/owl.carousel.min.css' %}" />
 </noscript>
 
 <style>
