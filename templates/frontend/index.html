@@ -3,12 +3,12 @@
 
 
 {% block title %}
-Flying Fox | 1.5 KM Adventure Rides | Munnar zipline
+Flying Fox | 1.5 KM Adventure Rides | Zipline Munnar 
 {% endblock %}
 
 
 {% block meta_description %}
-Try the Munnar zipline at Flying Fox Adventure. Fly 1.5 KM above the valley on Superman or Normal rides and reserve your ride online.
+Try the Zipline Munnar at Flying Fox Adventure. Fly 1.5 KM above the valley on Superman or Normal rides and reserve your ride online.
 {% endblock %}
 
 
@@ -707,7 +707,7 @@ active
             {% if ride.featured_videos.0 %}
             <video
               class="ride-card-video"
-              preload="metadata"
+              preload="none"
               playsinline
               muted
             >
@@ -3928,60 +3928,34 @@ active
 
 
 
+
 {% block extra_css %}
 
-<!-- Home page main CSS (loaded without blocking render) -->
-<link
-  rel="preload"
-  href="{% static 'frontend/assets/css/home-optimized.css' %}"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
+<!-- Hero CSS: normal (blocking) link, needed for the first screen -->
+<link rel="stylesheet" href="{% static 'frontend/assets/css/home-optimized.css' %}" />
 
-<!-- Animate.css -->
-<link
-  rel="preload"
-  href="{% static 'frontend/assets/css/animate.min.css' %}"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
+<!-- Start downloading the hero image early (desktop only) -->
+<link rel="preload" as="image" fetchpriority="high"
+      href="{% static 'frontend/assets/img/hero/img-2.webp' %}"
+      media="(min-width: 992px)" />
 
-<!-- Magnific Popup -->
-<link
-  rel="preload"
-  href="{% static 'frontend/assets/css/magnific-popup.min.css' %}"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
-
-<!-- Owl Carousel -->
-<link
-  rel="preload"
-  href="{% static 'frontend/assets/css/owl.carousel.min.css' %}"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
+<!-- The other CSS files load without blocking -->
+<link rel="preload" href="{% static 'frontend/assets/css/animate.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<link rel="preload" href="{% static 'frontend/assets/css/magnific-popup.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<link rel="preload" href="{% static 'frontend/assets/css/owl.carousel.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 
 <noscript>
-  <link rel="stylesheet" href="{% static 'frontend/assets/css/home-optimized.css' %}" />
   <link rel="stylesheet" href="{% static 'frontend/assets/css/animate.min.css' %}" />
   <link rel="stylesheet" href="{% static 'frontend/assets/css/magnific-popup.min.css' %}" />
   <link rel="stylesheet" href="{% static 'frontend/assets/css/owl.carousel.min.css' %}" />
 </noscript>
 
 <style>
-  /* Show the first hero slide before Owl Carousel starts */
-  .hero-slider:not(.owl-loaded) {
-    display: block;
-  }
-  .hero-slider:not(.owl-loaded) .hero-single:not(:first-child) {
-    display: none;
-  }
+  .hero-slider:not(.owl-loaded) { display: block; }
+  .hero-slider:not(.owl-loaded) .hero-single:not(:first-child) { display: none; }
 </style>
 
 {% endblock %}
-
-
 
 
 
