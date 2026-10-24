@@ -1308,5 +1308,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- page specific js -->
     {% block extra_js %}{% endblock %}
+     <!-- Remove stray JSON-LD text injected into <body> (broken GTM tag) -->
+    <script>
+      (function () {
+        function clean() {
+          var nodes = document.body.childNodes;
+          for (var i = nodes.length - 1; i >= 0; i--) {
+            var n = nodes[i];
+            if (n.nodeType === 3 && n.textContent.indexOf('"@context"') !== -1) {
+              n.parentNode.removeChild(n);
+            }
+          }
+        }
+        clean();
+        new MutationObserver(clean).observe(document.body, { childList: true });
+      })();
+    </script>
   </body>
 </html>
