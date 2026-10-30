@@ -3953,6 +3953,11 @@ active
 <style>
   .hero-slider:not(.owl-loaded) { display: block; }
   .hero-slider:not(.owl-loaded) .hero-single:not(:first-child) { display: none; }
+
+  .tour-slider.ff-single-ride {
+    display: block;
+    max-width: 440px;
+  }
 </style>
 
 {% endblock %}
@@ -4920,7 +4925,50 @@ document.addEventListener(
     });
   });
 </script>
+<script>
+  /* Fix duplicate cards in "Our Rides" slider */
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      var $s = $(".tour-slider");
+      if (!$s.length) return;
 
+      var count = $s.find(".owl-item:not(.cloned)").length;
+      if (!count) count = $s.children(".item").length;
+
+      $s.trigger("destroy.owl.carousel");
+      $s.removeClass("owl-loaded owl-hidden");
+
+      // 1 ride: show a single normal card
+      if (count <= 1) {
+        $s.removeClass("owl-carousel owl-theme").addClass("ff-single-ride");
+        return;
+      }
+
+      // 2 or more rides: scrollable slider without cloned cards
+      $s.addClass("owl-carousel owl-theme");
+      $s.owlCarousel({
+        loop: false,
+        rewind: true,
+        margin: 24,
+        nav: true,
+        dots: true,
+        autoplay: count > 3,
+        autoplayTimeout: 4000,
+        autoplayHoverPause: true,
+        smartSpeed: 700,
+        navText: [
+          '<i class="fas fa-arrow-left"></i>',
+          '<i class="fas fa-arrow-right"></i>'
+        ],
+        responsive: {
+          0:    { items: 1, margin: 14 },
+          768:  { items: 2 },
+          1200: { items: 3 }
+        }
+      });
+    }, 300);
+  });
+</script>
 <script>
   $(document).ready(function () {
     const testimonialSlider = $(".ff-testimonial-slider");
