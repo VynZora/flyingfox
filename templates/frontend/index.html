@@ -3954,9 +3954,33 @@ active
   .hero-slider:not(.owl-loaded) { display: block; }
   .hero-slider:not(.owl-loaded) .hero-single:not(:first-child) { display: none; }
 
-  .tour-slider.ff-single-ride {
-    display: block;
-    max-width: 440px;
+  /* 1 or 2 rides: no slider, cards centered */
+  .tour-slider.ff-static-rides {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  /* 2 rides: two cards side by side */
+  .tour-slider.ff-static-rides > .item {
+    flex: 0 1 calc(50% - 12px);
+    max-width: 620px;
+  }
+
+  /* 1 ride: one larger card in the center */
+  .tour-slider.ff-static-rides.ff-one-ride > .item {
+    flex: 0 1 100%;
+    max-width: 720px;
+  }
+
+  /* Mobile: full width cards */
+  @media (max-width: 767px) {
+    .tour-slider.ff-static-rides > .item,
+    .tour-slider.ff-static-rides.ff-one-ride > .item {
+      flex: 0 1 100%;
+      max-width: 100%;
+    }
   }
 </style>
 
@@ -4926,7 +4950,7 @@ document.addEventListener(
   });
 </script>
 <script>
-  /* Fix duplicate cards in "Our Rides" slider */
+  /* Our Rides: 1 = large centered, 2 = side by side, 3+ = slider */
   window.addEventListener("load", function () {
     setTimeout(function () {
       var $s = $(".tour-slider");
@@ -4935,16 +4959,18 @@ document.addEventListener(
       var count = $s.find(".owl-item:not(.cloned)").length;
       if (!count) count = $s.children(".item").length;
 
+      // Remove existing carousel (also removes cloned cards)
       $s.trigger("destroy.owl.carousel");
       $s.removeClass("owl-loaded owl-hidden");
 
-      // 1 ride: show a single normal card
-      if (count <= 1) {
-        $s.removeClass("owl-carousel owl-theme").addClass("ff-single-ride");
+      // 1 or 2 rides: no slider
+      if (count <= 2) {
+        $s.removeClass("owl-carousel owl-theme").addClass("ff-static-rides");
+        if (count === 1) $s.addClass("ff-one-ride");
         return;
       }
 
-      // 2 or more rides: scrollable slider without cloned cards
+      // More than 2 rides: scrollable slider, no clones
       $s.addClass("owl-carousel owl-theme");
       $s.owlCarousel({
         loop: false,
